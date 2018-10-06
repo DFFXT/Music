@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <selector android:exitFadeDuration="500"  >
+    		<item android:state_pressed="true" android:drawable="@color/lightBlue"></item>
+    		<item android:state_pressed="false" android:drawable="@color/transparent"></item>
+		</selector>
+    </item>
+    <item >
+        <shape android:shape="rectangle">
+            <padding android:top="15dp" android:bottom="15dp"/>
+        </shape>
+    </item>
+</layer-list>
+

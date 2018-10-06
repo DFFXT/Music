@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <RelativeLayout 
+        android:id="@+id/musicLog_logBox"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="120dp"
+	    android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/musiclog_count_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/musiclog_pading_tb"
+            android:paddingBottom="@dimen/musiclog_pading_tb"
+            android:textSize="@dimen/musiclog_textSize"
+            android:text="@string/musiclog_count" />
+
+        <EditText 
+            android:id="@+id/musiclog_count"
+            android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:maxLines="1"
+		    android:inputType="number"
+		    android:minWidth="180dp"
+		    android:hint="@string/musiclog_count"
+		    android:layout_toEndOf="@id/musiclog_count_iv"
+		    android:layout_alignBottom="@id/musiclog_count_iv"
+		    android:layout_alignTop="@id/musiclog_count_iv"
+		    android:layout_marginStart="20dp"
+		    android:background="@drawable/inputbox_style"
+		    android:textSize="@dimen/musiclog_textSize"
+            />
+        <TextView
+            android:id="@+id/musiclog_pw_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/musiclog_count_iv"
+            android:layout_marginTop="20dp"
+            android:paddingTop="@dimen/musiclog_pading_tb"
+            android:paddingBottom="@dimen/musiclog_pading_tb"
+            android:textSize="@dimen/musiclog_textSize"
+            android:text="@string/musiclog_password" />
+
+        <EditText
+            android:id="@+id/musiclog_pw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/musiclog_pw_iv"
+            android:layout_alignTop="@+id/musiclog_pw_iv"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/musiclog_pw_iv"
+            android:hint="@string/musiclog_password"
+            android:inputType="textWebPassword"
+            android:background="@drawable/inputbox_style"
+            android:textSize="@dimen/musiclog_textSize"
+            android:maxLines="1"
+            android:minWidth="180dp" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/musicLog_logButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/musicLog_logBox"
+        android:layout_marginTop="40dp"
+        android:paddingStart="@dimen/musiclog_pading_lr_large"
+        android:paddingEnd="@dimen/musiclog_pading_lr_large"
+        android:paddingTop="@dimen/padding_15"
+        android:paddingBottom="@dimen/padding_15"
+        android:textSize="@dimen/musiclog_textSize"
+        android:background="@drawable/but_lightblue_corner"
+        android:text="@string/musiclog_log" />
+    
+</RelativeLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subSettingBox"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <View
+        android:id="@+id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/colorPrimaryDark"
+        />
+    <Button
+        android:id="@+id/item_setting1"
+        android:text="@string/setting"
+        style="@style/leftDrawerItem"
+        />
+    <Button
+        android:id="@+id/goDownload"
+        android:text="@string/downloadSure"
+        style="@style/leftDrawerItem"
+        />
+    <Button
+        android:id="@+id/scanLocalMusic"
+        android:text="@string/getlist"
+        style="@style/leftDrawerItem"
+        />
+</LinearLayout>

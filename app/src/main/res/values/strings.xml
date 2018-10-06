@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ 
+
+	<string name="outerMusicLabel">播放</string>
+
+	<string name="webview_choose">View</string>
+    <string name="app_name">M盒子</string>
+    <string name="action_settings">刷新</string>
+	<string name="getlist">扫描本地歌曲</string>
+	<string name="aim">web</string>
+	<string name="yes">确认</string>
+	<string name="no">取消</string>
+	<string name="exit">退出</string>
+	<string name="close">关  闭</string>
+	<string name="reload">错误,是否重新加载？</string>
+	<string name="icon">头像</string>
+	<string name="editText_day">day</string>
+	<string name="timeout">设置时间小于当前时间</string>
+	<string name="add">++</string>
+	<string name="minus">--</string>
+	<string name="setting">设置</string>
+	
+	<string name="delete">删除</string>
+	<string name="deleteLocalFile">删除本地文件</string>
+	<string name="video">视频</string>
+	<string name="music">音乐</string>
+	
+	<string name="updata">web有更新</string>
+	<string name="downloadYes">下载成功</string>
+	<string name="updataYes">更新成功</string>
+	
+	<string name="local">本地</string>
+	<string name="musicplay_gedan">歌单</string>
+	<string name="internet">网络</string>
+	<string name="search">搜索</string>
+	
+	<string name="downloadManager">下载管理</string>
+	<string name="selectPath">····</string>
+	<string name="downloadSure">下载</string>
+	<string name="baiduOnce">百度一下</string>
+	
+	<!-- settings.xml -->
+	<string name="settings_titleBar">音乐播放器设置</string>
+	<string name="settings_ignoreFileSize">忽略小文件</string>
+	<string name="settings_minFileSizeValue">扫描最小文件大小[MB]</string>
+	<string name="setting_suffix_mp3">.mp3</string>
+	<string name="setting_suffix_ogg">.ogg</string>
+	<string name="setting_suffix_mid">.mid</string>
+	<string name="setting_suffix_wav">.wav</string>
+	<string name="setting_suffix_wma">.wma</string>
+	<string name="setting_suffix_acc">.acc</string>
+	
+	<!-- computer.xml -->
+	<string name="computer_titleBar">接入电脑</string>
+	<string name="computer_ip">ip地址：255.255.255.0</string>
+	<string name="computer_port">端口:3456</string>
+	<string name="computer_conButton">连接</string>
+	<string name="computer_toolBox_copy">复制</string>
+	<string name="computer_toolBox_paste">粘贴</string>
+	<string name="computer_toolBox_cut">剪切</string>
+	<string name="computer_toolBox_del">删除</string>
+	<string name="computer_toolBox_rename">重命名</string>
+	<string name="computer_toolBox_more">更多</string>
+	
+	
+	
+	
+	<string name="musiclog_count">账号</string>
+	<string name="musiclog_password">密码</string>
+	<string name="musiclog_log">登录</string>
+
+
+	<string name="musicPlay">播放</string>
+	<string name="deleteOrigin">删除源文件</string>
+	<string name="detailInfo">详细信息</string>
+	<string name="setAsLike">添加到分组</string>
+	<string name="remove">移除</string>
+
+	<string name="deleteGroupOrigin">完全删除</string>
+	<string name="clearGroup">清空</string>
+	<string name="addMusic">添加音乐</string>
+
+
+
+	<string name="page_local">本地音乐</string>
+	<string name="page_Internet">网络音乐</string>
+	<string name="page_lyrics">歌词</string>
+	<string name="playList">播放列表</string>
+	<string name="lyrics_noLyrics">没有歌词—(〃´-ω･) </string>
+
+
+
+</resources>

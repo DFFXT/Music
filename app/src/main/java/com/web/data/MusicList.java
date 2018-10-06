@@ -1,0 +1,42 @@
+package com.web.data;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MusicList<T> {
+    private List<T> music=new ArrayList<>();
+    private String title;
+    public MusicList(String title){
+        this.title=title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int size(){
+        return music.size();
+    }
+    public T get(int index){
+        return music.get(index);
+    }
+    public void add(T object){
+        music.add(object);
+    }
+    public void add(int index,T object){
+        music.add(index,object);
+    }
+    public void addAll(List<T> list){
+        music.addAll(list);
+    }
+    public T remove(int index){
+        return music.remove(index);
+    }
+    public void clear(){
+        music.clear();
+    }
+}

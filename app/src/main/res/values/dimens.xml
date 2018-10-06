@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">1dp</dimen>
+    <dimen name="activity_vertical_margin">1dp</dimen>
+    <dimen name="titleBar_textSize">20dp</dimen>
+	<dimen name="textSize">18dp</dimen>
+	<dimen name="paddingTop">20dp</dimen>
+	<dimen name="padding_10">10dp</dimen>
+	<dimen name="padding_15">15dp</dimen>
+	<dimen name="titleBarHeight">50dp</dimen>
+	<dimen name="padding_5">5dp</dimen>
+	<dimen name="padding_25">25dp</dimen>
+	
+	
+	
+	<!-- 音乐登录使用  -->
+	<dimen name="musiclog_pading_lr">15dp</dimen>
+	<dimen name="musiclog_pading_tb">10dp</dimen>
+	<dimen name="musiclog_pading_lr_large">70dp</dimen>
+	<dimen name="musiclog_textSize">18sp</dimen>
+
+
+
+	<dimen name="re_searchBoxWidth">200dp</dimen>
+
+</resources>

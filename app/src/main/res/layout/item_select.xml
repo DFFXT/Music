@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+     >
+    
+    <TextView
+        android:id="@+id/item1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:text="文件地址"
+        />
+    
+    <Button 
+        android:id="@+id/item4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/item1"
+        android:layout_alignParentRight="true"
+        android:text="@string/delete"
+        android:padding="10dp"
+        android:background="@color/lightBlue"
+        />
+    <EditText
+        android:id="@+id/item1_e"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/item1"
+        android:layout_toLeftOf="@+id/item4"
+        android:layout_toRightOf="@+id/item1"
+        android:hint="url"
+        android:textSize="18sp" />
+    <TextView
+        android:id="@+id/item2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item1_e"
+        android:layout_alignLeft="@id/item1"
+        android:textSize="18sp"
+        android:paddingTop="8dp"
+        android:text="文件重命名"
+        />
+    <TextView 
+        android:id="@+id/item3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item2"
+        android:layout_alignLeft="@id/item1"
+        android:textSize="18sp"
+        android:paddingTop="8dp"
+        android:text="文件大小："
+        />
+	<CheckBox 
+	    android:id="@+id/checkBox"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/deleteLocalFile"
+	    android:layout_below="@id/item3"
+	    />
+    <Button 
+        android:id="@+id/item_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/checkBox"
+        android:text="@string/close"
+        android:padding="10dp"
+        android:background="@color/lightBlue"
+        />
+    
+
+</RelativeLayout>

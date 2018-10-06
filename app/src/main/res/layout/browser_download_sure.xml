@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/parentBox"
+    android:background="@color/dim_transparent"
+    >
+    
+    
+    <LinearLayout 
+        android:id="@+id/box_1"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentBottom="true"
+    	android:orientation="horizontal"
+        >
+        <Button 
+            android:id="@+id/downloadOk"
+        	android:layout_width="match_parent"
+    		android:layout_height="wrap_content"
+    		android:text="@string/downloadSure"
+    		android:padding="20dp"
+    		android:background="@drawable/but"
+    		android:layout_gravity="bottom"
+            />
+    </LinearLayout>
+	<LinearLayout 
+        android:id="@+id/box"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_above="@id/box_1"
+    	android:orientation="horizontal"
+    	android:paddingTop="20dp"
+    	android:background="@color/white"
+        >
+        <EditText
+            android:id="@+id/nameEdit"
+        	android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:layout_weight="3"
+    		android:padding="10dp"
+    		android:background="@drawable/input_style"
+    		android:hint="@string/action_settings"
+    		android:text="@string/action_settings"
+            />
+        <Button 
+            android:id="@+id/selectPathButton"
+        	android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:layout_weight="0.5"
+    		android:background="@drawable/but"
+    		android:padding="12dp"
+    		android:text="@string/selectPath"
+            />
+    </LinearLayout>
+	<View
+	    android:layout_width="match_parent"
+	    android:layout_height="1dp"
+	    android:layout_above="@+id/box"
+	    android:background="@color/lightBlue" />
+	    	        
+</RelativeLayout>

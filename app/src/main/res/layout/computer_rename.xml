@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shade"
+    android:paddingTop="@dimen/padding_15"
+    android:paddingLeft="@dimen/padding_10"
+    android:paddingRight="@dimen/padding_10"
+    android:paddingBottom="2dp"
+    android:layout_gravity="center_horizontal">
+    
+    <EditText
+        android:id="@+id/computer_renameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_5"
+        android:background="@drawable/bottomline"
+        android:layout_marginBottom="@dimen/padding_15"
+        android:inputType="text" />
+
+    
+    <LinearLayout 
+        android:id="@+id/computer_renameButBox"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/computer_renameInput"
+	    android:orientation="horizontal"
+        >
+        
+        <Button
+	        android:id="@+id/computer_renameOK"
+	        style="?android:attr/borderlessButtonStyle"
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/but_1"
+	        android:padding="@dimen/padding_15"
+	        android:text="@string/yes" />
+	    <Button
+	        android:id="@+id/computer_renameCancel"
+	        style="?android:attr/borderlessButtonStyle"
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/but_1"
+	        android:padding="@dimen/padding_15"
+	        android:text="@string/no" />
+    </LinearLayout>
+	    
+
+</RelativeLayout>
