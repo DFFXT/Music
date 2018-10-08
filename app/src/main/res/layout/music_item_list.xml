@@ -40,7 +40,7 @@
 	<ImageView
 		android:id="@+id/add"
 		android:adjustViewBounds="true"
-		android:src="@drawable/add"
+		android:src="@drawable/list_add"
 		android:padding="5dp"
 		android:contentDescription="@null"
 		android:layout_alignParentEnd="true"

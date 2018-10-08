@@ -5,6 +5,7 @@ import com.web.subWeb.MusicPlayer_main_restruct;
 import com.web.web.R;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -35,10 +36,30 @@ public class MyNotification{
 		this.singer=singer;
 		this.isPlay=isPlay;
 	}
+	private String id="def";
+	private NotificationManager manager;
+	private void createChannel(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+			NotificationChannel channel=new NotificationChannel(id,"name",NotificationManager.IMPORTANCE_MIN);
+			getManager().createNotificationChannel(channel);
+		}
+	}
+	private NotificationManager getManager(){
+		if (manager==null){
+			manager=context.getSystemService(NotificationManager.class);
+		}
+		return manager;
+	}
 	
 	public void show(){//--通知栏
+		createChannel();
 		if(context==null) return;
-		Notification.Builder mBuilder = new Notification.Builder(context);
+		Notification.Builder mBuilder;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+			mBuilder = new Notification.Builder(context,id);
+		}else {
+			mBuilder = new Notification.Builder(context);
+		}
 		remoteViews=new RemoteViews(context.getPackageName(),R.layout.music_navigator_control);
 		mBuilder.setContent(remoteViews);
 		mBuilder.setPriority(Notification.PRIORITY_MAX);
