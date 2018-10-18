@@ -76,8 +76,12 @@ public class Computer extends BaseActivity implements OnClickListener{
 	MyHander myHander;
 	Comparator<ArrayList<Map<String, Object>>> comparator;
 	Config config=new Config();
-	public void onCreate(Bundle b){
-		super.onCreate(b);
+	public int getLayoutId(){
+		return R.layout.computer;
+	}
+
+	@Override
+	public void initView() {
 		setContentView(R.layout.computer);
 		myHander=new MyHander(this);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -86,6 +90,7 @@ public class Computer extends BaseActivity implements OnClickListener{
 		setListenner();
 		render();
 	}
+
 	void findId(){
 		computer_titleBar_text=(TextView)findViewById(R.id.computer_titleBar_text);
 		computer_ip=(AutoCompleteTextView)findViewById(R.id.computer_ip);

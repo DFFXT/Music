@@ -26,14 +26,19 @@ import java.util.List;
 public class Settings extends BaseActivity {
 	private LinearLayout suffixBox;
 	String suffix[]=new String[]{"mp3","acc","ogg","wma","wav","mid"};
-	protected void onCreate(Bundle bundle){
-		super.onCreate(bundle);
-		setContentView(R.layout.settings);
+	public int getLayoutId(){
+		return (R.layout.settings);
+
+	}
+
+	@Override
+	public void initView() {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		findId();
 		render();
 	}
+
 	void findId(){
 		suffixBox=findViewById(R.id.suffixBox);
 	}

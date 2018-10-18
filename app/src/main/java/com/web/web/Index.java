@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -16,11 +15,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.web.subWeb.MusicPlayer_main_restruct;
+import com.web.music.page.MusicPlayer_main_restruct;
 import com.web.util.BaseActivity;
 
 import dalvik.system.DexClassLoader;
@@ -30,15 +28,19 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 	private String[] name;
 	private int[] bgList;
 	ArrayList<Button> butList=new ArrayList<Button>();
-	public void onCreate(Bundle b){ 
-		super.onCreate(b);
-		setContentView(R.layout.index);
+	public int getLayoutId(){
+		return(R.layout.index);
+	}
+
+	@Override
+	public void initView() {
 		Index.requestWritePermission(this);
 		findId();
 		makeData();
 		fillTextAndColor();
 		go();
 	}
+
 	void go(){
 		final File optimizedDexOutputPath = new File(Environment.getExternalStorageDirectory().toString()
                 + File.separator + "aim.jar");

@@ -8,12 +8,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.text.DecimalFormat;
@@ -30,6 +32,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.web.data.InternetMusic;
@@ -124,18 +127,14 @@ import com.web.data.InternetMusic;
 		return text;
 	}
 	@Nullable
-	public String readNetData(String url){//--需要新线程
+	public String readNetData(String url) throws IOException {//--需要新线程
 		StringBuilder builder=new StringBuilder();
-		try {
-			URL Url=new URL(url);
-			InputStream stream = Url.openConnection().getInputStream();
-			BufferedReader bReader = new BufferedReader(new InputStreamReader(stream));
-			String tmp;
-			while((tmp=bReader.readLine())!=null){
-				builder.append(tmp);
-			}
-		} catch (Exception e) {
-			return null;
+		URL Url=new URL(url);
+		InputStream stream = Url.openConnection().getInputStream();
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(stream));
+		String tmp;
+		while((tmp=bReader.readLine())!=null){
+			builder.append(tmp);
 		}
 		return builder.toString();
 	}

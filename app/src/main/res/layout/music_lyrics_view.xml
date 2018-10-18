@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.web.model.lyrics.ui.LyricsView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.web.music.model.lyrics.ui.LyricsView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/lyricListView"
-    android:background="@color/gray"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
@@ -13,4 +12,4 @@
         android:contentDescription="@null"
         android:layout_width="40dp"
         android:layout_height="40dp" />
-</com.web.model.lyrics.ui.LyricsView>
+</com.web.music.model.lyrics.ui.LyricsView>

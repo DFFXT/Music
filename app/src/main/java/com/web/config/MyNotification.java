@@ -1,7 +1,7 @@
 package com.web.config;
 
 import com.web.service.MusicPlay;
-import com.web.subWeb.MusicPlayer_main_restruct;
+import com.web.music.page.MusicPlayer_main_restruct;
 import com.web.web.R;
 
 import android.app.Notification;
@@ -12,7 +12,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 /*
