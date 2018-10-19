@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.view.MotionEvent;
@@ -19,7 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.web.music.page.MusicPlayer_main_restruct;
-import com.web.util.BaseActivity;
+import com.web.common.util.BaseActivity;
 
 import dalvik.system.DexClassLoader;
 

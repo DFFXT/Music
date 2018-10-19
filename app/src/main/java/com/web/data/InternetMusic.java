@@ -8,8 +8,10 @@ public class InternetMusic extends DataSupport{
     private String musicName;
     private String singerName;
     private String hash;
+    private String sqHash;
     private String url="";
     private String path;
+    private int duration;
     private int hasDownload;
     private int fullSize;
 
@@ -82,5 +84,21 @@ public class InternetMusic extends DataSupport{
 
     public String getPath() {
         return path;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getSqHash() {
+        return sqHash;
+    }
+
+    public void setSqHash(String sqHash) {
+        this.sqHash = sqHash;
     }
 }

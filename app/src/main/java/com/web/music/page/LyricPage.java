@@ -13,7 +13,7 @@ import com.web.music.model.control.interf.IPage;
 import com.web.music.model.lyrics.model.LyricsLine;
 import com.web.music.model.lyrics.ui.LyricsView;
 import com.web.service.MusicPlay;
-import com.web.util.StrUtil;
+import com.web.common.util.StrUtil;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;

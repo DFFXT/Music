@@ -6,7 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
-import com.web.util.ViewUtil
+import com.web.common.util.ViewUtil
 import com.web.web.R
 
 object MToast {
@@ -15,7 +15,7 @@ object MToast {
         val mToast=Toast(context)
         val view=LayoutInflater.from(context).inflate(R.layout.layout_toast,null,false) as TextView
         mToast.view=view
-        val drawable=context.resources.getDrawable(R.drawable.waring_48x48,context.theme)
+        val drawable=context.resources.getDrawable(R.drawable.icon_waring_white,context.theme)
         drawable.bounds= Rect(0,0,ViewUtil.dpToPx(30F),ViewUtil.dpToPx(30F))
         view.setCompoundDrawables(drawable,null,null,null)
         view.text=msg

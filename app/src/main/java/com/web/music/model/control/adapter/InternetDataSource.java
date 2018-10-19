@@ -76,6 +76,8 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
                     music.setSingerName(obj.getString("singername"));
                     music.setFullSize(obj.getInt("filesize"));
                     music.setHash(obj.getString("hash"));
+                    music.setSqHash(obj.getString("sqhash"));
+                    music.setDuration(obj.getInt("duration"));
                     musicList.add(music);
                 } catch (JSONException e) {
                     e.printStackTrace();

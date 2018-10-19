@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_marginBottom="8dp"
+	android:layout_marginTop="8dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-	android:paddingStart="10dp"
-	android:paddingEnd="10dp">
-    
+    android:layout_height="wrap_content">
+
+	<TextView
+		android:id="@+id/tv_musicDuration"
+		android:textSize="12sp"
+		android:layout_marginEnd="20dp"
+		android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
     <TextView 
         android:id="@+id/musicName"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:paddingStart="10dp"
-		android:paddingEnd="0dp"
-        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
         android:textSize="18sp"
 		android:layout_alignParentStart="true"
 		android:ellipsize="end"
+		android:maxLines="1"
+		android:layout_marginStart="10dp"
 		android:marqueeRepeatLimit="marquee_forever"
+		android:layout_toStartOf="@+id/tv_musicDuration"
         />
+
     <TextView 
         android:id="@+id/singerName"
+		android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="14dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/musicName"
         android:textSize="12sp"
-		android:paddingStart="10dp"
-		android:paddingEnd="0dp"
         />
 
 	<TextView
 	    android:id="@+id/size"
 	    android:layout_width="wrap_content"
-	    android:layout_height="14dp"
+	    android:layout_height="wrap_content"
 	    android:layout_below="@+id/musicName"
 	    android:layout_toEndOf="@+id/singerName"
-		android:paddingStart="10dp"
-		android:paddingEnd="0dp"
+		android:layout_marginStart="10dp"
 	    android:textSize="12sp" />
 
 </RelativeLayout>

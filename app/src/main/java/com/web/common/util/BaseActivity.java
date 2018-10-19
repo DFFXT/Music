@@ -1,4 +1,4 @@
-package com.web.util;
+package com.web.common.util;
 
 
 import android.content.res.Configuration;

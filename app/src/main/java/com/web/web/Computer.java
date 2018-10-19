@@ -24,14 +24,13 @@ import com.web.config.GetFiles;
 import com.web.config.L;
 import com.web.config.SqlFitAll;
 import com.web.subWeb.VideoPlay;
-import com.web.util.BaseActivity;
+import com.web.common.util.BaseActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.SparseBooleanArray;

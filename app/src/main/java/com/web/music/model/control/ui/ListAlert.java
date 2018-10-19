@@ -13,8 +13,8 @@ import com.web.data.Music;
 import com.web.music.model.control.interf.WaitMusicListener;
 import com.web.music.model.control.adapter.MyItemTouchHelper;
 import com.web.music.model.control.adapter.WaitPlayListAdapter;
-import com.web.util.StrUtil;
-import com.web.util.ViewUtil;
+import com.web.common.util.StrUtil;
+import com.web.common.util.ViewUtil;
 import com.web.web.R;
 
 import java.util.List;

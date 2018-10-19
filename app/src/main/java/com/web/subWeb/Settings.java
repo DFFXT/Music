@@ -1,10 +1,7 @@
 package com.web.subWeb;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.web.data.ScanMusicType;
-import com.web.util.BaseActivity;
+import com.web.common.util.BaseActivity;
 import com.web.web.R;
 
 import org.litepal.crud.DataSupport;

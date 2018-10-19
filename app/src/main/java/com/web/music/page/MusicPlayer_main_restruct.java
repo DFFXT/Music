@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,8 +33,8 @@ import com.web.music.model.control.ui.ListAlert;
 import com.web.service.MusicPlay;
 import com.web.subWeb.MusicDownLoad;
 import com.web.subWeb.Settings;
-import com.web.util.BaseActivity;
-import com.web.util.StrUtil;
+import com.web.common.util.BaseActivity;
+import com.web.common.util.StrUtil;
 import com.web.web.R;
 
 import java.io.File;

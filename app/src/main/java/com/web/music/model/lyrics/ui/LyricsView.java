@@ -17,7 +17,7 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.web.music.model.lyrics.model.LyricsLine;
-import com.web.util.ViewUtil;
+import com.web.common.util.ViewUtil;
 
 import java.util.List;
 

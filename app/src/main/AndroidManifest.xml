@@ -71,7 +71,7 @@
         <activity android:name="com.web.web.Computer"/>
         <activity android:name="com.web.subWeb.VideoPlay"/>
         <activity android:name="com.web.web.MusicLogin"/>
-        <activity android:name="com.web.util.BaseActivity" />
+        <activity android:name="com.web.common.util.BaseActivity" />
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.web.common.base.BaseFragment;
 import com.web.common.toast.MToast;
+import com.web.common.util.ViewUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
@@ -28,7 +30,7 @@ import com.web.music.model.control.interf.IPage;
 import com.web.music.model.internet.music.viewmodel.InternetViewModel;
 import com.web.service.MusicPlay;
 import com.web.subWeb.GetInfo;
-import com.web.util.StrUtil;
+import com.web.common.util.StrUtil;
 import com.web.web.R;
 
 import java.text.DecimalFormat;
@@ -62,7 +64,10 @@ public class InternetMusicPage extends BaseFragment implements IPage {
         LinearLayoutManager manager=new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(context,DividerItemDecoration.VERTICAL));
+
+        DividerItemDecoration decoration=new DividerItemDecoration(context,DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(ViewUtil.getDrawable(R.drawable.recycler_divider));
+        recyclerView.addItemDecoration(decoration);
         adapter=new InternetMusicAdapter(context);
         vm= ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(InternetViewModel.class);
 
@@ -162,7 +167,7 @@ public class InternetMusicPage extends BaseFragment implements IPage {
         textView_songname.setTextColor(context.getResources().getColor(R.color.white,context.getTheme()));
         DecimalFormat format=new DecimalFormat("0.00");
         String ss=format.format(music.getFullSize()/1024.0/1024);
-        builder.setMessage("歌手："+music.getSingerName()+"\n"+"大小："+ss+"MB");
+        builder.setMessage("歌手："+music.getSingerName()+"\n"+"时长："+StrUtil.timeFormat("mm:ss",music.getDuration()*1000)+"\n大小："+ss+"MB");
         builder.show();
     }
 
