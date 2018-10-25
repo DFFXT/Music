@@ -1,6 +1,6 @@
 package com.web.config;
 
-import com.web.music.model.lyrics.model.LyricsLine;
+import com.web.moudle.music.model.lyrics.model.LyricsLine;
 
 import java.util.ArrayList;
 

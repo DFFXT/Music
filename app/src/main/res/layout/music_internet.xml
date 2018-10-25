@@ -12,6 +12,7 @@
             android:id="@+id/internetMusic"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
+            android:overScrollMode="never"
             android:layerType="software"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

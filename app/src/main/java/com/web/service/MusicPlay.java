@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
@@ -24,6 +21,7 @@ import com.web.data.MusicGroup;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
 import com.web.data.ScanMusicType;
+import com.web.moudle.musicDownload.service.FileDownloadService;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
@@ -36,7 +34,6 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class MusicPlay extends Service {
 	public static String ACTION_NEXT="com.web.web.MusicPlay.next";
@@ -138,7 +135,7 @@ public class MusicPlay extends Service {
                 while(player.isPlaying()){
                     if(play!=null){
                         play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
-                        Shortcut.sleep(1000);
+                        Shortcut.sleep(500);
                     }
                 }
             });
@@ -161,6 +158,7 @@ public class MusicPlay extends Service {
 		 * @param child child
 		 */
 		public void play(int group,int child){
+
 			if(groupIndex!=group||child!=childIndex){
 				groupIndex=group;
 				childIndex=child;
@@ -229,14 +227,7 @@ public class MusicPlay extends Service {
 		//***切换播放状态
 		public void changePlayerPlayingStatus(){
 			switch (config.getMusicOrigin()){
-				case LOCAL:{//**本地
-					if(canPlay())
-						play(groupIndex,childIndex);
-					else{
-						if(canPlay(0,0))
-							play(0,0);
-					}
-				}break;
+				case LOCAL://**本地
 				case INTERNET:{//**网络
 					if(player.isPlaying()){
 						player.pause();
@@ -247,7 +238,7 @@ public class MusicPlay extends Service {
 								config.getMusic().getSinger(),player.getDuration());
 						setTimeListener();
 					}
-				}
+				}break;
 				case STORAGE:
 				case WAIT:{
 					if(player.isPlaying()){
@@ -353,9 +344,7 @@ public class MusicPlay extends Service {
 					music.setPath(Shortcut.createPath(music));
 				}
 			}
-			Log.i("log",music.getPath()+"=="+music.getMusicName());
-			music.save();
-			FileDownloadService.addTask(MusicPlay.this,music.getHash());
+			FileDownloadService.addTask(MusicPlay.this,music);
 		}
 
 		/**

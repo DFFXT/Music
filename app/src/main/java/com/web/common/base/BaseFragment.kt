@@ -10,9 +10,13 @@ import android.view.ViewGroup
 abstract class BaseFragment public constructor ():Fragment(){
     private var mRootView:View?=null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if(mRootView!=null)return mRootView
         this.mRootView =inflater.inflate(getLayoutId(),container,false)
         initView(mRootView!!)
         return this.mRootView
+    }
+    public fun isInit():Boolean{
+        return mRootView!=null
     }
     @LayoutRes abstract fun getLayoutId():Int
     abstract fun initView(rootView:View)

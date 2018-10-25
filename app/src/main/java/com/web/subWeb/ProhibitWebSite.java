@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.web.config.DownloadViewAdapter;
-import com.web.service.FileDownloadService;
+import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.config.GetFiles;
 import com.web.web.R;
 
@@ -42,7 +42,7 @@ public class ProhibitWebSite extends Activity {
 	public void setAdapter(){//--设置适配器
 		try{
 			//adapter=new DownloadViewAdapter(ProhibitWebSite.this, dataList, R.layout.download_listview,"file");
-			listView.setAdapter(adapter);
+			//listView.setAdapter(adapter);
 		}catch(Exception e){
 			gfFiles.write(GetFiles.rootPath+"log.txt", e+"", true);
 		}

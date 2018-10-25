@@ -2,7 +2,8 @@ package com.web.config;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,120 +13,70 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.web.common.base.BaseViewHolder;
+import com.web.common.util.StrUtil;
 import com.web.data.InternetMusic;
-import com.web.service.FileDownloadService;
+import com.web.moudle.musicDownload.bean.DownloadMusic;
+import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.web.R;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 
-public class DownloadViewAdapter extends BaseAdapter{
-	private List<InternetMusic> dataList;
-	private DecimalFormat format=new DecimalFormat("0.00");
+public class DownloadViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+	private List<DownloadMusic> dataList;
 	private Context context;
-	private String downloadHash="";
-	private FileDownloadService.Connect connect;
-	public DownloadViewAdapter(Context c, List<InternetMusic> data, FileDownloadService.Connect connect){
+	private int downloadId;
+	private OnItemClickListener listener;
+	public DownloadViewAdapter(Context c, List<DownloadMusic> data){
 		dataList=data;
 		context=c;
-		this.connect=connect;
 	}
 
-	public void setConnect(FileDownloadService.Connect connect) {
-		this.connect = connect;
-	}
+    @NonNull
+    @Override
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new BaseViewHolder(LayoutInflater.from(context).inflate(R.layout.download_listview,parent,false));
+    }
 
-	private class View_item{
-		RelativeLayout parent;
-		TextView musicName;
-		TextView hasDownload;
-		TextView fullSize;
-		ImageView close;
-		ImageView statu;
-	}
-	@Override
-	public int getCount() {
-		return dataList.size();
-	}
+    @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+	    InternetMusic music=dataList.get(position).getInternetMusic();
+        holder.bindText(R.id.musicName,music.getMusicName());
+        holder.bindText(R.id.hasDownload,StrUtil.getFileSize(music.getHasDownload())+"/");
+        holder.bindText(R.id.fullSize,StrUtil.getFileSize(music.getFullSize()));
+        holder.bindImage(R.id.downloadStatu,dataList.get(position).getStatus()==DownloadMusic.DOWNLOAD_DOWNLODINF?R.drawable.play:R.drawable.pause)
+        .setOnClickListener(v->{
+            if(listener!=null){
+                listener.itemClick(v,position);
+            }
+        });
+        holder.rootView.findViewById(R.id.close).setOnClickListener(v->{
+            if(listener!=null){
+                listener.itemClick(v,position);
+            }
+        });
+    }
 
-	@Override
-	public Object getItem(int arg0) {
-		return dataList.get(arg0);
-	}
-
-	@Override
+    @Override
 	public long getItemId(int arg0) {
 		return arg0;
 	}
 
-	@SuppressLint("SetTextI18n")
-	@Override
-	public View getView(final int position, View view, ViewGroup parent) {//--视图信息和内部点击事件
-		final View_item item;
-		final InternetMusic music=dataList.get(position);
-		if(view==null){
-			item=new View_item();
-			view=LayoutInflater.from(context).inflate(R.layout.download_listview,parent, false);
-			item.parent=view.findViewById(R.id.parent);
-			item.musicName=view.findViewById(R.id.musicName);
-			item.hasDownload=view.findViewById(R.id.hasDownload);
-			item.fullSize=view.findViewById(R.id.fullSize);
-			item.close=view.findViewById(R.id.close);
-			item.statu=view.findViewById(R.id.downloadStatu);
-			view.setTag(item);
-
-			item.close.setOnClickListener(new OnClickListener() {//--点击取消下载
-				public void onClick(View v) {
-					connect.delete(music.getHash());
-					dataList.remove(position);
-					notifyDataSetChanged();
-				}
-			});
-			item.statu.setOnClickListener(new OnClickListener() {//--状态图标点击事件
-				public void onClick(View v) {//--点击切换图标
-					Log.i("log","click");
-					if(downloadHash.equals(music.getHash())){
-						Log.i("log","pause");
-						connect.pause(downloadHash);
-						downloadHash="";
-					}else if(downloadHash.equals("")) {
-						Log.i("log","start");
-						connect.start(music.getHash());
-					}
-				}
-			});
-			item.parent.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Log.i("log","parent");
-					item.statu.performClick();
-				}
-			});
+    @Override
+    public int getItemCount() {
+        return dataList==null?0:dataList.size();
+    }
 
 
-
-		}else{
-			item=(View_item)view.getTag();
-		}
-		item.musicName.setText(music.getMusicName());
-		item.hasDownload.setText(format.format(music.getHasDownload()/1024.0/1024)+"MB/");//--切换为MB单位
-		item.fullSize.setText(format.format(music.getFullSize()/1024.0/1024)+"MB");
-		if(music.getHash().equals(downloadHash)){//--根据状态显示状态图标
-			item.statu.setImageResource(R.drawable.play);
-		}else{
-			item.statu.setImageResource(R.drawable.pause);
-		}
-
-		return view;
+	public void setListener(OnItemClickListener listener) {
+		this.listener = listener;
 	}
 
-	public void setDownloadHash(String downloadHash) {
-		this.downloadHash=downloadHash;
-		notifyDataSetChanged();
+
+	public interface OnItemClickListener{
+		void itemClick(View v,int position);
 	}
 
-	public String getDownloadHash() {
-		return downloadHash;
-	}
 }

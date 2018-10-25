@@ -1,8 +1,5 @@
 package com.web.web;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,16 +15,36 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.web.music.page.MusicPlayer_main_restruct;
 import com.web.common.util.BaseActivity;
+import com.web.moudle.music.page.MusicPlayer_main_restruct;
+import com.web.moudle.net.NetApis;
+import com.web.moudle.net.baseBean.BaseNetBean2;
+import com.web.moudle.net.retrofit.MConVerter;
+
+import java.io.File;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import dalvik.system.DexClassLoader;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 @SuppressLint("InlinedApi")
 public class Index extends BaseActivity implements OnClickListener,OnTouchListener{
 	private String[] name;
 	private int[] bgList;
-	ArrayList<Button> butList=new ArrayList<Button>();
+	ArrayList<Button> butList= new ArrayList<>();
 	public int getLayoutId(){
 		return(R.layout.index);
 	}
@@ -38,28 +56,79 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 		makeData();
 		fillTextAndColor();
 		go();
+
+		/*Retrofit.Builder builder=new Retrofit.Builder()
+				.baseUrl("http://59.37.96.220/")
+				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+				.addConverterFactory(new Converter.Factory() {
+					@Override
+					public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+						return new MConVerter<>(type);
+					}
+
+					@Override
+					public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
+						return super.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
+					}
+				});
+		Retrofit retrofit=builder.build();
+		retrofit.create(NetApis.Music.class).s()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(new ObservableTransformer<BaseNetBean2, Object>() {
+                    @Override
+                    public ObservableSource<Object> apply(Observable<BaseNetBean2> upstream) {
+                        return upstream.map(BaseNetBean2::getCode);
+                    }
+                })
+                .subscribe(new Observer<Object>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Object baseNetBean2) {
+                Log.i("log","OK");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("log","eee"+e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+*/
+
 	}
 
 	void go(){
-		final File optimizedDexOutputPath = new File(Environment.getExternalStorageDirectory().toString()
+        final File optimizedDexOutputPath = new File(Environment.getExternalStorageDirectory().toString()
                 + File.separator + "aim.jar");
-		DexClassLoader cl = new DexClassLoader(optimizedDexOutputPath.getAbsolutePath(),
+        DexClassLoader cl = new DexClassLoader(optimizedDexOutputPath.getAbsolutePath(),
                 getDir("dex", MODE_PRIVATE).getAbsolutePath(), null, getClassLoader());
-            Class libProviderClazz = null;
-            try {
-                libProviderClazz = cl.loadClass("com.web.web.Text");
-                
-                Toast.makeText(this, libProviderClazz.toString(), Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-            	Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
-            }
+        Class libProviderClazz = null;
+        try {
+            libProviderClazz = cl.loadClass("com.web.web.Text");
+
+            Toast.makeText(this, libProviderClazz.toString(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+
+
 
 	}
 	public void findId(){
-		butList.add((Button)findViewById(R.id.index_c1_b1));
-		butList.add((Button)findViewById(R.id.index_c1_b2));
-		butList.add((Button)findViewById(R.id.index_c2_b1));
-		butList.add((Button)findViewById(R.id.index_c2_b2));
+		butList.add(findViewById(R.id.index_c1_b1));
+		butList.add(findViewById(R.id.index_c1_b2));
+		butList.add(findViewById(R.id.index_c2_b1));
+		butList.add(findViewById(R.id.index_c2_b2));
 		int len=butList.size();
 		for(int i=0;i<len;i++){
 			butList.get(i).setOnClickListener(this);

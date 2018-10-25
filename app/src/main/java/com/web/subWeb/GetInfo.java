@@ -1,16 +1,13 @@
 package com.web.subWeb;
 
-import android.util.Log;
-
-import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-
-import org.json.JSONObject;
 
 public class GetInfo{
 	public JSONObject get(String hash){
@@ -37,7 +34,6 @@ public class GetInfo{
 			JSONObject json=new JSONObject(OpURL(ask));
 			info.setPath(json.getString("url"));
 			info.setImgAddress(json.getString("imgUrl"));
-			Log.i("log",json.toString());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -48,7 +44,7 @@ public class GetInfo{
 		URLConnection connection=url.openConnection();
 		connection.connect();
 		BufferedReader br=new BufferedReader(new InputStreamReader(connection.getInputStream(),"UTF-8"));
-		String line="";
+		String line;
 		StringBuilder builder=new StringBuilder();
 		while((line=br.readLine())!=null){
 			builder.append(line);

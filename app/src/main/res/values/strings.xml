@@ -91,6 +91,7 @@
 	<string name="dataAnalyzeError">数据解析错误</string>
 	<string name="noInternet">没有网络</string>
 	<string name="urlAnalyzeError">地址解析错误</string>
+	<string name="download_urlError">获取路径失败</string>
 
 
 

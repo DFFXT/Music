@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/parent"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
@@ -6,13 +7,14 @@
   	
   	<ImageView 
   	    android:id="@+id/downloadStatu" 
-  	    android:layout_width="30dp"
+  	    android:layout_width="50dp"
   	    android:layout_height="wrap_content"
   	    android:layout_centerVertical="true"
   	    android:layout_alignParentEnd="true"
+		android:paddingStart="10dp"
+		android:paddingEnd="10dp"
   	    android:src="@drawable/pause"
-  	    android:contentDescription="@string/action_settings"
-  	    />
+		tools:ignore="ContentDescription" />
   	<ImageView 
   	    android:id="@+id/close" 
   	    android:layout_width="40dp"
@@ -22,14 +24,12 @@
   	    android:layout_toStartOf="@id/downloadStatu"
   	    android:layout_marginEnd="20dp"
   	    android:src="@drawable/icon_close_black"
-  	    android:contentDescription="@string/action_settings"
-  	    />
+		tools:ignore="ContentDescription" />
   	<TextView
   	    android:id="@+id/musicName" 
   	    android:layout_width="wrap_content"
   	    android:layout_height="wrap_content"
   	    android:textSize="20sp"
-  	    android:text="@string/action_settings"
   	    android:layout_toStartOf="@id/close"
   	    android:layout_alignParentStart="true"
   	    />
@@ -39,7 +39,6 @@
   	    android:layout_height="wrap_content"
   	    android:textSize="16sp"
   	    android:layout_below="@id/musicName"
-  	    android:text="@string/action_settings"
   	    />
   	<TextView
   	    android:id="@+id/fullSize" 
@@ -48,6 +47,5 @@
   	    android:textSize="16sp"
   	    android:layout_toEndOf="@id/hasDownload"
   	    android:layout_alignBottom="@id/hasDownload"
-  	    android:text="@string/action_settings"
   	    />
 </RelativeLayout>

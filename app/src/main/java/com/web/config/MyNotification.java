@@ -1,7 +1,7 @@
 package com.web.config;
 
 import com.web.service.MusicPlay;
-import com.web.music.page.MusicPlayer_main_restruct;
+import com.web.moudle.music.page.MusicPlayer_main_restruct;
 import com.web.web.R;
 
 import android.app.Notification;
