@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.toast.MToast;
+import com.web.common.util.BaseActivity;
+import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
@@ -33,11 +35,9 @@ import com.web.data.PlayerConfig;
 import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.control.interf.WaitMusicListener;
 import com.web.moudle.music.model.control.ui.ListAlert;
-import com.web.service.MusicPlay;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
+import com.web.service.MusicPlay;
 import com.web.subWeb.Settings;
-import com.web.common.util.BaseActivity;
-import com.web.common.util.ResUtil;
 import com.web.web.R;
 
 import java.io.File;
