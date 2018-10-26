@@ -12,6 +12,6 @@ class MyApplication : LitePalApplication(){
     }
     companion object {
         @SuppressLint("StaticFieldLeak")
-        var context:Context?=null
+        lateinit var context:Context
     }
 }

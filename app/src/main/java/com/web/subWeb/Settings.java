@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.web.common.util.ViewUtil;
 import com.web.data.ScanMusicType;
 import com.web.common.util.BaseActivity;
 import com.web.web.R;
@@ -30,8 +31,7 @@ public class Settings extends BaseActivity {
 
 	@Override
 	public void initView() {
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		ViewUtil.transparentStatusBar(getWindow());
 		findId();
 		render();
 	}

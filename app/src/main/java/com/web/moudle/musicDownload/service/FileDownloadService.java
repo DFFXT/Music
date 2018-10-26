@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.toast.MToast;
-import com.web.common.util.StrUtil;
+import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
@@ -245,7 +245,7 @@ public class FileDownloadService extends Service {
 				Shortcut.fileDelete(music.getPath());
 			}
 			if(TextUtils.isEmpty(music.getUrl())){
-				MToast.showToast(FileDownloadService.this,StrUtil.getString(R.string.download_urlError));
+				MToast.showToast(FileDownloadService.this, ResUtil.getString(R.string.download_urlError));
 				return ;
 			}
 			URL Url=new URL(music.getUrl());

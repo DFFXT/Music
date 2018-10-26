@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TopBarLayout">
+        <attr name="topBar_startImage" format="reference"/>
+        <attr name="topBar_endImage" format="reference"/>
+        <attr name="topBar_mainTitleColor" format="color"/>
+        <attr name="topBar_subtitleColor" format="color"/>
+        <attr name="topBar_mainTitleText" format="reference|string"/>
+        <attr name="topBar_subtitleText" format="reference|string"/>
+    </declare-styleable>
+</resources>

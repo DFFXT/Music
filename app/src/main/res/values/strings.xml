@@ -8,6 +8,7 @@
     <string name="app_name">M盒子</string>
     <string name="action_settings">刷新</string>
 	<string name="getlist">扫描本地歌曲</string>
+	<string name="musicIsScanning">正在扫描音乐</string>
 	<string name="aim">web</string>
 	<string name="yes">确认</string>
 	<string name="no">取消</string>

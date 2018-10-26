@@ -4,6 +4,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textColorGray</item>
+        <item name="android:screenOrientation">portrait</item>
     </style>
     <!-- Application theme. -->
     <style name="AppTheme" parent="android:Theme.Translucent.NoTitleBar">

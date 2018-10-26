@@ -1,32 +1,30 @@
 package com.web.moudle.musicDownload.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.web.common.util.BaseActivity;
+import com.web.common.util.ResUtil;
+import com.web.common.util.ViewUtil;
 import com.web.config.DownloadViewAdapter;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
+import com.web.misc.TopBarLayout;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.web.R;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("InlinedApi")
-public class MusicDownLoadActivity extends Activity implements FileDownloadService.DownloadListener {
+public class MusicDownLoadActivity extends BaseActivity implements FileDownloadService.DownloadListener {
 	private RecyclerView rv_download;
 	private List<DownloadMusic> dataList=new ArrayList<>();
 	private DownloadViewAdapter adapter;
@@ -35,16 +33,23 @@ public class MusicDownLoadActivity extends Activity implements FileDownloadServi
 	private FileDownloadService.Connect connect;
 	private boolean active=false;
 
-	protected void onCreate(Bundle b){
-		super.onCreate(b);
-		setContentView(R.layout.music_download);
-		findId();//--获取组件
+
+	@Override
+	public int getLayoutId() {
+		return R.layout.music_download;
+	}
+
+	@Override
+	public void initView() {
+        rv_download=findViewById(R.id.list);
+        rv_download.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 		connect();
+		TopBarLayout topBarLayout=findViewById(R.id.topBar_musicDownload);
+		topBarLayout.setMainTitle(ResUtil.getString(R.string.downloadManager));
+		ViewUtil.transparentStatusBar(getWindow());
+
 	}
-	public void findId(){//--获取组件
-		rv_download=findViewById(R.id.list);
-		rv_download.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-	}
+
 	private void connect(){
 		Intent intent=new Intent(this,FileDownloadService.class);
 		startService(intent);

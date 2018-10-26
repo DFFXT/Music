@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:paddingTop="4dp"
+	android:paddingBottom="4dp"
+	android:paddingStart="4dp"
+	android:paddingEnd="4dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-	android:paddingStart="10dp"
-	android:paddingEnd="10dp">
+    android:layout_height="wrap_content">
     
     <TextView 
         android:id="@+id/musicName"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:paddingStart="10dp"
-		android:paddingEnd="0dp"
-        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
         android:textSize="18sp"
 		android:layout_toStartOf="@+id/add"
 		android:layout_alignParentStart="true"
@@ -24,8 +23,6 @@
         android:layout_height="14dp"
         android:layout_below="@id/musicName"
         android:textSize="12sp"
-		android:paddingStart="10dp"
-		android:paddingEnd="0dp"
         />
 
 	<TextView

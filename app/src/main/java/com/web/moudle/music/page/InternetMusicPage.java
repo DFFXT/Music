@@ -18,7 +18,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.web.common.base.BaseFragment;
 import com.web.common.toast.MToast;
-import com.web.common.util.StrUtil;
+import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
@@ -32,7 +32,6 @@ import com.web.service.MusicPlay;
 import com.web.subWeb.GetInfo;
 import com.web.web.R;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class InternetMusicPage extends BaseFragment implements IPage {
@@ -95,13 +94,13 @@ public class InternetMusicPage extends BaseFragment implements IPage {
             switch (wrapper.getCode()){
                 case InternetDataSource.CODE_OK:break;
                 case InternetDataSource.CODE_JSON_ERROR:{
-                    MToast.showToast(context,StrUtil.getString(R.string.dataAnalyzeError));
+                    MToast.showToast(context, ResUtil.getString(R.string.dataAnalyzeError));
                 }break;
                 case InternetDataSource.CODE_URL_ERROR:{
-                    MToast.showToast(context,StrUtil.getString(R.string.urlAnalyzeError));
+                    MToast.showToast(context, ResUtil.getString(R.string.urlAnalyzeError));
                 }break;
                 case InternetDataSource.CODE_NET_ERROR:{
-                    MToast.showToast(context,StrUtil.getString(R.string.noInternet));
+                    MToast.showToast(context, ResUtil.getString(R.string.noInternet));
                 }break;
             }
         });
@@ -163,7 +162,7 @@ public class InternetMusicPage extends BaseFragment implements IPage {
             }
             connect.playInternet(info);
         }).start());
-        builder.setNegativeButton("下载("+StrUtil.getFileSize(music.getFullSize())+")", (arg0, arg1) -> {
+        builder.setNegativeButton("下载("+ ResUtil.getFileSize(music.getFullSize())+")", (arg0, arg1) -> {
             if(connect==null)return;
             connect.download(music);
         });
@@ -172,8 +171,8 @@ public class InternetMusicPage extends BaseFragment implements IPage {
         TextView textView_songname=new TextView(context);
         textView_songname.setTextColor(context.getResources().getColor(R.color.white,context.getTheme()));
         builder.setMessage("歌手："+music.getSingerName()+
-                "\n时长："+ StrUtil.timeFormat("mm:ss",music.getDuration()*1000)+
-                "\n大小："+StrUtil.getFileSize(music.getFullSize()));
+                "\n时长："+ ResUtil.timeFormat("mm:ss",music.getDuration()*1000)+
+                "\n大小："+ ResUtil.getFileSize(music.getFullSize()));
         builder.show();
     }
 

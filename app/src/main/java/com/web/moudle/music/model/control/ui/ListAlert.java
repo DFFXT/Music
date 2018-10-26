@@ -13,7 +13,7 @@ import com.web.data.Music;
 import com.web.moudle.music.model.control.interf.WaitMusicListener;
 import com.web.moudle.music.model.control.adapter.MyItemTouchHelper;
 import com.web.moudle.music.model.control.adapter.WaitPlayListAdapter;
-import com.web.common.util.StrUtil;
+import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.web.R;
 
@@ -31,7 +31,7 @@ public class ListAlert {
     public ListAlert(Context context){
         this.context=context;
         builder=new AlertDialog.Builder(context,R.style.Alert);
-        builder.setTitle(StrUtil.getString(R.string.playList));
+        builder.setTitle(ResUtil.getString(R.string.playList));
 
 
     }

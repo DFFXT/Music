@@ -11,10 +11,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(b);
         //**设置字体大小
         Configuration configuration = getResources().getConfiguration();
-        configuration.fontScale = .75f;
+        configuration.fontScale = .85f;
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
         setContentView(getLayoutId());
         initView();
+
     }
     abstract public @LayoutRes int getLayoutId();
     abstract public void initView();

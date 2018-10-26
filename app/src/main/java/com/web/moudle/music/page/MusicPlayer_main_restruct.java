@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
+import com.web.common.toast.MToast;
 import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
@@ -36,7 +37,7 @@ import com.web.service.MusicPlay;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.subWeb.Settings;
 import com.web.common.util.BaseActivity;
-import com.web.common.util.StrUtil;
+import com.web.common.util.ResUtil;
 import com.web.web.R;
 
 import java.io.File;
@@ -61,6 +62,8 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	private MusicPlay.Connect connect;
 	private List<IPage> pageList=new ArrayList<>();
 
+	private ListAlert listAlert;
+
 
 	public int getLayoutId(){//---活动启动入口
 		return R.layout.restruct_music_layout;
@@ -81,7 +84,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	@SuppressLint("RestrictedApi")
 	private void setToolbar(){
 	    toolbar=findViewById(R.id.toolbar);
-	    toolbar.setTitle(StrUtil.getString(R.string.page_local));
+	    toolbar.setTitle(ResUtil.getString(R.string.page_local));
 	    setSupportActionBar(toolbar);
 		if(getSupportActionBar()!=null){
 			getSupportActionBar().setHomeButtonEnabled(true);
@@ -264,14 +267,14 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 					searchView.onActionViewCollapsed();
                 switch (page.getPageName()){
 					case InternetMusicPage.pageName:{
-						toolbar.setTitle(StrUtil.getString(R.string.page_Internet));
+						toolbar.setTitle(ResUtil.getString(R.string.page_Internet));
 						internetMusicPage.setConnect(connect);
 					}break;
 					case MusicListLPage.pageName:{
-						toolbar.setTitle(StrUtil.getString(R.string.page_local));
+						toolbar.setTitle(ResUtil.getString(R.string.page_local));
 					}break;
 					case LyricPage.pageName:{
-						toolbar.setTitle(StrUtil.getString(R.string.page_lyrics));
+						toolbar.setTitle(ResUtil.getString(R.string.page_lyrics));
 					}break;
 				}
 
@@ -286,6 +289,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			case R.id.goDownload:{
 				Intent intent=new Intent(this,MusicDownLoadActivity.class);
 				startActivity(intent);
+				drawer.closeDrawer(Gravity.START);
 			}break;
 
 			case R.id.download:{
@@ -300,7 +304,6 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			}break;
 			case R.id.next:{
 				connect.next();
-
 			}
 			case R.id.musicplay_type:{
 				changePlayType();
@@ -314,14 +317,16 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			}
 			case R.id.scanLocalMusic:{//--扫描本地文件
 				connect.scanLocalMusic();
-				show("音乐扫描中");
+				MToast.showToast(this,ResUtil.getString(R.string.musicIsScanning));
 				drawer.closeDrawer(Gravity.START);
 			}break;
 			case R.id.songname:
 			case R.id.singer:
 			case R.id.musicOrigin:{
 				if(connect.getConfig().getMusicOrigin()!= PlayerConfig.MusicOrigin.WAIT)return;
-				ListAlert listAlert=new ListAlert(this);
+				if(listAlert==null) {
+					listAlert = new ListAlert(this);
+				}
 				listAlert.setMusicList(connect.getWaitMusic());
 				listAlert.setIndex(connect.getWaitIndex());
 				listAlert.setWaitMusicListener(new WaitMusicListener() {
@@ -340,7 +345,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
                         	return;
 						}
                         listAlert.setIndex(connect.getWaitIndex());
-                        listAlert.getAdapter().notifyDataSetChanged();
+                        listAlert.getAdapter().notifyItemRemoved(position);
                     }
                 });
 				listAlert.build();
@@ -420,6 +425,9 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	@Override
 	public void play(String musicName,String singerName,int maxTime) {
 		pause.setImageResource(R.drawable.play);
+		if(listAlert!=null){
+			listAlert.setIndex(connect.getWaitIndex());
+		}
 	}
 
 	@Override

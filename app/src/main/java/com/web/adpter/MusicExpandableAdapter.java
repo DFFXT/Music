@@ -10,6 +10,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.web.common.util.ResUtil;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.web.R;
@@ -104,8 +105,8 @@ public class MusicExpandableAdapter extends BaseExpandableListAdapter {
             holder.singer.setTextColor(Color.BLACK);
         }
         else if (music.getGroupId()==1){
-            holder.musicName.setTextColor(context.getResources().getColor(R.color.colorAccent,context.getTheme()));
-            holder.singer.setTextColor(context.getResources().getColor(R.color.colorAccent,context.getTheme()));
+            holder.musicName.setTextColor(ResUtil.getColor(R.color.themeColor));
+            holder.singer.setTextColor(ResUtil.getColor(R.color.themeColor));
         }
         //**添加到准备列表
         if(listener!=null){

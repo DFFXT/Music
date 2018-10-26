@@ -226,34 +226,17 @@ public class MusicPlay extends Service {
 		}
 		//***切换播放状态
 		public void changePlayerPlayingStatus(){
-			switch (config.getMusicOrigin()){
-				case LOCAL://**本地
-				case INTERNET:{//**网络
-					if(player.isPlaying()){
-						player.pause();
-						play.pause();
-					}else {
-						player.start();
-						play.play(config.getMusic().getMusicName(),
-								config.getMusic().getSinger(),player.getDuration());
-						setTimeListener();
-					}
-				}break;
-				case STORAGE:
-				case WAIT:{
-					if(player.isPlaying()){
-						player.pause();
-						play.pause();
-					}else{
-						player.start();
-						play.play(config.getMusic().getMusicName(),
-								config.getMusic().getSinger(),player.getDuration());
-                        setTimeListener();
-					}
-					notification.setPlayStatus(player.isPlaying());
-					notification.show();
-				}
-			}
+            if(player.isPlaying()){
+                player.pause();
+                play.pause();
+            }else{
+                player.start();
+                play.play(config.getMusic().getMusicName(),
+                        config.getMusic().getSinger(),player.getDuration());
+                setTimeListener();
+            }
+            notification.setPlayStatus(player.isPlaying());
+            notification.show();
 
 		}
 		public List<Music> getWaitMusic(){

@@ -13,7 +13,7 @@ import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.lyrics.model.LyricsLine;
 import com.web.moudle.music.model.lyrics.ui.LyricsView;
 import com.web.service.MusicPlay;
-import com.web.common.util.StrUtil;
+import com.web.common.util.ResUtil;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +58,7 @@ public class LyricPage extends BaseFragment implements IPage {
         else {//**没找到歌词
             LyricsLine line=new LyricsLine();
             line.setTime(0);
-            line.setLine(StrUtil.getString(R.string.lyrics_noLyrics));
+            line.setLine(ResUtil.getString(R.string.lyrics_noLyrics));
             list.add(line);
         }
         lyricsView.refresh();

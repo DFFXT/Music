@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.web.common.base.BaseViewHolder;
+import com.web.common.util.ResUtil;
 import com.web.data.Music;
 import com.web.moudle.music.model.control.interf.WaitMusicListener;
 import com.web.moudle.music.model.control.interf.RemoveItemListener;
@@ -17,43 +19,45 @@ import com.web.web.R;
 
 import java.util.List;
 
-public class WaitPlayListAdapter extends RecyclerView.Adapter<WaitPlayListAdapter.Holder> implements RemoveItemListener {
+public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> implements RemoveItemListener {
     private Context context;
     private List<Music> list;
     private int index=-1;
     private WaitMusicListener listener;
-    private int paddingStart=-1;
     public WaitPlayListAdapter(Context context, List<Music> list){
         this.context=context;
         this.list=list;
     }
     @NonNull
     @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(context).inflate(R.layout.view_textview,parent,false);
-        return new Holder(v);
+        return new BaseViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.tv.setText(list.get(position).getMusicName());
-        holder.tv.setOnClickListener((v1)->{
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+        TextView tv= (TextView) holder.rootView;
+        tv.setText(list.get(position).getMusicName());
+        tv.setOnClickListener((v1)->{
             if(listener!=null){
                 listener.select(v1,position);
             }
         });
         if(index==position){
-            holder.tv.setPadding(20,20,20,20);
+            tv.setPadding(20,20,20,20);
             Drawable drawable=context.getDrawable(R.drawable.pause);
             if(drawable!=null){
                 drawable.setBounds(0,0,25,25);
-                holder.tv.setCompoundDrawables(drawable,null,null,null);
+                tv.setCompoundDrawables(drawable,null,null,null);
             }
+            tv.setTextColor(ResUtil.getColor(R.color.themeColor));
 
         }else {
-            holder.tv.setBackgroundColor(Color.TRANSPARENT);
-            holder.tv.setCompoundDrawables(null,null,null,null);
-            holder.tv.setPadding(45,20,20,20);
+            tv.setBackgroundColor(Color.TRANSPARENT);
+            tv.setCompoundDrawables(null,null,null,null);
+            tv.setPadding(45,20,20,20);
+            tv.setTextColor(ResUtil.getColor(R.color.textColorGray));
         }
     }
 
@@ -76,15 +80,12 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<WaitPlayListAdapte
     }
 
     public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public class Holder extends RecyclerView.ViewHolder{
-        TextView tv;
-        public Holder(View itemView) {
-            super(itemView);
-            tv= (TextView) itemView;
+        if(index>=0&&index<list.size()) {
+            notifyItemChanged(this.index);
+            this.index = index;
+            notifyItemChanged(index);
         }
     }
+
 
 }
