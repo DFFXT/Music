@@ -1,80 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.web.web"
+    android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="1.0" android:installLocation="auto">
+    android:versionName="1.0">
 
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
-    <uses-permission-sdk-23 android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-	
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <uses-permission-sdk-23 android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission-sdk-23 android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    
+
     <application
         android:name="com.web.common.base.MyApplication"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppStyle"
-        android:fullBackupContent="true">
-        <receiver android:name=".Alarm" android:process=":remote"/>
+        android:theme="@style/AppStyle">
+        <receiver
+            android:name=".Alarm"
+            android:process=":remote" />
+
         <activity
+            android:name="com.web.moudle.music.page.MusicPlayer_main_restruct"
             android:label="@string/outerMusicLabel"
-            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppStyle"
-            android:name="com.web.moudle.music.page.MusicPlayer_main_restruct">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <action android:name="android.intent.action.SEARCH"/>
-                <data android:scheme="file"/>
-                <data android:scheme="content"/>
-                <data android:mimeType="application/xml"/>
-                <data android:mimeType="audio/*"/>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEARCH" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/xml" />
+                <data android:mimeType="audio/*" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.web.web.Index"
-            android:label="@string/app_name" >
+            android:name=".Index"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.web.web.Browser"
-            android:label="@string/webview_choose"
+            android:name=".Browser"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:label="@string/webview_choose"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="file"/>
-                <data android:scheme="content"/>
-                <data android:mimeType="application/xml"/>
-                <data android:mimeType="text/*"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/xml" />
+                <data android:mimeType="text/*" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Alarm_Activity"/>
-        <activity android:name=".Ring"/>
-        <service android:name="com.web.service.MusicPlay"/>
-        <service android:name="com.web.moudle.musicDownload.service.FileDownloadService"/>
+        <activity android:name=".Alarm_Activity" />
+        <activity android:name=".Ring" />
 
-        <activity android:name="com.web.subWeb.Settings"/>
-        <activity android:name="com.web.moudle.musicDownload.ui.MusicDownLoadActivity"/>
-        
+        <receiver android:name="com.web.moudle.music.model.control.receiver.EarPlugReceiver">
+            <intent-filter android:priority="999999999">
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
-        
-        <activity android:name="com.web.subWeb.File_download_sure"
-            android:theme="@style/AppTheme"/>
-        <activity android:name="com.web.subWeb.ProhibitWebSite"/>
-        <activity android:name="com.web.web.Computer"/>
-        <activity android:name="com.web.subWeb.VideoPlay"/>
-        <activity android:name="com.web.web.MusicLogin"/>
-        <activity android:name="com.web.common.util.BaseActivity" />
+        <service android:name="com.web.moudle.music.player.MusicPlay" />
+        <service android:name="com.web.moudle.musicDownload.service.FileDownloadService" />
+
+        <activity android:name="com.web.subWeb.Settings" />
+        <activity android:name="com.web.moudle.musicDownload.ui.MusicDownLoadActivity" />
+        <activity
+            android:name="com.web.subWeb.File_download_sure"
+            android:theme="@style/AppTheme" />
+        <activity android:name="com.web.subWeb.ProhibitWebSite" />
+        <activity android:name=".Computer" />
+        <activity android:name="com.web.subWeb.VideoPlay" />
+        <activity android:name=".MusicLogin" />
+        <activity
+            android:name="com.web.moudle.lockScreen.ui.LockScreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:taskAffinity="sfsddf.sdf"
+            android:theme="@style/FullscreenTheme"/>
     </application>
 
 </manifest>

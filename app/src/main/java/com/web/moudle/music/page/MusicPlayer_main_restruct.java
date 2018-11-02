@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,11 +21,10 @@ import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
+import com.web.common.base.BaseActivity;
 import com.web.common.toast.MToast;
-import com.web.common.util.BaseActivity;
 import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
@@ -36,7 +34,7 @@ import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.control.interf.WaitMusicListener;
 import com.web.moudle.music.model.control.ui.ListAlert;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.subWeb.Settings;
 import com.web.web.R;
 
@@ -137,11 +135,12 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 		Intent intent=getIntent();
 		if(intent.getData()!=null){
 			String path=intent.getData().getPath();
-			File file=new File(path);
-			String name=file.getName();
-			String out[]=Shortcut.getName(name);
-			Music music=new Music(out[0],out[1],path);
-			if(connect!=null){
+			File file;
+			if (path != null) {
+				file = new File(path);
+				String name=file.getName();
+				String out[]=Shortcut.getName(name);
+				Music music=new Music(out[0],out[1],path);
 				connect.playLocal(music);
 			}
 		}
@@ -190,6 +189,8 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	 */
 	private void connect(){
 		Intent intent = new Intent(this,MusicPlay.class);
+		intent.setAction(MusicPlay.BIND);
+
 		bindService(intent,serviceConnection= new ServiceConnection() {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
@@ -246,7 +247,8 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			public void onStopTrackingTouch(SeekBar arg0) {
 				int progress=arg0.getProgress();
 				connect.seekTo(progress*1000);
-				lyricPage.lyricsRun(progress*10);
+				if(lyricPage!=null)
+					lyricPage.lyricsRun(progress*1000);
 				//currentTime(-1,-1,arg0.getProgress()*100);
 			}
 			public void onStartTrackingTouch(SeekBar arg0) {
@@ -304,7 +306,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			}break;
 			case R.id.next:{
 				connect.next();
-			}
+			}break;
 			case R.id.musicplay_type:{
 				changePlayType();
 			}break;
@@ -393,15 +395,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			}break;
 		}
 	}
-	public boolean onKeyDown(int keyCode,KeyEvent event){//--按键处理
 
-		return super.onKeyDown(keyCode, event);//--调用父级方法
-	}
-
-	
-	private void show(String str){//---Toast提示
-		Toast.makeText(MusicPlayer_main_restruct.this, str, Toast.LENGTH_SHORT).show();
-	}
 
 
 	@Override
@@ -424,7 +418,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 
 	@Override
 	public void play(String musicName,String singerName,int maxTime) {
-		pause.setImageResource(R.drawable.play);
+		pause.setImageResource(R.drawable.icon_play_black);
 		if(listAlert!=null){
 			listAlert.setIndex(connect.getWaitIndex());
 		}
@@ -432,7 +426,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 
 	@Override
 	public void pause() {
-		pause.setImageResource(R.drawable.pause);
+		pause.setImageResource(R.drawable.icon_pause_black);
 	}
 
 	@Override
@@ -445,7 +439,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 		runOnUiThread(() -> {
             bar.setProgress(time/1000);
             if(lyricPage!=null){
-                lyricPage.lyricsRun(time/100);
+                lyricPage.lyricsRun(time);
             }
         });
 	}

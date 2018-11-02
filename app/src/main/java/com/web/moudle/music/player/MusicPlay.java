@@ -1,16 +1,31 @@
-package com.web.service;
+package com.web.moudle.music.player;
 
-import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.ResultReceiver;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserServiceCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
+import com.web.common.base.MyApplication;
+import com.web.common.toast.MToast;
+import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.MyNotification;
 import com.web.config.Shortcut;
@@ -21,9 +36,10 @@ import com.web.data.MusicGroup;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
 import com.web.data.ScanMusicType;
+import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.web.R;
 
-import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
@@ -35,11 +51,21 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MusicPlay extends Service {
-	public static String ACTION_NEXT="com.web.web.MusicPlay.next";
-	public static String ACTION_PRE="com.web.web.MusicPlay.pre";
-	public static String ACTION_STATUS_CHANGE="com.web.web.MusicPlay.statusChange";
-	public static String ACTION_DOWNLOAD_COMPLETE="com.web.web.MusicPlay.downloadComplete";
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
+public class MusicPlay extends MediaBrowserServiceCompat {
+	public final static String BIND="not media bind";
+	public final static String ACTION_NEXT="com.web.web.MusicPlay.icon_next_black";
+	public final static String ACTION_PRE="com.web.web.MusicPlay.icon_pre_black";
+	public final static String ACTION_STATUS_CHANGE="com.web.web.MusicPlay.statusChange";
+	public final static String ACTION_DOWNLOAD_COMPLETE="com.web.web.MusicPlay.downloadComplete";
+
+	public final static String COMMAND_GET_CURRENT_POSITION="getCurrentPosition";
+	public final static String COMMAND_GET_STATUS="getStatus";
+	public final static String COMMAND_SEND_SINGLE_DATA="sendCurrentPosition";
+	public final static int COMMAND_RESULT_CODE_CURRENT_POSITION=1;//**result code 标识为当前播放时间
+	public final static int COMMAND_RESULT_CODE_STATUS=2;//**result code 标识为播放状态
+
 	private MediaPlayer player=new MediaPlayer();
 	private MyNotification notification=new MyNotification(this);
 
@@ -50,43 +76,103 @@ public class MusicPlay extends Service {
 	private PlayInterface play;//**界面接口
 	private int groupIndex=-1,childIndex=-1;
 	private Connect connect;//***连接
+	private LockScreenReceiver lockScreenReceiver;
+    private MediaSessionCompat sessionCompat;
 
 	private ThreadPoolExecutor executor;
 	private PlayerConfig config=new PlayerConfig();
 	@Override
 	public IBinder onBind(Intent arg0) {
-		if(connect==null)connect=new Connect();
-		return connect;
+		if(BIND.equals(arg0.getAction())){
+			if(connect==null)connect=new Connect();
+			return connect;
+		}
+		return super.onBind(arg0);
 	}
+
+	@Nullable
+	@Override
+	public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
+		return new BrowserRoot("root",null);
+	}
+
+	@Override
+	public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
+		result.sendResult(new ArrayList<>());
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+        sessionCompat=new MediaSessionCompat(this,"2");
+        sessionCompat.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public void onPlay() {
+                super.onPlay();
+                connect.changePlayerPlayingStatus();
+            }
+
+			@Override
+			public void onPause() {
+				super.onPause();
+                musicPause();
+			}
+
+			@Override
+			public void onSkipToNext() {
+				super.onSkipToNext();
+                connect.next();
+			}
+
+			@Override
+			public void onSkipToPrevious() {
+				super.onSkipToPrevious();
+                connect.pre();
+			}
+
+			@Override
+			public void onCommand(String command, Bundle extras, ResultReceiver cb) {
+				Bundle bundle=new Bundle();
+            	switch (command){
+					case COMMAND_GET_CURRENT_POSITION:{
+						bundle.putInt(COMMAND_SEND_SINGLE_DATA,player.getCurrentPosition());
+						cb.send(COMMAND_RESULT_CODE_CURRENT_POSITION,bundle);
+					}break;
+					case COMMAND_GET_STATUS:{
+						bundle.putBoolean(COMMAND_SEND_SINGLE_DATA,player.isPlaying());
+						cb.send(COMMAND_RESULT_CODE_STATUS,bundle);
+					}break;
+				}
+			}
+		});
+
+
+
+        sessionCompat.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        // setSessionToken
+        setSessionToken(sessionCompat.getSessionToken());
+        sessionCompat.setActive(true);
+
+		IntentFilter filter=new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(lockScreenReceiver=new LockScreenReceiver(),filter);
+
+	}
+	public void onDestroy() {//--移除notification
+		unregisterReceiver(lockScreenReceiver);
+		lockScreenReceiver=null;
+		stopForeground(true);
+	}
+
 	public class Connect extends Binder {
 		Connect(){
-			executor=new ThreadPoolExecutor(1,1,5, TimeUnit.SECONDS,new LinkedBlockingDeque<Runnable>());
+			executor=new ThreadPoolExecutor(1,1,1, TimeUnit.SECONDS,new LinkedBlockingDeque<Runnable>());
+			player.setLooping(false);
 			player.setOnPreparedListener(mp -> {
-                mp.start();
-                Music music=null;
-                switch (config.getMusicOrigin()){
-                    case LOCAL:{
-                        music=musicList.get(groupIndex).get(childIndex);
-                        config.setMusic(music);
-                    }break;
-                    case INTERNET:{
-                        music=config.getMusic();
-                    }break;
-					case WAIT:{
-						music=waitMusic.get(waitIndex);
-					}break;
-                    case STORAGE:{
-                        music=config.getMusic();
-                    }break;
-                }
-
-                play.load(music.getMusicName(),music.getSinger(),player.getDuration());
-                setTimeListener();
-                notification.setName(music.getMusicName());
-                notification.setSinger(music.getSinger());
-                notification.setPlayStatus(true);
-                notification.setBitMap(getBitmap(music.getSinger()));
-                notification.show();
+                musicLoad();
             });
 			player.setOnCompletionListener(mp -> {
                 switch (config.getPlayType()){
@@ -100,7 +186,7 @@ public class MusicPlay extends Service {
                     //**单曲循环
                     case ONE_LOOP:{
                         player.seekTo(0);
-                        player.start();
+                        musicPlay();
                     }break;
                     //**列表不循环
                     case ALL_ONCE:{
@@ -112,13 +198,13 @@ public class MusicPlay extends Service {
                         else if(childIndex<musicList.get(groupIndex).size()-1){
 							next();
                         }else{//***暂停
-							play.pause();
+							musicPause();
 						}
                     }break;
                     //**单曲不循环
                     case ONE_ONCE:{
-						play.pause();
-                    }
+						musicPause();
+                    }break;
                 }
 
             });
@@ -130,35 +216,37 @@ public class MusicPlay extends Service {
 		/***
 		 * 每隔一秒获取当前时间
 		 */
-		private void setTimeListener(){
-			executor.execute(() -> {
-                while(player.isPlaying()){
-                    if(play!=null){
-                        play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
-                        Shortcut.sleep(500);
-                    }
-                }
-            });
-		}
+
 
 		public void setPlayInterface(PlayInterface play){
 			MusicPlay.this.play=play;
 		}
 		public void getList(){
 			if(musicList.size()==0)
-				getMusicList();
+				new Thread(MusicPlay.this::getMusicList).start();
 			else play.musicListChange(musicList);
 		}
+		public int getCurrentPosition(){
+		    return player.getCurrentPosition();
+        }
 		public void scanLocalMusic(){
-			MusicPlay.this.scanMusic();
+			new Thread(MusicPlay.this::scanMusicMedia).start();
 		}
+		public void musicSelect(int group,int child){
+            if(groupIndex!=group||child!=childIndex){
+                play(group,child);
+            }else if(player.isPlaying()) {
+                musicPause();
+            }else {
+                musicPlay();
+            }
+        }
 		/**
 		 * 控制音乐
 		 * @param group group
 		 * @param child child
 		 */
-		public void play(int group,int child){
-
+		private void play(int group,int child){
 			if(groupIndex!=group||child!=childIndex){
 				groupIndex=group;
 				childIndex=child;
@@ -166,17 +254,8 @@ public class MusicPlay extends Service {
 				config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
 				loadMusic(musicList.get(groupIndex).get(childIndex));
 			}else {
-				if(player.isPlaying()){//**播放--->暂停
-					play.pause();
-					player.pause();
-				}else{//**暂停--->播放
-					Music music=musicList.get(group).get(child);
-					play.play(music.getMusicName(),music.getSinger(),player.getDuration());
-					player.start();
-					setTimeListener();//**需要重新开线程监听时间变化
-				}
-				notification.setPlayStatus(player.isPlaying());
-				notification.show();
+				player.seekTo(0);
+				musicPlay();
 			}
 		}
 
@@ -227,16 +306,15 @@ public class MusicPlay extends Service {
 		//***切换播放状态
 		public void changePlayerPlayingStatus(){
             if(player.isPlaying()){
-                player.pause();
-                play.pause();
+                musicPause();
             }else{
-                player.start();
-                play.play(config.getMusic().getMusicName(),
-                        config.getMusic().getSinger(),player.getDuration());
-                setTimeListener();
+                if(config.getMusic()!=null){
+                    musicPlay();
+                }else {
+                    next();
+                }
             }
-            notification.setPlayStatus(player.isPlaying());
-            notification.show();
+
 
 		}
 		public List<Music> getWaitMusic(){
@@ -404,9 +482,84 @@ public class MusicPlay extends Service {
 			}
 			else if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.WAIT){
 				connect.next();
+			}else if(config.getMusicOrigin()==PlayerConfig.MusicOrigin.STORAGE){
+				MToast.showToast(this,ResUtil.getString(R.string.cannotPlay));
 			}
 		}
 		play.musicOriginChanged(config.getMusicOrigin());
+		MediaMetadataCompat data=new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE,music.getMusicName())
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST,music.getSinger())
+				.putString(MediaMetadataCompat.METADATA_KEY_COMPOSER,music.getLyricsPath())
+                .build();
+		sessionCompat.setMetadata(data);
+	}
+	public void musicPlay(){
+		player.start();
+		Music music=config.getMusic();
+		play.play(music.getMusicName(),music.getSinger(),player.getDuration());
+
+		notification.setName(music.getMusicName());
+		notification.setSinger(music.getSinger());
+		notification.setPlayStatus(true);
+		notification.setBitMap(getBitmap(music.getSinger()));
+		notification.show();
+		executor.execute(() -> {
+			while(player.isPlaying()){
+				if(play!=null){
+					play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
+					sendDuring(player.getCurrentPosition());
+					Shortcut.sleep(500);
+				}
+			}
+		});
+        sendState(PlaybackStateCompat.STATE_PLAYING);
+	}
+	public void musicLoad(){
+		player.start();
+		Music music=config.getMusic();
+		notification.setName(music.getMusicName());
+		notification.setSinger(music.getSinger());
+		notification.setPlayStatus(true);
+		notification.setBitMap(getBitmap(music.getSinger()));
+		notification.show();
+		play.load(music.getMusicName(),music.getSinger(),player.getDuration());
+		executor.execute(() -> {
+			while(player.isPlaying()){
+				if(play!=null){
+					play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
+					sendDuring(player.getCurrentPosition());
+					Shortcut.sleep(500);
+				}
+			}
+		});
+
+        sendState(PlaybackStateCompat.STATE_PLAYING);
+	}
+	private void musicPause(){
+		player.pause();
+		play.pause();
+		notification.setPlayStatus(false);
+		notification.show();
+        sendState(PlaybackStateCompat.STATE_PAUSED);
+	}
+	private void sendState(int state){
+        PlaybackStateCompat stateCompat=new PlaybackStateCompat.Builder()
+                .setState(state,1,1)
+				.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
+                .build();
+        sessionCompat.setPlaybackState(stateCompat);
+
+    }
+    private Bundle bundle=new Bundle();
+	public final static String MUSIC_DURING="md";
+	private void sendDuring(int during){
+		bundle.putInt(MUSIC_DURING,during);
+		PlaybackStateCompat stateCompat=new PlaybackStateCompat.Builder()
+				.setExtras(bundle)
+				.setActions(PlaybackStateCompat.ACTION_SEEK_TO)
+				.build();
+		sessionCompat.setPlaybackState(stateCompat);
 	}
 
 	/**
@@ -425,19 +578,17 @@ public class MusicPlay extends Service {
 		musicList.get(group).remove(child);
 	}
 
-	public void onDestroy() {//--移除notification
-		stopForeground(true);
-	}
-	//--[next:对歌曲进行了点击;init:初始化界面;task:下载请求;delFile:删除某个歌曲;getNewList:重新扫描歌曲;seekTo:进度跳转]
+
+	//--[icon_next_black:对歌曲进行了点击;init:初始化界面;task:下载请求;delFile:删除某个歌曲;getNewList:重新扫描歌曲;seekTo:进度跳转]
 	@Override
 	public int onStartCommand(Intent intent,int flags,int startId){
 		String action= intent.getAction();
 		if (action==null)return START_NOT_STICKY;
 		switch (action){
-			case "com.web.web.MusicPlay.next":connect.next();break;
-			case "com.web.web.MusicPlay.pre":connect.pre();break;
-			case "com.web.web.MusicPlay.statusChange":connect.changePlayerPlayingStatus();break;
-			case "com.web.web.MusicPlay.downloadComplete":{
+			case ACTION_NEXT:connect.next();break;
+			case ACTION_PRE:connect.pre();break;
+			case ACTION_STATUS_CHANGE:connect.changePlayerPlayingStatus();break;
+			case ACTION_DOWNLOAD_COMPLETE:{
 				Music music=DataSupport.where("path=?",
 						intent.getStringExtra("path")).findFirst(Music.class);
 				musicList.get(0).add(music);
@@ -475,81 +626,66 @@ public class MusicPlay extends Service {
 	/**
 	 * 获取本地列表
 	 */
+	@WorkerThread
 	private void getMusicList(){
-		new Thread(() -> {
-			LitePal.getDatabase();
-            List<MusicGroup> musicGroups =DataSupport.findAll(MusicGroup.class);
-            musicList.clear();
-            //**获取默认列表的歌曲
-            MusicList<Music> defGroup=new MusicList<>("默认");
-            List<Music> defList=DataSupport.findAll(Music.class);
-            defGroup.addAll(defList);
-            musicList.add(defGroup);
-            //**获取自定义列表的歌曲
-            for (MusicGroup musicGroup : musicGroups) {
-                MusicList<Music> list=new MusicList<>(musicGroup.getGroupName());
-                List<Music> musics=DataSupport.where("groupId=?", musicGroup.getId()+"").find(Music.class);
-                list.addAll(musics);
-                if(list.size()!=0)
-                	musicList.add(list);
-            }
-            play.musicListChange(musicList);
-        }).start();
+		List<MusicGroup> musicGroups =DataSupport.findAll(MusicGroup.class);
+		musicList.clear();
+		//**获取默认列表的歌曲
+		List<Music> defList=DataSupport.findAll(Music.class);
+		if(defList.size()==0){
+			scanMusicMedia();
+			return;
+		}
+		MusicList<Music> defGroup=new MusicList<>("默认");
+		defGroup.addAll(defList);
+		musicList.add(defGroup);
+		//**获取自定义列表的歌曲
+		for (MusicGroup musicGroup : musicGroups) {
+			MusicList<Music> list=new MusicList<>(musicGroup.getGroupName());
+			List<Music> musics=DataSupport.where("groupId=?", musicGroup.getId()+"").find(Music.class);
+			list.addAll(musics);
+			if(list.size()!=0)
+				musicList.add(list);
+		}
+		play.musicListChange(musicList);
 	}
-	private boolean isScanFile=false;
-	/**
-	 * 扫描音乐
-	 */
-	private void scanMusic(){
-		if(isScanFile)return;
-		new Thread(() -> {
-            isScanFile=true;
-            List<ScanMusicType> types=DataSupport.findAll(ScanMusicType.class);
-            if(types.size()==0){//**如果扫描设置不存在，就采用默认扫描设置
-                String suffix[]=new String[]{"mp3","ogg","wav"};
-                for(String str:suffix){
-                    ScanMusicType scanMusicType=new ScanMusicType();
-                    scanMusicType.setScanSuffix(str);
-                    scanMusicType.setMinFileSize(1024*50);
-                    scanMusicType.save();
-                    types.add(scanMusicType);
-                }
-
-            }
-            else{
-            	for(int i=0;i<types.size();i++){
-            		if(!types.get(i).isScanable()){
-            			types.remove(i);
-            			i--;
-					}
+	@WorkerThread
+	private void scanMusicMedia(){
+		Cursor cursor=getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,null);
+		if(cursor==null)return;
+		List<ScanMusicType> types=DataSupport.findAll(ScanMusicType.class);
+		if(types.size()==0){//**如果扫描设置不存在，就采用默认扫描设置
+			String suffix[]=new String[]{".mp3",".ogg",".wav"};
+			for(String str:suffix){
+				ScanMusicType scanMusicType=new ScanMusicType();
+				scanMusicType.setScanSuffix(str);
+				scanMusicType.setMinFileSize(1024*50);
+				scanMusicType.save();
+				types.add(scanMusicType);
+			}
+		}
+		String[] out=new String[2];
+		boolean add=false;
+		while (cursor.moveToNext()){
+			Shortcut.getName(out,cursor.getString(2));
+			String path=cursor.getString(1);
+			int size=cursor.getInt(3);
+			for(ScanMusicType type:types){
+				if(path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
+					int lastIndex=out[0].lastIndexOf('.');
+					Music music=new Music(out[0].substring(0,lastIndex),out[1],cursor.getString(1));
+					music.saveOrUpdate();
+					add=true;
+					break;
 				}
 			}
-            List<String> suffixs=new ArrayList<>();
-            List<Integer> len=new ArrayList<>();
-            for(ScanMusicType t:types){
-                suffixs.add(t.getScanSuffix());
-                len.add(t.getMinFileSize());
-            }
-            GetFiles getFiles=new GetFiles();
-            getFiles.getfiles(suffixs,len);
-            for(int i=0;i<getFiles.name.size();i++){
-                String[] str=Shortcut.getName(getFiles.name.get(i));
-                Music music=new Music(deprecateSuffix(str[0]),str[1],getFiles.path.get(i));
-                //**更新或者插入一条记录
-                music.saveOrUpdate();
-            }
-            //***扫描结束
-            getMusicList();
-            isScanFile=false;
-        }).start();
-	}
-
-
-
-	private String deprecateSuffix(String str){
-		int index=str.lastIndexOf('.');
-		if(index<0)return str;
-		return str.substring(0,index);
+		}
+		if(add){
+			getMusicList();
+		}
+		cursor.close();
+		Looper.prepare();
+		AndroidSchedulers.mainThread().scheduleDirect(()-> MToast.showToast(MyApplication.context,ResUtil.getString(R.string.scanOver)));
 	}
 
 }

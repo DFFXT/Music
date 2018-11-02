@@ -28,7 +28,7 @@ import com.web.moudle.music.model.control.adapter.InternetDataSource;
 import com.web.moudle.music.model.control.adapter.InternetMusicAdapter;
 import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.internet.music.viewmodel.InternetViewModel;
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.subWeb.GetInfo;
 import com.web.web.R;
 

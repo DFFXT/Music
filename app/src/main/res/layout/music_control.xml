@@ -68,7 +68,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:src="@drawable/pre"
+                android:src="@drawable/icon_pre_black"
                 android:contentDescription="@null"
                 android:padding="10dp"
                 />
@@ -79,13 +79,13 @@
                 android:layout_height="60dp"
                 android:contentDescription="@null"
                 android:padding="10dp"
-                android:src="@drawable/pause" />
+                android:src="@drawable/icon_pause_black" />
             <ImageView
                 android:id="@+id/next"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:src="@drawable/next"
+                android:src="@drawable/icon_next_black"
                 android:padding="10dp"
                 android:contentDescription="@null"
                 />

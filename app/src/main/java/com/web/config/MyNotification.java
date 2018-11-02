@@ -1,6 +1,6 @@
 package com.web.config;
 
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.page.MusicPlayer_main_restruct;
 import com.web.web.R;
 
@@ -71,9 +71,9 @@ public class MyNotification{
 			remoteViews.setImageViewResource(R.id.music_icon, R.drawable.ic_launcher);
 		}
 		if(isPlay){
-			remoteViews.setImageViewResource(R.id.pause, R.drawable.play);
+			remoteViews.setImageViewResource(R.id.pause, R.drawable.icon_play_black);
 		}else{
-			remoteViews.setImageViewResource(R.id.pause, R.drawable.pause);
+			remoteViews.setImageViewResource(R.id.pause, R.drawable.icon_pause_black);
 		}
 		//--设置点击事件
 		//--PendingIntent 的flag必须不一样

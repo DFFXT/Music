@@ -2,12 +2,12 @@ package com.web.config;
 
 import android.content.Context;
 import android.os.Message;
+import android.support.annotation.Size;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.web.data.InternetMusic;
-import com.web.data.Music;
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 
 import java.io.File;
 
@@ -48,11 +48,22 @@ public class Shortcut {
         }
     }
 
+    public static void getName(@Size(min = 2) String[] out, String nameAndSinger){
+        int index=nameAndSinger.indexOf(" - ");
+        if(index>0) {
+            out[1]=nameAndSinger.substring(0,index).trim();
+            out[0]=nameAndSinger.substring(index+3).trim();
+        }else {
+            out[1]="未知";
+            out[0]=nameAndSinger;
+        }
+    }
     /**
      * //---从文件名称获取歌手和歌名
      * @param nameAndSinger name
      * @return name , singer
      */
+    @Deprecated
     public static String[] getName(String nameAndSinger){
         int index=nameAndSinger.indexOf(" - ");
         String out[]=new String[2];

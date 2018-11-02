@@ -38,7 +38,7 @@ public class DownloadViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         holder.bindText(R.id.musicName,music.getMusicName());
         holder.bindText(R.id.hasDownload, ResUtil.getFileSize(music.getHasDownload())+"/");
         holder.bindText(R.id.fullSize, ResUtil.getFileSize(music.getFullSize()));
-        holder.bindImage(R.id.downloadStatu,dataList.get(position).getStatus()==DownloadMusic.DOWNLOAD_DOWNLODINF?R.drawable.play:R.drawable.pause)
+        holder.bindImage(R.id.downloadStatu,dataList.get(position).getStatus()==DownloadMusic.DOWNLOAD_DOWNLODINF?R.drawable.icon_play_black :R.drawable.icon_pause_black)
         .setOnClickListener(v->{
             if(listener!=null){
                 listener.itemClick(v,position);

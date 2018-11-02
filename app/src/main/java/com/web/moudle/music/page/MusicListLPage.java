@@ -12,7 +12,7 @@ import com.web.data.Music;
 import com.web.data.MusicGroup;
 import com.web.data.MusicList;
 import com.web.moudle.music.model.control.interf.IPage;
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public class MusicListLPage extends BaseFragment implements IPage {
         popupMenu.setOnMenuItemClickListener((item -> {
             switch (item.getItemId()){
                 case R.id.musicPlay:{
-                    this.connect.play(groupIndex,childIndex);
+                    this.connect.musicSelect(groupIndex,childIndex);
                 }break;
                 case R.id.remove:{
                     Music music=data.get(groupIndex).get(childIndex);
@@ -78,7 +78,7 @@ public class MusicListLPage extends BaseFragment implements IPage {
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()){
                 case R.id.musicPlay:{//**播放
-                    this.connect.play(groupIndex,childIndex);
+                    this.connect.musicSelect(groupIndex,childIndex);
                 }break;
                 case R.id.delete:{//**删除
                     data.get(groupIndex).get(childIndex).delete();
@@ -194,7 +194,7 @@ public class MusicListLPage extends BaseFragment implements IPage {
         listView=rootView.findViewById(R.id.musicExpandableList);
         listView.setOnChildClickListener((p, v, groupPosition, childPosition, id)-> {
             if(MusicListLPage.this.connect!=null){
-                MusicListLPage.this.connect.play(groupPosition,childPosition);
+                MusicListLPage.this.connect.musicSelect(groupPosition,childPosition);
             }
             return false;
         });

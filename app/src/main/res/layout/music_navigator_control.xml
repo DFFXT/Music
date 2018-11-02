@@ -19,7 +19,7 @@
        android:id="@+id/next"
        android:layout_width="40dp"
        android:layout_height="40dp"
-       android:src="@drawable/next"
+       android:src="@drawable/icon_next_black"
 	   android:layout_centerVertical="true"
        android:layout_alignParentEnd="true"
        android:layout_marginStart="10dp"
@@ -33,13 +33,13 @@
        android:layout_marginStart="10dp"
        android:layout_toStartOf="@+id/next"
        android:contentDescription="@string/action_settings"
-       android:src="@drawable/pause" />
+       android:src="@drawable/icon_pause_black" />
 	
    <ImageView 
        android:id="@+id/pre"
        android:layout_width="40dp"
        android:layout_height="40dp"
-       android:src="@drawable/pre"
+       android:src="@drawable/icon_pre_black"
 	   android:layout_centerVertical="true"
        android:layout_toStartOf="@+id/pause"
        android:contentDescription="@string/action_settings"

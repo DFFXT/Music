@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,30 +14,13 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.web.common.util.BaseActivity;
+import com.web.common.base.BaseActivity;
 import com.web.moudle.music.page.MusicPlayer_main_restruct;
-import com.web.moudle.net.NetApis;
-import com.web.moudle.net.baseBean.BaseNetBean2;
-import com.web.moudle.net.retrofit.MConVerter;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import dalvik.system.DexClassLoader;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Converter;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 @SuppressLint("InlinedApi")
 public class Index extends BaseActivity implements OnClickListener,OnTouchListener{

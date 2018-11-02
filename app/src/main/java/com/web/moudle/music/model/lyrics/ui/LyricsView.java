@@ -2,6 +2,7 @@ package com.web.moudle.music.model.lyrics.ui;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,18 +14,18 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
-import com.web.moudle.music.model.lyrics.model.LyricsLine;
 import com.web.common.util.ViewUtil;
+import com.web.moudle.music.model.lyrics.model.LyricsLine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class LyricsView extends RelativeLayout{
 
-    private List<LyricsLine> lyrics;
+    private List<LyricsLine> lyrics=new ArrayList<>();
     //***要显示的歌词行数
     private int showLineAccount;
     private int maxLineAccount;
@@ -39,13 +40,16 @@ public class LyricsView extends RelativeLayout{
     private int width,height;
     //**垂直滑动动画偏移量
     private int animationOffset;
+    //**文字是否缩放
+    private boolean enableFontScale=false;
 
     private Paint paint;
     private float textSize;
     //**歌词颜色
     private @ColorInt int textColor=Color.BLACK;
     //**当前歌词颜色
-    private @ColorInt int textFocusColor=Color.BLUE;
+    private @ColorInt int textFocusColor=0xffff00ee;
+    private Bitmap mBitmap;
 
     private int startIndex,endIndex;
     //**状态
@@ -54,9 +58,8 @@ public class LyricsView extends RelativeLayout{
     private Thread thread;
     private SeekListener seekListener;
     private int time;
-    private long t;
 
-    private PorterDuffXfermode mode_cover=new PorterDuffXfermode(PorterDuff.Mode.SCREEN);
+    private PorterDuffXfermode mode_cover=new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
     private PorterDuffXfermode mode_font=new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER);
     public LyricsView(Context context) {
         super(context);
@@ -66,7 +69,6 @@ public class LyricsView extends RelativeLayout{
     public LyricsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView();
-        t=System.currentTimeMillis();
     }
 
     public LyricsView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -80,18 +82,25 @@ public class LyricsView extends RelativeLayout{
         paint=new Paint();
 
         paint.setAntiAlias(true);
-        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                width=getWidth();
-                height=getHeight();
-                showLineAccount=height/(lineHeight+lineGap);
-                getViewTreeObserver().removeOnPreDrawListener(this);
-                return false;
-            }
-        });
         initData();
     }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        width=w;
+        height=h;
+        setShowLineAccount(height/(lineHeight+lineGap));
+        setTextSize(textSize);
+        initBitmap();
+    }
+    private void initBitmap(){
+        if(width<=0)return;
+        mBitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_4444);
+        mCanvas=new Canvas(mBitmap);
+        mCanvas.clipRect(0,height/2-halfShowHeight,width,height/2+halfShowHeight);
+    }
+
     private void initData(){
         index=0;
         nextIndex=0;
@@ -100,16 +109,9 @@ public class LyricsView extends RelativeLayout{
             if(!run){
                 start();
             }
-            halfShowHeight=(showLineAccount-1)/2*(lineHeight+lineGap);
             updateRange();
+            setTextSize(textSize);
             paint.setTextSize(textSize);
-            for(int i=0;i<lyrics.size();i++){
-                LyricsLine line=lyrics.get(i);
-                paint.getTextBounds(line.getLine(),0,line.getLine().length(),rect);
-                line.setWidth(rect.width());
-                line.setHeight(rect.height());
-                lineHeight=Math.max(rect.height(),lineHeight);
-            }
         }
         else{
             run=false;
@@ -121,6 +123,7 @@ public class LyricsView extends RelativeLayout{
 
 
     private int halfShowHeight=0;
+    private Canvas mCanvas;
 
     /**
      * 此处重写dispatchDraw（onDraw、draw方法要设置background才会执行）
@@ -130,31 +133,38 @@ public class LyricsView extends RelativeLayout{
     public void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         int centerH=height/2;
-        canvas.clipRect(0,centerH-halfShowHeight,width,centerH+halfShowHeight);
+        mCanvas.drawColor(textColor,PorterDuff.Mode.CLEAR);
         paint.setXfermode(mode_font);
         paint.setColor(textColor);
+        if(!enableFontScale){
+            paint.setTextSize(textSize);
+        }
         for(int i=startIndex;i<endIndex;i++){
             LyricsLine line=lyrics.get(i);
             int dec=this.index-i;
             int bottom= (int) (centerH-lineHeight*(-0.5+dec)-lineGap*dec)+animationOffset;
             float linear=1-Math.abs(bottom-lineHeight/2f-centerH)/centerH;
-            paint.setTextSize(textSize*linear);
+            if(enableFontScale)
+                paint.setTextSize(textSize*linear);
             paint.getTextBounds(line.getLine(),0,line.getLine().length(),rect);
 
             int left=(width-rect.width())/2;
             paint.setAlpha((int) (255*linear));
-            canvas.drawText(lyrics.get(i).getLine(),left,bottom,paint);
+            mCanvas.drawText(lyrics.get(i).getLine(),left,bottom,paint);
         }
         paint.setColor(textFocusColor);
         paint.setXfermode(mode_cover);
-        canvas.drawRect(0,centerH-lineHeight/2,width,centerH+lineHeight/2+2,paint);
+        mCanvas.drawRect(0,centerH-lineHeight/2+10,width,centerH+lineHeight/2+10,paint);
+        paint.setXfermode(mode_font);
+        canvas.drawBitmap(mBitmap,0,0,paint);
+
     }
     private int nextIndex=0;
     public void start(){
         if(run)return;
         run=true;
         thread=new Thread(() -> {
-            while (run&&lyrics!=null&&lyrics.size()>1){
+            while (run&&lyrics.size()>1){
                 try {
                     if(nextIndex!=index){
                         animationOffset-=1;
@@ -177,9 +187,24 @@ public class LyricsView extends RelativeLayout{
 
     }
 
+    /**
+     * 立即显示到当前歌词，一般在滑动了进度、界面重新显示时调用
+     * @param time time
+     */
+    public void setCurrentTimeImmediately(int time){
+        setCurrentTime(time);
+        index=nextIndex;
+        animationOffset=0;
+        updateRange();
+        postInvalidate();
+    }
 
-    public void setCurrentTime(int time){
-        this.time=time;
+    /**
+     * 设置当前进度
+     * @param currentTime mills
+     */
+    public void setCurrentTime(int currentTime){
+        this.time=currentTime;
         if(lyrics==null)return;
         if(lyrics.size()>0&&time>=lyrics.get(lyrics.size()-1).getTime()){//**直接拖到底
             setNextIndex(lyrics.size()-1);
@@ -187,7 +212,7 @@ public class LyricsView extends RelativeLayout{
         }
         for(int i=0;i<lyrics.size();i++){
             int lt=lyrics.get(i).getTime();
-            if(Math.abs(lt-time)<10){//**正常情况
+            if(Math.abs(lt-time)<100){//**正常情况
                 setNextIndex(i);
                 break;
             }
@@ -230,10 +255,9 @@ public class LyricsView extends RelativeLayout{
     }
 
     public void setLyrics(List<LyricsLine> lyrics) {
-        if(lyrics!=null&&lyrics.equals(this.lyrics)){
-            return;
-        }
-        this.lyrics = lyrics;
+        if(lyrics==null) return;
+        this.lyrics.clear();
+        this.lyrics.addAll(lyrics);
         refresh();
     }
 
@@ -285,7 +309,7 @@ public class LyricsView extends RelativeLayout{
             case MotionEvent.ACTION_UP:{
                 if (!startScroll||thread==null||seekListener==null)break;
                 startScroll=false;
-                if(Math.abs(lyrics.get(index).getTime()-time)>10){
+                if(Math.abs(lyrics.get(index).getTime()-time)>100){
                     if(Math.abs(animationOffset)<(lineHeight+lineGap)/2){
                         recover(animationOffset,0,0);
                     }else{
@@ -309,8 +333,8 @@ public class LyricsView extends RelativeLayout{
     private void updateRange(){
         index=Math.min(index,lyrics.size()-1);
         if(index<0)index=0;
-        startIndex=Math.max(0,index-(showLineAccount-1)/2);
-        endIndex=Math.min(index+(showLineAccount-1)/2,lyrics.size());
+        startIndex=Math.max(0,index-showLineAccount/2-2);
+        endIndex=Math.min(index+showLineAccount/2+2,lyrics.size());
     }
     private void recover(int from,int to,int indexAdd){
         ValueAnimator animator=ValueAnimator.ofInt(from,to);
@@ -324,6 +348,7 @@ public class LyricsView extends RelativeLayout{
                 updateRange();
                 time=lyrics.get(index).getTime();
                 setCurrentTime(time);
+
                 seekListener.seekTo(time);
 
             }
@@ -336,33 +361,20 @@ public class LyricsView extends RelativeLayout{
         drag=enable;
     }
 
-    public int getShowLineAccount() {
-        return showLineAccount;
-    }
-
     public void setShowLineAccount(int showLineAccount) {
-        this.showLineAccount = showLineAccount;
+        this.showLineAccount = Math.min(showLineAccount,maxLineAccount);
     }
 
-    public int getMaxLineAccount() {
-        return maxLineAccount;
-    }
 
     public void setMaxLineAccount(int maxLineAccount) {
         this.maxLineAccount = maxLineAccount;
     }
 
-    public int getLineHeight() {
-        return lineHeight;
-    }
-
     public void setLineHeight(int lineHeight) {
         this.lineHeight = lineHeight;
+
     }
 
-    public int getLineGap() {
-        return lineGap;
-    }
 
     public void setLineGap(int lineGap) {
         this.lineGap = lineGap;
@@ -376,20 +388,17 @@ public class LyricsView extends RelativeLayout{
         this.nextIndex = nextIndex;
     }
 
-    public int getAnimationOffset() {
-        return animationOffset;
-    }
-
-    public void setAnimationOffset(int animationOffset) {
-        this.animationOffset = animationOffset;
-    }
-
-    public float getTextSize() {
-        return textSize;
-    }
-
     public void setTextSize(float textSize) {
         this.textSize = textSize;
+        for(int i=0;i<lyrics.size();i++){
+            LyricsLine line=lyrics.get(i);
+            paint.getTextBounds(line.getLine(),0,line.getLine().length(),rect);
+            line.setWidth(rect.width());
+            line.setHeight(rect.height());
+            lineHeight=Math.max(rect.height(),lineHeight);
+        }
+        halfShowHeight= (int) (showLineAccount/2f*lineHeight+((showLineAccount+1)/2*lineGap))-10;
+        initBitmap();
     }
 
     public int getTextColor() {
@@ -400,12 +409,16 @@ public class LyricsView extends RelativeLayout{
         this.textColor = textColor;
     }
 
-    public int getTextFocusColor() {
-        return textFocusColor;
+    public int getMaxLineAccount() {
+        return maxLineAccount;
     }
 
     public void setTextFocusColor(int textFocusColor) {
         this.textFocusColor = textFocusColor;
+    }
+
+    public void setEnableFontScale(boolean enableFontScale) {
+        this.enableFontScale = enableFontScale;
     }
 
     public void setSeekListener(SeekListener seekListener) {

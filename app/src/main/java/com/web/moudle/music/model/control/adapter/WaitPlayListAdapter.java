@@ -46,7 +46,7 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> im
         });
         if(index==position){
             tv.setPadding(20,20,20,20);
-            Drawable drawable=context.getDrawable(R.drawable.pause);
+            Drawable drawable=context.getDrawable(R.drawable.icon_pause_black);
             if(drawable!=null){
                 drawable.setBounds(0,0,25,25);
                 tv.setCompoundDrawables(drawable,null,null,null);

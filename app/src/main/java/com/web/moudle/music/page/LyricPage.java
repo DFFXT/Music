@@ -1,10 +1,12 @@
 package com.web.moudle.music.page;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.web.common.base.BaseFragment;
+import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.LyricsAnalysis;
 import com.web.config.Shortcut;
@@ -12,8 +14,7 @@ import com.web.data.Music;
 import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.lyrics.model.LyricsLine;
 import com.web.moudle.music.model.lyrics.ui.LyricsView;
-import com.web.service.MusicPlay;
-import com.web.common.util.ResUtil;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,8 @@ public class LyricPage extends BaseFragment implements IPage {
         this.connect = connect;
         if(inited){
             lyricsView.setSeekListener(seekTo -> {
-                connect.seekTo(seekTo * 100);
+                connect.seekTo(seekTo);
+                Log.i("log","---"+seekTo);
                 return true;
             });
         }
@@ -61,9 +63,21 @@ public class LyricPage extends BaseFragment implements IPage {
             line.setLine(ResUtil.getString(R.string.lyrics_noLyrics));
             list.add(line);
         }
-        lyricsView.refresh();
+        lyricsView.setLyrics(list);
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden&&connect!=null){
+            lyricsView.setCurrentTimeImmediately(connect.getCurrentPosition());
+        }
+    }
+
+    /**
+     *
+     * @param cu
+     */
     public void lyricsRun(int cu) {//----判定歌词时间线
         if (inited)
             lyricsView.setCurrentTime(cu);
@@ -78,6 +92,7 @@ public class LyricPage extends BaseFragment implements IPage {
     public void initView(@NotNull View rootView) {
         if(inited)return;
         lyricsView=rootView.findViewById(R.id.lyricListView);
+        lyricsView.setTextColor(ResUtil.getColor(R.color.themeColor));
         lyricsView.setLyrics(list);
         lock=lyricsView.findViewById(R.id.lock);
         lock.setTag(false);

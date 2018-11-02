@@ -3,6 +3,7 @@ package com.web.moudle.musicDownload.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -18,7 +19,7 @@ import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
 import com.web.data.Music;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.subWeb.GetInfo;
 import com.web.web.R;
 
@@ -309,7 +310,14 @@ public class FileDownloadService extends Service {
 		intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);
 		intent.putExtra("path",dm.getInternetMusic().getPath());
 		startService(intent);
+
+		//***添加进媒体库
+		Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		Uri uri = Uri.fromFile(new File(dm.getInternetMusic().getPath()));
+		intent2.setData(uri);
+		sendBroadcast(intent2);
 	}
+
 
 
 

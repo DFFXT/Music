@@ -11,17 +11,22 @@ import com.web.web.R
 
 object MToast {
     @JvmStatic
+    var mToast:Toast?=null
+    @JvmStatic
     fun showToast(context:Context,msg:String){
-        val mToast=Toast(context)
+        if(mToast!=null){//**取消上次的Toast
+            mToast?.cancel()
+        }
+        mToast=Toast(context)
         val view=LayoutInflater.from(context).inflate(R.layout.layout_toast,null,false) as TextView
-        mToast.view=view
+        mToast?.view=view
         val drawable=context.resources.getDrawable(R.drawable.icon_waring_white,context.theme)
         drawable.bounds= Rect(0,0,ViewUtil.dpToPx(30F),ViewUtil.dpToPx(30F))
         view.setCompoundDrawables(drawable,null,null,null)
         view.text=msg
-        mToast.setGravity(Gravity.TOP,0,ViewUtil.dpToPx(60f))
-        mToast.duration=Toast.LENGTH_SHORT
-        mToast.show()
+        mToast?.setGravity(Gravity.TOP,0,ViewUtil.dpToPx(60f))
+        mToast?.duration=Toast.LENGTH_SHORT
+        mToast?.show()
     }
 
 }

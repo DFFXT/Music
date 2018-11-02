@@ -5,7 +5,7 @@ import java.lang.ref.WeakReference;
 import org.json.JSONObject;
 
 import com.web.config.DataBaseC;
-import com.web.service.MusicPlay;
+import com.web.moudle.music.player.MusicPlay;
 
 import android.app.Activity;
 import android.content.Intent;

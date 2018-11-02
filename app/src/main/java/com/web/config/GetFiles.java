@@ -40,8 +40,8 @@ import com.web.data.InternetMusic;
 @SuppressLint("SimpleDateFormat") public class GetFiles {
 	public static File url=Environment.getExternalStorageDirectory();
 	public File[] files=url.listFiles();
-	public static String rootPath=url.toString()+"/.0/";
-	public static String appPath=url.toString()+"/.0/app/";
+	public static String rootPath=url.toString()+"/0/";
+	public static String appPath=url.toString()+"/0/app/";
 	public static String cachePath=rootPath+"cache/";
 	public static String logPath=rootPath+"log.txt";
 	public static String singerPath=cachePath+"singer/";

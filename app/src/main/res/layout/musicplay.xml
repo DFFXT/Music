@@ -106,7 +106,7 @@
 		        android:id="@+id/pre"
 		        android:layout_width="40dp"
 		        android:layout_height="40dp"
-		        android:src="@drawable/pre"
+		        android:src="@drawable/icon_pre_black"
 		        android:layout_centerHorizontal="true"
 		        android:layout_centerVertical="true"
 		        android:contentDescription="@null"
@@ -121,12 +121,12 @@
 		        android:layout_marginStart="21dp"
 		        android:layout_toEndOf="@+id/pre"
 		        android:contentDescription="@null"
-		        android:src="@drawable/pause" />
+		        android:src="@drawable/icon_pause_black" />
 			<ImageView 
 		        android:id="@+id/next"
 		        android:layout_width="40dp"
 		        android:layout_height="40dp"
-		        android:src="@drawable/next"
+		        android:src="@drawable/icon_next_black"
 		        android:layout_centerVertical="true"
 		        android:layout_toEndOf="@id/pause"
 		        android:layout_marginStart="10dp"

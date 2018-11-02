@@ -9,7 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import com.web.common.util.BaseActivity;
+import com.web.common.base.BaseActivity;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.config.DownloadViewAdapter;

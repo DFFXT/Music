@@ -13,7 +13,7 @@
   	    android:layout_alignParentEnd="true"
 		android:paddingStart="10dp"
 		android:paddingEnd="10dp"
-  	    android:src="@drawable/pause"
+  	    android:src="@drawable/icon_pause_black"
 		tools:ignore="ContentDescription" />
   	<ImageView 
   	    android:id="@+id/close" 

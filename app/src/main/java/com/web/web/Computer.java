@@ -24,7 +24,7 @@ import com.web.config.GetFiles;
 import com.web.config.L;
 import com.web.config.SqlFitAll;
 import com.web.subWeb.VideoPlay;
-import com.web.common.util.BaseActivity;
+import com.web.common.base.BaseActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

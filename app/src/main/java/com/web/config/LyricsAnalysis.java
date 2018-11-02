@@ -16,8 +16,8 @@ public class LyricsAnalysis {
 			int second=Integer.parseInt(lyrics.substring(start+4, start+6));
 			int msec=Integer.parseInt(lyrics.substring(start+7, start+8));
 			LyricsLine line=new LyricsLine();
-			//***事件 10毫秒为单位
-			line.setTime(minute*600+second*10+msec);
+			//***事件 毫秒为单位
+			line.setTime((minute*600+second*10+msec)*100);
 			if(offset==-1){
 				line.setLine(lyrics.substring(start+10));
 				this.lyrics.add(line);
