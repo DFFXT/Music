@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -54,7 +55,7 @@ public class LyricsView extends RelativeLayout{
     private int startIndex,endIndex;
     //**状态
     private boolean run=false;
-    private boolean drag=true;
+    private boolean canScroll=true;
     private Thread thread;
     private SeekListener seekListener;
     private int time;
@@ -277,7 +278,7 @@ public class LyricsView extends RelativeLayout{
     private float originY;
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if(!drag||lyrics.size()<=1)return false;
+        if(!canScroll||lyrics.size()<=1)return false;
         switch (e.getAction()){
             case MotionEvent.ACTION_DOWN:{
                 originY=preY=e.getRawY();
@@ -307,7 +308,10 @@ public class LyricsView extends RelativeLayout{
 
             }break;
             case MotionEvent.ACTION_UP:{
-                if (!startScroll||thread==null||seekListener==null)break;
+                if (!startScroll||thread==null||seekListener==null){
+                    start();
+                    break;
+                }
                 startScroll=false;
                 if(Math.abs(lyrics.get(index).getTime()-time)>100){
                     if(Math.abs(animationOffset)<(lineHeight+lineGap)/2){
@@ -355,10 +359,11 @@ public class LyricsView extends RelativeLayout{
             invalidate();
         });
         animator.start();
+
     }
 
-    public void setDragEnable(boolean enable){
-        drag=enable;
+    public void setCanScroll(boolean canScroll){
+        this.canScroll=canScroll;
     }
 
     public void setShowLineAccount(int showLineAccount) {

@@ -1,6 +1,9 @@
 package com.web.common.util
 
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.support.annotation.ColorRes
+import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import com.web.common.base.MyApplication
 import org.litepal.LitePalApplication
@@ -29,5 +32,22 @@ object ResUtil {
     @JvmStatic
     fun getColor(@ColorRes colorId:Int):Int{
         return MyApplication.context.resources.getColor(colorId,MyApplication.context.theme)
+    }
+    @JvmStatic
+    fun getDrawable(@DrawableRes drawableId: Int):Drawable{
+        return MyApplication.context.resources.getDrawable(drawableId,MyApplication.context.theme)
+    }
+    @JvmStatic
+    fun getBitmapFromDrawable(drawable: Drawable):Bitmap{
+        val bitmap=Bitmap.createBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight,Bitmap.Config.ARGB_4444)
+        val canvas=Canvas(bitmap)
+        //********必须设置bounds
+        drawable.setBounds(0,0,canvas.width,canvas.height)
+        drawable.draw(canvas)
+        return bitmap
+    }
+    @JvmStatic
+    fun bitmapOp(bitmap:Bitmap,matrix:Matrix):Bitmap{
+        return Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,false)
     }
 }

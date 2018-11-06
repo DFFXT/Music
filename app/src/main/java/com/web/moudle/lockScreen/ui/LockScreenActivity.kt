@@ -2,7 +2,10 @@ package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
 import android.content.ComponentName
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.os.*
+import android.support.constraint.ConstraintLayout
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
@@ -30,6 +33,9 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     private var controller:MediaControllerCompat?=null
     private var stateCompat:PlaybackStateCompat?=null
     private val lyrics= arrayListOf<LyricsLine>()
+    private val arrowBitmap = arrayOfNulls<Bitmap>(2)
+    private lateinit var params:ConstraintLayout.LayoutParams
+    private var marginEnd=0
     val receiver=object :ResultReceiver(Handler(Looper.getMainLooper())){
         override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
             if (resultData==null)return
@@ -65,7 +71,14 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         iv_lockScreen_status.setOnClickListener(this)
         iv_lockScreen_next.setOnClickListener(this)
 
+        iv_lockScreen_leftArrow.setImageBitmap(arrowBitmap[0])
+        iv_lockScreen_rightArrow.setImageBitmap(arrowBitmap[1])
+        params=iv_lockScreen_leftArrow.layoutParams as ConstraintLayout.LayoutParams
+        marginEnd=params.marginEnd
+        //**歌词行数
         lyricView_lockScreen.maxLineAccount=5
+        lyricView_lockScreen.setCanScroll(false)
+
 
         rootView_lockScreenActivity.setOnTouchListener(object :View.OnTouchListener{
             private var preX:Float=0f
@@ -73,6 +86,8 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
             private var originX:Float=0f
             private var originY:Float=0f
             private var animatorRun=false
+            private var preDis=0f
+            private var marginAdd=true
             override fun onTouch(v: View?, e: MotionEvent?): Boolean {
                 when(e?.action){
                     MotionEvent.ACTION_DOWN->{
@@ -81,6 +96,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                         originX=preX
                         originY=preY
                         animatorRun=false
+                        preDis=0f
                     }
                     MotionEvent.ACTION_MOVE->{
                         if(Math.abs(e.rawX-originX)>200){
@@ -88,16 +104,40 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                         }
                         val alpha=(400-Math.abs(e.rawX-originX))/400
                         rootView_lockScreenActivity.alpha=alpha
+                        if(!marginAdd&&params.marginEnd<=marginEnd){
+                            marginAdd=true
+                        }
+                        val thisDis=e.rawX-preX
+                        if(preDis*thisDis<0){//**转折点
+                            marginAdd=!marginAdd
+                        }
+                        if(marginAdd)
+                            params.marginEnd+=Math.abs(thisDis*1.5f).toInt()
+                        else
+                            params.marginEnd-=Math.abs(thisDis*1.5f).toInt()
+                        if(params.marginEnd<marginEnd){
+                            params.marginEnd=marginEnd
+                        }
+                        iv_lockScreen_leftArrow.layoutParams=params
+                        preDis=thisDis
+                        preX=e.rawX
+                        preY=e.rawY
+
                     }
                     MotionEvent.ACTION_UP->{
                         animatorRun=true
+                        val dis=marginEnd-params.marginEnd
+                        val start=params.marginEnd
                         val animator=ValueAnimator.ofFloat(rootView_lockScreenActivity.alpha,1f)
                         animator.addUpdateListener {
                             if(!animatorRun){
                                 it.cancel()
                                 return@addUpdateListener
                             }
-                            rootView_lockScreenActivity.alpha=it.animatedValue as Float
+                            val value=it.animatedValue as Float
+                            rootView_lockScreenActivity.alpha=value
+                            params.marginEnd=start+(value*dis).toInt()
+                            iv_lockScreen_leftArrow.layoutParams=params
                         }
                         animator.duration=300
                         animator.start()
@@ -115,7 +155,6 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                             controller = MediaControllerCompat(this@LockScreenActivity, browserCompat.sessionToken)
                             controller?.registerCallback(object : MediaControllerCompat.Callback() {
                                 override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-                                    super.onPlaybackStateChanged(state)
                                     stateCompat=state
                                     when(state?.actions){//**歌曲状态改变
                                         PlaybackStateCompat.ACTION_PLAY_PAUSE->{
@@ -136,9 +175,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                                 }
 
                                 override fun onMetadataChanged(metadata: MediaMetadataCompat?) {//**歌曲信息改变
-                                    super.onMetadataChanged(metadata)
-                                    tv_lockScreen_musicName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
-                                    tv_lockScreen_singerName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+                                    musicSwitch(metadata)
                                 }
                             })
                             controller?.sendCommand(MusicPlay.COMMAND_GET_CURRENT_POSITION,null,receiver)
@@ -147,30 +184,46 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                                     else R.drawable.icon_pause_white
                             )
                             controller?.sendCommand(MusicPlay.COMMAND_GET_STATUS,null,receiver)
-                            val metadata=controller?.metadata
-                            tv_lockScreen_musicName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
-                            tv_lockScreen_singerName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
-                            val path=metadata?.getString(MediaMetadataCompat.METADATA_KEY_COMPOSER)
-                            if (Shortcut.fileExsist(path)) {//---存在歌词
-                                val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(path))
-                                lyrics.addAll(lyricsAnalysis.lyrics)
-                            } else {//**没找到歌词
-                                val line = LyricsLine()
-                                line.time = 0
-                                line.line = ResUtil.getString(R.string.lyrics_noLyrics)
-                                lyrics.add(line)
-                            }
-                            lyricView_lockScreen.lyrics=lyrics
+
                         } catch (e: RemoteException) {
                             e.printStackTrace()
                         }
 
                     }
                     override fun onConnectionFailed() {
-                        super.onConnectionFailed()
                         MToast.showToast(this@LockScreenActivity,ResUtil.getString(R.string.failedConnectToPlayer))
                     }
                 }, null)
+    }
+
+    /**
+     * 音乐切换
+     */
+    private fun musicSwitch(metadata:MediaMetadataCompat?){
+        tv_lockScreen_musicName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
+        tv_lockScreen_singerName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+        val path=metadata?.getString(MediaMetadataCompat.METADATA_KEY_COMPOSER)
+        lyrics.clear()
+        if (Shortcut.fileExsist(path)) {//---存在歌词
+            val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(path))
+            lyrics.addAll(lyricsAnalysis.lyrics)
+        } else {//**没找到歌词
+            val line = LyricsLine()
+            line.time = 0
+            line.line = ResUtil.getString(R.string.lyrics_noLyrics)
+            lyrics.add(line)
+        }
+        lyricView_lockScreen.lyrics=lyrics
+    }
+
+    override fun loadData(bundle: Bundle?) {
+        val d=ResUtil.getDrawable(R.drawable.icon_lockscreen_slide_arrow)
+        arrowBitmap[0]=ResUtil.getBitmapFromDrawable(d)
+        val matrix=Matrix()
+        matrix.postRotate(180f)
+        arrowBitmap[1]=ResUtil.bitmapOp(arrowBitmap[0]!!,matrix)
+
+
     }
 
     /**

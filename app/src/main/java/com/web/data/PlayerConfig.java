@@ -5,6 +5,7 @@ public class PlayerConfig {
     private PlayType playType=PlayType.ALL_LOOP;
     private MusicOrigin musicOrigin=MusicOrigin.LOCAL;
     private Music music;//**播放器中缓存的音乐
+    private boolean hasInit=false;
 
 
     public void setPlayType(PlayType playType) {
@@ -29,6 +30,14 @@ public class PlayerConfig {
 
     public Music getMusic() {
         return music;
+    }
+
+    public boolean isHasInit() {
+        return hasInit;
+    }
+
+    public void setHasInit(boolean hasInit) {
+        this.hasInit = hasInit;
     }
 
     public enum PlayType{

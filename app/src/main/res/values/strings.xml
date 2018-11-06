@@ -16,6 +16,7 @@
 	<string name="exit">退出</string>
 	<string name="close">关  闭</string>
 	<string name="reload">错误,是否重新加载？</string>
+	<string name="uncaughtException">未捕获的异常</string>
 	<string name="cannotPlay">无法播放</string>
 	<string name="icon">头像</string>
 	<string name="editText_day">day</string>

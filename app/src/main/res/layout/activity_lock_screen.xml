@@ -88,9 +88,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/iv_lockScreen_status"
+        app:layout_constraintBottom_toTopOf="@id/iv_lockScreen_leftArrow"
         app:layout_constraintHorizontal_chainStyle="packed"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="20dp"
         />
     <ImageView
         android:id="@+id/iv_lockScreen_status"
@@ -100,7 +101,7 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_lockScreen_pre"
         app:layout_constraintStart_toEndOf="@id/iv_lockScreen_pre"
         app:layout_constraintEnd_toStartOf="@id/iv_lockScreen_next"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         />
     <ImageView
         android:id="@+id/iv_lockScreen_next"
@@ -110,5 +111,29 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_lockScreen_status"
         app:layout_constraintStart_toEndOf="@id/iv_lockScreen_status"
         app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+    <ImageView
+        android:id="@+id/iv_lockScreen_leftArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_lockscreen_slide_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_lockScreen_rightArrow"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
+        />
+    <ImageView
+        android:id="@+id/iv_lockScreen_rightArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_lockscreen_slide_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/iv_lockScreen_leftArrow"
+        app:layout_constraintStart_toEndOf="@id/iv_lockScreen_leftArrow"
+        app:layout_constraintEnd_toEndOf="parent"
+
         />
 </android.support.constraint.ConstraintLayout>

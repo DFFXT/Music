@@ -3,6 +3,7 @@ package com.web.config;
 import android.content.Context;
 import android.os.Message;
 import android.support.annotation.Size;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -14,6 +15,7 @@ import java.io.File;
 public class Shortcut {
     public static MusicPlay.Connect connect;
     public static boolean fileExsist(String path){
+        if(TextUtils.isEmpty(path))return false;
         File file=new File(path);
         return (file.exists()&&file.isFile());
     }

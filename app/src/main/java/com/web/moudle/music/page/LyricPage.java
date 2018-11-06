@@ -105,7 +105,7 @@ public class LyricPage extends BaseFragment implements IPage {
                 lock.setTag(true);
                 lock.setImageResource(R.drawable.locked);
             }
-            lyricsView.setDragEnable(!(Boolean) lock.getTag());
+            lyricsView.setCanScroll(!(Boolean) lock.getTag());
         });
         inited=true;
         lyricsView.post(this::loadLyrics);

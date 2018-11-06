@@ -104,6 +104,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		executor=new ThreadPoolExecutor(1,1,1, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
         sessionCompat=new MediaSessionCompat(this,"2");
         sessionCompat.setCallback(new MediaSessionCompat.Callback() {
             @Override
@@ -135,8 +136,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				Bundle bundle=new Bundle();
             	switch (command){
 					case COMMAND_GET_CURRENT_POSITION:{
+						if(!config.isHasInit())return;
 						bundle.putInt(COMMAND_SEND_SINGLE_DATA,player.getCurrentPosition());
 						cb.send(COMMAND_RESULT_CODE_CURRENT_POSITION,bundle);
+
 					}break;
 					case COMMAND_GET_STATUS:{
 						bundle.putBoolean(COMMAND_SEND_SINGLE_DATA,player.isPlaying());
@@ -159,7 +162,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		IntentFilter filter=new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(lockScreenReceiver=new LockScreenReceiver(),filter);
-
 	}
 	public void onDestroy() {//--移除notification
 		unregisterReceiver(lockScreenReceiver);
@@ -169,11 +171,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 	public class Connect extends Binder {
 		Connect(){
-			executor=new ThreadPoolExecutor(1,1,1, TimeUnit.SECONDS,new LinkedBlockingDeque<Runnable>());
 			player.setLooping(false);
-			player.setOnPreparedListener(mp -> {
-                musicLoad();
-            });
+			player.setOnPreparedListener(mp -> musicLoad());
 			player.setOnCompletionListener(mp -> {
                 switch (config.getPlayType()){
                     //**列表循环
@@ -470,6 +469,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	 * @param music music
 	 */
 	private void loadMusic(Music music){
+		config.setHasInit(true);
 		config.setMusic(music);
 		player.reset();
 		try {
