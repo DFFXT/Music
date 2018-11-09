@@ -23,4 +23,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         iv.setImageResource(drawableId);
         return iv;
     }
+    public <T extends View> T findViewById(int id){
+        return itemView.findViewById(id);
+    }
 }

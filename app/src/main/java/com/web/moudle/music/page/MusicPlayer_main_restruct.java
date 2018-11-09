@@ -2,6 +2,7 @@ package com.web.moudle.music.page;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.base.BaseActivity;
+import com.web.common.constant.Constant;
 import com.web.common.toast.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
@@ -35,7 +38,8 @@ import com.web.moudle.music.model.control.interf.WaitMusicListener;
 import com.web.moudle.music.model.control.ui.ListAlert;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.music.player.MusicPlay;
-import com.web.subWeb.Settings;
+import com.web.moudle.preference.SP;
+import com.web.moudle.setting.ui.SettingActivity;
 import com.web.web.R;
 
 import java.io.File;
@@ -312,12 +316,12 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			}break;
 			case R.id.subSettingBox:break;
 			case R.id.item_setting1:{
-				Intent intent=new Intent(this,Settings.class);
-				startActivity(intent);
+				SettingActivity.actionStart(this);
 				drawer.closeDrawer(Gravity.START);
 				return;
 			}
 			case R.id.scanLocalMusic:{//--扫描本地文件
+				SP.INSTANCE.putValue(Constant.spName,Constant.SpKey.clearAll,false);
 				connect.scanLocalMusic();
 				MToast.showToast(this,ResUtil.getString(R.string.musicIsScanning));
 				drawer.closeDrawer(Gravity.START);
@@ -447,7 +451,19 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	@Override
 	public void musicListChange(List<MusicList<Music>> list) {
 	    runOnUiThread(() -> {
-	    	musicListLPage.setData(list);
+	        if(list==null||list.size()==0||list.get(0).size()==0){
+	            if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noNeedScan)){
+	                new AlertDialog.Builder(this)
+                            .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
+                            .setNegativeButton(ResUtil.getString(R.string.no),null)
+                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> {
+                                connect.scanLocalMusic();
+                            }).create().show();
+                }
+            }else {
+                musicListLPage.setData(list);
+            }
+
         });
 	}
 

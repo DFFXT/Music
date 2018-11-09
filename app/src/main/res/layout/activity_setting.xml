@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:background="@color/white"
+	android:orientation="vertical"
+	android:id="@+id/parent"
+     >
+    <com.web.misc.TopBarLayout
+		android:id="@+id/topBar_setting"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:fitsSystemWindows="true"
+		android:background="@color/themeColor"
+		android:elevation="1dp"
+		app:topBar_mainTitleColor="@color/white"
+		app:topBar_startImage="@drawable/icon_back_black"
+		app:topBar_mainTitleText="@string/setting"/>
+	<com.web.misc.TextWithDrawable
+		android:id="@+id/twd_lockScreen"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/selector_transparent_gray"
+		app:textWithDrawable_text="@string/setting_lockScreen"
+		app:textWithDrawable_drawable="@drawable/icon_back_black"
+		/>
+	<com.web.misc.TextWithDrawable
+		android:id="@+id/twd_musicScan"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/selector_transparent_gray"
+		app:textWithDrawable_text="@string/setting_suffixFilter"
+		app:textWithDrawable_drawable="@drawable/icon_back_black"
+		/>
+	<com.web.misc.TextWithDrawable
+		android:id="@+id/twd_clearAllMusic"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:textWithDrawable_text="@string/setting_clearAllMusic"/>
+
+</LinearLayout>

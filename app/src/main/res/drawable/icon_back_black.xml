@@ -4,8 +4,9 @@
     android:height="48dp"
     android:viewportHeight="24"
     android:viewportWidth="24">
-    <path android:strokeWidth="1"
-        android:strokeColor="#222222"
-        android:pathData="M16 4,8 12,16 18"
+
+    <path android:strokeColor="#000"
+        android:strokeWidth=".7"
+        android:pathData="M17 6,L10 12,L17 18"
         />
 </vector>

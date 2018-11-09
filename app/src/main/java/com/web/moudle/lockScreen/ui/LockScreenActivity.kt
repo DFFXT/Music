@@ -184,7 +184,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                                     else R.drawable.icon_pause_white
                             )
                             controller?.sendCommand(MusicPlay.COMMAND_GET_STATUS,null,receiver)
-
+                            musicSwitch(controller?.metadata)
                         } catch (e: RemoteException) {
                             e.printStackTrace()
                         }

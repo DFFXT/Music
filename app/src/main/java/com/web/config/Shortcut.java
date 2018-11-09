@@ -2,6 +2,7 @@ package com.web.config;
 
 import android.content.Context;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
@@ -50,7 +51,7 @@ public class Shortcut {
         }
     }
 
-    public static void getName(@Size(min = 2) String[] out, String nameAndSinger){
+    public static void getName(@Size(min = 2) String[] out,@NonNull String nameAndSinger){
         int index=nameAndSinger.indexOf(" - ");
         if(index>0) {
             out[1]=nameAndSinger.substring(0,index).trim();

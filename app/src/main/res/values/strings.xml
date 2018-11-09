@@ -24,6 +24,10 @@
 	<string name="add">++</string>
 	<string name="minus">--</string>
 	<string name="setting">设置</string>
+	<string name="setting_lockScreen">锁屏</string>
+	<string name="setting_suffixFilter">音乐扫描</string>
+
+    <string name="musicMain_noMusicAlert">没有音乐！是否加载？</string>
 
 	<string name="delete">删除</string>
 	<string name="deleteLocalFile">删除本地文件</string>
@@ -44,10 +48,13 @@
 	<string name="downloadSure">下载</string>
 	<string name="baiduOnce">百度一下</string>
 
-	<!-- settings.xml -->
+	<!-- activity_setting_setting.xml -->
 	<string name="settings_titleBar">音乐播放器设置</string>
+	<string name="setting_clearAllMusic">清空当前音乐</string>
+	<string name="setting_clearAllMusicAlert">是否清空所以音乐，该操作不会删除源文件！</string>
+	<string name="setting_suffix_select">音乐类型</string>
 	<string name="settings_ignoreFileSize">忽略小文件</string>
-	<string name="settings_minFileSizeValue">扫描最小文件大小[MB]</string>
+	<string name="settings_suffixMinSize">最小值[MB]</string>
 	<string name="setting_suffix_mp3">.mp3</string>
 	<string name="setting_suffix_ogg">.ogg</string>
 	<string name="setting_suffix_mid">.mid</string>

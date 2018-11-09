@@ -2,6 +2,7 @@ package com.web.moudle.music.player;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,10 +21,12 @@ import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.base.MyApplication;
+import com.web.common.constant.Constant;
 import com.web.common.toast.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
@@ -38,6 +41,7 @@ import com.web.data.PlayerConfig;
 import com.web.data.ScanMusicType;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.preference.SP;
 import com.web.web.R;
 
 import org.litepal.crud.DataSupport;
@@ -59,6 +63,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	public final static String ACTION_PRE="com.web.web.MusicPlay.icon_pre_black";
 	public final static String ACTION_STATUS_CHANGE="com.web.web.MusicPlay.statusChange";
 	public final static String ACTION_DOWNLOAD_COMPLETE="com.web.web.MusicPlay.downloadComplete";
+	public final static String ACTION_ClEAR_ALL_MUSIC="clearAllMusic";
 
 	public final static String COMMAND_GET_CURRENT_POSITION="getCurrentPosition";
 	public final static String COMMAND_GET_STATUS="getStatus";
@@ -229,7 +234,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		    return player.getCurrentPosition();
         }
 		public void scanLocalMusic(){
-			new Thread(MusicPlay.this::scanMusicMedia).start();
+			new Thread(()->{
+				scanMusicMedia();
+				getMusicList();
+			}).start();
 		}
 		public void musicSelect(int group,int child){
             if(groupIndex!=group||child!=childIndex){
@@ -594,6 +602,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				musicList.get(0).add(music);
 				play.musicListChange(musicList);
 			}break;
+			case ACTION_ClEAR_ALL_MUSIC:{
+				DataSupport.deleteAll(Music.class);
+				DataSupport.deleteAll(MusicGroup.class);
+				SP.INSTANCE.putValue(Constant.spName,Constant.SpKey.clearAll,true);
+				getMusicList();
+				reset();
+			}break;
 		}
 		return START_NOT_STICKY;
 		/*
@@ -604,9 +619,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 
 
-	public void show(String str){
-		Toast.makeText(MusicPlay.this, str,Toast.LENGTH_LONG).show();
-	}
 
 	public Bitmap getBitmap(String singerName){//--加载本地音频,图片
 		Bitmap bitmap=null;
@@ -622,6 +634,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		return bitmap;
 	}
 
+	private void reset(){
+		play.load("","",0);
+		play.currentTime(0,0,0);
+		play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
+		config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
+		config.setMusic(null);
+		waitMusic.clear();
+		waitIndex=0;
+	}
 
 	/**
 	 * 获取本地列表
@@ -632,10 +653,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		musicList.clear();
 		//**获取默认列表的歌曲
 		List<Music> defList=DataSupport.findAll(Music.class);
-		if(defList.size()==0){
+		/*if(defList.size()==0&&!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.clearAll)){
 			scanMusicMedia();
-			return;
-		}
+		}*/
 		MusicList<Music> defGroup=new MusicList<>("默认");
 		defGroup.addAll(defList);
 		musicList.add(defGroup);
@@ -651,6 +671,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 	@WorkerThread
 	private void scanMusicMedia(){
+		SP.INSTANCE.putValue(Constant.spName,Constant.SpKey.noNeedScan,true);
 		Cursor cursor=getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,null);
 		if(cursor==null)return;
 		List<ScanMusicType> types=DataSupport.findAll(ScanMusicType.class);
@@ -665,26 +686,27 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			}
 		}
 		String[] out=new String[2];
-		boolean add=false;
 		while (cursor.moveToNext()){
-			Shortcut.getName(out,cursor.getString(2));
-			String path=cursor.getString(1);
-			int size=cursor.getInt(3);
+			int index=cursor.getColumnIndex("_data");
+			String path=cursor.getString(index);
+			index=cursor.getColumnIndex("_size");
+			int size=cursor.getInt(index);
+
 			for(ScanMusicType type:types){
+				if(!type.isScanable())continue;
 				if(path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
+					Shortcut.getName(out,path);
 					int lastIndex=out[0].lastIndexOf('.');
-					Music music=new Music(out[0].substring(0,lastIndex),out[1],cursor.getString(1));
+					int lastIndex1=out[1].lastIndexOf('/');
+					Music music=new Music(out[0].substring(0,lastIndex),out[1].substring(lastIndex1+1),path);
+					index=cursor.getColumnIndex("duration");
+					music.setDuration(cursor.getInt(index));
 					music.saveOrUpdate();
-					add=true;
 					break;
 				}
 			}
 		}
-		if(add){
-			getMusicList();
-		}
 		cursor.close();
-		Looper.prepare();
 		AndroidSchedulers.mainThread().scheduleDirect(()-> MToast.showToast(MyApplication.context,ResUtil.getString(R.string.scanOver)));
 	}
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.web.misc.TopBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="@color/themeColor"
+        app:topBar_mainTitleText="@string/setting_suffix_select"
+        app:topBar_startImage="@drawable/icon_back_black"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:paddingTop="20dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:id="@+id/rv_suffixSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

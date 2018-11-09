@@ -2,13 +2,13 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item >
         <selector android:exitFadeDuration="500"  >
-    		<item android:state_pressed="true" android:drawable="@color/lightBlue"></item>
-    		<item android:state_pressed="false" android:drawable="@color/transparent"></item>
+    		<item android:state_pressed="true" android:drawable="@color/lightBlue"/>
+    		<item android:state_pressed="false" android:drawable="@color/transparent"/>
 		</selector>
     </item>
     <item >
         <shape android:shape="rectangle">
-            <padding android:top="15dp" android:bottom="15dp"/>
+            <padding android:top="10dp" android:bottom="10dp"/>
         </shape>
     </item>
 </layer-list>

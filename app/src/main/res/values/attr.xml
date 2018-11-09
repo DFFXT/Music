@@ -8,4 +8,8 @@
         <attr name="topBar_mainTitleText" format="reference|string"/>
         <attr name="topBar_subtitleText" format="reference|string"/>
     </declare-styleable>
+    <declare-styleable name="TextWithDrawable">
+        <attr name="textWithDrawable_text" format="string"/>
+        <attr name="textWithDrawable_drawable" format="reference"/>
+    </declare-styleable>
 </resources>

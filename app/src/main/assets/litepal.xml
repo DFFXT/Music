@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal >
     <dbname value="Music"/>
-    <version value="6"/>
+    <version value="7"/>
     <list>
         <mapping class="com.web.data.Music"/>
         <mapping class="com.web.data.MusicGroup"/>

@@ -12,6 +12,7 @@ public class Music extends DataSupport implements Cloneable{
     private String singer;
     private String path;
     private int groupId;
+    private int duration;
     public Music(String musicName,String singer,String path){
         this.musicName=musicName;
         this.path=path;
@@ -92,4 +93,12 @@ public class Music extends DataSupport implements Cloneable{
         return super.saveOrUpdate("path=?",path);
     }
 
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 }
