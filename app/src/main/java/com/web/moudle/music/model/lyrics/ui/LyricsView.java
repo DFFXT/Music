@@ -158,7 +158,6 @@ public class LyricsView extends RelativeLayout{
         mCanvas.drawRect(0,centerH-lineHeight/2+10,width,centerH+lineHeight/2+10,paint);
         paint.setXfermode(mode_font);
         canvas.drawBitmap(mBitmap,0,0,paint);
-
     }
     private int nextIndex=0;
     public void start(){

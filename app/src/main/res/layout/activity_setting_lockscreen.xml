@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/rootView_s_lock"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.web.misc.TopBarLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/themeColor"
+        android:fitsSystemWindows="true"
+        app:topBar_startImage="@drawable/icon_back_black"
+        app:topBar_mainTitleText="@string/setting_lockScreen_title"
+        app:topBar_mainTitleColor="@color/white"
+        />
+    <android.support.v4.widget.NestedScrollView
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="20dp"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.constraint.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_s_lock_switchText"
+                android:text="@string/setting_lockScreen_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/sw_s_lock_switch"
+                />
+            <Switch
+                android:id="@+id/sw_s_lock_switch"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_s_lock_labelForColorList"
+                android:text="@string/setting_lockScreen_colorListLabel"
+                app:layout_constraintTop_toBottomOf="@id/sw_s_lock_switch"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_s_lock_colorList"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view_s_lock_colorSelected"
+                app:layout_constraintTop_toTopOf="@id/view_s_lock_colorSelected" />
+            <ImageView
+                android:id="@+id/view_s_lock_colorSelected"
+                app:layout_constraintTop_toBottomOf="@id/tv_s_lock_labelForColorList"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/border_1dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+            <TextView
+                android:id="@+id/tv_s_lock_setImageBackground"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="@string/setting_lockScreen_imageBackground"
+                app:layout_constraintTop_toBottomOf="@id/rv_s_lock_colorList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/iv_s_lock_imageShow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_s_lock_setImageBackground"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

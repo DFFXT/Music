@@ -2,7 +2,6 @@ package com.web.moudle.music.player;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +9,6 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,12 +20,11 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
-import com.web.common.toast.MToast;
+import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.MyNotification;
@@ -49,6 +46,10 @@ import org.litepal.crud.DataSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -64,6 +65,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	public final static String ACTION_STATUS_CHANGE="com.web.web.MusicPlay.statusChange";
 	public final static String ACTION_DOWNLOAD_COMPLETE="com.web.web.MusicPlay.downloadComplete";
 	public final static String ACTION_ClEAR_ALL_MUSIC="clearAllMusic";
+	public final static String ACTION_LOCKSCREEN="ACTION_OpenLockScreen";
 
 	public final static String COMMAND_GET_CURRENT_POSITION="getCurrentPosition";
 	public final static String COMMAND_GET_STATUS="getStatus";
@@ -164,14 +166,24 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         setSessionToken(sessionCompat.getSessionToken());
         sessionCompat.setActive(true);
 
+        if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noLockScreen)){
+			lockScreen();
+		}
+	}
+	public void onDestroy() {//--移除notification
+		unLockScreen();
+		stopForeground(true);
+	}
+	private void lockScreen(){
 		IntentFilter filter=new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(lockScreenReceiver=new LockScreenReceiver(),filter);
 	}
-	public void onDestroy() {//--移除notification
-		unregisterReceiver(lockScreenReceiver);
-		lockScreenReceiver=null;
-		stopForeground(true);
+	private void unLockScreen(){
+		if(lockScreenReceiver!=null){
+			unregisterReceiver(lockScreenReceiver);
+			lockScreenReceiver=null;
+		}
 	}
 
 	public class Connect extends Binder {
@@ -380,6 +392,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 			play.musicOriginChanged(config.getMusicOrigin());
 			play.playTypeChanged(config.getPlayType());
+
 		}
 		public PlayerConfig getConfig(){
 			return config;
@@ -606,8 +619,16 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				DataSupport.deleteAll(Music.class);
 				DataSupport.deleteAll(MusicGroup.class);
 				SP.INSTANCE.putValue(Constant.spName,Constant.SpKey.clearAll,true);
-				getMusicList();
-				reset();
+				new Thread(this::getMusicList).start();
+                reset();
+            }break;
+            case ACTION_LOCKSCREEN:{
+                boolean noLock=SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noLockScreen);
+                if(noLock){
+					unLockScreen();
+				}else {
+					lockScreen();
+				}
 			}break;
 		}
 		return START_NOT_STICKY;

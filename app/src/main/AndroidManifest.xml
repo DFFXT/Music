@@ -23,6 +23,14 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppStyle">
+        
+        <provider
+            android:authorities="sfdsfs"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            android:name="android.support.v4.content.FileProvider">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths"/>
+        </provider>
         <receiver
             android:name=".Alarm"
             android:process=":remote" />
@@ -95,6 +103,7 @@
             android:taskAffinity="sfsddf.sdf"
             android:theme="@style/FullscreenTheme"/>
         <activity android:name="com.web.moudle.setting.suffix.SuffixSelectActivity" />
+        <activity android:name="com.web.moudle.setting.lockscreen.LockScreenSettingActivity" />
     </application>
 
 </manifest>

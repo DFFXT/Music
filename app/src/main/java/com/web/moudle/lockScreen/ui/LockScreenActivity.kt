@@ -1,10 +1,20 @@
 package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
+import android.app.Activity
+import android.app.ActivityManager
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.*
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
 import android.support.constraint.ConstraintLayout
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
@@ -14,8 +24,13 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
-import com.web.common.toast.MToast
+import com.web.common.base.BaseGlideTarget
+import com.web.common.constant.Constant
+import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
@@ -23,9 +38,11 @@ import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
 import com.web.moudle.music.model.lyrics.model.LyricsLine
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.preference.SP
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lock_screen.*
 import java.util.*
+import javax.microedition.khronos.opengles.GL
 
 
 class LockScreenActivity : BaseActivity() ,View.OnClickListener{
@@ -61,7 +78,30 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
 
     override fun initView() {
         ViewUtil.transparentStatusBar(window)
+        val mode=SP.getString(Constant.spName,Constant.SpKey.lockScreenBgMode)
+        when(mode){
+            BG_MODE_IMAGE-> {
 
+                ImageLoad.load(SP.getString(Constant.spName, Constant.SpKey.lockScreenBgImagePath)).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
+                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                        val rs = RenderScript.create(this@LockScreenActivity)
+                        val blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
+                        val from=(resource as BitmapDrawable).bitmap
+                        val allIn=Allocation.createFromBitmap(rs,from)
+                        val to=Bitmap.createBitmap(from.width,from.height,Bitmap.Config.ARGB_4444)
+                        val allOut=Allocation.createFromBitmap(rs,to)
+                        blur.setRadius(12f)
+                        blur.setInput(allIn)
+                        blur.forEach(allOut)
+                        allOut.copyTo(to)
+                        rs.destroy()
+                        Intent.ACTION_PICK
+                        rootView_lockScreenActivity.background=BitmapDrawable(resources,to)
+                    }
+                })
+            }
+            else ->rootView_lockScreenActivity.setBackgroundColor(SP.getInt(Constant.spName,Constant.SpKey.lockScreenBgColor))
+        }
         if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.N_MR1)
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         else
@@ -81,6 +121,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
 
 
         rootView_lockScreenActivity.setOnTouchListener(object :View.OnTouchListener{
+            private val maxDistance=ViewUtil.screenWidth()/3
             private var preX:Float=0f
             private var preY:Float=0f
             private var originX:Float=0f
@@ -99,10 +140,10 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                         preDis=0f
                     }
                     MotionEvent.ACTION_MOVE->{
-                        if(Math.abs(e.rawX-originX)>200){
+                        if(Math.abs(e.rawX-originX)>maxDistance){
                             finish()
                         }
-                        val alpha=(400-Math.abs(e.rawX-originX))/400
+                        val alpha=(maxDistance*2-Math.abs(e.rawX-originX))/(maxDistance*2)
                         rootView_lockScreenActivity.alpha=alpha
                         if(!marginAdd&&params.marginEnd<=marginEnd){
                             marginAdd=true
@@ -277,11 +318,25 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         browserCompat.disconnect()
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0,0)
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when(keyCode){
             KeyEvent.KEYCODE_HOME->return true
             KeyEvent.KEYCODE_BACK->return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+    companion object {
+        const val BG_MODE_COLOR="color"
+        const val BG_MODE_IMAGE="image"
+        fun actionStart(ctx:Context){
+            val intent=Intent(ctx,LockScreenActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            ctx.startActivity(intent)
+        }
     }
 }

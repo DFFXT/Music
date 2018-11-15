@@ -10,26 +10,22 @@ import android.widget.TextView
 import com.web.common.util.ResUtil
 import com.web.web.R
 
-class TextWithDrawable:FrameLayout{
+class TextWithDrawable @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private var text:String?=null
     private var drawable:Drawable?=null
     private var tvTitle:TextView
     private var ivDrawable:ImageView
-    constructor(context: Context?) :this(context,null)
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs,0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr,0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes){
+
+    init {
         val view=LayoutInflater.from(context).inflate(R.layout.item_text_drawable,this,false)
         tvTitle=view.findViewById(R.id.tv_text)
         ivDrawable=view.findViewById(R.id.iv_rightIcon)
-
         val typeArray=context?.obtainStyledAttributes(attrs, R.styleable.TextWithDrawable)
         setText(typeArray?.getString(R.styleable.TextWithDrawable_textWithDrawable_text))
         typeArray?.getDrawable(R.styleable.TextWithDrawable_textWithDrawable_drawable)?.let {
             setDrawable(it)
         }
-
         typeArray?.recycle()
         addView(view)
         setOnClickListener {}

@@ -14,12 +14,21 @@ import com.web.common.base.MyApplication;
 import org.litepal.LitePalApplication;
 
 public class ViewUtil {
+    private static int width=-1,height=-1;
     public static int dpToPx(float dp){
         return (int)(LitePalApplication.getContext().
                 getResources().getDisplayMetrics().density*dp+0.5);
     }
     public static int screenWidth(){
-        return LitePalApplication.getContext().getResources().getDisplayMetrics().widthPixels;
+        if(width<0)
+            width=LitePalApplication.getContext().getResources().getDisplayMetrics().widthPixels;
+        return width;
+    }
+    public static int screenHeight(){
+        if(height<0){
+            height=LitePalApplication.getContext().getResources().getDisplayMetrics().heightPixels;
+        }
+        return height;
     }
     public static void stringSize(String str, float size, Rect rect){
         Paint paint=new Paint();

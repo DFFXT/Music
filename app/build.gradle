@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 27
     buildToolsVersion '28.0.3'
@@ -15,6 +15,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField("String","app_name","build测试")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -23,6 +24,7 @@ android {
         sourceCompatibility 1.8
     }
 }
+
 
 dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
@@ -37,9 +39,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:retrofit-converters:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
     implementation 'com.alibaba:fastjson:1.2.51'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
 }
 repositories {
     mavenCentral()

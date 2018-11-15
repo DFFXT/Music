@@ -1,4 +1,4 @@
-package com.web.common.toast
+package com.web.common.tool
 
 import android.content.Context
 import android.graphics.Rect

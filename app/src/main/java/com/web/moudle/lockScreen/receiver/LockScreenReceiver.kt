@@ -7,10 +7,7 @@ import com.web.moudle.lockScreen.ui.LockScreenActivity
 
 class LockScreenReceiver:BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        if(intent==null||intent.action==null||intent.action!=Intent.ACTION_SCREEN_OFF) return
-        val intent1=Intent(context,LockScreenActivity::class.java)
-        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context?.startActivity(intent1)
-
+        if(context==null||intent==null||intent.action==null||intent.action!=Intent.ACTION_SCREEN_OFF) return
+        LockScreenActivity.actionStart(context)
     }
 }

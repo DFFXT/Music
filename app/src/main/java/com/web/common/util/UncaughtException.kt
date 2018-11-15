@@ -2,7 +2,7 @@ package com.web.common.util
 
 import android.util.Log
 import com.web.common.base.MyApplication
-import com.web.common.toast.MToast
+import com.web.common.tool.MToast
 import com.web.web.R
 
 object UncaughtException:Thread.UncaughtExceptionHandler {

@@ -5,5 +5,9 @@ public final class Constant {
     public class SpKey{
         public final static String clearAll="clearAll";
         public final static String noNeedScan="noNeedScan";
+        public final static String lockScreenBgColor="lockScreenBgColor";
+        public final static String lockScreenBgImagePath="lockScreenBgImagePath";
+        public final static String lockScreenBgMode="lockScreenBgMode";
+        public final static String noLockScreen="noLockScreen";
     }
 }

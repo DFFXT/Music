@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.web.common.base.BaseSingleObserver;
-import com.web.common.toast.MToast;
+import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;

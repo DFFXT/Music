@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.web.common.base.BaseFragment;
-import com.web.common.toast.MToast;
+import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.config.GetFiles;

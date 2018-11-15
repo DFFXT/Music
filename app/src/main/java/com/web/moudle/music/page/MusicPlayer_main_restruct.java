@@ -2,7 +2,6 @@ package com.web.moudle.music.page;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -27,7 +26,7 @@ import android.widget.TextView;
 import com.web.adpter.PlayInterface;
 import com.web.common.base.BaseActivity;
 import com.web.common.constant.Constant;
-import com.web.common.toast.MToast;
+import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
@@ -65,8 +64,6 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	private List<IPage> pageList=new ArrayList<>();
 
 	private ListAlert listAlert;
-
-
 	public int getLayoutId(){//---活动启动入口
 		return R.layout.restruct_music_layout;
 	}
