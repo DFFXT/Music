@@ -7,11 +7,10 @@ import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.web.adpter.MusicExpandableAdapter;
-import com.web.common.base.BaseFragment;
 import com.web.data.Music;
 import com.web.data.MusicGroup;
 import com.web.data.MusicList;
-import com.web.moudle.music.model.control.interf.IPage;
+import com.web.data.PlayerConfig;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.web.R;
 
@@ -23,7 +22,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
-public class MusicListLPage extends BaseFragment implements IPage {
+public class MusicListLPage extends BaseMusicPage {
     public final static String pageName="MusicList";
     private List<MusicList<Music>> data;
     private ExpandableListView listView;
@@ -97,7 +96,7 @@ public class MusicListLPage extends BaseFragment implements IPage {
                     if(group==null){
                         MusicGroup createGroup=new MusicGroup();
                         createGroup.setGroupName("分组");
-                        createGroup.setId(1);
+                        createGroup.setGroupId(1);
                         createGroup.save();
                         data.add(new MusicList<>(createGroup.getGroupName()));
                         data.get(1).setTitle(createGroup.getGroupName());
@@ -112,13 +111,12 @@ public class MusicListLPage extends BaseFragment implements IPage {
                         }
                     }
                     music.setGroupId(1);
-                    music.save();
+                    music.update(music.getId());
                     data.get(1).add(music.copy());
                     adapter.notifyDataSetChanged();
                 }break;
                 case R.id.detailInfo:{//**详细信息
                     showDetail(data.get(groupIndex).get(childIndex));
-
                 }
             }
             return false;
@@ -181,6 +179,11 @@ public class MusicListLPage extends BaseFragment implements IPage {
     private void expandGroup(int group){
         if(group>=0&&group<data.size()&&listView!=null)
             listView.expandGroup(group);
+    }
+    protected void loadMusic(int groupIndex,int childIndex){
+        if(groupIndex>=0&&childIndex>=0&&connect.getConfig().getMusicOrigin()==PlayerConfig.MusicOrigin.LOCAL){
+            adapter.setPlayingIndex(groupIndex,childIndex);
+        }
     }
 
 

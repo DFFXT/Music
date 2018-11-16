@@ -9,12 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.web.common.base.BaseFragment;
 import com.web.common.tool.MToast;
@@ -34,7 +36,7 @@ import com.web.web.R;
 
 import java.util.Objects;
 
-public class InternetMusicPage extends BaseFragment implements IPage {
+public class InternetMusicPage extends BaseMusicPage {
     public final static String pageName="InternetMusic";
     public Context context;
     private SmartRefreshLayout smartRefreshLayout;
@@ -45,7 +47,6 @@ public class InternetMusicPage extends BaseFragment implements IPage {
     private TextView tv_searchICon;//***居中的搜索控件
     private SearchView searchView;//***搜索控件
     private String keyWords;
-    private boolean inited=false;
     private InternetMusicAdapter adapter;
 
 
@@ -56,7 +57,6 @@ public class InternetMusicPage extends BaseFragment implements IPage {
 
     @Override
     public void initView(@NonNull View view) {
-        if(inited)return;
         context=getContext();
         recyclerView=view.findViewById(R.id.internetMusic);
         smartRefreshLayout=view.findViewById(R.id.smartRefreshLayout);
@@ -77,7 +77,9 @@ public class InternetMusicPage extends BaseFragment implements IPage {
 
 
         smartRefreshLayout.setEnableRefresh(false);
-        smartRefreshLayout.setRefreshHeader(new ClassicsHeader(context));
+        smartRefreshLayout.setEnableOverScrollDrag(true);
+        smartRefreshLayout.setEnableLoadMore(true);
+        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(context));
 
         //**点击搜索
         tv_searchICon.setOnClickListener((v)->{
@@ -86,13 +88,18 @@ public class InternetMusicPage extends BaseFragment implements IPage {
             }
         });
         init();
-        inited=true;
     }
     private void init(){
         vm.getStatus().observe((LifecycleOwner) context, wrapper -> {
             if(wrapper==null)return;
             switch (wrapper.getCode()){
-                case InternetDataSource.CODE_OK:break;
+                case InternetDataSource.CODE_OK:{
+                    smartRefreshLayout.finishLoadMore();
+                }break;
+                case InternetDataSource.CODE_NO_DATA:{
+                    smartRefreshLayout.setNoMoreData(true);
+                    //MToast.showToast(context, ResUtil.getString(R.string.noMoreData));
+                }break;
                 case InternetDataSource.CODE_JSON_ERROR:{
                     MToast.showToast(context, ResUtil.getString(R.string.dataAnalyzeError));
                 }break;
@@ -132,7 +139,9 @@ public class InternetMusicPage extends BaseFragment implements IPage {
         closeKeyBord();
         tv_searchICon.setVisibility(View.GONE);
         vm.setKeyWords(keyword);
-        vm.getMusicList().observe((LifecycleOwner) context, pl-> adapter.submitList(pl));
+        vm.getMusicList().observe((LifecycleOwner) context, pl-> {
+            adapter.submitList(pl);
+        });
         this.keyWords=keyword;
     }
 

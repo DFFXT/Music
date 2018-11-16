@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LyricPage extends BaseFragment implements IPage {
+public class LyricPage extends BaseMusicPage {
     public final static String pageName="lyricPage";
     private LyricsView lyricsView;
     private MusicPlay.Connect connect;

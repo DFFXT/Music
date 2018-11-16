@@ -7,8 +7,8 @@ import com.web.data.PlayerConfig;
 import java.util.List;
 
 public interface PlayInterface {
-    void play(String musicName,String singerName,int maxTime);
-    void load(String musicName,String singerName,int maxTime);
+    void play();
+    void load(int groupIndex,int childIndex,Music music,int maxTime);
     void pause();
     void currentTime(int group,int child,int time);
     void musicListChange(List<MusicList<Music>> list);

@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 import com.web.data.Music;
 import com.web.moudle.music.model.control.interf.WaitMusicListener;
-import com.web.moudle.music.model.control.adapter.MyItemTouchHelper;
+import com.web.moudle.music.model.control.adapter.MyItemTouchHelperCallBack;
 import com.web.moudle.music.model.control.adapter.WaitPlayListAdapter;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
@@ -58,7 +58,7 @@ public class ListAlert {
         adapter.setListener(waitMusicListener);
         adapter.setIndex(index);
         view.setAdapter(adapter);
-        ItemTouchHelper.Callback callback=new MyItemTouchHelper(adapter);
+        ItemTouchHelper.Callback callback=new MyItemTouchHelperCallBack(adapter);
         ItemTouchHelper helper=new ItemTouchHelper(callback);
         helper.attachToRecyclerView(view);
         dialog=builder.create();

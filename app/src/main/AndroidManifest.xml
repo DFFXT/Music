@@ -36,9 +36,8 @@
             android:process=":remote" />
 
         <activity
-            android:name="com.web.moudle.music.page.MusicPlayer_main_restruct"
+            android:name="com.web.moudle.music.page.MusicActivity"
             android:label="@string/outerMusicLabel"
-            android:theme="@style/AppStyle"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -22,6 +22,7 @@ public class MusicExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<MusicList<Music>> musicList;
     private IconClickListener listener;
+    private int groupIndex=-1,childIndex=-1;
     public MusicExpandableAdapter(Context context, List<MusicList<Music>> musicList){
         this.musicList=musicList;
         this.context=context;
@@ -114,7 +115,13 @@ public class MusicExpandableAdapter extends BaseExpandableListAdapter {
                 listener.onClick(v,groupPosition, childPosition);
             });
         }
-
+        if(groupPosition==groupIndex&&childPosition==childIndex){
+            holder.musicName.setTextColor(ResUtil.getColor(R.color.themeColor));
+            holder.singer.setTextColor(ResUtil.getColor(R.color.themeColor));
+        }else {
+            holder.musicName.setTextColor(Color.BLACK);
+            holder.singer.setTextColor(Color.BLACK);
+        }
         return convertView;
     }
 
@@ -124,11 +131,13 @@ public class MusicExpandableAdapter extends BaseExpandableListAdapter {
     }
 
 
-
-
-
-
-
+    public void setPlayingIndex(int groupIndex,int childIndex){
+        if(this.groupIndex!=groupIndex||this.childIndex!=childIndex){
+            this.groupIndex=groupIndex;
+            this.childIndex=childIndex;
+            notifyDataSetChanged();
+        }
+    }
 
     private class GroupHolder{
         TextView groupName,musicNum;

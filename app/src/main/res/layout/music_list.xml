@@ -4,6 +4,7 @@
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
     android:divider="@drawable/recycler_divider"
+    android:childDivider="@drawable/bottom_dashline_1px"
     android:layerType="software"
     android:layout_width="match_parent"
     android:layout_height="match_parent">

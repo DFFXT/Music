@@ -13,6 +13,7 @@ public class Music extends DataSupport implements Cloneable{
     private String path;
     private int groupId;
     private int duration;
+    public Music(){}
     public Music(String musicName,String singer,String path){
         this.musicName=musicName;
         this.path=path;
@@ -68,7 +69,7 @@ public class Music extends DataSupport implements Cloneable{
     }
     public Music copy(){
         try {
-            return (Music) clone();
+            return (Music) this.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

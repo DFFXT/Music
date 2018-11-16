@@ -7,19 +7,19 @@ import java.util.List;
 
 public class MusicGroup extends DataSupport {
     private String groupName;
-    private int id;
+    private int groupId;
     private List<Music> music=new ArrayList<>();//***外表
 
-    public void setId(int groupId) {
-        this.id = groupId;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public String getGroupName() {
         return groupName;
     }
 
-    public int getId() {
-        return id;
+    public int getGroupId() {
+        return groupId;
     }
 
     public void setGroupName(String groupName) {

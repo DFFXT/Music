@@ -1,7 +1,7 @@
 package com.web.config;
 
 import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.music.page.MusicPlayer_main_restruct;
+import com.web.moudle.music.page.MusicActivity;
 import com.web.web.R;
 
 import android.app.Notification;
@@ -87,7 +87,7 @@ public class MyNotification{
 		remoteViews.setOnClickPendingIntent(R.id.pause, pPause);
 		
 		//--进入播放器
-		Intent enterIntent=new Intent(context, MusicPlayer_main_restruct.class).
+		Intent enterIntent=new Intent(context, MusicActivity.class).
 				addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.op, enter);

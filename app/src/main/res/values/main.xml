@@ -5,7 +5,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/but_1</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/textSize_normal</item>
         <item name="android:gravity">start</item>
         <item name="android:paddingStart">30dp</item>
     </style>

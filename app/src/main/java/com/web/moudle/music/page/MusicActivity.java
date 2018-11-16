@@ -32,11 +32,10 @@ import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
-import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.control.interf.WaitMusicListener;
 import com.web.moudle.music.model.control.ui.ListAlert;
-import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.ui.SettingActivity;
 import com.web.web.R;
@@ -45,7 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicPlayer_main_restruct extends BaseActivity implements OnClickListener,PlayInterface{
+public class MusicActivity extends BaseActivity implements OnClickListener,PlayInterface{
 
     private TextView songname,singer,tv_musicOrigin;//**音乐信息
 	private SeekBar bar;//--进度条
@@ -56,12 +55,12 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 
 	private DrawerLayout drawer;
 	private ViewPager viewPager;
-	private FragmentStatePagerAdapter adapter;
+	private PagerAdapter adapter;
 	private InternetMusicPage internetMusicPage;
 	private MusicListLPage musicListLPage;
 	private LyricPage lyricPage;
 	private MusicPlay.Connect connect;
-	private List<IPage> pageList=new ArrayList<>();
+	private List<BaseMusicPage> pageList=new ArrayList<>();
 
 	private ListAlert listAlert;
 	public int getLayoutId(){//---活动启动入口
@@ -82,6 +81,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 
 	@SuppressLint("RestrictedApi")
 	private void setToolbar(){
+
 	    toolbar=findViewById(R.id.toolbar);
 	    toolbar.setTitle(ResUtil.getString(R.string.page_local));
 	    setSupportActionBar(toolbar);
@@ -123,7 +123,7 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 		return true;
 	}
 	private boolean hasPage(String pageName){
-		for(IPage page:pageList){
+		for(BaseMusicPage page:pageList){
 			if(pageName.equals(page.getPageName()))return true;
 		}
 		return false;
@@ -196,10 +196,10 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				connect=(MusicPlay.Connect) service;
-				connect.setPlayInterface(MusicPlayer_main_restruct.this);
+				connect.setPlayInterface(MusicActivity.this);
 				connect.getList();
 				getIntentData();//*************8获取输入数据
-				for(IPage page:pageList){
+				for(BaseMusicPage page:pageList){
 					page.setConnect(connect);
 				}
 				connect.getPlayerInfo();//**获取播放器状态
@@ -213,25 +213,21 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	}
 
 	private void setAdapter(){//--设置本地适配器
-
 		viewPager.setOffscreenPageLimit(2);
 		viewPager.setAdapter(adapter=new FragmentStatePagerAdapter(getSupportFragmentManager()) {
 			@Override
 			public Fragment getItem(int position) {
-				return (Fragment) pageList.get(position);
+				return pageList.get(position);
 			}
-
 			@Override
 			public int getCount() {
 				return pageList.size();
 			}
 			@Override
 			public int getItemPosition(@NonNull Object object) {
-				return PagerAdapter.POSITION_NONE;
+				return POSITION_NONE;
 			}
 		});
-
-		//viewPager.setCurrentItem(1);
 
 	}
 
@@ -262,10 +258,10 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
             @Override
             public void onPageSelected(int position) {
-                Shortcut.closeKeyBord(MusicPlayer_main_restruct.this,viewPager);
+                Shortcut.closeKeyBord(MusicActivity.this,viewPager);
 
 
-                IPage page=pageList.get(position);
+                BaseMusicPage page=pageList.get(position);
 				if(searchView!=null&&!InternetMusicPage.pageName.equals(page.getPageName()))
 					searchView.onActionViewCollapsed();
                 switch (page.getPageName()){
@@ -400,11 +396,17 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 
 
 	@Override
-	public void load(String musicName,String singerName,int maxTime){
+	public void load(int groupIndex,int childIndex,Music music,int maxTime){
 		bar.setMax(maxTime/1000);
-		songname.setText(musicName);
-		singer.setText(singerName);
-		play(musicName,singerName,maxTime);
+		if(music==null){
+			songname.setText("");
+			singer.setText("");
+		}else {
+			songname.setText(music.getMusicName());
+			singer.setText(music.getSinger());
+		}
+		play();
+		musicListLPage.loadMusic(groupIndex,childIndex);
 		if(!hasPage(LyricPage.pageName)){
 			lyricPage=new LyricPage();
 			lyricPage.setConnect(connect);
@@ -418,9 +420,9 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	}
 
 	@Override
-	public void play(String musicName,String singerName,int maxTime) {
+	public void play() {
 		pause.setImageResource(R.drawable.icon_play_black);
-		if(listAlert!=null){
+		if(listAlert!=null&&connect.getConfig().getMusicOrigin()==PlayerConfig.MusicOrigin.WAIT){
 			listAlert.setIndex(connect.getWaitIndex());
 		}
 	}
@@ -492,12 +494,13 @@ public class MusicPlayer_main_restruct extends BaseActivity implements OnClickLi
 	}
 
 	private void goDownloadInfo(){//--跳转到下载界面
-		Intent intent=new Intent(MusicPlayer_main_restruct.this,MusicDownLoadActivity.class);
+		Intent intent=new Intent(MusicActivity.this,MusicDownLoadActivity.class);
 		startActivity(intent);
 	}
 	public void onDestroy(){
 		super.onDestroy();
-		unbindService(serviceConnection);
+		if(serviceConnection!=null)
+			unbindService(serviceConnection);
 	}
 
 	

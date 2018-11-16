@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
 import com.web.common.base.BaseAdapter
@@ -24,6 +25,7 @@ import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
+import com.web.misc.DrawableItemDecoration
 import com.web.misc.GapItemDecoration
 import com.web.moudle.lockScreen.ui.LockScreenActivity
 import com.web.moudle.music.player.MusicPlay
@@ -54,7 +56,7 @@ class LockScreenSettingActivity :BaseActivity() {
     override fun initView() {
         view_s_lock_colorSelected.setImageDrawable(ColorDrawable(mColor))
         rv_s_lock_colorList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        rv_s_lock_colorList.addItemDecoration(GapItemDecoration(0,0,10,0))
+        rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(LinearLayout.HORIZONTAL,10,getDrawable(R.drawable.refresh)))
         view_s_lock_colorSelected.setOnClickListener{colorPick()}
         sw_s_lock_switch.setOnCheckedChangeListener{_,res->
             SP.putValue(Constant.spName,Constant.SpKey.noLockScreen,!res)

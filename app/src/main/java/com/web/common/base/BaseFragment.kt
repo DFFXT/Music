@@ -15,7 +15,7 @@ abstract class BaseFragment :Fragment(){
         initView(mRootView!!)
         return this.mRootView
     }
-    public fun isInit():Boolean{
+    fun isInit():Boolean{
         return mRootView!=null
     }
     @LayoutRes abstract fun getLayoutId():Int

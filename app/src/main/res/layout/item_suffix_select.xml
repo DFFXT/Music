@@ -7,18 +7,32 @@
     android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/tv_suffixItem_suffix"
-        android:layout_width="50dp"
+    <ImageView
+        android:id="@+id/iv_deleteItem"
+        android:layout_alignBottom="@id/et_suffixItem_suffix"
+        android:layout_alignTop="@id/et_suffixItem_suffix"
+        android:src="@drawable/icon_delete_suffix"
+        android:tint="@color/themeColor"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:layout_marginEnd="20dp"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:background="@drawable/bottom_line"
+        android:id="@+id/et_suffixItem_suffix"
+        android:layout_toEndOf="@id/iv_deleteItem"
+        android:layout_width="40dp"
+        android:layout_marginEnd="10dp"
         android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/et_suffixSize"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:labelFor="@id/tv_suffixItem_suffix"
+        android:labelFor="@id/et_suffixItem_suffix"
         android:hint="@string/settings_suffixMinSize"
-        android:layout_toEndOf="@id/tv_suffixItem_suffix"
+        android:layout_toEndOf="@id/et_suffixItem_suffix"
         android:background="@drawable/bottom_line"
         android:paddingStart="10dp"
         android:paddingEnd="0dp"
@@ -28,7 +42,7 @@
         android:id="@+id/view_suffixItem_selector"
         android:layout_width="@dimen/textSize_normal"
         android:layout_height="@dimen/textSize_normal"
-        android:layout_alignBottom="@id/tv_suffixItem_suffix"
+        android:layout_alignBottom="@id/et_suffixItem_suffix"
         android:layout_alignParentEnd="true"
         android:background="@drawable/selector_suffix_rect"/>
 </RelativeLayout>

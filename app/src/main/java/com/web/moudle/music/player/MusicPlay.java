@@ -19,7 +19,6 @@ import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.base.MyApplication;
@@ -46,10 +45,6 @@ import org.litepal.crud.DataSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -381,7 +376,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public void getPlayerInfo(){
 			if(canPlay()){
 				Music music=config.getMusic();
-				play.load(music.getMusicName(),music.getSinger(),player.getDuration());
+				play.load(groupIndex,childIndex,music,player.getDuration());
 				if(!player.isPlaying()){
 					play.pause();
 				}
@@ -518,7 +513,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	public void musicPlay(){
 		player.start();
 		Music music=config.getMusic();
-		play.play(music.getMusicName(),music.getSinger(),player.getDuration());
+		play.play();
 
 		notification.setName(music.getMusicName());
 		notification.setSinger(music.getSinger());
@@ -544,7 +539,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		notification.setPlayStatus(true);
 		notification.setBitMap(getBitmap(music.getSinger()));
 		notification.show();
-		play.load(music.getMusicName(),music.getSinger(),player.getDuration());
+		play.load(groupIndex,childIndex,music,player.getDuration());
 		executor.execute(() -> {
 			while(player.isPlaying()){
 				if(play!=null){
@@ -656,9 +651,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 
 	private void reset(){
-		play.load("","",0);
+		play.load(-1,-1,null,0);
 		play.currentTime(0,0,0);
 		play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
+		play.pause();
 		config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
 		config.setMusic(null);
 		waitMusic.clear();
@@ -683,7 +679,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		//**获取自定义列表的歌曲
 		for (MusicGroup musicGroup : musicGroups) {
 			MusicList<Music> list=new MusicList<>(musicGroup.getGroupName());
-			List<Music> musics=DataSupport.where("groupId=?", musicGroup.getId()+"").find(Music.class);
+			List<Music> musics=DataSupport.where("groupId=?", musicGroup.getGroupId()+"").find(Music.class);
 			list.addAll(musics);
 			if(list.size()!=0)
 				musicList.add(list);
@@ -699,9 +695,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		if(types.size()==0){//**如果扫描设置不存在，就采用默认扫描设置
 			String suffix[]=new String[]{".mp3",".ogg",".wav"};
 			for(String str:suffix){
-				ScanMusicType scanMusicType=new ScanMusicType();
-				scanMusicType.setScanSuffix(str);
-				scanMusicType.setMinFileSize(1024*50);
+				ScanMusicType scanMusicType=new ScanMusicType(str,1024*50,true);
 				scanMusicType.save();
 				types.add(scanMusicType);
 			}
@@ -716,13 +710,26 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			for(ScanMusicType type:types){
 				if(!type.isScanable())continue;
 				if(path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
-					Shortcut.getName(out,path);
+					int lastSeparatorChar = path.lastIndexOf(File.separatorChar);
+					//**文件名包含后缀
+					String fileName=path;
+					if (lastSeparatorChar >=0){
+						fileName = path.substring(lastSeparatorChar+1);
+					}
+					Shortcut.getName(out,fileName);
+					//**去后缀
 					int lastIndex=out[0].lastIndexOf('.');
-					int lastIndex1=out[1].lastIndexOf('/');
-					Music music=new Music(out[0].substring(0,lastIndex),out[1].substring(lastIndex1+1),path);
+					Music music=new Music(out[0].substring(0,lastIndex),out[1],path);
 					index=cursor.getColumnIndex("duration");
 					music.setDuration(cursor.getInt(index));
-					music.saveOrUpdate();
+					Music m=DataSupport.where("path=?",music.getPath()).findFirst(Music.class);
+					if(m==null){
+						music.save();
+					}else {//***更新保持groupID不变
+						music.setGroupId(m.getGroupId());
+						music.setId(m.getId());
+						music.update(m.getId());
+					}
 					break;
 				}
 			}

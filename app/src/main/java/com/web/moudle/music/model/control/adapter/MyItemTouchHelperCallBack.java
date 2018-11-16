@@ -5,10 +5,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.web.moudle.music.model.control.interf.RemoveItemListener;
 
-public class MyItemTouchHelper extends ItemTouchHelper.Callback{
+public class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback{
 
     private RemoveItemListener listener;
-    public MyItemTouchHelper(RemoveItemListener listener){
+    public MyItemTouchHelperCallBack(RemoveItemListener listener){
         this.listener=listener;
     }
     @Override

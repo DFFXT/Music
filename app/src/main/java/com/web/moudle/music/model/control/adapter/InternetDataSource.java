@@ -28,6 +28,7 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
     public static final int CODE_NET_ERROR=2;
     public static final int CODE_URL_ERROR=3;
     public static final int CODE_OK=4;
+    public static final int CODE_NO_DATA=5;
 
     public InternetDataSource(@NonNull MutableLiveData<LiveDataWrapper> liveData){
         this.liveData=liveData;
@@ -86,7 +87,11 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
                     e.printStackTrace();
                 }
             }
-            wrapper.setCode(CODE_OK);
+            if(musicList.size()==0){
+                wrapper.setCode(CODE_NO_DATA);
+            }else {
+                wrapper.setCode(CODE_OK);
+            }
         }catch (JSONException e){
             wrapper.setCode(CODE_JSON_ERROR);
         }catch (MalformedURLException e){

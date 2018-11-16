@@ -16,6 +16,10 @@ import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.web.R;
 
+import org.litepal.crud.callback.FindMultiCallback;
+
+import java.util.List;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
@@ -27,6 +31,12 @@ public class SettingActivity extends BaseActivity {
 	}
 	@Override
 	public void initView() {
+		new FindMultiCallback(){
+			@Override
+			public <T> void onFinish(List<T> t) {
+				t.add((T) "");
+			}
+		};
 		ViewUtil.transparentStatusBar(getWindow());
 		findViewById(R.id.twd_lockScreen).setOnClickListener(v->LockScreenSettingActivity.Companion.actionStart(this));
 		findViewById(R.id.twd_musicScan).setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));

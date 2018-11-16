@@ -65,6 +65,7 @@ public class Shortcut {
      * //---从文件名称获取歌手和歌名
      * @param nameAndSinger name
      * @return name , singer
+     * @deprecated use getName(@Size(min = 2) String[] out,@NonNull String nameAndSinger)
      */
     @Deprecated
     public static String[] getName(String nameAndSinger){

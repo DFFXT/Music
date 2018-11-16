@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.web.common.base.BaseActivity;
-import com.web.moudle.music.page.MusicPlayer_main_restruct;
+import com.web.moudle.music.page.MusicActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 		name = new String[]{"浏览器","闹钟","音乐","电脑"};
 
 		path = new Class[]{Browser.class,Alarm_Activity.class,
-				MusicPlayer_main_restruct.class,Computer.class};
+				MusicActivity.class,Computer.class};
 		
 		bgList=new int[]{cTi(R.color.lightBlue),cTi(R.color.lightBlue),
 				cTi(R.color.gray),cTi(R.color.gray)};

@@ -5,7 +5,14 @@ import org.litepal.crud.DataSupport;
 public class ScanMusicType extends DataSupport {
     private String scanSuffix;
     private int minFileSize;
-    private boolean scanable=false;
+    private boolean scanable=true;
+
+    public ScanMusicType(){
+
+    }
+    public ScanMusicType(String scanSuffix,int minFileSize,boolean scanable){
+
+    }
 
     public int getMinFileSize() {
         return minFileSize;
