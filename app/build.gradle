@@ -44,7 +44,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.github.open-android:pinyin4j:2.5.0'
 }
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }

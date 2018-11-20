@@ -19,6 +19,7 @@ import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.TextUtils;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.base.MyApplication;
@@ -41,18 +42,27 @@ import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.moudle.preference.SP;
 import com.web.web.R;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -616,9 +626,23 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			Music.deleteMusic(music);
 			getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,"_data=?",new String[]{music.getPath()});
 		}
+
+
+		if(group==0||deleteFile){//**影响group 0
+			List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
+			for(SongSheet songSheet:list){
+				songSheet.remove(music.getId());
+			}
+		}else {
+			SongSheetManager.INSTANCE.getSongSheetList().getSongList().get(group).remove(music.getId());
+			SongSheetManager.INSTANCE.getSongSheetList().save();
+		}
 		music.delete();
 		musicList.get(group).remove(child);
-		play.musicListChange(group,musicList);
+
+		new Thread(MusicPlay.this::getMusicList).start();
+		//getMusicList();
+		//play.musicListChange(group,musicList);
 	}
 
 
@@ -720,6 +744,34 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				return null;
 			});
 			musicList.add(group);
+		}
+		String chinese="[\\u4e00-\\u9fa5+]";
+		String code="[a-zA-Z]";
+		for(MusicList<Music> ml:musicList){
+			Collections.sort(ml.getMusicList(),(m1,m2)-> {
+				String n1=m1.getMusicName().substring(0,1);
+				String n2=m2.getMusicName().substring(0,1);
+				boolean valid1=n1.matches(chinese+"|"+code);//**是否是中英文
+				boolean valid2=n2.matches(chinese+"|"+code);
+				if(valid1&&valid2){//***中英文
+					String c1=n1;
+					String c2=n2;
+					if(n1.matches(chinese)){//**中文
+						c1=PinyinHelper.toHanyuPinyinStringArray(n1.charAt(0))[0];
+					}
+					if(n2.matches(chinese)){
+						c2=PinyinHelper.toHanyuPinyinStringArray(n2.charAt(0))[0];
+					}
+					return Collator.getInstance(Locale.CHINA).compare(c1,c2);
+				}else if(valid1){
+					return -1;
+				}else if(valid2){
+					return 1;
+				}else {
+					return n1.charAt(0)-n2.charAt(0);
+				}
+
+			});
 		}
 		play.musicListChange(groupIndex,musicList);
 		gettingMusicLock.unlock();

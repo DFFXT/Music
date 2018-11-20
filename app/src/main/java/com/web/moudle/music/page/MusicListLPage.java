@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
 import com.web.data.Music;
 import com.web.data.MusicList;
@@ -20,9 +21,12 @@ import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.web.R;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,13 +63,15 @@ public class MusicListLPage extends BaseMusicPage {
                     connect.delete(groupIndex,position,false);
                 }break;
                 case R.id.deleteOrigin:{//**完全删除
-                    new android.app.AlertDialog.Builder(getContext())
-                            .setTitle(ResUtil.getString(R.string.deleteOrigin))
-                            .setMessage(data.get(position).getPath())
-                            .setNegativeButton(ResUtil.getString(R.string.no),null)
-                            .setPositiveButton(ResUtil.getString(R.string.yes),(dialog,witch)->{
-                                connect.delete(groupIndex,position,true);
-                            }).create().show();
+                    if(groupIndex==0){//**group 0 才可以删除源文件
+                        new android.app.AlertDialog.Builder(getContext())
+                                .setTitle(ResUtil.getString(R.string.deleteOrigin))
+                                .setMessage(data.get(position).getPath())
+                                .setNegativeButton(ResUtil.getString(R.string.no),null)
+                                .setPositiveButton(ResUtil.getString(R.string.yes),(dialog,witch)->{
+                                    connect.delete(groupIndex,position,true);
+                                }).create().show();
+                    }
                 }break;
                 case R.id.setAsLiske:{
                     List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
@@ -74,7 +80,7 @@ public class MusicListLPage extends BaseMusicPage {
                         sheetNameList.add(sheet.getName());
                     }
                     sheetNameList.add("新建");
-                    SingleTextListAlert alert=new SingleTextListAlert(getContext(),"");
+                    SingleTextListAlert alert=new SingleTextListAlert(getContext(),"歌单");
                     alert.setList(sheetNameList);
                     alert.setItemClickListener(index->{
                         if(index!=sheetNameList.size()-1){
@@ -176,7 +182,8 @@ public class MusicListLPage extends BaseMusicPage {
     public void initView(@NotNull View rootView) {
         rv_musicList =rootView.findViewById(R.id.musicExpandableList);
         indexBar=rootView.findViewById(R.id.indexBar_musicList);
-        rv_musicList.setLayoutManager(new LinearLayoutManager(rootView.getContext(),LinearLayoutManager.VERTICAL,false));
+        LinearLayoutManager layoutManager=new LinearLayoutManager(rootView.getContext(),LinearLayoutManager.VERTICAL,false);
+        rv_musicList.setLayoutManager(layoutManager);
         rv_musicList.addItemDecoration(new DrawableItemDecoration(LinearLayout.VERTICAL,4,ResUtil.getDrawable(R.drawable.recycler_divider)));
         if(data!=null){
             adapter=new LocalMusicAdapter(rootView.getContext(),data.getMusicList());
@@ -201,12 +208,36 @@ public class MusicListLPage extends BaseMusicPage {
         if(connect!=null){
             connect.getList(groupIndex);
         }
-
-
-        String str="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        List<String> indexList=Arrays.asList(str.split(""));
+        String str="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
+        List<String> indexList=Arrays.asList(str.split(" "));
         indexBar.setVerticalGap(10);
         indexBar.setIndexList(indexList);
+        rv_musicList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int p=layoutManager.findFirstVisibleItemPosition();
+                if(p<0)return;
+                try {
+                    char code=PinYin.getFirstChar(data.get(p).getMusicName().charAt(0)+"");
+                    for(int i=0;i<indexList.size();i++){
+                        if(code==indexList.get(i).charAt(0)){
+                            indexBar.setSelectedIndex(i);
+                        }
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
 
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.web.common.util.ResUtil
@@ -73,15 +74,20 @@ class IndexBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }else{
                     paint.color=textColor
                 }
-                canvas.drawText(it[i],paddingStart+(maxWidth-widthList[i])/2f,top,paint)
                 top+=lineHeight
+                canvas.drawText(it[i],paddingStart+(maxWidth-widthList[i])/2f,top,paint)
+
                 top+=verticalGap
             }
         }
     }
 
 
-    private var selectedIndex=-1
+    var selectedIndex=-1
+        set(value) {
+            field=value
+            invalidate()
+        }
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent): Boolean {
         val y=e.y
@@ -91,13 +97,13 @@ class IndexBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             else if(index>=it.size)index=it.size-1
             if(selectedIndex!=index){
                 selectedIndex=index
-                invalidate()
+                //invalidate()
                 selectListener?.invoke(selectedIndex)
 
             }
         }
         if(e.action==MotionEvent.ACTION_UP){
-            invalidate()
+            //invalidate()
             touchUpListener?.invoke(selectedIndex)
         }
 
