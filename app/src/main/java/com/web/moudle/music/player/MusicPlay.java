@@ -36,6 +36,7 @@ import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
 import com.web.data.ScanMusicType;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
+import com.web.moudle.music.player.bean.SongSheet;
 import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.moudle.preference.SP;
 import com.web.web.R;
@@ -50,6 +51,8 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -76,7 +79,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private List<Music> waitMusic=new ArrayList<>();//***等待播放的音乐
 	private int waitIndex=0;
 	private PlayInterface play;//**界面接口
-	private int groupIndex=-1,childIndex=-1;
+	private int groupIndex=0,childIndex=-1;
 	private Connect connect;//***连接
 	private LockScreenReceiver lockScreenReceiver;
     private MediaSessionCompat sessionCompat;
@@ -232,10 +235,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public void setPlayInterface(PlayInterface play){
 			MusicPlay.this.play=play;
 		}
-		public void getList(){
+		public void getList(int group){
+			groupIndex=group;
 			if(musicList.size()==0)
 				new Thread(MusicPlay.this::getMusicList).start();
-			else play.musicListChange(musicList);
+			else {
+				play.musicListChange(groupIndex,musicList);
+			}
 		}
 		public int getCurrentPosition(){
 		    return player.getCurrentPosition();
@@ -245,6 +251,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				scanMusicMedia();
 				getMusicList();
 			}).start();
+		}
+		public void groupSelect(int group){
+			if(groupIndex!=group){
+				groupIndex=group;
+				play.musicListChange(group,musicList);
+			}
 		}
 		public void musicSelect(int group,int child){
             if(groupIndex!=group||child!=childIndex){
@@ -346,6 +358,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			}
 			return true;
 		}
+		public void groupChange(){
+			new Thread(()->{
+			    getMusicList();
+            }).start();
+		}
 		public int getWaitIndex(){
 			return  waitIndex;
 		}
@@ -440,7 +457,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		    config.setMusic(music);
 			config.setMusicOrigin(PlayerConfig.MusicOrigin.STORAGE);
 			loadMusic(music);
-
 		}
 		public void playWait(int index){
 			if(index>=0&&index<waitMusic.size()){
@@ -450,6 +466,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		}
 		public boolean isPlay(){
 			return player.isPlaying();
+		}
+
+		public void delete(int groupIndex,int childIndex,boolean deleteFile){
+			MusicPlay.this.deleteMusic(groupIndex,childIndex,deleteFile);
 		}
 
 	}
@@ -480,6 +500,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 	}
 
+
+	private MediaMetadataCompat.Builder metaDataBuilder=new MediaMetadataCompat.Builder();
 	/**
 	 * 加载音乐
 	 * @param music music
@@ -503,12 +525,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			}
 		}
 		play.musicOriginChanged(config.getMusicOrigin());
-		MediaMetadataCompat data=new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE,music.getMusicName())
+
+		metaDataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,music.getMusicName())
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST,music.getSinger())
-				.putString(MediaMetadataCompat.METADATA_KEY_COMPOSER,music.getLyricsPath())
-                .build();
-		sessionCompat.setMetadata(data);
+				.putString(MediaMetadataCompat.METADATA_KEY_COMPOSER,music.getLyricsPath());
+
+		sessionCompat.setMetadata(metaDataBuilder.build());
 	}
 	public void musicPlay(){
 		player.start();
@@ -585,13 +607,18 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	 * @param deleteFile 是否删除源文件
 	 */
 	private void deleteMusic(int group,int child,boolean deleteFile){
-		if(!canPlay())return;
+		if(!canPlay(group,child))return;
 		Music music=musicList.get(group).get(child);
-		if (deleteFile){
-			Shortcut.fileDelete(music.getPath());
+		if(music==config.getMusic()){
+			reset();
+		}
+		if (deleteFile){//******删除源文件并更新媒体库
+			Music.deleteMusic(music);
+			getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,"_data=?",new String[]{music.getPath()});
 		}
 		music.delete();
 		musicList.get(group).remove(child);
+		play.musicListChange(group,musicList);
 	}
 
 
@@ -608,7 +635,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				Music music=DataSupport.where("path=?",
 						intent.getStringExtra("path")).findFirst(Music.class);
 				musicList.get(0).add(music);
-				play.musicListChange(musicList);
+				play.musicListChange(groupIndex,musicList);
 			}break;
 			case ACTION_ClEAR_ALL_MUSIC:{
 				DataSupport.deleteAll(Music.class);
@@ -651,6 +678,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 
 	private void reset(){
+		player.reset();
 		play.load(-1,-1,null,0);
 		play.currentTime(0,0,0);
 		play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
@@ -661,33 +689,46 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		waitIndex=0;
 	}
 
+	private Lock gettingMusicLock =new ReentrantLock();
+	private Lock scanningMusicLock =new ReentrantLock();
 	/**
 	 * 获取本地列表
 	 */
 	@WorkerThread
 	private void getMusicList(){
-		List<MusicGroup> musicGroups =DataSupport.findAll(MusicGroup.class);
+		if(!gettingMusicLock.tryLock()){
+			return;
+		}
 		musicList.clear();
 		//**获取默认列表的歌曲
 		List<Music> defList=DataSupport.findAll(Music.class);
-		/*if(defList.size()==0&&!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.clearAll)){
-			scanMusicMedia();
-		}*/
+
 		MusicList<Music> defGroup=new MusicList<>("默认");
 		defGroup.addAll(defList);
 		musicList.add(defGroup);
 		//**获取自定义列表的歌曲
-		for (MusicGroup musicGroup : musicGroups) {
-			MusicList<Music> list=new MusicList<>(musicGroup.getGroupName());
-			List<Music> musics=DataSupport.where("groupId=?", musicGroup.getGroupId()+"").find(Music.class);
-			list.addAll(musics);
-			if(list.size()!=0)
-				musicList.add(list);
+
+		List<SongSheet> sheetList=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
+		for(SongSheet songSheet:sheetList){
+			MusicList<Music> group=new MusicList<>(songSheet.getName());
+			songSheet.each((id)->{
+				for(Music m:defList){
+					if(m.getId()==id){
+						group.add(m);
+					}
+				}
+				return null;
+			});
+			musicList.add(group);
 		}
-		play.musicListChange(musicList);
+		play.musicListChange(groupIndex,musicList);
+		gettingMusicLock.unlock();
 	}
 	@WorkerThread
 	private void scanMusicMedia(){
+		if(!scanningMusicLock.tryLock()){
+			return;
+		}
 		SP.INSTANCE.putValue(Constant.spName,Constant.SpKey.noNeedScan,true);
 		Cursor cursor=getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,null);
 		if(cursor==null)return;
@@ -736,6 +777,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		}
 		cursor.close();
 		AndroidSchedulers.mainThread().scheduleDirect(()-> MToast.showToast(MyApplication.context,ResUtil.getString(R.string.scanOver)));
+		scanningMusicLock.unlock();
 	}
 
 }

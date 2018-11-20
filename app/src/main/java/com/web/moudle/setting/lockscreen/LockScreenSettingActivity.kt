@@ -65,7 +65,7 @@ class LockScreenSettingActivity :BaseActivity() {
             startService(intent)
         }
         sw_s_lock_switch.isChecked=!SP.getBoolean(Constant.spName,Constant.SpKey.noLockScreen)
-        rv_s_lock_colorList.adapter=object :BaseAdapter(colorList){
+        rv_s_lock_colorList.adapter=object :BaseAdapter<Int>(colorList){
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val v= ImageView(this@LockScreenSettingActivity)
                 v.background=getDrawable(R.drawable.border_1dp)
@@ -75,8 +75,8 @@ class LockScreenSettingActivity :BaseActivity() {
                 return BaseViewHolder(v)
             }
 
-            override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-                (holder.rootView as ImageView).setImageDrawable(ColorDrawable(colorList[position]))
+            override fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:Int?) {
+                (holder.rootView as ImageView).setImageDrawable(ColorDrawable(item!!))
                 holder.rootView.setOnClickListener {
                     view_s_lock_colorSelected.setImageDrawable(ColorDrawable(colorList[position]))
                     SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgColor,colorList[position])

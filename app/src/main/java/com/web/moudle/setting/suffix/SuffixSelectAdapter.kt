@@ -12,12 +12,12 @@ import com.web.common.base.BaseViewHolder
 import com.web.data.ScanMusicType
 import com.web.web.R
 
-class SuffixSelectAdapter(private val ctx:Context,private val list:ArrayList<ScanMusicType>): BaseAdapter(list) {
+class SuffixSelectAdapter(private val ctx:Context,private val list:ArrayList<ScanMusicType>): BaseAdapter<ScanMusicType>(list) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return BaseViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_suffix_select,parent,false))
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:ScanMusicType?) {
         val type=list[position]
         holder.bindText(R.id.et_suffixItem_suffix, type.scanSuffix)
         holder.bindText(R.id.et_suffixSize,"${type.minFileSize}")

@@ -1,6 +1,7 @@
 package com.web.moudle.musicDownload.ui;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 import com.web.common.base.BaseActivity;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
-import com.web.config.DownloadViewAdapter;
+import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.misc.TopBarLayout;
@@ -47,7 +48,6 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 		TopBarLayout topBarLayout=findViewById(R.id.topBar_musicDownload);
 		topBarLayout.setMainTitle(ResUtil.getString(R.string.downloadManager));
 		ViewUtil.transparentStatusBar(getWindow());
-
 	}
 
 	private void connect(){
@@ -70,14 +70,21 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             int id=dataList.get(position).getInternetMusic().getId();
             int status=dataList.get(position).getStatus();
             if(view.getId()==R.id.downloadStatu){
-                if(status==DownloadMusic.DOWNLOAD_DOWNLODINF){
+                if(status==DownloadMusic.DOWNLOAD_DOWNLOADING){
                     connect.pause(id);
+
                 }
                 else {
                     connect.start(id);
                 }
             }else if(view.getId()==R.id.close){
-                connect.delete(id);
+                new AlertDialog.Builder(MusicDownLoadActivity.this)
+                        .setTitle(ResUtil.getString(R.string.delete))
+                        .setMessage("\n\n")
+                        .setNegativeButton(ResUtil.getString(R.string.no),null)
+                        .setPositiveButton(ResUtil.getString(R.string.yes),(dialog,witch)->{
+                            connect.delete(id);
+                        }).create().show();
             }
         });
         rv_download.setAdapter(adapter);
@@ -101,9 +108,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 				    break;
                 }
 				Shortcut.sleep(500);
-				runOnUiThread(()->{
-					adapter.notifyDataSetChanged();
-				});
+				runOnUiThread(()-> adapter.notifyDataSetChanged());
 			}
 		}).start();
 	}

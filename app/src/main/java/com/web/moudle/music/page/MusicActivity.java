@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -32,8 +35,8 @@ import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
-import com.web.moudle.music.model.control.interf.WaitMusicListener;
-import com.web.moudle.music.model.control.ui.ListAlert;
+import com.web.moudle.music.model.control.interf.ListSelectListener;
+import com.web.moudle.music.model.control.ui.SelectorListAlert;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.preference.SP;
@@ -60,19 +63,22 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 	private MusicListLPage musicListLPage;
 	private LyricPage lyricPage;
 	private MusicPlay.Connect connect;
+	private List<MusicList<Music>> groupList;
+	private int groupIndex=-1;
 	private List<BaseMusicPage> pageList=new ArrayList<>();
 
-	private ListAlert listAlert;
+	private SelectorListAlert listAlert;
 	public int getLayoutId(){//---活动启动入口
 		return R.layout.restruct_music_layout;
 	}
 
 	@Override
 	public void initView() {
-		setToolbar();
 		findID();
+		setToolbar();
 		musicListLPage=new MusicListLPage();
 		pageList.add(musicListLPage);
+		setTitle(musicListLPage);
 		setAdapter();
 		startService(new Intent(this,MusicPlay.class));
 		setListener();
@@ -81,9 +87,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 
 	@SuppressLint("RestrictedApi")
 	private void setToolbar(){
-
+		arrowDown=new BitmapDrawable(getResources(),ResUtil.getDrawableRotate(R.drawable.icon_back_black,-90));
+		arrowDown.setBounds(0,0,50,50);
 	    toolbar=findViewById(R.id.toolbar);
 	    toolbar.setTitle(ResUtil.getString(R.string.page_local));
+		tv_title= (TextView) toolbar.getChildAt(0);
+		tv_title.setCompoundDrawableTintMode(PorterDuff.Mode.ADD);
 	    setSupportActionBar(toolbar);
 		if(getSupportActionBar()!=null){
 			getSupportActionBar().setHomeButtonEnabled(true);
@@ -91,8 +100,53 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 			getSupportActionBar().setHomeAsUpIndicator(R.drawable.three_h_line);
 		}
 		toolbar.setNavigationOnClickListener(v -> drawer.openDrawer(Gravity.START));
-
+		tv_title.setOnClickListener(v->{
+			switch (pageList.get(viewPager.getCurrentItem()).getPageName()){
+				case MusicListLPage.pageName:{
+					SelectorListAlert listAlert=new SelectorListAlert(MusicActivity.this,ResUtil.getString(R.string.songSheet));
+					List<String> list=new ArrayList<>();
+					for(MusicList ml:groupList){
+						list.add(ml.getTitle());
+					}
+					listAlert.setList(list);
+					listAlert.setIndex(groupIndex);
+					listAlert.setCanTouchRemove(false);
+					listAlert.setListSelectListener(new ListSelectListener() {
+						@Override
+						public void select(View v, int position) {
+							connect.getList(position);
+							listAlert.cancel();
+						}
+						@Override
+						public void remove(View v, int position) { }
+					});
+					listAlert.build();
+					listAlert.show();
+				}break;
+			}
+		});
     }
+    private TextView tv_title;
+	private Drawable arrowDown;
+    private void setTitle(BaseMusicPage page){
+		switch (page.getPageName()){
+			case InternetMusicPage.pageName:{
+				tv_title.setText(ResUtil.getString(R.string.page_Internet));
+				tv_title.setCompoundDrawables(null,null,null,null);
+			}break;
+			case MusicListLPage.pageName:{
+				tv_title.setText(ResUtil.getString(R.string.page_local));
+				if(groupList!=null){
+					tv_title.setCompoundDrawables(null,null,arrowDown,null);
+				}
+			}break;
+			case LyricPage.pageName:{
+				tv_title.setText(ResUtil.getString(R.string.page_lyrics));
+				tv_title.setCompoundDrawables(null,null,null,null);
+			}break;
+		}
+
+	}
 
     public boolean onCreateOptionsMenu(Menu m){
 		getMenuInflater().inflate(R.menu.music_toolbar_item,m);
@@ -197,7 +251,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				connect=(MusicPlay.Connect) service;
 				connect.setPlayInterface(MusicActivity.this);
-				connect.getList();
+				connect.getList(0);
 				getIntentData();//*************8获取输入数据
 				for(BaseMusicPage page:pageList){
 					page.setConnect(connect);
@@ -276,6 +330,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 						toolbar.setTitle(ResUtil.getString(R.string.page_lyrics));
 					}break;
 				}
+				setTitle(page);
 
             }
             @Override
@@ -324,34 +379,40 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 			case R.id.musicOrigin:{
 				if(connect.getConfig().getMusicOrigin()!= PlayerConfig.MusicOrigin.WAIT)return;
 				if(listAlert==null) {
-					listAlert = new ListAlert(this);
+					listAlert = new SelectorListAlert(this,ResUtil.getString(R.string.playList));
 				}
-				listAlert.setMusicList(connect.getWaitMusic());
-				listAlert.setIndex(connect.getWaitIndex());
-				listAlert.setWaitMusicListener(new WaitMusicListener() {
-                    @Override
-                    public void select(View v, int position) {
-                        connect.playWait(position);
-                        listAlert.setIndex(position);
-                        listAlert.getAdapter().notifyDataSetChanged();
-                    }
+				listAlert.setListSelectListener(new ListSelectListener() {
+					@Override
+					public void select(View v, int position) {
+						connect.playWait(position);
+					}
 
-                    @Override
-                    public void remove(View v, int position) {
-                        connect.removeWait(position);
-                        if(connect.getWaitMusic().size()==0){
-                        	listAlert.cancel();
-                        	return;
+					@Override
+					public void remove(View v, int position) {
+						connect.removeWait(position);
+						if(connect.getWaitMusic().size()==0){
+							listAlert.cancel();
+							return;
 						}
-                        listAlert.setIndex(connect.getWaitIndex());
-                        listAlert.getAdapter().notifyItemRemoved(position);
-                    }
-                });
+						listAlert.setIndex(connect.getWaitIndex());
+					}
+				});
+				List<String> list=new ArrayList<>();
+				for(Music m:connect.getWaitMusic()){
+					list.add(m.getMusicName());
+				}
+				listAlert.setCanTouchRemove(true);
+				listAlert.setList(list);
+				listAlert.setIndex(connect.getWaitIndex());
 				listAlert.build();
 				listAlert.show();
 
 			}break;
 		}
+	}
+
+	private BaseMusicPage getCurrentPage(){
+		return pageList.get(viewPager.getCurrentItem());
 	}
 
 	/**
@@ -448,7 +509,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 	}
 
 	@Override
-	public void musicListChange(List<MusicList<Music>> list) {
+	public void musicListChange(int groupIndex,List<MusicList<Music>> list) {
 	    runOnUiThread(() -> {
 	        if(list==null||list.size()==0||list.get(0).size()==0){
 	            if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noNeedScan)){
@@ -460,9 +521,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
                             }).create().show();
                 }
             }else {
-                musicListLPage.setData(list);
+                musicListLPage.setData(groupIndex,list.get(groupIndex));
+				this.groupList=list;
+				this.groupIndex=groupIndex;
+				setTitle(getCurrentPage());
             }
-
         });
 	}
 
@@ -502,6 +565,34 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 		if(serviceConnection!=null)
 			unbindService(serviceConnection);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
 }

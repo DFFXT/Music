@@ -96,6 +96,7 @@
 	<string name="page_Internet">网络音乐</string>
 	<string name="page_lyrics">歌词</string>
 	<string name="playList">播放列表</string>
+	<string name="songSheet">歌单</string>
 	<string name="lyrics_noLyrics">没有歌词—(〃´-ω･) </string>
 	<string name="dataAnalyzeError">数据解析错误</string>
 	<string name="noInternet">没有网络</string>

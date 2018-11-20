@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ExpandableListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/musicExpandableList"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:divider="@drawable/recycler_divider"
-    android:childDivider="@drawable/bottom_dashline_1px"
-    android:layerType="software"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</ExpandableListView>
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/musicExpandableList"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:divider="@drawable/recycler_divider"
+        android:layerType="software"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/indexBar_musicList"/>
+
+    <com.web.misc.IndexBar
+        android:id="@+id/indexBar_musicList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        app:indexBar_textSize="@dimen/textSize_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
+

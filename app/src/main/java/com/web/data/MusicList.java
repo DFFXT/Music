@@ -39,4 +39,7 @@ public class MusicList<T> {
     public void clear(){
         music.clear();
     }
+    public List<T> getMusicList(){
+        return music;
+    }
 }

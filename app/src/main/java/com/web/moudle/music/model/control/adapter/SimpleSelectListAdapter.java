@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +13,18 @@ import android.widget.TextView;
 
 import com.web.common.base.BaseViewHolder;
 import com.web.common.util.ResUtil;
-import com.web.data.Music;
-import com.web.moudle.music.model.control.interf.ListSelectListener;
 import com.web.moudle.music.model.control.interf.RemoveItemListener;
+import com.web.moudle.music.model.control.interf.ListSelectListener;
 import com.web.web.R;
 
 import java.util.List;
 
-public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> implements RemoveItemListener {
+public class SimpleSelectListAdapter extends RecyclerView.Adapter<BaseViewHolder> implements RemoveItemListener {
     private Context context;
-    private List<Music> list;
+    private List<String> list;
     private int index=-1;
     private ListSelectListener listener;
-    public WaitPlayListAdapter(Context context, List<Music> list){
+    public SimpleSelectListAdapter(Context context, List<String> list){
         this.context=context;
         this.list=list;
     }
@@ -38,10 +38,11 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         TextView tv= (TextView) holder.rootView;
-        tv.setText(list.get(position).getMusicName());
+        tv.setText(list.get(position));
         tv.setOnClickListener((v1)->{
             if(listener!=null){
                 listener.select(v1,position);
+                setIndex(position);
             }
         });
         if(index==position){
@@ -72,6 +73,7 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> im
         if(listener!=null){
             listener.remove(holder.itemView,position);
         }
+        list.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -81,7 +83,8 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> im
 
     public void setIndex(int index) {
         if(index>=0&&index<list.size()) {
-            notifyItemChanged(this.index);
+            if(this.index>=0)
+                notifyItemChanged(this.index);
             this.index = index;
             notifyItemChanged(index);
         }

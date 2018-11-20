@@ -15,6 +15,7 @@ public class InternetMusic extends DataSupport implements Serializable {
     private String sqHash;
     private String _320Hash;
     private String url="";
+    //******本地保存位置
     private String path;
     private int duration;
     private int hasDownload;

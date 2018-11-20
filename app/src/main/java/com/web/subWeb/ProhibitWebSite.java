@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.web.config.DownloadViewAdapter;
+import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.config.GetFiles;
 import com.web.web.R;

@@ -50,4 +50,30 @@ object ResUtil {
     fun bitmapOp(bitmap:Bitmap,matrix:Matrix):Bitmap{
         return Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,false)
     }
+    @JvmStatic
+    fun getBitmapHorizontalMirror(bitmap: Bitmap):Bitmap{
+        val matrix=Matrix()
+        matrix.postScale(-1f,1f)
+        return bitmapOp(bitmap,matrix)
+    }
+    @JvmStatic
+    fun getDrawableHorizontalMirror(@DrawableRes drawableId: Int):Bitmap{
+        val mBitmap=getBitmapFromDrawable(getDrawable(drawableId))
+        val res=getBitmapHorizontalMirror(mBitmap)
+        mBitmap.recycle()
+        return res
+    }
+    @JvmStatic
+    fun getBitmapRotate(bitmap: Bitmap,degree:Float):Bitmap{
+        val matrix=Matrix()
+        matrix.postRotate(degree)
+        return bitmapOp(bitmap,matrix)
+    }
+    @JvmStatic
+    fun getDrawableRotate(@DrawableRes drawableId: Int,degree:Float):Bitmap{
+        val mBitmap= getBitmapFromDrawable(getDrawable(drawableId))
+        val res= getBitmapRotate(mBitmap,degree)
+        mBitmap.recycle()
+        return res
+    }
 }

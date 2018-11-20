@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.web.data.Music;
-import com.web.moudle.music.model.control.interf.WaitMusicListener;
+import com.web.moudle.music.model.control.interf.ListSelectListener;
 import com.web.moudle.music.model.control.adapter.MyItemTouchHelperCallBack;
 import com.web.moudle.music.model.control.adapter.WaitPlayListAdapter;
 import com.web.common.util.ResUtil;
@@ -25,7 +25,7 @@ public class ListAlert {
     private AlertDialog.Builder builder;
     private List<Music> list;
     private RecyclerView view;
-    private WaitMusicListener waitMusicListener;
+    private ListSelectListener listSelectListener;
     private int index=-1;
     private WaitPlayListAdapter adapter;
     public ListAlert(Context context){
@@ -55,7 +55,7 @@ public class ListAlert {
         view.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
 
         adapter=new WaitPlayListAdapter(context,list);
-        adapter.setListener(waitMusicListener);
+        adapter.setListener(listSelectListener);
         adapter.setIndex(index);
         view.setAdapter(adapter);
         ItemTouchHelper.Callback callback=new MyItemTouchHelperCallBack(adapter);
@@ -67,8 +67,8 @@ public class ListAlert {
 
     }
 
-    public void setWaitMusicListener(WaitMusicListener waitMusicListener) {
-        this.waitMusicListener = waitMusicListener;
+    public void setListSelectListener(ListSelectListener listSelectListener) {
+        this.listSelectListener = listSelectListener;
     }
 
     public void show(){

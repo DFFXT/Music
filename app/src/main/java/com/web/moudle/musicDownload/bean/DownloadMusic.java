@@ -7,8 +7,9 @@ import com.web.data.InternetMusic;
 public class DownloadMusic {
     public final static int DOWNLOAD_WAIT=1;
     public final static int DOWNLOAD_PAUSE=2;
-    public final static int DOWNLOAD_DOWNLODINF=3;
-    @IntDef({DOWNLOAD_WAIT,DOWNLOAD_PAUSE,DOWNLOAD_DOWNLODINF})
+    public final static int DOWNLOAD_DOWNLOADING=3;
+    public final static int DOWNLOAD_DELETE=4;
+    @IntDef({DOWNLOAD_WAIT,DOWNLOAD_PAUSE,DOWNLOAD_DOWNLOADING,DOWNLOAD_DELETE})
     @interface DownloadStatus{}
     private InternetMusic internetMusic;
     private @DownloadStatus int status;

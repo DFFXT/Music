@@ -2,74 +2,50 @@ package com.web.moudle.music.page;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 
-import com.web.adpter.MusicExpandableAdapter;
+import com.web.common.util.ResUtil;
 import com.web.data.Music;
-import com.web.data.MusicGroup;
 import com.web.data.MusicList;
-import com.web.data.PlayerConfig;
+import com.web.misc.DrawableItemDecoration;
+import com.web.misc.IndexBar;
+import com.web.moudle.music.model.control.adapter.LocalMusicAdapter;
+import com.web.moudle.music.model.control.ui.SingleTextListAlert;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.music.player.SongSheetManager;
+import com.web.moudle.music.player.bean.SongSheet;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
-import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class MusicListLPage extends BaseMusicPage {
     public final static String pageName="MusicList";
-    private List<MusicList<Music>> data;
-    private ExpandableListView listView;
-    private MusicExpandableAdapter adapter;
+    private MusicList<Music> data;
+    private RecyclerView rv_musicList;
+    private IndexBar indexBar;
+    private LocalMusicAdapter adapter;
     private MusicPlay.Connect connect;
+    private int groupIndex=0;
 
 
-    /**
-     * 偏爱组子项长点击
-     * @param v v
-     * @param groupIndex gr
-     * @param childIndex ch
-     */
-    private void likeGroupChildLongClick(View v,int groupIndex,int childIndex){
-        PopupMenu popupMenu =new PopupMenu(Objects.requireNonNull(getContext()),v);
-        popupMenu.inflate(R.menu.like_child_long_click);
-        popupMenu.show();
-        popupMenu.setOnMenuItemClickListener((item -> {
-            switch (item.getItemId()){
-                case R.id.musicPlay:{
-                    this.connect.musicSelect(groupIndex,childIndex);
-                }break;
-                case R.id.remove:{
-                    Music music=data.get(groupIndex).get(childIndex);
-                    music.setGroupId(0);
-                    music.save();
-                    data.get(groupIndex).remove(childIndex);
-                    if(data.get(groupIndex).size()==0){
-                        data.remove(groupIndex);
-                    }
-                    adapter.notifyDataSetChanged();
-                }break;
-                case R.id.detailInfo:{
-                    showDetail(data.get(groupIndex).get(childIndex));
-                }break;
-            }
 
-            return true;
-        }));
-    }
 
     /**
      * 默认组子项长点击
-     * @param groupIndex gr
-     * @param childIndex ch
+     * @param position p
      */
-    private void defaultGroupChildLongClick(View view,int groupIndex,int childIndex){
+    private void defaultGroupChildLongClick(View view,int position){
         PopupMenu popupMenu =new PopupMenu(Objects.requireNonNull(getContext()),view);
         popupMenu.inflate(R.menu.default_child_long_click);
         popupMenu.show();
@@ -77,46 +53,49 @@ public class MusicListLPage extends BaseMusicPage {
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()){
                 case R.id.musicPlay:{//**播放
-                    this.connect.musicSelect(groupIndex,childIndex);
+                    this.connect.musicSelect(groupIndex,position);
                 }break;
                 case R.id.delete:{//**删除
-                    data.get(groupIndex).get(childIndex).delete();
-                    data.get(groupIndex).remove(childIndex);
-                    adapter.notifyDataSetChanged();
+                    connect.delete(groupIndex,position,false);
                 }break;
                 case R.id.deleteOrigin:{//**完全删除
-                    Music music= data.get(groupIndex).get(childIndex);
-                    Music.deleteMusic(music);
-                    data.get(groupIndex).remove(childIndex);
-                    adapter.notifyDataSetChanged();
+                    new android.app.AlertDialog.Builder(getContext())
+                            .setTitle(ResUtil.getString(R.string.deleteOrigin))
+                            .setMessage(data.get(position).getPath())
+                            .setNegativeButton(ResUtil.getString(R.string.no),null)
+                            .setPositiveButton(ResUtil.getString(R.string.yes),(dialog,witch)->{
+                                connect.delete(groupIndex,position,true);
+                            }).create().show();
                 }break;
                 case R.id.setAsLiske:{
-                    Music music=data.get(groupIndex).get(childIndex);
-                    MusicGroup group=DataSupport.findFirst(MusicGroup.class);
-                    if(group==null){
-                        MusicGroup createGroup=new MusicGroup();
-                        createGroup.setGroupName("分组");
-                        createGroup.setGroupId(1);
-                        createGroup.save();
-                        data.add(new MusicList<>(createGroup.getGroupName()));
-                        data.get(1).setTitle(createGroup.getGroupName());
-                    }else {
-                        if(data.size()==1){
-                            data.add(new MusicList<>(group.getGroupName()));
-                        }
-                        for(int i=0;i<data.get(1).size();i++){
-                            if(data.get(0).get(i).getPath().equals(music.getPath())){
-                                return true;
-                            }
-                        }
+                    List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
+                    List<String> sheetNameList=new ArrayList<>();
+                    for(SongSheet sheet:list){
+                        sheetNameList.add(sheet.getName());
                     }
-                    music.setGroupId(1);
-                    music.update(music.getId());
-                    data.get(1).add(music.copy());
-                    adapter.notifyDataSetChanged();
+                    sheetNameList.add("新建");
+                    SingleTextListAlert alert=new SingleTextListAlert(getContext(),"");
+                    alert.setList(sheetNameList);
+                    alert.setItemClickListener(index->{
+                        if(index!=sheetNameList.size()-1){
+                            list.get(index).add(data.get(position).getId());
+                            connect.groupChange();
+                            SongSheetManager.INSTANCE.getSongSheetList().save();
+                            alert.cancel();
+                        }else {
+                            String name="sheet-"+SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
+                            SongSheetManager.INSTANCE.createNewSongSheet(name);
+                            sheetNameList.add(index,name);
+                            alert.getAdapter().notifyItemRangeInserted(index,1);
+                            connect.groupChange();
+                        }
+                        return null;
+                    });
+                    alert.build();
+                    alert.show();
                 }break;
                 case R.id.detailInfo:{//**详细信息
-                    showDetail(data.get(groupIndex).get(childIndex));
+                    showDetail(data.get(position));
                 }
             }
             return false;
@@ -144,7 +123,11 @@ public class MusicListLPage extends BaseMusicPage {
      */
     @Override
     public void setConnect(@NonNull MusicPlay.Connect connect) {
-        this.connect = connect;
+        if(this.connect==null){
+            this.connect = connect;
+            connect.getList(groupIndex);
+        }
+
     }
 
     @NotNull
@@ -157,32 +140,29 @@ public class MusicListLPage extends BaseMusicPage {
      * 设置主音乐页面的数据
      * @param data data
      */
-    public void setData(List<MusicList<Music>> data) {
-        if(data==null||!isInit()) return;
-        if(this.data==null||!this.data.equals(data)){
-            adapter=new MusicExpandableAdapter(getContext(),data);
-            adapter.setIconClickListener((v,g,c)->{
-                connect.addToWait(data.get(g).get(c));
-
-            });
-            listView.setAdapter(adapter);
-            this.data = data;
-            if(data.size()==1){
-                expandGroup(0);
+    public void setData(int groupIndex,MusicList<Music> data) {
+        this.groupIndex=groupIndex;
+        this.data=data;
+        if(adapter!=null){
+            if(musicGroupIndex!=groupIndex){
+                adapter.setIndex(-1);
+            }else {
+                adapter.setIndex(childPosition);
             }
-        }else {
+            adapter.notifyItemChanged(childPosition);
+            adapter.setData(data.getMusicList());
             adapter.notifyDataSetChanged();
         }
 
     }
 
-    private void expandGroup(int group){
-        if(group>=0&&group<data.size()&&listView!=null)
-            listView.expandGroup(group);
-    }
-    protected void loadMusic(int groupIndex,int childIndex){
-        if(groupIndex>=0&&childIndex>=0&&connect.getConfig().getMusicOrigin()==PlayerConfig.MusicOrigin.LOCAL){
-            adapter.setPlayingIndex(groupIndex,childIndex);
+    private int musicGroupIndex=0;
+    private int childPosition=0;
+    protected void loadMusic(int musicGroupIndex,int position){
+        this.musicGroupIndex=musicGroupIndex;
+        this.childPosition=position;
+        if(adapter!=null&&musicGroupIndex==groupIndex) {
+            adapter.setIndex(position);
         }
     }
 
@@ -194,32 +174,39 @@ public class MusicListLPage extends BaseMusicPage {
 
     @Override
     public void initView(@NotNull View rootView) {
-        listView=rootView.findViewById(R.id.musicExpandableList);
-        listView.setOnChildClickListener((p, v, groupPosition, childPosition, id)-> {
-            if(MusicListLPage.this.connect!=null){
-                MusicListLPage.this.connect.musicSelect(groupPosition,childPosition);
-            }
-            return false;
+        rv_musicList =rootView.findViewById(R.id.musicExpandableList);
+        indexBar=rootView.findViewById(R.id.indexBar_musicList);
+        rv_musicList.setLayoutManager(new LinearLayoutManager(rootView.getContext(),LinearLayoutManager.VERTICAL,false));
+        rv_musicList.addItemDecoration(new DrawableItemDecoration(LinearLayout.VERTICAL,4,ResUtil.getDrawable(R.drawable.recycler_divider)));
+        if(data!=null){
+            adapter=new LocalMusicAdapter(rootView.getContext(),data.getMusicList());
+        }else {
+            adapter=new LocalMusicAdapter(rootView.getContext(),null);
+        }
+
+        adapter.setItemClickListener((v,position)->{
+            connect.musicSelect(groupIndex,position);
+            return null;
         });
-        //***长点击
-        listView.setOnItemLongClickListener((parent1, view, position, id) -> {
-            long p=listView.getExpandableListPosition(position);
-            int groupIndex=ExpandableListView.getPackedPositionGroup(p);
-            int childIndex=ExpandableListView.getPackedPositionChild(p);
-            if(childIndex>=0){//**长点击的子项
-                if(groupIndex==0)
-                    defaultGroupChildLongClick(view,groupIndex,childIndex);
-                else likeGroupChildLongClick(view,groupIndex,childIndex);
-            }
-            else if(groupIndex==0){//***默认音乐组长点击
+        adapter.setAddListenner(position->{
+            connect.addToWait(data.get(position));
+            return null;
+        });
 
-            }
-
+        adapter.setItemLongClickListener((v,position)->{
+            defaultGroupChildLongClick(v,position);
             return true;
         });
-        listView.setAdapter(adapter);
+        rv_musicList.setAdapter(adapter);
         if(connect!=null){
-            connect.getList();
+            connect.getList(groupIndex);
         }
+
+
+        String str="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        List<String> indexList=Arrays.asList(str.split(""));
+        indexBar.setVerticalGap(10);
+        indexBar.setIndexList(indexList);
+
     }
 }

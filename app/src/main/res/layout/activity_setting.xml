@@ -6,6 +6,7 @@
 	android:background="@color/white"
 	android:orientation="vertical"
 	android:id="@+id/parent"
+	android:transitionName="sss"
      >
     <com.web.misc.TopBarLayout
 		android:id="@+id/topBar_setting"
