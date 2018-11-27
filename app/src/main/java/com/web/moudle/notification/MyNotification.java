@@ -1,4 +1,4 @@
-package com.web.config;
+package com.web.moudle.notification;
 
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.page.MusicActivity;

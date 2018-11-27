@@ -84,8 +84,10 @@
 	<string name="musicPlay">播放</string>
 	<string name="deleteOrigin">删除源文件</string>
 	<string name="detailInfo">详细信息</string>
+	<string name="multiSelect">多选</string>
 	<string name="setAsLike">添加到分组</string>
 	<string name="remove">移除</string>
+	<string name="selectAll">全选</string>
 
 	<string name="deleteGroupOrigin">完全删除</string>
 	<string name="clearGroup">清空</string>
@@ -115,6 +117,9 @@
 	<string name="text_6">六</string>
     <string name="setting_lockScreen_title">锁屏设置</string>
     <string name="setting_lockScreen_switch">开启锁屏</string>
+	<string name="setting_lockScreen_modeSelect">锁屏模式</string>
+	<string name="setting_lockScreen_mode_color">颜色</string>
+	<string name="setting_lockScreen_mode_image">图片</string>
     <string name="setting_lockScreen_colorListLabel">锁屏背景:</string>
 	<string name="setting_lockScreen_imageBackground">选择图片背景</string>
 

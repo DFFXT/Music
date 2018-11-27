@@ -39,6 +39,7 @@ import com.web.config.Shortcut
 import com.web.moudle.music.model.lyrics.model.LyricsLine
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.preference.SP
+import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lock_screen.*
 import java.util.*
@@ -78,11 +79,11 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
 
     override fun initView() {
         ViewUtil.transparentStatusBar(window)
-        val mode=SP.getString(Constant.spName,Constant.SpKey.lockScreenBgMode)
+        val mode=LockScreenSettingActivity.getMode()
         when(mode){
             BG_MODE_IMAGE-> {
 
-                ImageLoad.load(SP.getString(Constant.spName, Constant.SpKey.lockScreenBgImagePath)).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
+                ImageLoad.load(LockScreenSettingActivity.getBgImagePath()).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         val rs = RenderScript.create(this@LockScreenActivity)
                         val blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
@@ -100,7 +101,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                     }
                 })
             }
-            else ->rootView_lockScreenActivity.setBackgroundColor(SP.getInt(Constant.spName,Constant.SpKey.lockScreenBgColor))
+            else ->rootView_lockScreenActivity.setBackgroundColor(LockScreenSettingActivity.getBgColor())
         }
         if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.N_MR1)
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)

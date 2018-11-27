@@ -64,7 +64,7 @@ public class TaskListSql {
 			}
 			cursor.close();//--必须关闭，不然打开次数多了会内存泄漏
 		}catch(Exception e){
-			gFiles.write(GetFiles.rootPath+"log.txt", "sql select:"+e+"\r\n", true);
+			gFiles.write(GetFiles.rootPath+"log.txt", "sql isSelect:"+e+"\r\n", true);
 		}
 		
 		return map;

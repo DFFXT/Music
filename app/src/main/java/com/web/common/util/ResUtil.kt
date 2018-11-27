@@ -16,6 +16,10 @@ object ResUtil {
     fun getString(@StringRes id: Int): String {
         return LitePalApplication.getContext().resources.getString(id)
     }
+
+    /**
+     * @param pattern mm:ss
+     */
     @JvmStatic
     fun timeFormat(pattern: String, time: Long): String {
         val format = SimpleDateFormat(pattern, Locale.CHINA)

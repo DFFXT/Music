@@ -9,11 +9,12 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
@@ -269,8 +270,17 @@ public class LyricsView extends RelativeLayout{
         postInvalidate();
     }
 
+    @Override
+    public boolean onKeyShortcut(int keyCode, KeyEvent event) {
+        Log.i("log","-1-");
+        return true;
+    }
 
-
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Log.i("log","-2--");
+        return true;
+    }
 
     private float preY;
     private boolean startScroll;

@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -58,13 +59,22 @@ class LockScreenSettingActivity :BaseActivity() {
         rv_s_lock_colorList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(LinearLayout.HORIZONTAL,10,getDrawable(R.drawable.refresh)))
         view_s_lock_colorSelected.setOnClickListener{colorPick()}
+        sw_lockScreenMode.setOnClickListener {
+            if(getMode()==LockScreenActivity.BG_MODE_COLOR){
+                setMode(LockScreenActivity.BG_MODE_IMAGE)
+            }else{
+                setMode(LockScreenActivity.BG_MODE_COLOR)
+            }
+            switchLockScreenMode(getMode())
+        }
+        switchLockScreenMode(getMode())
         sw_s_lock_switch.setOnCheckedChangeListener{_,res->
-            SP.putValue(Constant.spName,Constant.SpKey.noLockScreen,!res)
+            setNoLockScreen(!res)
             val intent=Intent(this@LockScreenSettingActivity,MusicPlay::class.java)
             intent.action = MusicPlay.ACTION_LOCKSCREEN
             startService(intent)
         }
-        sw_s_lock_switch.isChecked=!SP.getBoolean(Constant.spName,Constant.SpKey.noLockScreen)
+        sw_s_lock_switch.isChecked=!getNoLockScreen()
         rv_s_lock_colorList.adapter=object :BaseAdapter<Int>(colorList){
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val v= ImageView(this@LockScreenSettingActivity)
@@ -79,15 +89,13 @@ class LockScreenSettingActivity :BaseActivity() {
                 (holder.rootView as ImageView).setImageDrawable(ColorDrawable(item!!))
                 holder.rootView.setOnClickListener {
                     view_s_lock_colorSelected.setImageDrawable(ColorDrawable(colorList[position]))
-                    SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgColor,colorList[position])
-                    SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgMode,LockScreenActivity.BG_MODE_COLOR)
+                    setBgColor(colorList[position])
+                    //SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgMode,LockScreenActivity.BG_MODE_COLOR)
                 }
             }
         }
 
-        if(SP.getString(Constant.spName,Constant.SpKey.lockScreenBgMode)==LockScreenActivity.BG_MODE_IMAGE){
-            setBackgroundImage(SP.getString(Constant.spName,Constant.SpKey.lockScreenBgImagePath))
-        }
+        setBackgroundImage(getBgImagePath())
 
 
         tv_s_lock_setImageBackground.setOnClickListener {
@@ -99,6 +107,11 @@ class LockScreenSettingActivity :BaseActivity() {
         }
 
 
+    }
+    private fun switchLockScreenMode(mode:String){
+        sw_lockScreenMode.text=
+                if(mode==LockScreenActivity.BG_MODE_COLOR) getString(R.string.setting_lockScreen_mode_color)
+                else getString(R.string.setting_lockScreen_mode_image)
     }
     private fun setBackgroundImage(path:String){
         ImageLoad.load(path).into(object :BaseGlideTarget(ViewUtil.screenWidth() shr 2,ViewUtil.screenHeight() shr 2){
@@ -129,7 +142,7 @@ class LockScreenSettingActivity :BaseActivity() {
         colorPickerDialog.positiveButtonListener={
             colorPickerDialog.cancel()
             if(it!=null){
-                SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgColor,it)
+                setBgColor(it)
                 view_s_lock_colorSelected.setImageDrawable(ColorDrawable(it))
             }
         }
@@ -168,15 +181,17 @@ class LockScreenSettingActivity :BaseActivity() {
             }
             val path = dir.absolutePath + File.separator + "lockScreenImage.png"
             try {
-                val inputStream = FileInputStream(Environment.getExternalStorageDirectory().absolutePath+"/1.png")
+                val tmpFile=File(Environment.getExternalStorageDirectory().absolutePath+"/1.png")
+                val inputStream = FileInputStream(tmpFile)
                 inputStream.use { input ->
                     FileOutputStream(path).use { output ->
                         input.copyTo(output)
                     }
                 }
-                SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgImagePath, path)
-                SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgMode, LockScreenActivity.BG_MODE_IMAGE)
+                setBgImagePath(path)
+                //setMode(LockScreenActivity.BG_MODE_IMAGE)
                 setBackgroundImage(path)
+                tmpFile.delete()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -186,6 +201,30 @@ class LockScreenSettingActivity :BaseActivity() {
     companion object {
         fun actionStart(context: Context){
             context.startActivity(Intent(context,LockScreenSettingActivity::class.java))
+        }
+        fun getNoLockScreen():Boolean{
+            return SP.getBoolean(Constant.spName,Constant.SpKey.noLockScreen)
+        }
+        fun setNoLockScreen(noLock:Boolean){
+            SP.putValue(Constant.spName,Constant.SpKey.noLockScreen,noLock)
+        }
+        fun getMode():String{
+            return SP.getString(Constant.spName,Constant.SpKey.lockScreenBgMode)
+        }
+        fun setMode(mode:String){
+            SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgMode,mode)
+        }
+        fun setBgColor(color:Int){
+            SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgColor,color)
+        }
+        fun getBgColor():Int{
+            return SP.getInt(Constant.spName,Constant.SpKey.lockScreenBgColor)
+        }
+        fun setBgImagePath(path:String){
+            SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgImagePath,path)
+        }
+        fun getBgImagePath():String{
+            return SP.getString(Constant.spName,Constant.SpKey.lockScreenBgImagePath)
         }
     }
 

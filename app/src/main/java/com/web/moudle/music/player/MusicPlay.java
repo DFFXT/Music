@@ -19,7 +19,7 @@ import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.text.TextUtils;
+import android.util.Log;
 
 import com.web.adpter.PlayInterface;
 import com.web.common.base.MyApplication;
@@ -27,7 +27,7 @@ import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
-import com.web.config.MyNotification;
+import com.web.moudle.notification.MyNotification;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
@@ -40,11 +40,10 @@ import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.moudle.preference.SP;
+import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.web.R;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 
 import org.litepal.crud.DataSupport;
 
@@ -53,7 +52,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -62,7 +60,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Pattern;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -124,25 +121,21 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         sessionCompat.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
-                super.onPlay();
                 connect.changePlayerPlayingStatus();
             }
 
 			@Override
 			public void onPause() {
-				super.onPause();
                 musicPause();
 			}
 
 			@Override
 			public void onSkipToNext() {
-				super.onSkipToNext();
                 connect.next();
 			}
 
 			@Override
 			public void onSkipToPrevious() {
-				super.onSkipToPrevious();
                 connect.pre();
 			}
 
@@ -262,12 +255,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				getMusicList();
 			}).start();
 		}
-		public void groupSelect(int group){
-			if(groupIndex!=group){
-				groupIndex=group;
-				play.musicListChange(group,musicList);
-			}
-		}
 		public void musicSelect(int group,int child){
             if(groupIndex!=group||child!=childIndex){
                 play(group,child);
@@ -299,6 +286,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		 * 播放下一首
 		 */
 		public void next(){
+
 			waitMusic.clear();
 			config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
 		    int nextChildIndex=1+childIndex;
@@ -478,8 +466,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			return player.isPlaying();
 		}
 
-		public void delete(int groupIndex,int childIndex,boolean deleteFile){
-			MusicPlay.this.deleteMusic(groupIndex,childIndex,deleteFile);
+		public void delete(boolean deleteFile,int groupIndex,int...childIndex){
+			MusicPlay.this.deleteMusic(deleteFile,groupIndex,childIndex);
+		}
+		public void delete(boolean deleteFile,int groupIndex,List<Integer> childList){
+			int list[]=new int[childList.size()];
+			for(int i=0;i<list.length;i++){
+				list[i]=childList.get(i);
+			}
+			delete(deleteFile,groupIndex,list);
 		}
 
 	}
@@ -519,13 +514,14 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private void loadMusic(Music music){
 		config.setHasInit(true);
 		config.setMusic(music);
+		config.setBitmap(getBitmap(music.getSinger()));
 		player.reset();
 		try {
 			player.setDataSource(music.getPath());
 			player.prepareAsync();
 		} catch (IOException e) {//***播放异常，如果是文件不存在则删除记录
 			if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.LOCAL){
-				deleteMusic(groupIndex,childIndex,Shortcut.fileExsist(music.getPath()));
+				deleteMusic(false,groupIndex, childIndex);
 				connect.next();
 			}
 			else if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.WAIT){
@@ -544,13 +540,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 	public void musicPlay(){
 		player.start();
+
+		//player.setPlaybackParams(player.getPlaybackParams().setSpeed(2));
 		Music music=config.getMusic();
 		play.play();
 
 		notification.setName(music.getMusicName());
 		notification.setSinger(music.getSinger());
 		notification.setPlayStatus(true);
-		notification.setBitMap(getBitmap(music.getSinger()));
+		notification.setBitMap(config.getBitmap());
 		notification.show();
 		executor.execute(() -> {
 			while(player.isPlaying()){
@@ -564,25 +562,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         sendState(PlaybackStateCompat.STATE_PLAYING);
 	}
 	public void musicLoad(){
-		player.start();
-		Music music=config.getMusic();
-		notification.setName(music.getMusicName());
-		notification.setSinger(music.getSinger());
-		notification.setPlayStatus(true);
-		notification.setBitMap(getBitmap(music.getSinger()));
-		notification.show();
-		play.load(groupIndex,childIndex,music,player.getDuration());
-		executor.execute(() -> {
-			while(player.isPlaying()){
-				if(play!=null){
-					play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
-					sendDuring(player.getCurrentPosition());
-					Shortcut.sleep(500);
-				}
-			}
-		});
-
-        sendState(PlaybackStateCompat.STATE_PLAYING);
+		play.load(groupIndex,childIndex,config.getMusic(),player.getDuration());
+		musicPlay();
 	}
 	private void musicPause(){
 		player.pause();
@@ -591,6 +572,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		notification.show();
         sendState(PlaybackStateCompat.STATE_PAUSED);
 	}
+
+	/**
+	 * 发送播放器状态
+	 * @param state state
+	 */
 	private void sendState(int state){
         PlaybackStateCompat stateCompat=new PlaybackStateCompat.Builder()
                 .setState(state,1,1)
@@ -613,36 +599,41 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	/**
 	 * 删除音乐记录
 	 * @param group group
-	 * @param child child
+	 * @param childList child
 	 * @param deleteFile 是否删除源文件
 	 */
-	private void deleteMusic(int group,int child,boolean deleteFile){
-		if(!canPlay(group,child))return;
-		Music music=musicList.get(group).get(child);
-		if(music==config.getMusic()){
-			reset();
-		}
-		if (deleteFile){//******删除源文件并更新媒体库
-			Music.deleteMusic(music);
-			getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,"_data=?",new String[]{music.getPath()});
-		}
-
-
-		if(group==0||deleteFile){//**影响group 0
-			List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
-			for(SongSheet songSheet:list){
-				songSheet.remove(music.getId());
+	private void deleteMusic(boolean deleteFile,int group,int...childList){
+		List<Music> deleteList=new ArrayList<>();
+		for(int child:childList){
+			if(!canPlay(group,child))return;
+			Music music=musicList.get(group).get(child);
+			deleteList.add(music);
+			if(music==config.getMusic()){
+				reset();
 			}
-		}else {
-			SongSheetManager.INSTANCE.getSongSheetList().getSongList().get(group).remove(music.getId());
-			SongSheetManager.INSTANCE.getSongSheetList().save();
+			if (deleteFile){//******删除源文件并更新媒体库
+				Music.deleteMusic(music);
+				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,"_data=?",new String[]{music.getPath()});
+			}
+
+
+			if(group==0||deleteFile){//**影响group 0
+				List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
+				for(SongSheet songSheet:list){
+					songSheet.remove(music.getId());
+				}
+			}else {
+				SongSheetManager.INSTANCE.getSongSheetList().getSongList().get(group).remove(music.getId());
+				SongSheetManager.INSTANCE.getSongSheetList().save();
+			}
+			music.delete();
 		}
-		music.delete();
-		musicList.get(group).remove(child);
+		for(Music m:deleteList){
+			musicList.get(group).remove(m);
+		}
+
 
 		new Thread(MusicPlay.this::getMusicList).start();
-		//getMusicList();
-		//play.musicListChange(group,musicList);
 	}
 
 
@@ -669,7 +660,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 reset();
             }break;
             case ACTION_LOCKSCREEN:{
-                boolean noLock=SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noLockScreen);
+                boolean noLock=LockScreenSettingActivity.Companion.getNoLockScreen();
                 if(noLock){
 					unLockScreen();
 				}else {

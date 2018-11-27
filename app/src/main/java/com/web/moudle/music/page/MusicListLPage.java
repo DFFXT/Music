@@ -5,6 +5,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ActionMode;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -15,13 +20,12 @@ import com.web.data.MusicList;
 import com.web.misc.DrawableItemDecoration;
 import com.web.misc.IndexBar;
 import com.web.moudle.music.model.control.adapter.LocalMusicAdapter;
+import com.web.moudle.music.model.control.interf.KeyBackListener;
 import com.web.moudle.music.model.control.ui.SingleTextListAlert;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.web.R;
-
-import net.sourceforge.pinyin4j.PinyinHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,10 +34,13 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-public class MusicListLPage extends BaseMusicPage {
+public class MusicListLPage extends BaseMusicPage implements KeyBackListener {
     public final static String pageName="MusicList";
     private MusicList<Music> data;
     private RecyclerView rv_musicList;
@@ -60,7 +67,7 @@ public class MusicListLPage extends BaseMusicPage {
                     this.connect.musicSelect(groupIndex,position);
                 }break;
                 case R.id.delete:{//**删除
-                    connect.delete(groupIndex,position,false);
+                    connect.delete(false,groupIndex,position);
                 }break;
                 case R.id.deleteOrigin:{//**完全删除
                     if(groupIndex==0){//**group 0 才可以删除源文件
@@ -69,7 +76,7 @@ public class MusicListLPage extends BaseMusicPage {
                                 .setMessage(data.get(position).getPath())
                                 .setNegativeButton(ResUtil.getString(R.string.no),null)
                                 .setPositiveButton(ResUtil.getString(R.string.yes),(dialog,witch)->{
-                                    connect.delete(groupIndex,position,true);
+                                    connect.delete(true,groupIndex,position);
                                 }).create().show();
                     }
                 }break;
@@ -102,7 +109,11 @@ public class MusicListLPage extends BaseMusicPage {
                 }break;
                 case R.id.detailInfo:{//**详细信息
                     showDetail(data.get(position));
-                }
+                }break;
+                case R.id.multiSelect:{//**多选
+                    showMultiSelect(view);
+                    adapter.select(position);
+                }break;
             }
             return false;
         });
@@ -120,6 +131,50 @@ public class MusicListLPage extends BaseMusicPage {
         builder.setMessage("路径："+music.getPath()
                 +"\r\n大小："+format.format(file.length()/1024.0/1024)+"MB");
         builder.create().show();
+    }
+
+    /**
+     * 显示多选
+     * @param v view
+     */
+    private void showMultiSelect(View v){
+        adapter.setSelect(true);
+        v.startActionMode(new ActionMode.Callback2() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.like_child_long_click,menu);
+                return true;
+            }
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.remove:{
+                        HashSet<Integer> hashSet=adapter.getSelectedSet();
+                        connect.delete(false,groupIndex, new ArrayList<>(hashSet));
+                        hashSet.clear();
+                    }break;
+                    case R.id.deleteOrigin:{
+                        HashSet<Integer> hashSet=adapter.getSelectedSet();
+                        connect.delete(true,groupIndex, new ArrayList<>(hashSet));
+                        hashSet.clear();
+                    }break;
+                    case R.id.selectAll:{
+                        adapter.setSelectAll(!adapter.isSelectAll());
+                    }break;
+                }
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                adapter.setSelect(false);
+            }
+        },ActionMode.TYPE_PRIMARY);
     }
 
 
@@ -190,12 +245,13 @@ public class MusicListLPage extends BaseMusicPage {
         }else {
             adapter=new LocalMusicAdapter(rootView.getContext(),null);
         }
+        adapter.setSelect(false);
 
         adapter.setItemClickListener((v,position)->{
             connect.musicSelect(groupIndex,position);
             return null;
         });
-        adapter.setAddListenner(position->{
+        adapter.setAddListener(position->{
             connect.addToWait(data.get(position));
             return null;
         });
@@ -235,9 +291,17 @@ public class MusicListLPage extends BaseMusicPage {
                 }
             }
         });
+        rv_musicList.setFocusable(true);
 
 
+    }
 
-
+    @Override
+    public boolean keyBackPressed() {
+        /*if(adapter.isSelect()){
+            adapter.setSelect(false);
+            return true;
+        }*/
+        return false;
     }
 }

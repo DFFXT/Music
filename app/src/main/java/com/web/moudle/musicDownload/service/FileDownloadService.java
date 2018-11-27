@@ -31,6 +31,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -266,18 +267,21 @@ public class FileDownloadService extends Service {
 			BufferedInputStream bis=new BufferedInputStream(stream);
 			File f=new File(music.getPath());
 			FileOutputStream fos=new FileOutputStream(f,true);
-			BufferedOutputStream bos=new BufferedOutputStream(fos);
+			//BufferedOutputStream bos=new BufferedOutputStream(fos);
+			RandomAccessFile raf=new RandomAccessFile(f,"rw");
+			raf.seek(hasDownload);
 			int tmp;
 			statusChange(downloadMusic);
 			while((tmp=bis.read(byte1))!=-1){
-				bos.write(byte1,0,tmp);
+				raf.write(byte1,0,tmp);
+				//bos.write(byte1,0,tmp);
 				music.setHasDownload(music.getHasDownload()+tmp);
 				music.save();//**时刻保存进度
 				progressChange(music);
 				if(downloadMusic.getStatus()!=DownloadMusic.DOWNLOAD_DOWNLOADING){//**暂停
 					bis.close();
 					fos.close();
-					bos.close();
+					raf.close();
 					stream.close();
 					connection.disconnect();
 					if(downloadMusic.getStatus()==DownloadMusic.DOWNLOAD_DELETE){//**删除任务
@@ -292,6 +296,7 @@ public class FileDownloadService extends Service {
 			}
 			bis.close();
 			fos.close();
+			raf.close();
 			stream.close();
 
 

@@ -1,10 +1,13 @@
 package com.web.data;
 
+import android.graphics.Bitmap;
+
 public class PlayerConfig {
     //***播放模式
     private PlayType playType=PlayType.ALL_LOOP;
     private MusicOrigin musicOrigin=MusicOrigin.LOCAL;
     private Music music;//**播放器中缓存的音乐
+    private Bitmap bitmap;//**音乐图片
     private boolean hasInit=false;
 
 
@@ -25,7 +28,11 @@ public class PlayerConfig {
     }
 
     public void setMusic(Music music) {
-        this.music = music;
+        if(this.music!=music){
+            this.music = music;
+            bitmap=null;
+        }
+
     }
 
     public Music getMusic() {
@@ -39,6 +46,15 @@ public class PlayerConfig {
     public void setHasInit(boolean hasInit) {
         this.hasInit = hasInit;
     }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
 
     public enum PlayType{
         ONE_LOOP,

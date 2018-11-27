@@ -12,6 +12,8 @@
         android:id="@+id/musicExpandableList"
         android:paddingStart="20dp"
         android:paddingEnd="0dp"
+        android:paddingTop="10dp"
+        android:clipToPadding="true"
         android:divider="@drawable/recycler_divider"
         android:layerType="software"
         android:layout_width="0dp"

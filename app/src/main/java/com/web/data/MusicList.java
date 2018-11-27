@@ -36,6 +36,9 @@ public class MusicList<T> {
     public T remove(int index){
         return music.remove(index);
     }
+    public boolean remove(T t){
+        return music.remove(t);
+    }
     public void clear(){
         music.clear();
     }

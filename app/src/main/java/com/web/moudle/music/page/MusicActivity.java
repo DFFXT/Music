@@ -1,26 +1,39 @@
 package com.web.moudle.music.page;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Application;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Outline;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewOutlineProvider;
+import android.widget.AbsSeekBar;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -35,6 +48,7 @@ import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
+import com.web.moudle.music.model.control.interf.KeyBackListener;
 import com.web.moudle.music.model.control.interf.ListSelectListener;
 import com.web.moudle.music.model.control.ui.SelectorListAlert;
 import com.web.moudle.music.player.MusicPlay;
@@ -46,11 +60,13 @@ import com.web.web.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class MusicActivity extends BaseActivity implements OnClickListener,PlayInterface{
 
     private TextView songname,singer,tv_musicOrigin;//**音乐信息
 	private SeekBar bar;//--进度条
+    private ImageView iv_singerIcon;
 	private ImageView pre,pause,next,musicplay_type;//--各种图标
 
 	private Toolbar toolbar;
@@ -68,6 +84,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 	private List<BaseMusicPage> pageList=new ArrayList<>();
 
 	private SelectorListAlert listAlert;
+	private List<KeyBackListener> backObserver=new ArrayList<>();
 	public int getLayoutId(){//---活动启动入口
 		return R.layout.restruct_music_layout;
 	}
@@ -78,11 +95,19 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 		setToolbar();
 		musicListLPage=new MusicListLPage();
 		pageList.add(musicListLPage);
+		addBackListener(musicListLPage);
 		setTitle(musicListLPage);
 		setAdapter();
 		startService(new Intent(this,MusicPlay.class));
 		setListener();
 		connect();
+        iv_singerIcon.setClipToOutline(true);
+        iv_singerIcon.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),view.getWidth()/10f);
+            }
+        });
 	}
 
 	@SuppressLint("RestrictedApi")
@@ -157,7 +182,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				if(!hasPage(InternetMusicPage.pageName)){
+				if(noSuchPage(InternetMusicPage.pageName)){
 					internetMusicPage=new InternetMusicPage();
 					internetMusicPage.setConnect(connect);
 					pageList.add(0,internetMusicPage);
@@ -176,11 +201,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 		});
 		return true;
 	}
-	private boolean hasPage(String pageName){
+	private boolean noSuchPage(String pageName){
 		for(BaseMusicPage page:pageList){
-			if(pageName.equals(page.getPageName()))return true;
+			if(pageName.equals(page.getPageName()))return false;
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -194,12 +219,18 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 			if (path != null) {
 				file = new File(path);
 				String name=file.getName();
-				String out[]=Shortcut.getName(name);
+				String out[]=new String[2];
+				Shortcut.getName(out,name);
 				Music music=new Music(out[0],out[1],path);
 				connect.playLocal(music);
 			}
 		}
 
+	}
+
+	@Override
+	public View onCreateView(String name, Context context, AttributeSet attrs) {
+		return super.onCreateView(name, context, attrs);
 	}
 
 	private void findID(){
@@ -208,6 +239,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 
 		View v=findViewById(R.id.musicControlBox);
 		bar=v.findViewById(R.id.bar);
+		Drawable d=getDrawable(R.drawable.icon_seekbar_dot_pressed);
+		if (d != null) {
+			d.setTint(getColor(R.color.themeColor));
+			bar.setThumb(d);
+		}
+		iv_singerIcon=v.findViewById(R.id.iv_singerIcon);
 		songname=v.findViewById(R.id.songname);
 		singer=v.findViewById(R.id.singer);
 		pre=v.findViewById(R.id.pre);
@@ -466,9 +503,15 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 			songname.setText(music.getMusicName());
 			singer.setText(music.getSinger());
 		}
+		if(connect.getConfig().getBitmap()==null){
+            iv_singerIcon.setImageResource(R.drawable.singer_default_icon);
+        }else {
+            iv_singerIcon.setImageBitmap(connect.getConfig().getBitmap());
+        }
+
 		play();
 		musicListLPage.loadMusic(groupIndex,childIndex);
-		if(!hasPage(LyricPage.pageName)){
+		if(noSuchPage(LyricPage.pageName)){
 			lyricPage=new LyricPage();
 			lyricPage.setConnect(connect);
 			pageList.add(lyricPage);
@@ -511,15 +554,19 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 	@Override
 	public void musicListChange(int groupIndex,List<MusicList<Music>> list) {
 	    runOnUiThread(() -> {
+
 	        if(list==null||list.size()==0||list.get(0).size()==0){
 	            if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noNeedScan)){
 	                new AlertDialog.Builder(this)
                             .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
                             .setNegativeButton(ResUtil.getString(R.string.no),null)
-                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> {
-                                connect.scanLocalMusic();
-                            }).create().show();
-                }
+                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> connect.scanLocalMusic()).create().show();
+                }else if(list!=null) {
+					musicListLPage.setData(groupIndex,list.get(groupIndex));
+					this.groupList=list;
+					this.groupIndex=groupIndex;
+					setTitle(getCurrentPage());
+				}
             }else {
                 musicListLPage.setData(groupIndex,list.get(groupIndex));
 				this.groupList=list;
@@ -566,34 +613,19 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 			unbindService(serviceConnection);
 	}
 
+	public void addBackListener(KeyBackListener listener){
+		backObserver.add(0,listener);
+	}
+	public void removeBackListener(KeyBackListener listener){
+		backObserver.remove(listener);
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
+	@Override
+	public void onBackPressed() {
+		for(KeyBackListener listener:backObserver){
+			if(listener.keyBackPressed())return;
+		}
+		super.onBackPressed();
+	}
 }
 
