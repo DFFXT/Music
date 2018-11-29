@@ -33,7 +33,7 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
         }
 
     override fun onCreateItemView(parent: ViewGroup, viewType: Int): View {
-        return LayoutInflater.from(ctx).inflate(R.layout.music_item_list,parent,false)
+        return LayoutInflater.from(ctx).inflate(R.layout.music_local_item_qiuck,parent,false)
     }
 
     override fun onBindItemView(holder: BaseViewHolder, position: Int, item: Music?) {
@@ -41,11 +41,17 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
         val tvSingerName=holder.bindText(R.id.singerName, item?.singer)
         holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item!!.duration.toLong()))
         holder.findViewById<ImageView>(R.id.add).setOnClickListener {
-            if(isSelect)return@setOnClickListener
+            if(isSelect){
+                select(position)
+                return@setOnClickListener
+            }
             addListener?.invoke(position)
         }
         holder.rootView.setOnClickListener{
-            if(isSelect) return@setOnClickListener
+            if(isSelect){
+                select(position)
+                return@setOnClickListener
+            }
             itemClickListener?.invoke(it,position)
         }
         holder.rootView.setOnLongClickListener {

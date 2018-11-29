@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
@@ -17,8 +16,6 @@ import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.web.common.base.BaseFragment;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
@@ -28,7 +25,6 @@ import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
 import com.web.moudle.music.model.control.adapter.InternetDataSource;
 import com.web.moudle.music.model.control.adapter.InternetMusicAdapter;
-import com.web.moudle.music.model.control.interf.IPage;
 import com.web.moudle.music.model.internet.music.viewmodel.InternetViewModel;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.subWeb.GetInfo;
@@ -159,8 +155,8 @@ public class InternetMusicPage extends BaseMusicPage {
         builder.setNeutralButton("在线试听", (dialog, which) -> new Thread(() -> {
             GetInfo getInfo=new GetInfo();
             InternetMusicInfo info=getInfo.getMusicInfo(music.getHash());
-            info.setMusicName(music.getMusicName());
-            info.setSinger(music.getSingerName());
+            info.setMusicName(Shortcut.validatePath(music.getMusicName()));
+            info.setSinger(Shortcut.validatePath(music.getSingerName()));
             if(!Shortcut.fileExsist(info.getLyricsPath())){
                 new GetFiles().write(info.getLyricsPath(),getInfo.getKrc(music.getHash()),false);
             }

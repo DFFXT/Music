@@ -82,4 +82,17 @@ public class Shortcut {
         return out;
     }
 
+    public static String validatePath(String name){
+        return name.replace('/',',')
+                .replace('&',' ')
+                .replace(':',' ')
+                .replace('<',' ')
+                .replace('>',' ')
+                .replace('*',' ')
+                .replace('"',' ')
+                .replace('\\',' ')
+                .replace('|',' ')
+                .replace('?',' ');
+    }
+
 }

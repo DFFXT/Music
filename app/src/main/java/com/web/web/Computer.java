@@ -114,7 +114,7 @@ public class Computer extends BaseActivity implements OnClickListener{
 			ip[i]=ipMap.get(i).get("ip");
 		}
 		sqlFitAll.close();
-		ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,  R.layout.music_item_list, R.id.musicName,
+		ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,  R.layout.music_local_item, R.id.musicName,
 				ip);
 		computer_ip.setAdapter(adapter);
 		computer_ip.setDropDownVerticalOffset(10);

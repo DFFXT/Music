@@ -6,6 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -154,14 +156,12 @@ public class MusicListLPage extends BaseMusicPage implements KeyBackListener {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.remove:{
-                        HashSet<Integer> hashSet=adapter.getSelectedSet();
-                        connect.delete(false,groupIndex, new ArrayList<>(hashSet));
-                        hashSet.clear();
+                        connect.delete(false,groupIndex, getSelectedList());
+                        adapter.getSelectedSet().clear();
                     }break;
                     case R.id.deleteOrigin:{
-                        HashSet<Integer> hashSet=adapter.getSelectedSet();
-                        connect.delete(true,groupIndex, new ArrayList<>(hashSet));
-                        hashSet.clear();
+                        connect.delete(true,groupIndex, getSelectedList());
+                        adapter.getSelectedSet().clear();
                     }break;
                     case R.id.selectAll:{
                         adapter.setSelectAll(!adapter.isSelectAll());
@@ -178,6 +178,20 @@ public class MusicListLPage extends BaseMusicPage implements KeyBackListener {
     }
 
 
+    /**
+     * 获取被选中的position
+     * @return
+     */
+    private List<Integer> getSelectedList(){
+        SparseBooleanArray hashSet=adapter.getSelectedSet();
+        ArrayList<Integer> list=new ArrayList<>();
+        for(int i=0;i<adapter.getItemCount();i++){
+            if(hashSet.get(i,false)){
+                list.add(i);
+            }
+        }
+        return list;
+    }
     /**
      * 设置连接接口
      * @param connect connect

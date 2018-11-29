@@ -90,7 +90,7 @@ public class MusicExpandableAdapter extends BaseExpandableListAdapter {
         ChildHolder holder;
         if(convertView==null){
             holder=new ChildHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.music_item_list,parent,false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.music_local_item,parent,false);
             holder.musicName=convertView.findViewById(R.id.musicName);
             holder.singer=convertView.findViewById(R.id.singerName);
             holder.add=convertView.findViewById(R.id.add);
