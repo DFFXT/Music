@@ -11,9 +11,9 @@ import com.web.config.GetFiles;
 import com.web.config.LyricsAnalysis;
 import com.web.config.Shortcut;
 import com.web.data.Music;
-import com.web.moudle.music.model.control.interf.IPage;
-import com.web.moudle.music.model.lyrics.model.LyricsLine;
-import com.web.moudle.music.model.lyrics.ui.LyricsView;
+import com.web.moudle.music.page.control.interf.IPage;
+import com.web.moudle.music.page.lyrics.model.LyricsLine;
+import com.web.moudle.music.page.lyrics.ui.LyricsView;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.web.R;
 

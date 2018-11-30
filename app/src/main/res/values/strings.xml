@@ -101,7 +101,7 @@
 	<string name="songSheet">歌单</string>
 	<string name="lyrics_noLyrics">没有歌词—(〃´-ω･) </string>
 	<string name="dataAnalyzeError">数据解析错误</string>
-	<string name="noInternet">没有网络</string>
+	<string name="noInternet">网络错误</string>
 	<string name="urlAnalyzeError">地址解析错误</string>
 	<string name="download_urlError">获取路径失败</string>
 	<string name="noMoreData">没有更多数据</string>

@@ -2,6 +2,8 @@ package com.web.data;
 
 import android.support.annotation.IntDef;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
@@ -9,18 +11,27 @@ import java.io.Serializable;
 public class InternetMusic extends DataSupport implements Serializable {
 
     private int id;
+    @JSONField(name = "songname")
     private String musicName;
+    @JSONField(name = "singername")
     private String singerName;
+    @JSONField(name = "hash")
     private String hash;
+    @JSONField(name = "sqhash")
     private String sqHash;
+    @JSONField(name = "320hash")
     private String _320Hash;
     private String url="";
     //******本地保存位置
     private String path;
+    @JSONField(name = "duration")
     private int duration;
     private int hasDownload;
+    @JSONField(name = "filesize")
     private int fullSize;
+    @JSONField(name = "320filesize")
     private int _320FileSize;
+    @JSONField(name = "sqfilesize")
     private int sqFileSize;
 
     public final static int TYPE_NORMAL=1;

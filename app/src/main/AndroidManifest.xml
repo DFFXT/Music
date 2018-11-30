@@ -77,7 +77,7 @@
         <activity android:name=".Alarm_Activity" />
         <activity android:name=".Ring" />
 
-        <receiver android:name="com.web.moudle.music.model.control.receiver.EarPlugReceiver">
+        <receiver android:name="com.web.moudle.music.page.control.receiver.EarPlugReceiver">
             <intent-filter android:priority="999999999">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

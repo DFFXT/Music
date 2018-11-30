@@ -71,7 +71,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.web.moudle.music.model.lyrics.ui.LyricsView
+    <com.web.moudle.music.page.lyrics.ui.LyricsView
         android:id="@+id/lyricView_lockScreen"
         android:layout_width="match_parent"
         android:layout_height="200dp"

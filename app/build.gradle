@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.github.open-android:pinyin4j:2.5.0'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 repositories {
     mavenCentral()

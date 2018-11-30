@@ -7,7 +7,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.TextUtils
 import com.web.common.base.BaseActivity
 import com.web.data.ScanMusicType
-import com.web.moudle.music.model.control.adapter.MyItemTouchHelperCallBack
+import com.web.moudle.music.page.control.adapter.MyItemTouchHelperCallBack
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_select_suffix.*
 import org.litepal.crud.DataSupport

@@ -36,7 +36,7 @@ import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
-import com.web.moudle.music.model.lyrics.model.LyricsLine
+import com.web.moudle.music.page.lyrics.model.LyricsLine
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.preference.SP
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
