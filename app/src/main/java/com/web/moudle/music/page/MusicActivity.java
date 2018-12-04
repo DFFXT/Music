@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewOutlineProvider;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SeekBar;

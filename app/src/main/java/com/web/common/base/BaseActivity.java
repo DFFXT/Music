@@ -11,7 +11,7 @@ import com.web.common.util.UncaughtException;
 public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        Thread.setDefaultUncaughtExceptionHandler(UncaughtException.INSTANCE);
+        //Thread.setDefaultUncaughtExceptionHandler(UncaughtException.INSTANCE);
 
         //**设置字体大小
         Configuration configuration = getResources().getConfiguration();

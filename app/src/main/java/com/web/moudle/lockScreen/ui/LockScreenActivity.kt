@@ -192,7 +192,6 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         browserCompat= MediaBrowserCompat(this, ComponentName(this, MusicPlay::class.java),
                 object : MediaBrowserCompat.ConnectionCallback() {
                     override fun onConnected() {
-                        super.onConnected()
                         try {
                             controller = MediaControllerCompat(this@LockScreenActivity, browserCompat.sessionToken)
                             controller?.registerCallback(object : MediaControllerCompat.Callback() {
@@ -221,10 +220,10 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                                 }
                             })
                             controller?.sendCommand(MusicPlay.COMMAND_GET_CURRENT_POSITION,null,receiver)
-                            iv_lockScreen_status.setImageResource(
+                            /*iv_lockScreen_status.setImageResource(
                                     if(controller?.playbackState?.state==PlaybackStateCompat.STATE_PLAYING)R.drawable.icon_play_white
                                     else R.drawable.icon_pause_white
-                            )
+                            )*/
                             controller?.sendCommand(MusicPlay.COMMAND_GET_STATUS,null,receiver)
                             musicSwitch(controller?.metadata)
                         } catch (e: RemoteException) {

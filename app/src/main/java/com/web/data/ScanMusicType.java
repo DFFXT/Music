@@ -11,7 +11,9 @@ public class ScanMusicType extends DataSupport {
 
     }
     public ScanMusicType(String scanSuffix,int minFileSize,boolean scanable){
-
+        this.scanSuffix=scanSuffix;
+        this.minFileSize=minFileSize;
+        this.scanable=scanable;
     }
 
     public int getMinFileSize() {

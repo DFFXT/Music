@@ -7,8 +7,7 @@ import com.web.web.R
 
 object UncaughtException:Thread.UncaughtExceptionHandler {
     override fun uncaughtException(t: Thread?, e: Throwable?) {
-        Log.e("uncaughtException",ResUtil.getString(R.string.uncaughtException))
-        MToast.showToast(MyApplication.context,ResUtil.getString(R.string.uncaughtException))
         e?.printStackTrace()
+        Log.e("uncaughtException",ResUtil.getString(R.string.uncaughtException)+"-> Thread:${t?.name}")
     }
 }

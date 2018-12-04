@@ -56,7 +56,6 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 		makeData();
 		fillTextAndColor();
 		go();
-
 		/*Retrofit.Builder builder=new Retrofit.Builder()
 				.baseUrl("http://59.37.96.220/")
 				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())

@@ -28,7 +28,6 @@ object SongSheetManager {
                 }
             }
         }catch (e:IOException){
-            e.printStackTrace()
             songSheetList= SongSheetList()
             SongSheetManager.saveObject(songSheetList!!)
         }

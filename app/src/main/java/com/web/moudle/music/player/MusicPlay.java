@@ -1,10 +1,13 @@
 package com.web.moudle.music.player;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
@@ -19,6 +22,9 @@ import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.view.KeyEvent;
 
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
@@ -92,6 +98,33 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 	private ThreadPoolExecutor executor;
 	private PlayerConfig config=new PlayerConfig();
+	//********耳塞插拔广播接收
+	private BroadcastReceiver headsetReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        	if(!config.isHasInit())return;
+            if(intent.getIntExtra("state",0)==0){
+                musicPause();
+            }else {
+            	musicPlay();
+			}
+        }
+    };
+	//*******来电监听器
+	private PhoneStateListener phoneStateListener=new PhoneStateListener(){
+		@Override
+		public void onCallStateChanged(int state, String phoneNumber) {
+			if(!config.isHasInit())return;
+			switch (state){
+				case TelephonyManager.CALL_STATE_RINGING:{
+					musicPause();
+				}break;
+				case TelephonyManager.CALL_STATE_IDLE:{
+					musicPlay();
+				}break;
+			}
+		}
+	};
 	@Override
 	public IBinder onBind(Intent arg0) {
 		if(BIND.equals(arg0.getAction())){
@@ -138,6 +171,33 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 connect.pre();
 			}
 
+			private long preEventTime=0;
+            private long preHookTime=0;
+			@Override
+			public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+				if(System.currentTimeMillis()-preEventTime<50)return false;
+				preEventTime=System.currentTimeMillis();
+                KeyEvent event=mediaButtonEvent.getParcelableExtra("android.intent.extra.KEY_EVENT");
+				switch (event.getKeyCode()){
+					case KeyEvent.KEYCODE_MEDIA_NEXT:{
+						onSkipToNext();
+					}break;
+					case KeyEvent.KEYCODE_MEDIA_PREVIOUS:{
+						onSkipToPrevious();
+					}break;
+					case KeyEvent.KEYCODE_HEADSETHOOK:{
+						if(System.currentTimeMillis()-preHookTime<100)return false;
+						else if(System.currentTimeMillis()-preHookTime<800){
+							onSkipToNext();
+						}else {
+							connect.changePlayerPlayingStatus();
+						}
+						preHookTime=System.currentTimeMillis();
+					}break;
+				}
+				return true;
+			}
+
 			@Override
 			public void onCommand(String command, Bundle extras, ResultReceiver cb) {
 				Bundle bundle=new Bundle();
@@ -169,11 +229,26 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noLockScreen)){
 			lockScreen();
 		}
+		//**耳塞插拔注册广播
+		IntentFilter filter=new IntentFilter();
+        filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+        registerReceiver(headsetReceiver,filter);
+
+        //**来电注册监听
+		TelephonyManager manager=getSystemService(TelephonyManager.class);
+		manager.listen(phoneStateListener,PhoneStateListener.LISTEN_CALL_STATE);
+
 	}
-	public void onDestroy() {//--移除notification
+	public void onDestroy() {//--移除notification、取消注册、监听
 		unLockScreen();
+		unregisterReceiver(headsetReceiver);
+		getSystemService(TelephonyManager.class).listen(phoneStateListener,PhoneStateListener.LISTEN_NONE);
 		stopForeground(true);
 	}
+
+    /**
+     * 激活锁屏
+     */
 	private void lockScreen(){
 		IntentFilter filter=new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -530,14 +605,14 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		sessionCompat.setMetadata(metaDataBuilder.build());
 	}
 	public void musicPlay(){
-		player.start();
 
 		//player.setPlaybackParams(player.getPlaybackParams().setSpeed(2));
 		Music music=config.getMusic();
+		if(music==null)return;
 		if (play != null) {
 			play.play();
 		}
-
+		player.start();
 		notification.setName(music.getMusicName());
 		notification.setSinger(music.getSinger());
 		notification.setPlayStatus(true);
