@@ -13,10 +13,10 @@ import android.widget.Toast;
 import com.web.common.base.BaseActivity;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
-import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.misc.TopBarLayout;
+import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.web.R;
@@ -102,7 +102,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 	    active=true;
 		new Thread(()->{
 			while (true){
-				List<DownloadMusic> list=connect.getDowloadingMusic();
+				List<DownloadMusic> list=connect.getDownloadingMusic();
 				if(list.size()==0){
 				    active=false;
 				    break;
@@ -155,6 +155,8 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 		super.onDestroy();
 		if(serviceConnection!=null){
 			unbindService(serviceConnection);
+			if(connect!=null)
+				connect.removeDownloadListener(this);
 		}
 	}
 }

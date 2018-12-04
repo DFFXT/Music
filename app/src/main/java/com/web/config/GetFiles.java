@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -138,13 +140,16 @@ import com.web.data.InternetMusic;
 		}
 		return builder.toString();
 	}
+	@WorkerThread
 	public boolean NetDataToLocal(String url,String path){//--需要新线程  保存至本地
 		byte[] byte1= new byte[1024];
+		InputStream stream=null;
+		OutputStream oStream=null;
 		try {
 			URL Url=new URL(url);
-			InputStream stream = Url.openConnection().getInputStream();
-			OutputStream oStream = new BufferedOutputStream(new FileOutputStream(path));
-			int tmp=0;
+			stream = Url.openConnection().getInputStream();
+			oStream = new BufferedOutputStream(new FileOutputStream(path));
+			int tmp;
 			long all=0;
 			while((tmp=stream.read(byte1,0,1024))!=-1){
 				oStream.write(byte1,0,tmp);
@@ -155,22 +160,29 @@ import com.web.data.InternetMusic;
 			stream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			if(stream!=null){
+				try {
+					stream.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if(oStream!=null){
+				try {
+					oStream.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+
 			return false;
 		}
 		return true;
 	}
 
-	public void append(byte[] b){
-		try{
-			RandomAccessFile file=new RandomAccessFile(rootPath+"log.txt", "rw");
-				file.seek(file.length()-1);
-				file.write(b);
-			file.close();
-		}catch(Exception e){
-			write( rootPath+"log.txt", "测试"+e, true);
-		}
-	}
-	@JavascriptInterface
+
+
 	public boolean write(String path,String text,boolean buer){//----文件写入
 		try {
 			File FILE=new File(path);
@@ -187,7 +199,7 @@ import com.web.data.InternetMusic;
 		write(rootPath+"log.txt", e+"\r\n\r\n", true);
 	}
 	
-public void UnZip(String ZipFile,String UnZipPath){//--UnZipPath带 '/'
+	public void UnZip(String ZipFile,String UnZipPath){//--UnZipPath带 '/'
 		try {
 			File filePath = new File(UnZipPath);
 			if(!filePath.exists()){//--解压路径是否存在

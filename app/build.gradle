@@ -23,6 +23,18 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    sourceSets {
+        main{
+            File[] file=new File(getProjectDir().path+"/src/main/next_res").listFiles()
+            /*File f=new File("D:/1.txt")
+            FileOutputStream fos=new FileOutputStream(f)
+            fos.write(res.getName().getBytes())
+            fos.close()*/
+            for(File folder:file){
+                res.srcDirs folder
+            }
+        }
+    }
 }
 
 

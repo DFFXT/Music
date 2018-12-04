@@ -18,10 +18,8 @@ public class SqlFitAll {//--试用所有sql操作
 		this.TB=TB;
 	}
 	public void connection(String CreatedColunms){//--连接
-		sql=context.openOrCreateDatabase(DB, Context.MODE_APPEND, null);
-		if(!CreatedColunms.equals(null)){
-			sql.execSQL("create table if not exists "+TB+" ("+CreatedColunms+")");
-		}
+		sql=context.openOrCreateDatabase(DB, Context.MODE_PRIVATE, null);
+		sql.execSQL("create table if not exists "+TB+" ("+CreatedColunms+")");
 	}
 	public ArrayList<Map<String, String>> getAll(String columns[]){//--获取所有数据
 		ArrayList<Map<String, String>> data=new ArrayList<Map<String,String>>();
@@ -34,16 +32,17 @@ public class SqlFitAll {//--试用所有sql操作
 			}
 			data.add(map);
 		}
+		cursor.close();
 		return data;
 	}
 	public void insert(String colums,String values[]){//--插入
 		int len=values.length,i=0;
-		String val="";
+		StringBuilder val= new StringBuilder();
 		for(;i<len;i++){
-			val+=values[i]+",";
+			val.append(values[i]).append(",");
 		}
 		if(val.length()>0){//--去除最后的逗号
-			val=val.substring(0,val.length()-1);
+			val = new StringBuilder(val.substring(0, val.length() - 1));
 		}
 		sql.execSQL("insert into "+TB+" ("+colums+")values("+val+")");
 	}
@@ -51,28 +50,27 @@ public class SqlFitAll {//--试用所有sql操作
 		if(getRecords(colums, values).size()==0){//--不存在记录
 			ContentValues contentValues=new ContentValues();
 			int len=colums.length;
-			String range="";
+			StringBuilder range= new StringBuilder();
 			for(int i=0;i<len;i++){
 				contentValues.put(colums[i], values[i]);
-				range+=colums[i]+"=? and ";
+				range.append(colums[i]).append("=? and ");
 			}
 			if(range.length()>0){
-				range=range.substring(0,range.length()-4);
+				range = new StringBuilder(range.substring(0, range.length() - 4));
 			}
-			sql.insert(TB, range, contentValues);
+			sql.insert(TB, range.toString(), contentValues);
 		}
 	}
 	public ArrayList<Map<String, String>> getRecords(String[] colums,String[] values){//--按条件获取数据
 		ArrayList<Map<String, String>> record=new ArrayList<Map<String,String>>();
-		int len=colums.length;
-		String selection="";
-		for(int i=0;i<len;i++){
-			selection+=colums[i]+"=? and ";
+		StringBuilder selection= new StringBuilder();
+		for (String colum : colums) {
+			selection.append(colum).append("=? and ");
 		}
 		if(selection.length()>0){
-			selection=selection.substring(0,selection.length()-4);
+			selection = new StringBuilder(selection.substring(0, selection.length() - 4));
 		}
-		Cursor cursor=sql.query(TB,colums , selection, values, null, null, null);
+		Cursor cursor=sql.query(TB,colums , selection.toString(), values, null, null, null);
 		int count=cursor.getColumnCount();
 		while(cursor.moveToNext()){
 			Map<String, String> map=new HashMap<String, String>();
@@ -81,6 +79,7 @@ public class SqlFitAll {//--试用所有sql操作
 			}
 			record.add(map);
 		}
+		cursor.close();
 		return record;
 	}
 	public void delList(String key,String value){

@@ -1,4 +1,4 @@
-package com.web.adpter;
+package com.web.moudle.music.player;
 
 import com.web.data.Music;
 import com.web.data.MusicList;

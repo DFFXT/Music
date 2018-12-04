@@ -12,6 +12,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 /*
@@ -52,6 +53,7 @@ public class MyNotification{
 	
 	public void show(){//--通知栏
 		createChannel();
+
 		if(context==null) return;
 		Notification.Builder mBuilder;
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

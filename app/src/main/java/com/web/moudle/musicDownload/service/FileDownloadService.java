@@ -6,30 +6,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.tool.MToast;
+import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
 import com.web.data.Music;
-import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.subWeb.GetInfo;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.litepal.crud.DataSupport;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
@@ -46,7 +42,7 @@ public class FileDownloadService extends Service {
 	public final static String ACTION_DOWNLOAD="com.web.web.File.download";
 	private GetFiles gfFiles=new GetFiles();
 	private Connect connect;
-	private @Nullable DownloadListener downloadListener;
+	private ArrayList<DownloadListener> listeners=new ArrayList<>();
 	private List<DownloadMusic> downloadList=new ArrayList<>();//**下载列表
 	private List<DownloadMusic> downloadingList=new ArrayList<>();
 	private int maxDownloadingCount=3;
@@ -57,7 +53,11 @@ public class FileDownloadService extends Service {
 	}
 	public class Connect extends Binder{
 		public void setDownloadListener(DownloadListener downloadListener){
-			FileDownloadService.this.downloadListener=downloadListener;
+			if(!listeners.contains(downloadListener))
+				FileDownloadService.this.listeners.add(downloadListener);
+		}
+		public void removeDownloadListener(DownloadListener downloadListener){
+			listeners.remove(downloadListener);
 		}
 		public boolean start(int id){
 			if(getDownloadingNum()>=maxDownloadingCount)return false;
@@ -93,13 +93,11 @@ public class FileDownloadService extends Service {
 				}
 			}
 
-			if (downloadListener != null) {
-				downloadListener.listChanged(downloadList);
-			}
+			listChange();
 		}
 		public void getDownloadList(){
 			if(downloadList.size()!=0){
-				listChange(downloadList);
+				listChange();
 				return;
 			}
 			Single.create((SingleOnSubscribe<List<InternetMusic>>) emitter -> {
@@ -113,11 +111,11 @@ public class FileDownloadService extends Service {
 							for(InternetMusic m:res){
 								downloadList.add(new DownloadMusic(m,DownloadMusic.DOWNLOAD_WAIT));
 							}
-							listChange(downloadList);
+							listChange();
 						}
 					});
 		}
-		public List<DownloadMusic> getDowloadingMusic(){
+		public List<DownloadMusic> getDownloadingMusic(){
 			downloadingList.clear();
 			for(DownloadMusic dm:downloadList){
 				if(dm.getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING) {
@@ -163,7 +161,7 @@ public class FileDownloadService extends Service {
 		DownloadMusic dm=new DownloadMusic(music,DownloadMusic.DOWNLOAD_WAIT);
 		downloadList.add(dm);
 		startTask(dm);
-		listChange(downloadList);
+		listChange();
 	}
 
 
@@ -186,6 +184,7 @@ public class FileDownloadService extends Service {
 				return;
 			}
 			if(downloadMusic.getStatus()==DownloadMusic.DOWNLOAD_WAIT){
+				downloadingList.add(downloadMusic);
 				downloadMusic.setStatus(DownloadMusic.DOWNLOAD_DOWNLOADING);
 			}else {
 				emitter.onError(new Throwable(""));
@@ -227,29 +226,28 @@ public class FileDownloadService extends Service {
 								break;
 							}
 						}
+						if(downloadingList.size()==0){
+							stopSelf();
+						}
 					}
 
 					@Override
 					public void onError(@NotNull Throwable e) {
 						super.onError(e);
-						for(DownloadMusic dm:downloadList){
-							if(dm.getStatus()==DownloadMusic.DOWNLOAD_WAIT){
-								startTask(dm);
-								break;
-							}
-						}
+						onSuccess(null);
 					}
 				});
 	}
 
 
 	private void downloadGO(DownloadMusic downloadMusic){//--需要新线程  保存至本地
-		byte[] byte1= new byte[1024*50];
+		//byte[] byte1= new byte[1024*50];
 		InternetMusic music=downloadMusic.getInternetMusic();
 		if(music.getHasDownload()==music.getFullSize()){//**已经完成了的
 			complete(downloadMusic);
 			return;
 		}
+
 		try {
 			int hasDownload=music.getHasDownload();
 			if(hasDownload==0){//--清除同名文件【重新下载】
@@ -264,64 +262,56 @@ public class FileDownloadService extends Service {
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("Range", "bytes="+hasDownload+"-"+music.getFullSize());
 			InputStream stream = connection.getInputStream();
-			BufferedInputStream bis=new BufferedInputStream(stream);
-			File f=new File(music.getPath());
-			FileOutputStream fos=new FileOutputStream(f,true);
-			//BufferedOutputStream bos=new BufferedOutputStream(fos);
-			RandomAccessFile raf=new RandomAccessFile(f,"rw");
-			raf.seek(hasDownload);
-			int tmp;
+
+			RandomAccessFile raf=new RandomAccessFile(new File(music.getPath()),"rw");
 			statusChange(downloadMusic);
-			while((tmp=bis.read(byte1))!=-1){
-				raf.write(byte1,0,tmp);
-				//bos.write(byte1,0,tmp);
-				music.setHasDownload(music.getHasDownload()+tmp);
+			IOUtil.StreamStop streamStop=new IOUtil.StreamStop();
+
+			IOUtil.streamAccess(stream, raf, hasDownload, progress ->{
+				music.setHasDownload(hasDownload+progress);
 				music.save();//**时刻保存进度
 				progressChange(music);
-				if(downloadMusic.getStatus()!=DownloadMusic.DOWNLOAD_DOWNLOADING){//**暂停
-					bis.close();
-					fos.close();
-					raf.close();
-					stream.close();
-					connection.disconnect();
-					if(downloadMusic.getStatus()==DownloadMusic.DOWNLOAD_DELETE){//**删除任务
+				if(downloadMusic.getStatus()!=DownloadMusic.DOWNLOAD_DOWNLOADING) {//**暂停
+					streamStop.setStop(true);
+					if(downloadMusic.getStatus()==DownloadMusic.DOWNLOAD_DELETE) {//**删除任务
 						downloadList.remove(downloadMusic);
-						listChange(downloadList);
+						listChange();
 						delete(music);
-						return;
 					}
-					statusChange(downloadMusic);
-					return ;
 				}
-			}
-			bis.close();
-			fos.close();
-			raf.close();
-			stream.close();
-
-
-			Music record=new Music(music.getMusicName(),music.getSingerName(),music.getPath());
-			record.saveOrUpdate();
-			complete(downloadMusic);//**下载完成 --- 广播
+				return null;
+			}, complete ->{
+				if(complete){//**下载完成 --- 广播
+					Music record=new Music(music.getMusicName(),music.getSingerName(),music.getPath());
+					record.setDuration(music.getDuration());
+					record.saveOrUpdate();
+					complete(downloadMusic);
+				}
+				//**stop
+				connection.disconnect();
+				statusChange(downloadMusic);
+				return null;
+			} ,streamStop);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void listChange(List<DownloadMusic> list){
-		if(downloadListener!=null){
-			downloadListener.listChanged(list);
+	private void listChange(){
+		for(DownloadListener listener:listeners){
+			listener.listChanged(downloadList);
 		}
+
 	}
 	private void statusChange(DownloadMusic dm){
-		if(downloadListener!=null){
-			downloadListener.statusChange(dm.getInternetMusic().getId(),dm.getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING);
+		for(DownloadListener listener:listeners){
+			listener.statusChange(dm.getInternetMusic().getId(),dm.getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING);
 		}
 	}
 	private void progressChange(InternetMusic music){
-		if(downloadListener!=null){
-			downloadListener.progressChange(music.getId(),music.getHasDownload(),music.getFullSize());
+		for(DownloadListener listener:listeners){
+			listener.progressChange(music.getId(),music.getHasDownload(),music.getFullSize());
 		}
 	}
 
@@ -331,7 +321,7 @@ public class FileDownloadService extends Service {
 	private void complete(DownloadMusic dm){
 		downloadList.remove(dm);
 		dm.getInternetMusic().delete();
-		listChange(downloadList);
+		listChange();
 		Intent intent=new Intent(this,MusicPlay.class);
 		intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);
 		intent.putExtra("path",dm.getInternetMusic().getPath());
@@ -354,11 +344,6 @@ public class FileDownloadService extends Service {
 		void listChanged(List<DownloadMusic> downloadMusicList);
 	}
 
-
-
-	public void show(String str){
-		Toast.makeText(FileDownloadService.this, str, Toast.LENGTH_LONG).show();
-	}
 
 
 

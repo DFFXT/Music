@@ -19,15 +19,12 @@ import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
-import com.web.adpter.PlayInterface;
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
-import com.web.moudle.notification.MyNotification;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
@@ -39,6 +36,7 @@ import com.web.data.ScanMusicType;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.web.R;
@@ -85,6 +83,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private List<MusicList<Music>> musicList=new ArrayList<>();//**音乐列表
 	private List<Music> waitMusic=new ArrayList<>();//***等待播放的音乐
 	private int waitIndex=0;
+	@Nullable
 	private PlayInterface play;//**界面接口
 	private int groupIndex=0,childIndex=-1;
 	private Connect connect;//***连接
@@ -243,7 +242,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			if(musicList.size()==0)
 				new Thread(MusicPlay.this::getMusicList).start();
 			else {
-				play.musicListChange(groupIndex,musicList);
+				musicListChange();
 			}
 		}
 		public int getCurrentPosition(){
@@ -357,9 +356,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			return true;
 		}
 		public void groupChange(){
-			new Thread(()->{
-			    getMusicList();
-            }).start();
+			new Thread(MusicPlay.this::getMusicList).start();
 		}
 		public int getWaitIndex(){
 			return  waitIndex;
@@ -385,24 +382,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public void seekTo(int millis){
 		    if(canPlay()) {
 				player.seekTo(millis);
-				play.currentTime(groupIndex,childIndex,millis);
+				if (play != null) {
+					play.currentTime(groupIndex,childIndex,millis);
+				}
 			}
 		}
 		public void getPlayerInfo(){
-			if(canPlay()){
-				Music music=config.getMusic();
-				play.load(groupIndex,childIndex,music,player.getDuration());
-				if(!player.isPlaying()){
-					play.pause();
-				}
-			}
-			if(groupIndex!=-1&&childIndex!=-1){
-				play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
-			}
-
-			play.musicOriginChanged(config.getMusicOrigin());
-			play.playTypeChanged(config.getPlayType());
-
+			disPatchMusicInfo();
 		}
 		public PlayerConfig getConfig(){
 			return config;
@@ -462,9 +448,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				loadMusic(waitMusic.get(index));
 			}
 		}
-		public boolean isPlay(){
-			return player.isPlaying();
-		}
 
 		public void delete(boolean deleteFile,int groupIndex,int...childIndex){
 			MusicPlay.this.deleteMusic(deleteFile,groupIndex,childIndex);
@@ -477,6 +460,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			delete(deleteFile,groupIndex,list);
 		}
 
+		/**
+		 * 取消连接
+		 */
+		public void cancel(){
+			play=null;
+		}
 	}
 
 	/**
@@ -530,7 +519,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				MToast.showToast(this,ResUtil.getString(R.string.cannotPlay));
 			}
 		}
-		play.musicOriginChanged(config.getMusicOrigin());
+		if (play != null) {
+			play.musicOriginChanged(config.getMusicOrigin());
+		}
 
 		metaDataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,music.getMusicName())
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST,music.getSinger())
@@ -543,7 +534,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 		//player.setPlaybackParams(player.getPlaybackParams().setSpeed(2));
 		Music music=config.getMusic();
-		play.play();
+		if (play != null) {
+			play.play();
+		}
 
 		notification.setName(music.getMusicName());
 		notification.setSinger(music.getSinger());
@@ -562,12 +555,16 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         sendState(PlaybackStateCompat.STATE_PLAYING);
 	}
 	public void musicLoad(){
-		play.load(groupIndex,childIndex,config.getMusic(),player.getDuration());
+		if(play!=null){
+			play.load(groupIndex,childIndex,config.getMusic(),player.getDuration());
+		}
 		musicPlay();
 	}
 	private void musicPause(){
 		player.pause();
-		play.pause();
+		if(play!=null){
+			play.pause();
+		}
 		notification.setPlayStatus(false);
 		notification.show();
         sendState(PlaybackStateCompat.STATE_PAUSED);
@@ -650,7 +647,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				Music music=DataSupport.where("path=?",
 						intent.getStringExtra("path")).findFirst(Music.class);
 				musicList.get(0).add(music);
-				play.musicListChange(groupIndex,musicList);
+				musicListChange();
 			}break;
 			case ACTION_ClEAR_ALL_MUSIC:{
 				DataSupport.deleteAll(Music.class);
@@ -692,12 +689,35 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		return bitmap;
 	}
 
+	private void musicListChange(){
+		if(play!=null){
+			play.musicListChange(groupIndex,musicList);
+		}
+	}
+	private void disPatchMusicInfo(){
+		if(play==null)return;
+		if(canPlay()){
+			Music music=config.getMusic();
+			play.load(groupIndex,childIndex,music,player.getDuration());
+			if(!player.isPlaying()){
+				play.pause();
+			}
+		}
+		if(groupIndex!=-1&&childIndex!=-1){
+			play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
+		}
+
+		play.musicOriginChanged(config.getMusicOrigin());
+		play.playTypeChanged(config.getPlayType());
+	}
 	private void reset(){
 		player.reset();
-		play.load(-1,-1,null,0);
-		play.currentTime(0,0,0);
-		play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
-		play.pause();
+		if(play!=null){
+			play.load(-1,-1,null,0);
+			play.currentTime(0,0,0);
+			play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
+			play.pause();
+		}
 		config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
 		config.setMusic(null);
 		waitMusic.clear();
@@ -764,7 +784,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 			});
 		}
-		play.musicListChange(groupIndex,musicList);
+		musicListChange();
+
 		gettingMusicLock.unlock();
 	}
 	@WorkerThread
@@ -793,7 +814,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 			for(ScanMusicType type:types){
 				if(!type.isScanable())continue;
-				if(path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
+				if(path!=null&&path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
 					int lastSeparatorChar = path.lastIndexOf(File.separatorChar);
 					//**文件名包含后缀
 					String fileName=path;

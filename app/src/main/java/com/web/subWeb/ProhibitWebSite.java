@@ -49,7 +49,7 @@ public class ProhibitWebSite extends Activity {
 	}
 	public void register(){//--注册接收器
 		IntentFilter filter=new IntentFilter();
-		filter.addAction("FileDownload");
+		filter.addAction("IOUtil");
 		registerReceiver(receiver, filter);
 	}
 	public void send(){//--向服务发送信息

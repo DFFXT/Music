@@ -6,6 +6,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,8 +25,8 @@ import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicInfo;
 import com.web.moudle.music.model.InternetDataSource;
-import com.web.moudle.music.page.control.adapter.InternetMusicAdapter;
 import com.web.moudle.music.model.InternetViewModel;
+import com.web.moudle.music.page.control.adapter.InternetMusicAdapter;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.subWeb.GetInfo;
 import com.web.web.R;
@@ -38,7 +39,7 @@ public class InternetMusicPage extends BaseMusicPage {
     private SmartRefreshLayout smartRefreshLayout;
     private RecyclerView recyclerView;
     private InternetViewModel vm;
-    //private MusicInternetAdapter adapter;
+    @Nullable
     private MusicPlay.Connect connect;
     private TextView tv_searchICon;//***居中的搜索控件
     private SearchView searchView;//***搜索控件
@@ -135,9 +136,7 @@ public class InternetMusicPage extends BaseMusicPage {
         closeKeyBord();
         tv_searchICon.setVisibility(View.GONE);
         vm.setKeyWords(keyword);
-        vm.getMusicList().observe((LifecycleOwner) context, pl-> {
-            adapter.submitList(pl);
-        });
+        vm.getMusicList().observe((LifecycleOwner) context, pl-> adapter.submitList(pl));
         this.keyWords=keyword;
     }
 
@@ -153,6 +152,7 @@ public class InternetMusicPage extends BaseMusicPage {
 
         });
         builder.setNeutralButton("在线试听", (dialog, which) -> new Thread(() -> {
+            if (connect==null)return;
             GetInfo getInfo=new GetInfo();
             InternetMusicInfo info=getInfo.getMusicInfo(music.getHash());
             info.setMusicName(Shortcut.validatePath(music.getMusicName()));
@@ -169,12 +169,14 @@ public class InternetMusicPage extends BaseMusicPage {
         }).start());
         builder.setNegativeButton("下载("+ ResUtil.getFileSize(music.getFullSize())+")", (arg0, arg1) -> {
             if(connect==null)return;
+            //**网络获取的时间以秒为单位、后面需要毫秒(媒体库里面的单位为毫秒)
+            music.setDuration(music.getDuration()*1000);
             connect.download(music);
         });
 
         builder.setTitle(music.getMusicName());
-        TextView textView_songname=new TextView(context);
-        textView_songname.setTextColor(context.getResources().getColor(R.color.white,context.getTheme()));
+        TextView tv_songName=new TextView(context);
+        tv_songName.setTextColor(context.getResources().getColor(R.color.white,context.getTheme()));
         builder.setMessage("歌手："+music.getSingerName()+
                 "\n时长："+ ResUtil.timeFormat("mm:ss",music.getDuration()*1000)+
                 "\n大小："+ ResUtil.getFileSize(music.getFullSize()));

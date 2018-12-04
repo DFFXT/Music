@@ -1,8 +1,6 @@
 package com.web.moudle.music.page;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,35 +9,27 @@ import android.graphics.Outline;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewOutlineProvider;
-import android.widget.AbsSeekBar;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.web.adpter.PlayInterface;
 import com.web.common.base.BaseActivity;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
@@ -52,6 +42,7 @@ import com.web.moudle.music.page.control.interf.KeyBackListener;
 import com.web.moudle.music.page.control.interf.ListSelectListener;
 import com.web.moudle.music.page.control.ui.SelectorListAlert;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.music.player.PlayInterface;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.ui.SettingActivity;
@@ -60,7 +51,6 @@ import com.web.web.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class MusicActivity extends BaseActivity implements OnClickListener,PlayInterface{
 
@@ -608,9 +598,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener,PlayI
 		startActivity(intent);
 	}
 	public void onDestroy(){
-		super.onDestroy();
-		if(serviceConnection!=null)
+		if(serviceConnection!=null){
 			unbindService(serviceConnection);
+			if(connect!=null)
+				connect.cancel();
+		}
+		super.onDestroy();
 	}
 
 	public void addBackListener(KeyBackListener listener){
