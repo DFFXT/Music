@@ -1,5 +1,6 @@
 package com.web.moudle.net.retrofit
 
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -11,7 +12,8 @@ class MConverter<T>(val type: Type):Converter<ResponseBody,T> {
         if(res.startsWith("(")){
             return JSON.parseObject(res.substring(1,res.length-1),type)
         }
-        return JSON.parseObject(value.string(),type)
+        Log.i("log",res)
+        return JSON.parseObject(res,type)
     }
 
 }

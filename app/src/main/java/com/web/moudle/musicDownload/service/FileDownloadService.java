@@ -15,6 +15,7 @@ import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
+import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicInfo;
 import com.web.data.Music;
 import com.web.moudle.music.player.MusicPlay;
@@ -62,7 +63,7 @@ public class FileDownloadService extends Service {
 		public boolean start(int id){
 			if(getDownloadingNum()>=maxDownloadingCount)return false;
 			for(DownloadMusic dm:downloadList){
-				if(dm.getInternetMusic().getId()==id){
+				if(dm.getInternetMusicDetail().getId()==id){
 				    dm.setStatus(DownloadMusic.DOWNLOAD_WAIT);
 					startTask(dm);
 					return true;
@@ -72,7 +73,7 @@ public class FileDownloadService extends Service {
 		}
 		public boolean pause(int id){
 			for(DownloadMusic dm:downloadList){
-				if(dm.getInternetMusic().getId()==id){
+				if(dm.getInternetMusicDetail().getId()==id){
 					dm.setStatus(DownloadMusic.DOWNLOAD_PAUSE);
 					return true;
 				}
@@ -83,10 +84,10 @@ public class FileDownloadService extends Service {
 		public void delete(int id){
 			for(int i=0;i<downloadList.size();i++){
 				DownloadMusic dm=downloadList.get(i);
-				if(dm.getInternetMusic().getId()==id){
-					dm.getInternetMusic().delete();
+				if(dm.getInternetMusicDetail().getId()==id){
+					dm.getInternetMusicDetail().delete();
 					if(dm.getStatus()!=DownloadMusic.DOWNLOAD_DOWNLOADING){
-						FileDownloadService.this.delete(dm.getInternetMusic());
+						FileDownloadService.this.delete(dm.getInternetMusicDetail());
 					}
 					dm.setStatus(DownloadMusic.DOWNLOAD_DELETE);
 					break;
@@ -100,15 +101,15 @@ public class FileDownloadService extends Service {
 				listChange();
 				return;
 			}
-			Single.create((SingleOnSubscribe<List<InternetMusic>>) emitter -> {
-				List<InternetMusic> res=DataSupport.findAll(InternetMusic.class);
+			Single.create((SingleOnSubscribe<List<InternetMusicDetail>>) emitter -> {
+				List<InternetMusicDetail> res=DataSupport.findAll(InternetMusicDetail.class);
 				emitter.onSuccess(res);
 			}).subscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(new BaseSingleObserver<List<InternetMusic>>() {
+					.subscribe(new BaseSingleObserver<List<InternetMusicDetail>>() {
 						@Override
-						public void onSuccess(List<InternetMusic> res) {
-							for(InternetMusic m:res){
+						public void onSuccess(List<InternetMusicDetail> res) {
+							for(InternetMusicDetail m:res){
 								downloadList.add(new DownloadMusic(m,DownloadMusic.DOWNLOAD_WAIT));
 							}
 							listChange();
@@ -130,16 +131,16 @@ public class FileDownloadService extends Service {
 	 * 删除本地相关信息
 	 * @param internetMusic music
 	 */
-	private void delete(InternetMusic internetMusic){
-		Music.deleteMusic(new Music(internetMusic.getMusicName(),
-				internetMusic.getSingerName(),internetMusic.getPath()));
+	private void delete(InternetMusicDetail internetMusic){
+		Music.deleteMusic(new Music(internetMusic.getSongName(),
+				internetMusic.getArtistName(),internetMusic.getPath()));
 	}
 	public int onStartCommand(Intent intent,int flag,int startId){
 		String action=intent.getAction();
 		if(action!=null){
 			switch (action){
 				case ACTION_DOWNLOAD:{
-					InternetMusic music= (InternetMusic) intent.getSerializableExtra("music");
+					InternetMusicDetail music= (InternetMusicDetail) intent.getSerializableExtra("music");
 					addMusic(music);
 				}break;
 			}
@@ -151,9 +152,9 @@ public class FileDownloadService extends Service {
 	 * 从外部添加任务
 	 * @param music music
 	 */
-	private void addMusic(InternetMusic music){
+	private void addMusic(InternetMusicDetail music){
 		for(int i=0;i<downloadList.size();i++){
-			if(downloadList.get(i).getInternetMusic().getHash().equals(music.getHash())){
+			if(downloadList.get(i).getInternetMusicDetail().getSongId().equals(music.getSongId())){
 				return;
 			}
 		}
@@ -190,29 +191,19 @@ public class FileDownloadService extends Service {
 				emitter.onError(new Throwable(""));
 				return;
 			}
-			InternetMusic music=downloadMusic.getInternetMusic();
+			InternetMusicDetail music=downloadMusic.getInternetMusicDetail();
 			if(music==null)return;
-			GetInfo getInfo=new GetInfo();//**获取歌曲详细信息
-			String hash;
-			switch (music.getType()){
-				case InternetMusic.TYPE_NORMAL:hash=music.getHash();break;
-				case InternetMusic.TYPE_HIGH:hash=music.getSqHash();break;
-				default:return;
-			}
-			InternetMusicInfo info=getInfo.getMusicInfo(hash);
-			info.setMusicName(music.getMusicName());
-			info.setSinger(music.getSingerName());
-			music.setUrl(info.getPath());
+
 			music.save();
-			if(!Shortcut.fileExsist(info.getLyricsPath())){
-				//**下载歌词
-				gfFiles.write(info.getLyricsPath(),getInfo.getKrc(music.getHash()),false);
+			String lyricPath=Shortcut.getLyricsPath(music.getSongName(),music.getArtistName());
+			if(!Shortcut.fileExsist(lyricPath)){
+				IOUtil.onlineDataToLocal(music.getLrcLink(),lyricPath);
 			}
-			if(!Shortcut.fileExsist(info.getIconPath())){
-				if(!TextUtils.isEmpty(info.getImgAddress())){//**下载图片
-					gfFiles.NetDataToLocal(info.getImgAddress(), GetFiles.singerPath+music.getSingerName()+".png");//---下载图片
-				}
+			String iconPath=Shortcut.getIconPath(music.getArtistName());
+			if(!Shortcut.fileExsist(iconPath)){
+				IOUtil.onlineDataToLocal(music.getSingerIconSmall(),iconPath);
 			}
+
 			downloadGO(downloadMusic);
 			emitter.onSuccess(downloadMusic);
 		}).subscribeOn(Schedulers.io())
@@ -242,25 +233,25 @@ public class FileDownloadService extends Service {
 
 	private void downloadGO(DownloadMusic downloadMusic){//--需要新线程  保存至本地
 		//byte[] byte1= new byte[1024*50];
-		InternetMusic music=downloadMusic.getInternetMusic();
-		if(music.getHasDownload()==music.getFullSize()){//**已经完成了的
+		InternetMusicDetail music=downloadMusic.getInternetMusicDetail();
+		if(music.getHasDownload()==music.getSize()){//**已经完成了的
 			complete(downloadMusic);
 			return;
 		}
 
 		try {
-			int hasDownload=music.getHasDownload();
+			long hasDownload=music.getHasDownload();
 			if(hasDownload==0){//--清除同名文件【重新下载】
 				Shortcut.fileDelete(music.getPath());
 			}
-			if(TextUtils.isEmpty(music.getUrl())){
+			if(TextUtils.isEmpty(music.getSongLink())){
 				MToast.showToast(FileDownloadService.this, ResUtil.getString(R.string.download_urlError));
 				return ;
 			}
-			URL Url=new URL(music.getUrl());
+			URL Url=new URL(music.getSongLink());
 			HttpURLConnection connection= (HttpURLConnection) Url.openConnection();
 			connection.setRequestMethod("GET");
-			connection.setRequestProperty("Range", "bytes="+hasDownload+"-"+music.getFullSize());
+			connection.setRequestProperty("Range", "bytes="+hasDownload+"-"+music.getSize());
 			InputStream stream = connection.getInputStream();
 
 			RandomAccessFile raf=new RandomAccessFile(new File(music.getPath()),"rw");
@@ -282,7 +273,7 @@ public class FileDownloadService extends Service {
 				return null;
 			}, complete ->{
 				if(complete){//**下载完成 --- 广播
-					Music record=new Music(music.getMusicName(),music.getSingerName(),music.getPath());
+					Music record=new Music(music.getSongName(),music.getArtistName(),music.getPath());
 					record.setDuration(music.getDuration());
 					record.saveOrUpdate();
 					complete(downloadMusic);
@@ -306,12 +297,12 @@ public class FileDownloadService extends Service {
 	}
 	private void statusChange(DownloadMusic dm){
 		for(DownloadListener listener:listeners){
-			listener.statusChange(dm.getInternetMusic().getId(),dm.getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING);
+			listener.statusChange(dm.getInternetMusicDetail().getId(),dm.getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING);
 		}
 	}
-	private void progressChange(InternetMusic music){
+	private void progressChange(InternetMusicDetail music){
 		for(DownloadListener listener:listeners){
-			listener.progressChange(music.getId(),music.getHasDownload(),music.getFullSize());
+			listener.progressChange(music.getId(),music.getHasDownload(),music.getSize());
 		}
 	}
 
@@ -320,16 +311,16 @@ public class FileDownloadService extends Service {
 	 */
 	private void complete(DownloadMusic dm){
 		downloadList.remove(dm);
-		dm.getInternetMusic().delete();
+		dm.getInternetMusicDetail().delete();
 		listChange();
 		Intent intent=new Intent(this,MusicPlay.class);
 		intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);
-		intent.putExtra("path",dm.getInternetMusic().getPath());
+		intent.putExtra("path",dm.getInternetMusicDetail().getPath());
 		startService(intent);
 
 		//***添加进媒体库
 		Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-		Uri uri = Uri.fromFile(new File(dm.getInternetMusic().getPath()));
+		Uri uri = Uri.fromFile(new File(dm.getInternetMusicDetail().getPath()));
 		intent2.setData(uri);
 		sendBroadcast(intent2);
 	}
@@ -338,7 +329,7 @@ public class FileDownloadService extends Service {
 
 
 	public interface DownloadListener{
-		void progressChange(int id,int progress,int max);
+		void progressChange(int id,long progress,long max);
 		void complete(InternetMusic music);
 		void statusChange(int id,boolean isDownload);
 		void listChanged(List<DownloadMusic> downloadMusicList);
@@ -352,7 +343,7 @@ public class FileDownloadService extends Service {
 	 * @param context context
 	 * @param music music
 	 */
-	public static void addTask(Context context,InternetMusic music){
+	public static void addTask(Context context,InternetMusicDetail music){
 		Intent intent=new Intent(context,FileDownloadService.class);
 		intent.setAction(FileDownloadService.ACTION_DOWNLOAD);
 		intent.putExtra("music",music);

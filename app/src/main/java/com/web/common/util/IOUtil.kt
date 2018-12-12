@@ -1,7 +1,10 @@
 package com.web.common.util
 
 import android.support.annotation.WorkerThread
+import android.text.TextUtils
 import java.io.*
+import java.lang.Exception
+import java.net.URL
 
 object IOUtil{
     class StreamStop{
@@ -66,6 +69,19 @@ object IOUtil{
                 }
             }
         }
+    }
+    @JvmStatic
+    @WorkerThread
+    fun onlineDataToLocal(url:String?,savePath:String){
+        try {
+            if(TextUtils.isEmpty(url))return
+            val mUrl=URL(url)
+            val outputStream=FileOutputStream(savePath)
+            streamCopy(mUrl.openStream(),outputStream)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
     }
 
 }

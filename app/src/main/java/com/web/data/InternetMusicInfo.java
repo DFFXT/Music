@@ -8,16 +8,10 @@ import com.web.subWeb.GetInfo;
 import java.util.function.Consumer;
 
 public class InternetMusicInfo extends Music{
-    private String hash;
     private String imgAddress;
-
+    private String lrcLink;
     public InternetMusicInfo(@NonNull String hash){
         super("","","");
-        this.hash=hash;
-    }
-
-    public String getHash() {
-        return hash;
     }
 
     @Nullable
@@ -29,4 +23,11 @@ public class InternetMusicInfo extends Music{
         this.imgAddress = imgAddress;
     }
 
+    public String getLrcLink() {
+        return lrcLink;
+    }
+
+    public void setLrcLink(String lrcLink) {
+        this.lrcLink = lrcLink;
+    }
 }

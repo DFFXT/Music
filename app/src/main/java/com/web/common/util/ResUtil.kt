@@ -26,7 +26,7 @@ object ResUtil {
         return format.format(Date(time))
     }
     @JvmStatic
-    fun getFileSize(size:Int):String{
+    fun getFileSize(size:Long):String{
         val format= DecimalFormat("0.00")
         return when(size){
             in 0..1024*1024-> format.format(size/1024F)+"KB"

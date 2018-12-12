@@ -3,6 +3,7 @@ package com.web.moudle.musicDownload.bean;
 import android.support.annotation.IntDef;
 
 import com.web.data.InternetMusic;
+import com.web.data.InternetMusicDetail;
 
 public class DownloadMusic {
     public final static int DOWNLOAD_WAIT=1;
@@ -11,21 +12,21 @@ public class DownloadMusic {
     public final static int DOWNLOAD_DELETE=4;
     @IntDef({DOWNLOAD_WAIT,DOWNLOAD_PAUSE,DOWNLOAD_DOWNLOADING,DOWNLOAD_DELETE})
     @interface DownloadStatus{}
-    private InternetMusic internetMusic;
+    private InternetMusicDetail internetMusic;
     private @DownloadStatus int status;
 
-    public DownloadMusic(InternetMusic internetMusic,@DownloadStatus int status) {
+    public DownloadMusic(InternetMusicDetail internetMusic, @DownloadStatus int status) {
         this.internetMusic = internetMusic;
         this.status = status;
     }
 
 
 
-    public InternetMusic getInternetMusic() {
+    public InternetMusicDetail getInternetMusicDetail() {
         return internetMusic;
     }
 
-    public void setInternetMusic(InternetMusic internetMusic) {
+    public void setInternetMusicDetail(InternetMusicDetail internetMusic) {
         this.internetMusic = internetMusic;
     }
 

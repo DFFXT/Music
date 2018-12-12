@@ -21,7 +21,7 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Inte
         val item= getItem(position) ?: return
         holder.bindText(R.id.musicName,item.musicName)
         holder.bindText(R.id.singerName,item.singerName)
-        holder.bindText(R.id.size,ResUtil.getFileSize(item.fullSize))
+        holder.bindText(R.id.size,ResUtil.getFileSize(item.fullSize.toLong()))
         holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))
         holder.rootView.setOnClickListener {
             listener?.itemClick(item)

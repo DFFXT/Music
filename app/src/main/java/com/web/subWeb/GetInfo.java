@@ -27,6 +27,7 @@ public class GetInfo{
 		}
 		return null;
 	}
+	@Deprecated
 	public InternetMusicInfo getMusicInfo(String hash){
 		InternetMusicInfo info=new InternetMusicInfo(hash);
 		try{

@@ -67,7 +67,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 	private void setAdapter(){//--设置适配器
         adapter=new DownloadViewAdapter(MusicDownLoadActivity.this, dataList);
         adapter.setListener((view,position)->{
-            int id=dataList.get(position).getInternetMusic().getId();
+            int id=dataList.get(position).getInternetMusicDetail().getId();
             int status=dataList.get(position).getStatus();
             if(view.getId()==R.id.downloadStatu){
                 if(status==DownloadMusic.DOWNLOAD_DOWNLOADING){
@@ -115,7 +115,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 
 
 	@Override
-	public void progressChange(int id, int progress, int max) {
+	public void progressChange(int id, long progress, long max) {
 		loop();
 	}
 
@@ -144,7 +144,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 	}
 	private int getIndex(int id){
 		for(int i=0;i<dataList.size();i++){
-			if(id==dataList.get(i).getInternetMusic().getId()){
+			if(id==dataList.get(i).getInternetMusicDetail().getId()){
 				return i;
 			}
 		}

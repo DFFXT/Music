@@ -11,6 +11,7 @@ import com.web.common.base.BaseAdapter;
 import com.web.common.base.BaseViewHolder;
 import com.web.common.util.ResUtil;
 import com.web.data.InternetMusic;
+import com.web.data.InternetMusicDetail;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.web.R;
 
@@ -38,10 +39,10 @@ public class DownloadViewAdapter extends BaseAdapter<DownloadMusic> {
 
     @Override
     public void onBindViewHolder(@NotNull BaseViewHolder holder, int position, @Nullable DownloadMusic item) {
-	    InternetMusic music=dataList.get(position).getInternetMusic();
-        holder.bindText(R.id.musicName,music.getMusicName());
+	    InternetMusicDetail music=dataList.get(position).getInternetMusicDetail();
+        holder.bindText(R.id.musicName,music.getSongName());
         holder.bindText(R.id.hasDownload, ResUtil.getFileSize(music.getHasDownload())+"/");
-        holder.bindText(R.id.fullSize, ResUtil.getFileSize(music.getFullSize()));
+        holder.bindText(R.id.fullSize, ResUtil.getFileSize(music.getSize()));
         holder.bindImage(R.id.downloadStatu,dataList.get(position).getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING?R.drawable.icon_play_black :R.drawable.icon_pause_black)
         .setOnClickListener(v->{
             if(listener!=null){

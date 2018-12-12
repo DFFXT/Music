@@ -9,7 +9,7 @@ import com.web.common.base.BaseObserver;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.config.GetFiles;
 import com.web.data.InternetMusic;
-import com.web.moudle.music.model.bean.RowMusicData;
+import com.web.data.SearchResultBd;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -22,17 +22,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.web.moudle.music.model.InternetViewModel.*;
+
 public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic> {
     private String keyWords;
     private int page=1;
+    private int pageSize=10;
     private MutableLiveData<LiveDataWrapper> liveData;
     private LiveDataWrapper wrapper;
     private InternetMusicModel model=new InternetMusicModel();
-    public static final int CODE_JSON_ERROR=1;
-    public static final int CODE_NET_ERROR=2;
-    public static final int CODE_URL_ERROR=3;
-    public static final int CODE_OK=4;
-    public static final int CODE_NO_DATA=5;
+
 
     public InternetDataSource(@NonNull MutableLiveData<LiveDataWrapper> liveData){
         this.liveData=liveData;
@@ -41,10 +40,15 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<String> params, @NonNull LoadInitialCallback<String, InternetMusic> callback) {
-        model.search(keyWords,page).subscribe(new BaseObserver<RowMusicData>() {
+        model.search(keyWords,page,pageSize).subscribe(new BaseObserver<SearchResultBd>() {
             @Override
-            public void onNext(RowMusicData rowMusicData) {
-                callback.onResult(rowMusicData.getInfo(),"","");
+            public void onNext(SearchResultBd rowMusicData) {
+                callback.onResult(rowMusicData.getSong_list(),"","");
+            }
+
+            @Override
+            public void error(@NotNull Throwable e) {
+                e.printStackTrace();
             }
         });
     }
@@ -56,10 +60,10 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
     @Override
     public void loadAfter(@NonNull LoadParams<String> params, @NonNull LoadCallback<String, InternetMusic> callback) {
         setPage(page+1);
-        model.search(keyWords,page).subscribe(new BaseObserver<RowMusicData>() {
+        model.search(keyWords,page,pageSize).subscribe(new BaseObserver<SearchResultBd>() {
             @Override
-            public void onNext(RowMusicData rowMusicData) {
-                callback.onResult(rowMusicData.getInfo(),"");
+            public void onNext(SearchResultBd rowMusicData) {
+                callback.onResult(rowMusicData.getSong_list(),"");
             }
 
             @Override

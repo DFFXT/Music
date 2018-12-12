@@ -24,15 +24,19 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 
+import com.web.common.base.BaseSingleObserver;
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
+import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
+import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicInfo;
 import com.web.data.Music;
 import com.web.data.MusicGroup;
@@ -42,9 +46,11 @@ import com.web.data.ScanMusicType;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.net.retrofit.SchedulerTransform;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
+import com.web.subWeb.GetInfo;
 import com.web.web.R;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -65,7 +71,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MusicPlay extends MediaBrowserServiceCompat {
 	public final static String BIND="not media bind";
@@ -472,23 +484,23 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public Music getPlayingMusic(){
 			return config.getMusic();
 		}
-		public void download(InternetMusic music){
-			String originMusicName=music.getMusicName();
+		public void download(InternetMusicDetail music){
+			String originMusicName=music.getSongName();
 			for(int i=1;i<10;i++){//***音乐查重
 				Music localMusic=DataSupport.where("path=?",Shortcut.createPath(music)).findFirst(Music.class);
 				if(localMusic!=null){
 					File file=new File(Shortcut.createPath(music));
 					if(file.exists()&&file.isFile()){//**存在记录，有文件
-						if(music.getFullSize()==file.length()){
+						if(music.getSize()==file.length()){
 							//**文件完全相同
 							return;
 						}
 						else {//**文件不同
-							music.setMusicName(originMusicName+"("+i+")");
+							music.setSongName(originMusicName+"("+i+")");
 						}
 					}
 					else {//**存在记录，文件丢失
-						music.setMusicName(localMusic.getPath());
+						music.setSongName(localMusic.getPath());
 						music.setPath(localMusic.getPath());
 						break;
 					}
@@ -506,6 +518,23 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public void playInternet(final InternetMusicInfo music){
 			config.setMusicOrigin(PlayerConfig.MusicOrigin.INTERNET);
 			loadMusic(music);
+			//**下载歌词和图片
+            Single.create((SingleOnSubscribe<InternetMusic>) emitter -> {
+                if(!Shortcut.fileExsist(music.getLyricsPath())){
+                    IOUtil.onlineDataToLocal(music.getLrcLink(),music.getLyricsPath());
+                }
+                if(!Shortcut.fileExsist(music.getIconPath())){
+                    IOUtil.onlineDataToLocal(music.getImgAddress(),music.getIconPath());
+                    config.setBitmap(getBitmap(music.getSinger()));
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new BaseSingleObserver<InternetMusic>(){
+                        @Override
+                        public void onSuccess(InternetMusic music) {
+                            musicLoad();
+                        }
+                    });
 		}
 
 		/**

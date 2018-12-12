@@ -11,12 +11,14 @@ import java.io.Serializable;
 public class InternetMusic extends DataSupport implements Serializable {
 
     private int id;
-    @JSONField(name = "songname")
+    @JSONField(name = "title")
     private String musicName;
-    @JSONField(name = "singername")
+    @JSONField(name = "author")
     private String singerName;
-    @JSONField(name = "hash")
+    @JSONField(name = "song_id")
     private String hash;
+    @JSONField(name = "album_id")
+    private String albumId;
     @JSONField(name = "sqhash")
     private String sqHash;
     @JSONField(name = "320hash")
@@ -33,6 +35,8 @@ public class InternetMusic extends DataSupport implements Serializable {
     private int _320FileSize;
     @JSONField(name = "sqfilesize")
     private int sqFileSize;
+    @JSONField(name = "lrclink")
+    private String lrcLink;
 
     public final static int TYPE_NORMAL=1;
     public final static int TYPE_HIGH=2;
@@ -59,8 +63,10 @@ public class InternetMusic extends DataSupport implements Serializable {
         this.id = id;
     }
 
-    public void setMusicName(String musicName) {
+    public void setMusicName(String musicName) {//**baidu music title有标签
         this.musicName = musicName;
+        this.musicName=this.musicName.replace("<em>","");
+        this.musicName=this.musicName.replace("</em>","");
     }
 
     public void setHash(String hash) {
@@ -157,5 +163,21 @@ public class InternetMusic extends DataSupport implements Serializable {
 
     public void setType(@MusicQuality int type) {
         this.type = type;
+    }
+
+    public String getLrcLink() {
+        return lrcLink;
+    }
+
+    public void setLrcLink(String lrcLink) {
+        this.lrcLink = lrcLink;
+    }
+
+    public String getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(String albumId) {
+        this.albumId = albumId;
     }
 }

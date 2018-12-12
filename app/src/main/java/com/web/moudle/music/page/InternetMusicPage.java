@@ -23,6 +23,7 @@ import com.web.common.util.ViewUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
+import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicInfo;
 import com.web.moudle.music.model.InternetDataSource;
 import com.web.moudle.music.model.InternetViewModel;
@@ -47,6 +48,7 @@ public class InternetMusicPage extends BaseMusicPage {
     private InternetMusicAdapter adapter;
 
 
+
     @Override
     public int getLayoutId() {
         return R.layout.music_internet;
@@ -69,7 +71,9 @@ public class InternetMusicPage extends BaseMusicPage {
         vm= ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(InternetViewModel.class);
 
         recyclerView.setAdapter(adapter);
-        adapter.setListener(this::downloadConsider);
+        adapter.setListener(internetMusic->{
+            vm.getMusicDetail(internetMusic.getHash());
+        });
 
 
 
@@ -87,25 +91,32 @@ public class InternetMusicPage extends BaseMusicPage {
         init();
     }
     private void init(){
+        vm.observerMusicDetail().observe((LifecycleOwner) context, detailList->{
+            if(detailList==null)return;
+            downloadConsider(detailList.getSongList().get(0));
+        });
         vm.getStatus().observe((LifecycleOwner) context, wrapper -> {
             if(wrapper==null)return;
             switch (wrapper.getCode()){
-                case InternetDataSource.CODE_OK:{
+                case InternetViewModel.CODE_OK:{
                     smartRefreshLayout.finishLoadMore();
                 }break;
-                case InternetDataSource.CODE_NO_DATA:{
+                case InternetViewModel.CODE_NO_DATA:{
                     smartRefreshLayout.setNoMoreData(true);
                     //MToast.showToast(context, ResUtil.getString(R.string.noMoreData));
                 }break;
-                case InternetDataSource.CODE_JSON_ERROR:{
+                case InternetViewModel.CODE_JSON_ERROR:{
                     MToast.showToast(context, ResUtil.getString(R.string.dataAnalyzeError));
                 }break;
-                case InternetDataSource.CODE_URL_ERROR:{
+                case InternetViewModel.CODE_URL_ERROR:{
                     MToast.showToast(context, ResUtil.getString(R.string.urlAnalyzeError));
                 }break;
-                case InternetDataSource.CODE_NET_ERROR:{
+                case InternetViewModel.CODE_NET_ERROR:{
                     MToast.showToast(context, ResUtil.getString(R.string.noInternet));
                 }break;
+                case InternetViewModel.CODE_ERROR:{
+                    MToast.showToast(context,ResUtil.getString(R.string.unkownError));
+                }
             }
         });
     }
@@ -145,7 +156,7 @@ public class InternetMusicPage extends BaseMusicPage {
      * @param music p
      */
     @SuppressLint("SetTextI18n")
-    private void downloadConsider(InternetMusic music){
+    private void downloadConsider(InternetMusicDetail music){
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
         builder.create();
         builder.setPositiveButton("取消", (arg0, arg1) -> {
@@ -153,33 +164,28 @@ public class InternetMusicPage extends BaseMusicPage {
         });
         builder.setNeutralButton("在线试听", (dialog, which) -> new Thread(() -> {
             if (connect==null)return;
-            GetInfo getInfo=new GetInfo();
-            InternetMusicInfo info=getInfo.getMusicInfo(music.getHash());
-            info.setMusicName(Shortcut.validatePath(music.getMusicName()));
-            info.setSinger(Shortcut.validatePath(music.getSingerName()));
-            if(!Shortcut.fileExsist(info.getLyricsPath())){
-                new GetFiles().write(info.getLyricsPath(),getInfo.getKrc(music.getHash()),false);
-            }
-            if(!Shortcut.fileExsist(info.getIconPath())){
-                if(info.getImgAddress()!=null){
-                    new GetFiles().NetDataToLocal(info.getImgAddress().replace("{size}", "80"), GetFiles.singerPath+ music.getSingerName()+".png");//---下载图片
-                }
-            }
+            InternetMusicInfo info=new InternetMusicInfo(music.getSongId());
+            info.setMusicName(Shortcut.validatePath(music.getSongName()));
+            info.setSinger(Shortcut.validatePath(music.getArtistName()));
+            info.setPath(music.getSongLink());
+            info.setImgAddress(music.getSingerIconSmall());
+            info.setLrcLink(music.getLrcLink());
+
             connect.playInternet(info);
         }).start());
-        builder.setNegativeButton("下载("+ ResUtil.getFileSize(music.getFullSize())+")", (arg0, arg1) -> {
+        builder.setNegativeButton("下载("+ ResUtil.getFileSize(music.getSize())+")", (arg0, arg1) -> {
             if(connect==null)return;
             //**网络获取的时间以秒为单位、后面需要毫秒(媒体库里面的单位为毫秒)
             music.setDuration(music.getDuration()*1000);
             connect.download(music);
         });
 
-        builder.setTitle(music.getMusicName());
+        builder.setTitle(music.getSongName());
         TextView tv_songName=new TextView(context);
         tv_songName.setTextColor(context.getResources().getColor(R.color.white,context.getTheme()));
-        builder.setMessage("歌手："+music.getSingerName()+
+        builder.setMessage("歌手："+music.getArtistName()+
                 "\n时长："+ ResUtil.timeFormat("mm:ss",music.getDuration()*1000)+
-                "\n大小："+ ResUtil.getFileSize(music.getFullSize()));
+                "\n大小："+ ResUtil.getFileSize(music.getSize()));
         builder.show();
     }
 

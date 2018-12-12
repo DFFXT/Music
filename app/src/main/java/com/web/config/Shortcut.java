@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.web.data.InternetMusic;
+import com.web.data.InternetMusicDetail;
 import com.web.moudle.music.player.MusicPlay;
 
 import java.io.File;
@@ -32,8 +33,17 @@ public class Shortcut {
         return msg;
     }
 
-    public static String createPath(InternetMusic music){
-        return GetFiles.cachePath+music.getSingerName()+" - "+music.getMusicName()+".mp3";
+    public static String createPath(InternetMusicDetail music){
+        return GetFiles.cachePath+music.getArtistName()+" - "+music.getSongName()+"."+music.getFormat();
+    }
+    public static String getMusicPath(String musicName,String singerName,String suffix){
+        return GetFiles.cachePath+musicName+" - "+singerName+"."+suffix;
+    }
+    public static String getLyricsPath(String musicName,String signerName){
+        return GetFiles.cachePath+"lyrics"+ File.separator+signerName+" - "+musicName+".lrc";
+    }
+    public static String getIconPath(String singerName){
+        return GetFiles.cachePath+"singer"+ File.separator+singerName+".png";
     }
 
     public static void sleep(int millis){
