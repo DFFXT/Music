@@ -105,4 +105,17 @@ public class Shortcut {
                 .replace('?',' ');
     }
 
+    /**
+     * 判断字符串是不是严格空，连续空格为空
+     * @param string str
+     * @return isEmpty
+     */
+    public static boolean isStrictEmpty(String string){
+        if(string==null)return true;
+        for(int i=0;i<string.length();i++){
+            if(string.charAt(i)!=' ')return false;
+        }
+        return true;
+    }
+
 }

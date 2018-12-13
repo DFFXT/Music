@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="searchView_cancel">取消</string>
+    <string name="searchView_hint">曲名 歌手 专辑</string>
+</resources>

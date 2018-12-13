@@ -18,4 +18,11 @@
         <attr name="indexBar_textColor" format="color"/>
         <attr name="indexBar_textSize" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="SearchView">
+        <attr name="searchView_hint" format="string"/>
+        <attr name="searchView_autoFocus" format="boolean"/>
+        <attr name="searchView_enable" format="boolean"/>
+    </declare-styleable>
+
 </resources>

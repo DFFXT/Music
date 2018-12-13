@@ -3,6 +3,7 @@ package com.web.moudle.musicDownload.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -19,6 +20,7 @@ import com.web.misc.TopBarLayout;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.net.NetApis;
 import com.web.web.R;
 
 import java.util.ArrayList;
@@ -158,5 +160,10 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 			if(connect!=null)
 				connect.removeDownloadListener(this);
 		}
+	}
+
+	public static void actionStart(Context ctx){
+		Intent intent=new Intent(ctx,NetApis.Music.class);
+		ctx.startActivity(intent);
 	}
 }

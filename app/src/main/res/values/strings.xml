@@ -125,5 +125,6 @@
 	<string name="setting_lockScreen_imageBackground">选择图片背景</string>
 
 
+	<string name="search_searchHint"></string>
 
 </resources>

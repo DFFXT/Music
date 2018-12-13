@@ -29,13 +29,13 @@ class ColorPicker @JvmOverloads constructor(context: Context?, attrs: AttributeS
         gradient=LinearGradient(0f,0f,w.toFloat(),0f,colorArray,positionArray,Shader.TileMode.CLAMP)
         bitmap?.recycle()
         bitmap= Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_4444)
-        canvas= Canvas(bitmap)
+        canvas= Canvas(bitmap!!)
     }
     override fun onDraw(c: Canvas?) {
         if(c==null)return
         paint.shader=gradient
         canvas?.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
-        c.drawBitmap(bitmap,0f,0f,null)
+        c.drawBitmap(bitmap!!,0f,0f,null)
     }
 
     @SuppressLint("ClickableViewAccessibility")

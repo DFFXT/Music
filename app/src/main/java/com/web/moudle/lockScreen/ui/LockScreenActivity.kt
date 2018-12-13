@@ -79,6 +79,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
 
     override fun initView() {
         ViewUtil.transparentStatusBar(window)
+        loadData()
         val mode=LockScreenSettingActivity.getMode()
         when(mode){
             BG_MODE_IMAGE-> {
@@ -257,7 +258,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         lyricView_lockScreen.lyrics=lyrics
     }
 
-    override fun loadData(bundle: Bundle?) {
+    fun loadData() {
         val d=ResUtil.getDrawable(R.drawable.icon_lockscreen_slide_arrow)
         arrowBitmap[0]=ResUtil.getBitmapFromDrawable(d)
         val matrix=Matrix()

@@ -18,10 +18,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         configuration.fontScale = .85f;
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
         setContentView(getLayoutId());
-        loadData(b);
         initView();
     }
     abstract public @LayoutRes int getLayoutId();
     abstract public void initView();
-    protected void loadData(Bundle bundle){ }
 }

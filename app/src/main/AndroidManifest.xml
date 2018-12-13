@@ -94,7 +94,6 @@
         <activity android:name="com.web.subWeb.ProhibitWebSite" />
         <activity android:name=".Computer" />
         <activity android:name="com.web.subWeb.VideoPlay" />
-        <activity android:name=".MusicLogin" />
         <activity
             android:name="com.web.moudle.lockScreen.ui.LockScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -103,6 +102,9 @@
             android:theme="@style/FullscreenTheme"/>
         <activity android:name="com.web.moudle.setting.suffix.SuffixSelectActivity" />
         <activity android:name="com.web.moudle.setting.lockscreen.LockScreenSettingActivity" />
+        <activity android:name="com.web.moudle.search.SearchActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name="com.web.moudle.music.page.InternetMusicActivity" />
     </application>
 
 </manifest>
