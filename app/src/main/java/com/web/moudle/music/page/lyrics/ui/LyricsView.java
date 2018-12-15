@@ -51,7 +51,7 @@ public class LyricsView extends RelativeLayout{
     private @ColorInt int textColor=Color.BLACK;
     //**当前歌词颜色
     private @ColorInt int textFocusColor=0xffff00ee;
-    private Bitmap mBitmap;
+
 
     private int startIndex,endIndex;
     //**状态
@@ -97,7 +97,7 @@ public class LyricsView extends RelativeLayout{
         initBitmap();
     }
     private void initBitmap(){
-        if(width<=0)return;
+        if(width<=0||height<=0)return;
         mBitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_4444);
         mCanvas=new Canvas(mBitmap);
         mCanvas.clipRect(0,height/2-halfShowHeight,width,height/2+halfShowHeight);
@@ -125,7 +125,10 @@ public class LyricsView extends RelativeLayout{
 
 
     private int halfShowHeight=0;
+    @Nullable
     private Canvas mCanvas;
+    @Nullable
+    private Bitmap mBitmap;
 
     /**
      * 此处重写dispatchDraw（onDraw、draw方法要设置background才会执行）
@@ -135,7 +138,8 @@ public class LyricsView extends RelativeLayout{
     public void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         int centerH=height/2;
-        mCanvas.drawColor(textColor,PorterDuff.Mode.CLEAR);
+        if(mCanvas!=null)
+            mCanvas.drawColor(textColor,PorterDuff.Mode.CLEAR);
         paint.setXfermode(mode_font);
         paint.setColor(textColor);
         if(!enableFontScale){
@@ -152,12 +156,15 @@ public class LyricsView extends RelativeLayout{
 
             int left=(width-rect.width())/2;
             paint.setAlpha((int) (255*linear));
-            mCanvas.drawText(lyrics.get(i).getLine(),left,bottom,paint);
+            if(mCanvas!=null)
+                mCanvas.drawText(lyrics.get(i).getLine(),left,bottom,paint);
         }
         paint.setColor(textFocusColor);
         paint.setXfermode(mode_cover);
-        mCanvas.drawRect(0,centerH-lineHeight/2+10,width,centerH+lineHeight/2+10,paint);
+        if(mCanvas!=null)
+            mCanvas.drawRect(0,centerH-lineHeight/2+10,width,centerH+lineHeight/2+10,paint);
         paint.setXfermode(mode_font);
+            if(mBitmap!=null)
         canvas.drawBitmap(mBitmap,0,0,paint);
     }
     private int nextIndex=0;
@@ -259,6 +266,7 @@ public class LyricsView extends RelativeLayout{
         if(lyrics==null) return;
         this.lyrics.clear();
         this.lyrics.addAll(lyrics);
+        requestLayout();
         refresh();
     }
 
@@ -268,18 +276,6 @@ public class LyricsView extends RelativeLayout{
     public void refresh(){
         initData();
         postInvalidate();
-    }
-
-    @Override
-    public boolean onKeyShortcut(int keyCode, KeyEvent event) {
-        Log.i("log","-1-");
-        return true;
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        Log.i("log","-2--");
-        return true;
     }
 
     private float preY;
@@ -370,6 +366,20 @@ public class LyricsView extends RelativeLayout{
         animator.start();
 
     }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthMode=MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode=MeasureSpec.getMode(heightMeasureSpec);
+        int width=MeasureSpec.getSize(widthMeasureSpec);
+        int height=MeasureSpec.getSize(heightMeasureSpec);
+        if(heightMode==MeasureSpec.AT_MOST){
+            Log.i("log","++++");
+            height=lyrics.size()*(lineGap+lineHeight);
+        }
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+    }
+
 
     public void setCanScroll(boolean canScroll){
         this.canScroll=canScroll;

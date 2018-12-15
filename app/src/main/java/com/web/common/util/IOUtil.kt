@@ -10,6 +10,10 @@ object IOUtil{
     class StreamStop{
         var stop=false
     }
+
+    /**
+     * 复制，将一个流里面的数据复制到另一个流
+     */
     @JvmStatic
     @WorkerThread
     fun streamCopy(inputStream:InputStream,outputStream:OutputStream,progressCallBack:((Int)->Unit)?=null,stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null){

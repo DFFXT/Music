@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="musicDetailActivity_mainSinger">主唱：</string>
+    <string name="musicDetailActivity_durationLabel">时长：</string>
+    <string name="musicDetailActivity_album">专辑：</string>
+    <string name="musicDetailActivity_publishTime">发行时间：</string>
+    <string name="musicDetailActivity_publishCompany">发行公司：</string>
+    <string name="musicDetailActivity_listenTimes">播放次数：</string>
+
+    <integer name="loadingListenerId">11</integer>
+    <integer name="loadingViewId">22</integer>
+    <integer name="errorViewId">33</integer>
+    <integer name="errorListenerId">44</integer>
+
+    <dimen name="musicDetailActivity_descMarginTop">5dp</dimen>
+</resources>

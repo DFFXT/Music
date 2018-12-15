@@ -7,7 +7,11 @@ import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 
-open class BaseGlideTarget(private val w:Int=Target.SIZE_ORIGINAL, private val h:Int=Target.SIZE_ORIGINAL): Target<Drawable> {
+open class BaseGlideTarget(private val w:Int=Target.SIZE_ORIGINAL, private val h:Int=Target.SIZE_ORIGINAL): Target<Bitmap> {
+    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+
+    }
+
     override fun onLoadStarted(placeholder: Drawable?) {
 
     }
@@ -40,9 +44,9 @@ open class BaseGlideTarget(private val w:Int=Target.SIZE_ORIGINAL, private val h
 
     }
 
-    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+    /*override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
 
-    }
+    }*/
 
     override fun onStart() {
 

@@ -128,8 +128,7 @@ import com.web.data.InternetMusic;
 		}
 		return text;
 	}
-	@Nullable
-	public String readNetData(String url) throws IOException {//--需要新线程
+	public static String readNetData(String url) throws IOException {//--需要新线程
 		StringBuilder builder=new StringBuilder();
 		URL Url=new URL(url);
 		InputStream stream = Url.openConnection().getInputStream();

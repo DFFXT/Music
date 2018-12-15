@@ -2,6 +2,7 @@ package com.web.moudle.net
 
 import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd
+import com.web.moudle.entry.bean.MusicDetailInfo
 import com.web.moudle.music.model.bean.RowMusicData
 import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.search.bean.SearchSug
@@ -25,5 +26,10 @@ class NetApis {
 
         @GET("http://sug.qianqian.com/info/suggestion?format=json")
         fun searchSug(@Query("word") word: String): Observable<BaseNetBean<SearchSug>>
+    }
+
+    interface Entry {
+        @GET("http://musicapi.taihe.com/v1/restserver/ting?method=baidu.ting.song.playAAC")
+        fun getMusicDetail(@Query("songid") songId: String): Observable<MusicDetailInfo>
     }
 }

@@ -7,13 +7,13 @@ import com.alibaba.fastjson.annotation.JSONField
  */
 data class AlbumSug(
         @JSONField(name = "albumname")
-        var albumName: String,
+        val albumName: String,
         @JSONField(name = "artistname")
-        var artistName: String,
+        val artistName: String,
         @JSONField(name = "artistpic")
-        var artistPic: String,
+        val artistPic: String,
         @JSONField(name = "albumid")
-        var albumId: String,
+        val albumId: String,
         @JSONField(name = "weight")
-        var weight: String
+        val weight: String
 )

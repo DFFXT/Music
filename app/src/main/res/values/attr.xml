@@ -7,6 +7,7 @@
         <attr name="topBar_subtitleColor" format="color"/>
         <attr name="topBar_mainTitleText" format="reference|string"/>
         <attr name="topBar_subtitleText" format="reference|string"/>
+        <attr name="topBar_tint" format="color"/>
     </declare-styleable>
     <declare-styleable name="TextWithDrawable">
         <attr name="textWithDrawable_text" format="string"/>
@@ -25,4 +26,9 @@
         <attr name="searchView_enable" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="ExpandableTextView">
+        <attr name="attr_text" format="string"/>
+        <attr name="attr_textSize" format="dimension"/>
+        <attr name="attr_color" format="color"/>
+    </declare-styleable>
 </resources>

@@ -1,15 +1,12 @@
 package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
-import android.app.Activity
-import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.*
 import android.renderscript.Allocation
 import android.renderscript.Element
@@ -24,11 +21,9 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
 import com.web.common.base.BaseGlideTarget
-import com.web.common.constant.Constant
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
@@ -38,12 +33,10 @@ import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
 import com.web.moudle.music.page.lyrics.model.LyricsLine
 import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.preference.SP
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lock_screen.*
 import java.util.*
-import javax.microedition.khronos.opengles.GL
 
 
 class LockScreenActivity : BaseActivity() ,View.OnClickListener{
@@ -84,13 +77,12 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         when(mode){
             BG_MODE_IMAGE-> {
 
-                ImageLoad.load(LockScreenSettingActivity.getBgImagePath()).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                ImageLoad.loadAsBitmap(LockScreenSettingActivity.getBgImagePath()).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         val rs = RenderScript.create(this@LockScreenActivity)
                         val blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
-                        val from=(resource as BitmapDrawable).bitmap
-                        val allIn=Allocation.createFromBitmap(rs,from)
-                        val to=Bitmap.createBitmap(from.width,from.height,Bitmap.Config.ARGB_4444)
+                        val allIn=Allocation.createFromBitmap(rs, resource)
+                        val to=Bitmap.createBitmap(resource.width, resource.height,Bitmap.Config.ARGB_4444)
                         val allOut=Allocation.createFromBitmap(rs,to)
                         blur.setRadius(12f)
                         blur.setInput(allIn)
