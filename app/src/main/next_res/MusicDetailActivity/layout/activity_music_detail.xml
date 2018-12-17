@@ -181,12 +181,12 @@
                 tools:text="6.93MB"/>
             <com.web.misc.ExpandableTextView
                 android:id="@+id/lyricsView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:paddingTop="20dp"
-                android:background="@color/themeColor"
+                android:background="@color/white"
                 android:drawableBottom="@drawable/download"
                 app:layout_constraintTop_toBottomOf="@id/tv_listenTimesLabel"/>
         </android.support.constraint.ConstraintLayout>
