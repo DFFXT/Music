@@ -3,9 +3,10 @@ package com.web.misc
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.Drawable
+import android.graphics.Matrix
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
@@ -47,7 +48,7 @@ class ExpandableTextView @JvmOverloads constructor(
             requestMeasure = true
             requestLayout()
         }
-    private var arrow: Drawable
+    private var arrow: Bitmap
     var minLines = 5
         set(value) {
             field = value
@@ -71,6 +72,7 @@ class ExpandableTextView @JvmOverloads constructor(
     private var hideAnimator: ValueAnimator? = null
     private var duration = 400L
 
+    private var arrowScale=0f
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView)
         textSize = ta.getFloat(R.styleable.ExpandableTextView_attr_textSize, textSize)
@@ -78,11 +80,13 @@ class ExpandableTextView @JvmOverloads constructor(
         text = ta.getString(R.styleable.ExpandableTextView_attr_text)
         isExpand=ta.getBoolean(R.styleable.ExpandableTextView_attr_isExpand,isExpand)
         ta.recycle()
-        arrow = ResUtil.getDrawable(R.drawable.icon_back_black)
+        arrow = ResUtil.getBitmapFromDrawable(ResUtil.getDrawable(R.drawable.icon_back_black))
+        arrowScale=bottomDrawableHeight/arrow.width.toFloat()
         touchControl.clickListener = {
+            isShowFull = !isShowFull
             if (touchControl.originY > height - bottomDrawableHeight) {
-                //**点击的有效区域
-                isShowFull = !isShowFull
+                //**点击的有效图标区域
+
             }
         }
         viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -123,6 +127,7 @@ class ExpandableTextView @JvmOverloads constructor(
     }
 
     private var degree = 90f
+    private var arrowMatrix=Matrix()
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.save()
@@ -132,10 +137,10 @@ class ExpandableTextView @JvmOverloads constructor(
         paint.color = textColor
         staticLayout?.draw(canvas)
         canvas.restore()
-
-        arrow.setBounds(width / 2 - bottomDrawableHeight / 2, height - bottomDrawableHeight - paddingBottom, width / 2 + bottomDrawableHeight / 2, height - paddingBottom)
-        canvas.rotate(degree, width / 2f, height - bottomDrawableHeight / 2f)
-        arrow.draw(canvas)
+        arrowMatrix.setScale(arrowScale,arrowScale,bottomDrawableHeight/2f,bottomDrawableHeight/2f)
+        arrowMatrix.postRotate(degree,bottomDrawableHeight/2f,bottomDrawableHeight/2f)
+        arrowMatrix.postTranslate(width / 2f - bottomDrawableHeight / 2f,height.toFloat() - bottomDrawableHeight - paddingBottom)
+        canvas.drawBitmap(arrow,arrowMatrix,paint)
 
     }
 
@@ -155,7 +160,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 hideAnimator!!.addUpdateListener {
                     layoutParams.height = it.animatedValue as Int
                     layoutParams = layoutParams
-                    degree = -90f
+                    degree = -180*(layoutParams.height-fullHeight.toFloat())/(hideHeight-fullHeight)+90
                 }
                 hideAnimator!!.start()
             }
@@ -171,7 +176,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 expandAnimator!!.addUpdateListener {
                     layoutParams.height = it.animatedValue as Int
                     layoutParams = layoutParams
-                    degree = 90f
+                    degree = 180*(layoutParams.height-hideHeight.toFloat())/(fullHeight-hideHeight)-90
                 }
             }
             expandAnimator!!.start()
