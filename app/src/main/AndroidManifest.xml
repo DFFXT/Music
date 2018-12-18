@@ -23,13 +23,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppStyle">
-        <activity android:name="com.web.moudle.entry.ui.MusicDetailActivity" >
+        <!--<activity android:name="com.web.moudle.albumEntry.ui.MusicDetailActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>-->
         
         <provider
             android:authorities="sfdsfs"
@@ -112,6 +112,8 @@
         <activity android:name="com.web.moudle.search.SearchActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name="com.web.moudle.music.page.InternetMusicActivity" />
+        <activity android:name="com.web.moudle.albumEntry.ui.AlbumEntryActivity" />
+        <activity android:name="com.web.moudle.musicEntry.ui.MusicDetailActivity" />
 
     </application>
 

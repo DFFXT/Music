@@ -10,6 +10,7 @@
         app:topBar_startImage="@drawable/icon_back_black"
         app:topBar_mainTitleText="@string/page_Internet"
         app:topBar_mainTitleColor="@color/white"
+        app:topBar_tint="@color/white"
         android:background="@color/themeColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

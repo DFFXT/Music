@@ -1,10 +1,8 @@
-package com.web.moudle.entry.model
+package com.web.moudle.musicEntry.model
 
-import com.web.common.base.BaseSingleObserver
-import com.web.common.base.MyApplication
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
-import com.web.moudle.entry.bean.MusicDetailInfo
+import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.music.page.lyrics.model.LyricsLine
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
@@ -17,7 +15,7 @@ import java.lang.Exception
 
 class MusicDetailModel:BaseRetrofit() {
     fun getMusicDetail(songId:String):Observable<MusicDetailInfo>{
-        return obtainClass(NetApis.Entry::class.java)
+        return obtainClass(NetApis.SongEntry::class.java)
                 .getMusicDetail(songId)
                 .compose(SchedulerTransform())
     }

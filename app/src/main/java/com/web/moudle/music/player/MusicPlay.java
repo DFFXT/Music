@@ -1,5 +1,6 @@
 package com.web.moudle.music.player;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
@@ -37,7 +37,7 @@ import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
-import com.web.data.InternetMusicInfo;
+import com.web.data.InternetMusicForPlay;
 import com.web.data.Music;
 import com.web.data.MusicGroup;
 import com.web.data.MusicList;
@@ -46,11 +46,9 @@ import com.web.data.ScanMusicType;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.moudle.musicDownload.service.FileDownloadService;
-import com.web.moudle.net.retrofit.SchedulerTransform;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
-import com.web.subWeb.GetInfo;
 import com.web.web.R;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -71,16 +69,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MusicPlay extends MediaBrowserServiceCompat {
 	public final static String BIND="not media bind";
+	public final static String ACTION_PLAY_INTERNET_MUSIC="com.web.web.MusicPlay.playInternetMusic";
 	public final static String ACTION_NEXT="com.web.web.MusicPlay.icon_next_black";
 	public final static String ACTION_PRE="com.web.web.MusicPlay.icon_pre_black";
 	public final static String ACTION_STATUS_CHANGE="com.web.web.MusicPlay.statusChange";
@@ -101,10 +97,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private List<MusicList<Music>> musicList=new ArrayList<>();//**音乐列表
 	private List<Music> waitMusic=new ArrayList<>();//***等待播放的音乐
 	private int waitIndex=0;
-	@Nullable
-	private PlayInterface play;//**界面接口
+	//@Nullable
+	//private PlayInterface play;//**界面接口
+	private PlayInterfaceManager play=new PlayInterfaceManager();
 	private int groupIndex=0,childIndex=-1;
-	private Connect connect;//***连接
+	private Connect connect;
 	private LockScreenReceiver lockScreenReceiver;
     private MediaSessionCompat sessionCompat;
 
@@ -321,8 +318,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		 */
 
 
-		public void setPlayInterface(PlayInterface play){
-			MusicPlay.this.play=play;
+		public void addObserver(LifecycleOwner owner,PlayInterface play){
+			MusicPlay.this.play.addObserver(owner,play);
 		}
 		public void getList(int group){
 			groupIndex=group;
@@ -469,9 +466,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public void seekTo(int millis){
 		    if(canPlay()) {
 				player.seekTo(millis);
-				if (play != null) {
-					play.currentTime(groupIndex,childIndex,millis);
-				}
+				play.currentTime(groupIndex,childIndex,millis);
 			}
 		}
 		public void getPlayerInfo(){
@@ -515,7 +510,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		 * 播放在线音乐
 		 * @param music music
 		 */
-		public void playInternet(final InternetMusicInfo music){
+		public void playInternet(final InternetMusicForPlay music){
 			config.setMusicOrigin(PlayerConfig.MusicOrigin.INTERNET);
 			loadMusic(music);
 			//**下载歌词和图片
@@ -566,10 +561,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 		/**
 		 * 取消连接
-		 */
 		public void cancel(){
 			play=null;
-		}
+		}*/
 	}
 
 	/**
@@ -623,9 +617,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				MToast.showToast(this,ResUtil.getString(R.string.cannotPlay));
 			}
 		}
-		if (play != null) {
-			play.musicOriginChanged(config.getMusicOrigin());
-		}
+		play.musicOriginChanged(config.getMusicOrigin());
 
 		metaDataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,music.getMusicName())
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST,music.getSinger())
@@ -638,9 +630,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		//player.setPlaybackParams(player.getPlaybackParams().setSpeed(2));
 		Music music=config.getMusic();
 		if(music==null)return;
-		if (play != null) {
-			play.play();
-		}
+		play.play();
 		player.start();
 		notification.setName(music.getMusicName());
 		notification.setSinger(music.getSinger());
@@ -649,19 +639,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		notification.show();
 		executor.execute(() -> {
 			while(player.isPlaying()){
-				if(play!=null){
-					play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
-					sendDuring(player.getCurrentPosition());
-					Shortcut.sleep(500);
-				}
+				play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
+				sendDuring(player.getCurrentPosition());
+				Shortcut.sleep(500);
 			}
 		});
         sendState(PlaybackStateCompat.STATE_PLAYING);
 	}
 	public void musicLoad(){
-		if(play!=null){
-			play.load(groupIndex,childIndex,config.getMusic(),player.getDuration());
-		}
+		play.load(groupIndex,childIndex,config.getMusic(),player.getDuration());
 		musicPlay();
 	}
 	private void musicPause(){
@@ -768,6 +754,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 					lockScreen();
 				}
 			}break;
+			case ACTION_PLAY_INTERNET_MUSIC:{
+				loadMusic((Music) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
+			}break;
 		}
 		return START_NOT_STICKY;
 		/*
@@ -794,12 +783,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 
 	private void musicListChange(){
-		if(play!=null){
-			play.musicListChange(groupIndex,musicList);
-		}
+		play.musicListChange(groupIndex,musicList);
 	}
 	private void disPatchMusicInfo(){
-		if(play==null)return;
 		if(canPlay()){
 			Music music=config.getMusic();
 			play.load(groupIndex,childIndex,music,player.getDuration());
@@ -816,12 +802,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	}
 	private void reset(){
 		player.reset();
-		if(play!=null){
-			play.load(-1,-1,null,0);
-			play.currentTime(0,0,0);
-			play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
-			play.pause();
-		}
+		play.load(-1,-1,null,0);
+		play.currentTime(0,0,0);
+		play.musicOriginChanged(PlayerConfig.MusicOrigin.LOCAL);
+		play.pause();
 		config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
 		config.setMusic(null);
 		waitMusic.clear();
@@ -948,5 +932,17 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		scanningMusicLock.unlock();
 	}
 
+
+	/**
+	 * 播放网络音乐
+	 * @param ctx context
+	 * @param music music
+	 */
+	public static void play(Context ctx,InternetMusicForPlay music){
+		Intent intent=new Intent(ctx,MusicPlay.class);
+		intent.putExtra(MusicPlay.ACTION_PLAY_INTERNET_MUSIC,music);
+		intent.setAction(MusicPlay.COMMAND_SEND_SINGLE_DATA);
+		ctx.startService(intent);
+	}
 }
 

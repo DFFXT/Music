@@ -5,7 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.web.common.base.BaseViewHolder
-import com.web.moudle.entry.ui.MusicDetailActivity
+import com.web.moudle.albumEntry.ui.AlbumEntryActivity
+import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.search.bean.SearchSug
 import com.web.web.R
 
@@ -31,13 +32,21 @@ class SearchSugAdapter(var searchSug: SearchSug) : RecyclerView.Adapter<BaseView
             }
             in searchSug.musicSugList.size until searchSug.musicSugList.size + searchSug.albumList.size -> {//**专辑
                 val relativeP = p - searchSug.musicSugList.size
-                holder.bindText(R.id.tv_name, searchSug.albumList[relativeP].albumName + " --  " + searchSug.albumList[relativeP].artistName)
+                val albumSug=searchSug.albumList[relativeP]
+                holder.bindText(R.id.tv_name, albumSug.albumName + " --  " + albumSug.artistName)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.album_sug_icon)
+                holder.itemView.setOnClickListener {
+                    AlbumEntryActivity.actionStart(it.context,albumSug.albumId)
+                }
             }
             in itemCount - searchSug.artistList.size until itemCount -> {//**歌手
                 val relativeP = p - (itemCount - searchSug.artistList.size)
-                holder.bindText(R.id.tv_name, searchSug.artistList[relativeP].artistName)
+                val artist=searchSug.artistList[relativeP]
+                holder.bindText(R.id.tv_name, artist.artistName)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.singer_sug_icon)
+                holder.itemView.setOnClickListener {
+                    //AlbumEntryActivity.actionStart(it.context,artist.artistId)
+                }
             }
         }
     }

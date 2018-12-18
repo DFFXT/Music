@@ -1,7 +1,5 @@
 package com.web.subWeb;
 
-import com.web.data.InternetMusicInfo;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -27,19 +25,7 @@ public class GetInfo{
 		}
 		return null;
 	}
-	@Deprecated
-	public InternetMusicInfo getMusicInfo(String hash){
-		InternetMusicInfo info=new InternetMusicInfo(hash);
-		try{
-			String ask="http://m.kugou.com/app/i/getSongInfo.php?hash="+hash+"&cmd=playInfo";
-			JSONObject json=new JSONObject(OpURL(ask));
-			info.setPath(json.getString("url"));
-			info.setImgAddress(json.getString("imgUrl"));
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return info;
-	}
+
 	public String OpURL(String path) throws Exception{//---以字符串的方式获取改地址的返回值
 		URL url=new URL(path);
 		URLConnection connection=url.openConnection();

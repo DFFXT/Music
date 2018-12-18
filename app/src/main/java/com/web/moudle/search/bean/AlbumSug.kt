@@ -13,7 +13,7 @@ data class AlbumSug(
         @JSONField(name = "artistpic")
         val artistPic: String,
         @JSONField(name = "albumid")
-        val albumId: String,
+        val albumId: Long,
         @JSONField(name = "weight")
         val weight: String
 )

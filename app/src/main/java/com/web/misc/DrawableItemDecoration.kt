@@ -2,6 +2,7 @@ package com.web.misc
 
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
 
@@ -11,8 +12,8 @@ import android.widget.LinearLayout
 class DrawableItemDecoration(private val orientation: Int,private val gap: Int, private var drawable: Drawable) : GapItemDecoration(
         0,
         0,
-        if (orientation == LinearLayout.HORIZONTAL) gap else 0,
-        if (orientation == LinearLayout.VERTICAL) gap else 0
+        if (orientation == LinearLayoutManager.HORIZONTAL) gap else 0,
+        if (orientation == LinearLayoutManager.VERTICAL) gap else 0
 ){
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDraw(c, parent, state)

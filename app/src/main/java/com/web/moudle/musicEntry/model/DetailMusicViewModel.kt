@@ -1,4 +1,4 @@
-package com.web.moudle.entry.model
+package com.web.moudle.musicEntry.model
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import com.web.common.base.BaseSingleObserver
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
-import com.web.moudle.entry.bean.MusicDetailInfo
+import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.music.page.lyrics.model.LyricsLine
 
 class DetailMusicViewModel : ViewModel() {
@@ -39,6 +39,7 @@ class DetailMusicViewModel : ViewModel() {
     fun getLyrics(lrcLink:String){
         if(Shortcut.isStrictEmpty(lrcLink)){
             lyricsWrapper.code= CODE_NO_DATA
+            lyricsWrapper.value=ArrayList()
             lyrics.value=lyricsWrapper
             return
         }

@@ -21,7 +21,7 @@ import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusicDetail;
-import com.web.data.InternetMusicInfo;
+import com.web.data.InternetMusicForPlay;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.music.model.InternetViewModel;
 import com.web.moudle.music.page.control.adapter.InternetMusicAdapter;
@@ -134,11 +134,7 @@ public class InternetMusicActivity extends BaseActivity {
         this.connect = connect;
     }
 
-    /*@NonNull
-    @Override
-    public String getPageName() {
-        return pageName;
-    }*/
+
 
     /**
      * 外部调用搜索
@@ -167,7 +163,7 @@ public class InternetMusicActivity extends BaseActivity {
         });
         builder.setNeutralButton("在线试听", (dialog, which) -> new Thread(() -> {
             if (connect == null) return;
-            InternetMusicInfo info = new InternetMusicInfo(music.getSongId());
+            InternetMusicForPlay info = new InternetMusicForPlay();
             info.setMusicName(Shortcut.validatePath(music.getSongName()));
             info.setSinger(Shortcut.validatePath(music.getArtistName()));
             info.setPath(music.getSongLink());
@@ -175,6 +171,7 @@ public class InternetMusicActivity extends BaseActivity {
             info.setLrcLink(music.getLrcLink());
 
             connect.playInternet(info);
+
         }).start());
         builder.setNegativeButton("下载(" + ResUtil.getFileSize(music.getSize()) + ")", (arg0, arg1) -> {
             //**网络获取的时间以秒为单位、后面需要毫秒(媒体库里面的单位为毫秒)

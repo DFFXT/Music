@@ -1,7 +1,6 @@
-package com.web.moudle.entry.bean
+package com.web.moudle.musicEntry.bean
 
 import com.alibaba.fastjson.annotation.JSONField
-import com.web.moudle.search.bean.AlbumSug
 
 data class SongInfo (
         @JSONField(name = "hot")

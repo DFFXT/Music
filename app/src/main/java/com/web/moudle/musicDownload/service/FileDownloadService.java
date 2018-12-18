@@ -16,11 +16,9 @@ import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
-import com.web.data.InternetMusicInfo;
 import com.web.data.Music;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
-import com.web.subWeb.GetInfo;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;

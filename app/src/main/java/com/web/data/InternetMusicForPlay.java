@@ -1,18 +1,12 @@
 package com.web.data;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.web.subWeb.GetInfo;
+import java.io.Serializable;
 
-import java.util.function.Consumer;
-
-public class InternetMusicInfo extends Music{
+public class InternetMusicForPlay extends Music implements Serializable {
     private String imgAddress;
     private String lrcLink;
-    public InternetMusicInfo(@NonNull String hash){
-        super("","","");
-    }
 
     @Nullable
     public String getImgAddress() {
@@ -23,6 +17,7 @@ public class InternetMusicInfo extends Music{
         this.imgAddress = imgAddress;
     }
 
+    @Nullable
     public String getLrcLink() {
         return lrcLink;
     }

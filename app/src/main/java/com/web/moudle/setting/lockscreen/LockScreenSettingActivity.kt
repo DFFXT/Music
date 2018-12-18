@@ -56,7 +56,7 @@ class LockScreenSettingActivity : BaseActivity() {
     override fun initView() {
         view_s_lock_colorSelected.setImageDrawable(ColorDrawable(mColor))
         rv_s_lock_colorList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(LinearLayout.HORIZONTAL, 10, getDrawable(R.drawable.refresh)))
+        rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(LinearLayoutManager.HORIZONTAL, 10, getDrawable(R.drawable.refresh)!!))
         view_s_lock_colorSelected.setOnClickListener { colorPick() }
         sw_lockScreenMode.setOnClickListener {
             if (getMode() == LockScreenActivity.BG_MODE_COLOR) {

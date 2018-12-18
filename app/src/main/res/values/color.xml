@@ -17,4 +17,5 @@
     <color name="deepDark">#555555ff</color>
     <color name="lightDark">#22111111</color>
     <color name="toastBackground">#222222</color>
+    <color name="black">#000000</color>
 </resources>

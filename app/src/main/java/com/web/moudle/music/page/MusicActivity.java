@@ -268,7 +268,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 connect = (MusicPlay.Connect) service;
-                connect.setPlayInterface(MusicActivity.this);
+                connect.addObserver(MusicActivity.this,MusicActivity.this);
                 connect.getList(0);
                 getIntentData();//*************8获取输入数据
                 for (BaseMusicPage page : pageList) {
@@ -614,8 +614,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
     public void onDestroy() {
         if (serviceConnection != null) {
             unbindService(serviceConnection);
-            if (connect != null)
-                connect.cancel();
         }
         super.onDestroy();
     }

@@ -6,6 +6,10 @@
     <string name="musicDetailActivity_publishTime">发行时间：</string>
     <string name="musicDetailActivity_publishCompany">发行公司：</string>
     <string name="musicDetailActivity_listenTimes">播放次数：</string>
+    <string name="musicDetailActivity_lyrics">歌词</string>
+    <string name="musicDetailActivity_styles">风格：</string>
+    <string name="albumEntry_albumList">专辑列表：</string>
+    <string name="albumEntry_MV">MV</string>
 
     <integer name="loadingListenerId">11</integer>
     <integer name="loadingViewId">22</integer>
