@@ -9,8 +9,8 @@ data class ArtistSug(
         @JSONField(name = "artistname")
         val artistName: String,
         @JSONField(name = "artistId")
-        val artistId: String,
+        val uid: String,
         @JSONField(name = "artistpic")
         val artistPic: String,
-        val weight: String
+        val weight: String?=null
 )

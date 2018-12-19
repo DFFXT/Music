@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -499,6 +500,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
 
     @Override
     public void load(int groupIndex, int childIndex, Music music, int maxTime) {
+        Log.i("log","++++"+music.getMusicName());
         bar.setMax(maxTime / 1000);
         if (music == null) {
             songname.setText("");

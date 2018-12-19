@@ -6,7 +6,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 
 
-open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,private val top:Int=0,private val right:Int=0,private val bottom:Int=0): RecyclerView.ItemDecoration() {
+/**
+ * remainEndPadding 是否保留最后一个item的gap
+ * remainBottomPadding 是否保留最后一个item的gap
+ */
+open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,private val top:Int=0,
+                                                       private val right:Int=0,private val bottom:Int=0,
+                                                       private val remainEndPadding:Boolean=false,
+                                                       private val remainBottomPadding:Boolean=false): RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         parent.adapter?.let {
             val lm=parent.layoutManager as LinearLayoutManager
@@ -16,7 +23,7 @@ open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,pr
                 }
                 outRect.left=left
                 outRect.right=right
-                if(it.itemCount-1!=parent.getChildAdapterPosition(view)){
+                if(remainBottomPadding||it.itemCount-1!=parent.getChildAdapterPosition(view)){
                     outRect.bottom=bottom
                 }
             }
@@ -26,7 +33,7 @@ open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,pr
                 }
                 outRect.top=top
                 outRect.bottom=bottom
-                if(it.itemCount-1!=parent.getChildAdapterPosition(view)){
+                if(remainEndPadding||it.itemCount-1!=parent.getChildAdapterPosition(view)){
                     outRect.right=right
                 }
             }

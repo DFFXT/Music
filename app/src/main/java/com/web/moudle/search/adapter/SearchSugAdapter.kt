@@ -1,6 +1,7 @@
 package com.web.moudle.search.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import com.web.common.base.BaseViewHolder
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.search.bean.SearchSug
+import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.web.R
 
 class SearchSugAdapter(var searchSug: SearchSug) : RecyclerView.Adapter<BaseViewHolder>() {
@@ -45,7 +47,8 @@ class SearchSugAdapter(var searchSug: SearchSug) : RecyclerView.Adapter<BaseView
                 holder.bindText(R.id.tv_name, artist.artistName)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.singer_sug_icon)
                 holder.itemView.setOnClickListener {
-                    //AlbumEntryActivity.actionStart(it.context,artist.artistId)
+                    Log.i("log","'+++++   ${artist.uid}")
+                    SingerEntryActivity.actionStart(it.context,artist.uid)//?????
                 }
             }
         }

@@ -6,8 +6,8 @@ import com.web.common.base.BaseObserver
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
+import com.web.moudle.search.bean.DefSearchRes
 import com.web.moudle.search.bean.SearchSug
-import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 
 class SearchViewModel : ViewModel() {
@@ -17,9 +17,12 @@ class SearchViewModel : ViewModel() {
         val CODE_INTERNET_ERROR = 0
     }
 
-    var searchSug = MutableLiveData<SearchSug>()
-    var status = MutableLiveData<LiveDataWrapper<Any>>()
+    val searchSug = MutableLiveData<SearchSug>()
+    val status = MutableLiveData<LiveDataWrapper<Any>>()
     private var wrapper = LiveDataWrapper<Any>()
+
+    val defSearchRes = MutableLiveData<DefSearchRes>()
+
     private val model = SearchModel()
 
     private var disposable: Disposable? = null
@@ -42,6 +45,15 @@ class SearchViewModel : ViewModel() {
                         wrapper.code = CODE_INTERNET_ERROR
                         status.value = wrapper
                     }
+                })
+    }
+
+    fun defSearch(time:Long){
+        model.defSearch(time)
+                .get(onNext = {
+                    defSearchRes.value=it
+                },onError = {
+                    it.printStackTrace()
                 })
     }
 }

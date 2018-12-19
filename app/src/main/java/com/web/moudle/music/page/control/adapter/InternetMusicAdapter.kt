@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
-import com.web.data.InternetMusic
+import com.web.data.InternetMusicDetail
 import com.web.web.R
 
-class InternetMusicAdapter(private val context: Context) : PagedListAdapter<InternetMusic, BaseViewHolder>(diff) {
+class InternetMusicAdapter(private val context: Context) : PagedListAdapter<InternetMusicDetail, BaseViewHolder>(diff) {
     var listener:OnItemClickListener?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -19,9 +19,9 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Inte
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val item= getItem(position) ?: return
-        holder.bindText(R.id.musicName,item.musicName)
-        holder.bindText(R.id.singerName,item.singerName)
-        holder.bindText(R.id.size,ResUtil.getFileSize(item.fullSize.toLong()))
+        holder.bindText(R.id.musicName,item.songName)
+        holder.bindText(R.id.singerName,item.artistName)
+        holder.bindText(R.id.size,ResUtil.getFileSize(item.size))
         holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))
         holder.rootView.setOnClickListener {
             listener?.itemClick(item)
@@ -30,17 +30,17 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Inte
 
 
     companion object {
-        private val diff = object : DiffUtil.ItemCallback<InternetMusic>() {
-            override fun areItemsTheSame(oldItem: InternetMusic, newItem: InternetMusic): Boolean {
+        private val diff = object : DiffUtil.ItemCallback<InternetMusicDetail>() {
+            override fun areItemsTheSame(oldItem: InternetMusicDetail, newItem: InternetMusicDetail): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: InternetMusic, newItem: InternetMusic): Boolean {
+            override fun areContentsTheSame(oldItem: InternetMusicDetail, newItem: InternetMusicDetail): Boolean {
                 return false
             }
         }
     }
     interface OnItemClickListener{
-        fun itemClick(music:InternetMusic)
+        fun itemClick(music:InternetMusicDetail)
     }
 }

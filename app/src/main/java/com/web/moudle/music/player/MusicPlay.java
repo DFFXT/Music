@@ -35,7 +35,6 @@ import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
-import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicForPlay;
 import com.web.data.Music;
@@ -70,7 +69,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -86,7 +84,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 	public final static String COMMAND_GET_CURRENT_POSITION="getCurrentPosition";
 	public final static String COMMAND_GET_STATUS="getStatus";
-	public final static String COMMAND_SEND_SINGLE_DATA="sendCurrentPosition";
+	public final static String COMMAND_SEND_SINGLE_DATA="translateSingleData";
 	public final static int COMMAND_RESULT_CODE_CURRENT_POSITION=1;//**result code 标识为当前播放时间
 	public final static int COMMAND_RESULT_CODE_STATUS=2;//**result code 标识为播放状态
 
@@ -273,7 +271,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	public class Connect extends Binder {
 		Connect(){
 			player.setLooping(false);
-			player.setOnPreparedListener(mp -> musicLoad());
+			player.setOnPreparedListener(mp -> {
+				config.setPrepared(true);
+				musicLoad();
+			});
 			player.setOnCompletionListener(mp -> {
                 switch (config.getPlayType()){
                     //**列表循环
@@ -514,7 +515,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			config.setMusicOrigin(PlayerConfig.MusicOrigin.INTERNET);
 			loadMusic(music);
 			//**下载歌词和图片
-            Single.create((SingleOnSubscribe<InternetMusic>) emitter -> {
+            Single.create(emitter -> {
                 if(!Shortcut.fileExsist(music.getLyricsPath())){
                     IOUtil.onlineDataToLocal(music.getLrcLink(),music.getLyricsPath());
                 }
@@ -522,14 +523,16 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                     IOUtil.onlineDataToLocal(music.getImgAddress(),music.getIconPath());
                     config.setBitmap(getBitmap(music.getSinger()));
                 }
+                emitter.onSuccess(1);
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new BaseSingleObserver<InternetMusic>(){
+                    .subscribe(new BaseSingleObserver<Object>(){
                         @Override
-                        public void onSuccess(InternetMusic music) {
-                            musicLoad();
+                        public void onSuccess(Object obj) {
+                        	if(config.isPrepared())//**必须在准备好了才能start和getDuration
+                            	musicLoad();
                         }
-                    });
+					});
 		}
 
 		/**
@@ -604,6 +607,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		config.setBitmap(getBitmap(music.getSinger()));
 		player.reset();
 		try {
+			config.setPrepared(false);
 			player.setDataSource(music.getPath());
 			player.prepareAsync();
 		} catch (IOException e) {//***播放异常，如果是文件不存在则删除记录
@@ -647,14 +651,17 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         sendState(PlaybackStateCompat.STATE_PLAYING);
 	}
 	public void musicLoad(){
-		play.load(groupIndex,childIndex,config.getMusic(),player.getDuration());
+		play.load(groupIndex,childIndex,config.getMusic(),getDuration());
 		musicPlay();
+	}
+
+	private int getDuration(){
+		if(!config.isPrepared())return 0;
+		return player.getDuration();
 	}
 	private void musicPause(){
 		player.pause();
-		if(play!=null){
-			play.pause();
-		}
+        play.pause();
 		notification.setPlayStatus(false);
 		notification.show();
         sendState(PlaybackStateCompat.STATE_PAUSED);
@@ -755,7 +762,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				}
 			}break;
 			case ACTION_PLAY_INTERNET_MUSIC:{
-				loadMusic((Music) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
+				connect.playInternet((InternetMusicForPlay) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
 			}break;
 		}
 		return START_NOT_STICKY;
@@ -785,13 +792,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private void musicListChange(){
 		play.musicListChange(groupIndex,musicList);
 	}
+	//**分发信息
 	private void disPatchMusicInfo(){
-		if(canPlay()){
-			Music music=config.getMusic();
-			play.load(groupIndex,childIndex,music,player.getDuration());
-			if(!player.isPlaying()){
-				play.pause();
-			}
+		Music music=config.getMusic();
+		play.load(groupIndex,childIndex,music,getDuration());
+		if(!player.isPlaying()){
+			play.pause();
 		}
 		if(groupIndex!=-1&&childIndex!=-1){
 			play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
@@ -940,8 +946,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	 */
 	public static void play(Context ctx,InternetMusicForPlay music){
 		Intent intent=new Intent(ctx,MusicPlay.class);
-		intent.putExtra(MusicPlay.ACTION_PLAY_INTERNET_MUSIC,music);
-		intent.setAction(MusicPlay.COMMAND_SEND_SINGLE_DATA);
+		intent.putExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA,music);
+		intent.setAction(MusicPlay.ACTION_PLAY_INTERNET_MUSIC);
 		ctx.startService(intent);
 	}
 }

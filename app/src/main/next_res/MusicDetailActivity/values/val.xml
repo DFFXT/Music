@@ -8,13 +8,26 @@
     <string name="musicDetailActivity_listenTimes">播放次数：</string>
     <string name="musicDetailActivity_lyrics">歌词</string>
     <string name="musicDetailActivity_styles">风格：</string>
-    <string name="albumEntry_albumList">专辑列表：</string>
+    <string name="albumEntry_albumList">专辑歌曲：</string>
     <string name="albumEntry_MV">MV</string>
 
     <integer name="loadingListenerId">11</integer>
     <integer name="loadingViewId">22</integer>
     <integer name="errorViewId">33</integer>
     <integer name="errorListenerId">44</integer>
+
+    <string name="singer_country">国家：</string>
+    <string name="singer_birth">年代：</string>
+    <string name="singer_constellation">星座：</string>
+    <string name="singer_owner">归属：</string>
+    <string name="singer_totalSongs">歌曲：</string>
+    <string name="singer_totalAlbums">专辑：</string>
+    <string name="singer_totalMv">相关视频：</string>
+    <string name="singer_introduction">简介：</string>
+    <string name="singer_musicAbout">相关音乐</string>
+    <string name="singer_albumAbout">相关专辑</string>
+    <string name="singer_MVAbout">相关视频</string>
+    <string name="singer_more">更多></string>
 
     <dimen name="musicDetailActivity_descMarginTop">5dp</dimen>
 </resources>

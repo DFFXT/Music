@@ -12,18 +12,18 @@ data class InternetMusicDetail(
         var songName:String,
         @JSONField(name = "artistName")
         var artistName:String,
-        var albumId:String,
-        var albumName:String,
+        var albumId:String?=null,
+        var albumName:String?=null,
         @JSONField(name = "time")
         var duration:Int,
         @JSONField(name = "size")
         var size:Long,
         @JSONField(name = "lrcLink")
-        var lrcLink:String,
+        var lrcLink:String?=null,
         @JSONField(name = "songLink")
         var songLink:String,
         @JSONField(name = "songPicSmall")
-        var singerIconSmall:String,
+        var singerIconSmall:String?=null,
         var format:String
         //***自己设置
         //var id:Int?=-1,

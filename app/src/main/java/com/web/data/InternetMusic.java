@@ -83,6 +83,8 @@ public class InternetMusic extends DataSupport implements Serializable {
 
     public void setSingerName(String singerName) {
         this.singerName = singerName;
+        this.singerName=this.singerName.replace("<em>","");
+        this.singerName=this.singerName.replace("</em>","");
     }
 
     public void setPath(String path) {

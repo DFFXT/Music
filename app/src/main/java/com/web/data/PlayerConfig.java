@@ -9,7 +9,7 @@ public class PlayerConfig {
     private Music music;//**播放器中缓存的音乐
     private Bitmap bitmap;//**音乐图片
     private boolean hasInit=false;
-
+    private boolean prepared=false;
 
     public void setPlayType(PlayType playType) {
         this.playType = playType;
@@ -55,6 +55,13 @@ public class PlayerConfig {
         this.bitmap = bitmap;
     }
 
+    public boolean isPrepared() {
+        return prepared;
+    }
+
+    public void setPrepared(boolean prepared) {
+        this.prepared = prepared;
+    }
 
     public enum PlayType{
         ONE_LOOP,

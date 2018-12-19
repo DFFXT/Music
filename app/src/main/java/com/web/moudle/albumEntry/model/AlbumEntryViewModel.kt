@@ -24,7 +24,7 @@ class AlbumEntryViewModel : ViewModel() {
     private val albumWrapper=LiveDataWrapper<AlbumResponse>()
     private val detailMusicWrapper=LiveDataWrapper<MusicDetailInfo>()
 
-    fun getAlbumInfo(albumId: Long) {
+    fun getAlbumInfo(albumId: String) {
         model.getAlbumInfo(albumId)
                 .get(
                         onNext = {res->

@@ -9,7 +9,6 @@ import android.arch.paging.PagedList;
 
 import com.web.common.base.BaseObserver;
 import com.web.common.bean.LiveDataWrapper;
-import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicDetailList;
 
@@ -29,7 +28,7 @@ public class InternetViewModel extends ViewModel {
 
     private InternetDataSource dataSource;
     private PagedList.Config config;
-    private LiveData<PagedList<InternetMusic>> pagedListLiveData;
+    private LiveData<PagedList<InternetMusicDetail>> pagedListLiveData;
     private MutableLiveData<InternetMusicDetailList> musicDetail;
     private MutableLiveData<LiveDataWrapper> status;
     private LiveDataWrapper wrapper;
@@ -56,11 +55,11 @@ public class InternetViewModel extends ViewModel {
         return status;
     }
 
-    public LiveData<PagedList<InternetMusic>> getMusicList(){
+    public LiveData<PagedList<InternetMusicDetail>> getMusicList(){
         if(pagedListLiveData==null)
-            pagedListLiveData= new LivePagedListBuilder<>(new DataSource.Factory<String,InternetMusic>(){
+            pagedListLiveData= new LivePagedListBuilder<>(new DataSource.Factory<String,InternetMusicDetail>(){
                 @Override
-                public DataSource<String,InternetMusic> create() {
+                public DataSource<String,InternetMusicDetail> create() {
                     return dataSource;
                 }
             },config).build();
@@ -71,7 +70,7 @@ public class InternetViewModel extends ViewModel {
         pagedListLiveData=null;
     }
     public void getMusicDetail(String songIds){
-        model.getMusicDetail(songIds)
+        model.getMusicDetailAsync(songIds)
                 .subscribe(new BaseObserver<InternetMusicDetailList>() {
                     @Override
                     public void onNext(InternetMusicDetailList internetMusicDetailList) {

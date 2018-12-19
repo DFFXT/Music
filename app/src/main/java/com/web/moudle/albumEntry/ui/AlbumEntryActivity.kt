@@ -24,6 +24,7 @@ import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
 import com.web.data.InternetMusicDetail
 import com.web.misc.DrawableItemDecoration
+import com.web.misc.ExpandableTextView
 import com.web.misc.GapItemDecoration
 import com.web.moudle.albumEntry.adapter.AlbumListAdapter
 import com.web.moudle.albumEntry.bean.AlbumResponse
@@ -38,7 +39,7 @@ import kotlinx.android.synthetic.main.activity_music_detail.*
 import java.lang.StringBuilder
 
 class AlbumEntryActivity : BaseActivity() {
-    private var id: Long=0
+    private lateinit var id: String
     private lateinit var model: AlbumEntryViewModel
     private lateinit var rootView:ViewGroup
     override fun getLayoutId(): Int {
@@ -46,7 +47,7 @@ class AlbumEntryActivity : BaseActivity() {
     }
 
     private fun loadData() {
-        id = if (intent.getLongExtra(ID,id) == id) 2065932 else intent.getLongExtra(ID,id)
+        id = intent.getStringExtra(ID)
         model = ViewModelProviders.of(this)[AlbumEntryViewModel::class.java]
         model.albumResponse.observe(this, Observer<LiveDataWrapper<AlbumResponse>> { data ->
             if (data != null) {
@@ -59,14 +60,7 @@ class AlbumEntryActivity : BaseActivity() {
                     findViewById<TextView>(R.id.tv_publishTime).text = res.albumInfo.publishTime
                     findViewById<TextView>(R.id.tv_publishCompany).text = res.albumInfo.publishCompany
                     findViewById<TextView>(R.id.tv_listenTimes).text =res.albumInfo.listenNum
-                    //tv_downloadMusic.text = "000" /*ResUtil.getFileSize(res.bitRate.fileSize)*/
-//                    val drawable = getDrawable(R.drawable.download)
-//                    drawable!!.setBounds(0, 0, ViewUtil.dpToPx(20f), ViewUtil.dpToPx(20f))
-//                    tv_downloadMusic.setCompoundDrawables(drawable, null, null, null)
-//                    tv_downloadMusic.setOnClickListener {
-//                        //**获取详信息
-//                        //FileDownloadService.addTask(it.context, attributesMap(res))
-//                    }
+                    findViewById<ExpandableTextView>(R.id.ex_introduction).text=res.albumInfo.info
                     ImageLoad.loadAsBitmap(res.albumInfo.pic500).into(object : BaseGlideTarget() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                             Palette.from(resource).generate {
@@ -150,7 +144,7 @@ class AlbumEntryActivity : BaseActivity() {
     companion object {
         private const val ID = "id"
         @JvmStatic
-        fun actionStart(ctx: Context, id: Long) {
+        fun actionStart(ctx: Context, id: String) {
             val intent = Intent(ctx, AlbumEntryActivity::class.java)
             intent.putExtra(ID, id)
             ctx.startActivity(intent)

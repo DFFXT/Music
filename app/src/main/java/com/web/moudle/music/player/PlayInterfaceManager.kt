@@ -15,9 +15,13 @@ class PlayInterfaceManager:PlayInterface {
             this.observerList.add(observer)
         }
         //**观测者变动
-        owner.lifecycle.addObserver(GenericLifecycleObserver{_,event->
-            if(event==Lifecycle.Event.ON_DESTROY){
-                observerList.remove(observer)
+
+        owner.lifecycle.addObserver(object :GenericLifecycleObserver{
+            override fun onStateChanged(source: LifecycleOwner?, event: Lifecycle.Event?) {
+                if(event==Lifecycle.Event.ON_DESTROY){
+                    observerList.remove(observer)
+                    owner.lifecycle.removeObserver(this)
+                }
             }
         })
     }

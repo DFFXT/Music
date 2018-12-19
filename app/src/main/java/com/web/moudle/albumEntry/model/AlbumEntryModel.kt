@@ -8,7 +8,7 @@ import com.web.moudle.net.retrofit.SchedulerTransform
 import io.reactivex.Observable
 
 class AlbumEntryModel:BaseRetrofit() {
-    fun getAlbumInfo(albumId:Long):Observable<AlbumResponse>{
+    fun getAlbumInfo(albumId:String):Observable<AlbumResponse>{
         return obtainClass(NetApis.AlbumEntry::class.java)
                 .getAlbumInfo(albumId)
                 .compose(SchedulerTransform())

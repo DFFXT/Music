@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,8 +35,6 @@ public class InternetMusicActivity extends BaseActivity {
     private SmartRefreshLayout smartRefreshLayout;
     private RecyclerView recyclerView;
     private InternetViewModel vm;
-    @Nullable
-    private MusicPlay.Connect connect;
     private TopBarLayout topBarLayout;
     private String keyWords;
     private InternetMusicAdapter adapter;
@@ -71,9 +68,7 @@ public class InternetMusicActivity extends BaseActivity {
         vm = ViewModelProviders.of(this).get(InternetViewModel.class);
 
         recyclerView.setAdapter(adapter);
-        adapter.setListener(internetMusic -> {
-            vm.getMusicDetail(internetMusic.getHash());
-        });
+        adapter.setListener(this::downloadConsider);
 
 
         smartRefreshLayout.setEnableRefresh(false);
@@ -129,10 +124,6 @@ public class InternetMusicActivity extends BaseActivity {
         }
     }
 
-    //@Override
-    public void setConnect(@NonNull MusicPlay.Connect connect) {
-        this.connect = connect;
-    }
 
 
 
@@ -145,7 +136,9 @@ public class InternetMusicActivity extends BaseActivity {
         smartRefreshLayout.setNoMoreData(false);
         closeKeyBord();
         vm.setKeyWords(keyword);
-        vm.getMusicList().observe(this, pl -> adapter.submitList(pl));
+        vm.getMusicList().observe(this, pl -> {
+            adapter.submitList(pl);
+        });
         this.keyWords = keyword;
     }
 
@@ -162,15 +155,13 @@ public class InternetMusicActivity extends BaseActivity {
 
         });
         builder.setNeutralButton("在线试听", (dialog, which) -> new Thread(() -> {
-            if (connect == null) return;
             InternetMusicForPlay info = new InternetMusicForPlay();
             info.setMusicName(Shortcut.validatePath(music.getSongName()));
             info.setSinger(Shortcut.validatePath(music.getArtistName()));
             info.setPath(music.getSongLink());
             info.setImgAddress(music.getSingerIconSmall());
             info.setLrcLink(music.getLrcLink());
-
-            connect.playInternet(info);
+            MusicPlay.play(InternetMusicActivity.this,info);
 
         }).start());
         builder.setNegativeButton("下载(" + ResUtil.getFileSize(music.getSize()) + ")", (arg0, arg1) -> {

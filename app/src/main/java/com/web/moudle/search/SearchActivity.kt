@@ -9,12 +9,16 @@ import android.hardware.input.InputManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.web.common.base.BaseActivity
+import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.search.adapter.SearchSugAdapter
+import com.web.moudle.search.bean.DefSearchRes
+import com.web.moudle.search.bean.SearchSug
 import com.web.moudle.search.model.SearchViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_search.*
@@ -29,15 +33,23 @@ class SearchActivity : BaseActivity() {
     private fun loadData() {
         viewModel = ViewModelProviders.of(this)[SearchViewModel::class.java]
         viewModel.searchSug.observe(this, Observer { res ->
-            var adapter = rv_searchSug.adapter
-            if (adapter == null) {
-                adapter = SearchSugAdapter(res!!)
-                rv_searchSug.adapter = adapter
-            } else {
-                (adapter as SearchSugAdapter).searchSug = res!!
-                adapter.notifyDataSetChanged()
-            }
+            tv_type.visibility= View.VISIBLE
+            tv_type.text=ResUtil.getString(R.string.searchView_searchRes)
+            setSearchData(res!!)
         })
+        viewModel.defSearchRes.observe(this,Observer<DefSearchRes>{res->
+            if(res==null)return@Observer
+            tv_type.visibility= View.VISIBLE
+            tv_type.text=ResUtil.getString(R.string.searchView_desc)
+            res.recommendSug.recommendSongs.addAll(res.hotSearchSug.songList)
+            setSearchData(SearchSug(
+                    res.recommendSug.recommendSongs,
+                    ArrayList(),
+                    res.hotSearchSug.artistSugList
+            ))
+        })
+
+        viewModel.defSearch(System.currentTimeMillis())
     }
 
     override fun initView() {
@@ -59,9 +71,27 @@ class SearchActivity : BaseActivity() {
             finish()
         }
         searchView_searchActivity.textChangeCallback = {
-            viewModel.getSearchSug(it)
+            if(it==""){
+                viewModel.defSearch(System.currentTimeMillis())
+            }else{
+                viewModel.getSearchSug(it)
+            }
+
+        }
+        searchView_searchActivity.cancelCallback={
+            finish()
         }
 
+    }
+    private fun setSearchData(res:SearchSug){
+        var adapter = rv_searchSug.adapter
+        if (adapter == null) {
+            adapter = SearchSugAdapter(res)
+            rv_searchSug.adapter = adapter
+        } else {
+            (adapter as SearchSugAdapter).searchSug = res
+            adapter.notifyDataSetChanged()
+        }
     }
 
 

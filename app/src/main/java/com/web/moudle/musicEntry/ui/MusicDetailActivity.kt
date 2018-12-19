@@ -27,6 +27,7 @@ import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.musicDownload.service.FileDownloadService
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
+
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_music_detail.*
 

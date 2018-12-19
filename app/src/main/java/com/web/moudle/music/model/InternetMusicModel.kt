@@ -6,7 +6,6 @@ import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.DataTransform
 import com.web.moudle.net.retrofit.SchedulerTransform
-import com.web.moudle.search.bean.SearchSug
 import io.reactivex.Observable
 
 class InternetMusicModel : BaseRetrofit() {
@@ -21,10 +20,15 @@ class InternetMusicModel : BaseRetrofit() {
 
     }
 
-    fun getMusicDetail(songIds: String): Observable<InternetMusicDetailList> {
+    fun getMusicDetailAsync(songIds: String): Observable<InternetMusicDetailList> {
         return obtainClass(NetApis.Music::class.java)
                 .musicInfo(songIds)
                 .compose(SchedulerTransform())
+                .compose(DataTransform())
+    }
+    fun getMusicDetail(songIds: String): Observable<InternetMusicDetailList> {
+        return obtainClass(NetApis.Music::class.java)
+                .musicInfo(songIds)
                 .compose(DataTransform())
     }
 

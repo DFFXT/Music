@@ -4,6 +4,9 @@ public class LiveDataWrapper<T> {
     private int code;
     private T value;
 
+    public final static int CODE_OK=999;
+    public final static int CODE_ERROR=998;
+
     public int getCode() {
         return code;
     }

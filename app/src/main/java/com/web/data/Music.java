@@ -5,8 +5,9 @@ import com.web.config.GetFiles;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class Music extends DataSupport implements Cloneable{
+public class Music extends DataSupport implements Cloneable,Serializable {
     private int id;
     private String musicName;
     private String singer;

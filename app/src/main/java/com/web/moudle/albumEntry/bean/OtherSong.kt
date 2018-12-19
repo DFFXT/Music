@@ -55,6 +55,11 @@ data class OtherSong (
         @JSONField(name = "ting_uid")
         val uid:String,
         @JSONField(name = "title")
-        val title:String
+        val title:String,
+        @JSONField(name = "versions")
+        val version:String,
+        @JSONField(name = "all_rate")
+        val allRate:String
+
 
 )

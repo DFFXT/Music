@@ -137,11 +137,10 @@ class ExpandableTextView @JvmOverloads constructor(
         paint.color = textColor
         staticLayout?.draw(canvas)
         canvas.restore()
-        arrowMatrix.setScale(arrowScale,arrowScale,bottomDrawableHeight/2f,bottomDrawableHeight/2f)
-        arrowMatrix.postRotate(degree,bottomDrawableHeight/2f,bottomDrawableHeight/2f)
-        arrowMatrix.postTranslate(width / 2f - bottomDrawableHeight / 2f,height.toFloat() - bottomDrawableHeight - paddingBottom)
+        arrowMatrix.setRotate(degree,arrow.width/2f,arrow.height/2f)
+        arrowMatrix.postScale(arrowScale,arrowScale)
+        arrowMatrix.postTranslate(width / 2f - bottomDrawableHeight/2f,height.toFloat() - bottomDrawableHeight - paddingBottom)
         canvas.drawBitmap(arrow,arrowMatrix,paint)
-
     }
 
 

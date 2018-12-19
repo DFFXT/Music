@@ -26,6 +26,9 @@ object PinYin {
         return res
     }
 
+    /**
+     * 获取中文首字母没有在库内的就返回本身【一般是字母、数字】
+     */
     @JvmStatic
     @Throws(UnsupportedEncodingException::class)
     fun getFirstChar(chr: String): Char {
@@ -35,9 +38,9 @@ object PinYin {
                 return if (i > 0)
                     letter[i - 1]
                 else
-                    0.toChar()
+                    chr.elementAt(0)
             }
         }
-        return 0.toChar()
+        return chr.elementAt(0)
     }
 }

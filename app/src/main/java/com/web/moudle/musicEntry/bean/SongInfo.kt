@@ -12,11 +12,11 @@ data class SongInfo (
         @JSONField(name = "ting_uid")
         val uid:String,
         @JSONField(name = "expire")
-        val expire:Int,
+        val expire:Int=0,
         @JSONField(name = "si_proxycompany")
         val proxyCompany:String,
         @JSONField(name = "compose")
-        val compose:String,
+        val compose:String?=null,
         @JSONField(name = "artist_640_1136")
         val artistPic640x1136:String,
         @JSONField(name = "artist_500_500")

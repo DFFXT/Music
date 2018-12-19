@@ -2,4 +2,6 @@
 <resources>
     <string name="searchView_cancel">取消</string>
     <string name="searchView_hint">曲名 歌手 专辑</string>
+    <string name="searchView_desc">推荐</string>
+    <string name="searchView_searchRes">搜索结果</string>
 </resources>

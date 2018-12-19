@@ -6,7 +6,11 @@ import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.music.model.bean.RowMusicData
 import com.web.moudle.net.baseBean.BaseNetBean
+import com.web.moudle.search.bean.DefSearchRes
 import com.web.moudle.search.bean.SearchSug
+import com.web.moudle.singerEntry.bean.AlbumEntryBox
+import com.web.moudle.singerEntry.bean.SingerInfo
+import com.web.moudle.singerEntry.bean.SongEntryBox
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -27,6 +31,9 @@ class NetApis {
 
         @GET("http://sug.qianqian.com/info/suggestion?format=json")
         fun searchSug(@Query("word") word: String): Observable<BaseNetBean<SearchSug>>
+
+        @GET("http://sug.qianqian.com/info/suggestion?format=json&word=&version=2&from=web&third_type=0&client_type=0")
+        fun defSearch(@Query("_") time:Long):Observable<BaseNetBean<DefSearchRes>>
     }
 
     interface SongEntry {
@@ -35,7 +42,18 @@ class NetApis {
     }
     interface AlbumEntry{
         @GET("http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.album.getAlbumInfo")
-        fun getAlbumInfo(@Query("album_id") albumId:Long):Observable<AlbumResponse>
+        fun getAlbumInfo(@Query("album_id") albumId:String):Observable<AlbumResponse>
+    }
+    interface SingerEntry{
+        //@GET("http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.artist.getInfo&artistid=90")
+        @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.artist.getinfo&format=json")
+        fun getArtistInfo(@Query("tinguid") uid:String):Observable<SingerInfo>
+
+        @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getSongList&format=json&order=2")
+        fun getSongList(@Query("tinguid") uid:String,@Query("offset") offset:Int,@Query("limits") limit:Int):Observable<SongEntryBox>
+
+        @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getAlbumList&format=json&order=2")
+        fun getAlbumList(@Query("tinguid")uid:String,@Query("offset")offset:Int,@Query("limits")limit:Int):Observable<AlbumEntryBox>
     }
 
 }
