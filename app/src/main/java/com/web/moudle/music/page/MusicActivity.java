@@ -500,7 +500,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
 
     @Override
     public void load(int groupIndex, int childIndex, Music music, int maxTime) {
-        Log.i("log","++++"+music.getMusicName());
         bar.setMax(maxTime / 1000);
         if (music == null) {
             songname.setText("");

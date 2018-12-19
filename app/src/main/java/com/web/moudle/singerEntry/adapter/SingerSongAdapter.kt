@@ -16,7 +16,7 @@ class SingerSongAdapter(private val ctx:Context,private val list:ArrayList<SongE
         holder.rootView.setOnClickListener {
             MusicDetailActivity.actionStart(it.context,item!!.songId)
         }
-        ImageLoad.load(item!!.picSmall).into(holder.findViewById(R.id.iv_musicIcon))
+        ImageLoad.load(item!!.picSmall).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_musicIcon))
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): BaseViewHolder {
