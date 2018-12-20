@@ -16,35 +16,36 @@ object SP {
         }
         editor.apply()
     }
-    fun getValue(name: String,key: String,type:Class<Any>):Any{
+    @Suppress("UNCHECKED_CAST")
+    inline fun <reified T:Any> getValue(name: String, key: String, type:Class<Any>):T{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        return when(type.name){
-            String::class.java.name->sp.getString(key,"")
-            Int::class.java.name ->sp.getInt(key,0)
-            Boolean::class.java.name ->sp.getBoolean(key,false)
-            Long::class.java.name ->sp.getLong(key,0)
-            Float::class.java.name ->sp.getFloat(key,0f)
-            else->""
+        return when(T::class.java.name){
+            String::class.java.name->sp.getString(key,"") as T
+            Int::class.java.name ->sp.getInt(key,0) as T
+            Boolean::class.java.name ->sp.getBoolean(key,false) as T
+            Long::class.java.name ->sp.getLong(key,0) as T
+            Float::class.java.name ->sp.getFloat(key,0f) as T
+            else-> Any() as T
         }
     }
-    fun getInt(name: String,key: String):Int{
+    fun getInt(name: String,key: String,defValue:Int=0):Int{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        return sp.getInt(key,0)
+        return sp.getInt(key,defValue)
     }
-    fun getString(name: String,key: String):String{
+    fun getString(name: String,key: String,defValue: String=""):String{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        return sp.getString(key,"")
+        return sp.getString(key,defValue)!!
     }
-    fun getBoolean(name: String,key: String):Boolean{
+    fun getBoolean(name: String,key: String,defValue: Boolean=false):Boolean{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        return sp.getBoolean(key,false)
+        return sp.getBoolean(key,defValue)
     }
-    fun getFloat(name: String,key: String):Float{
+    fun getFloat(name: String,key: String,defValue: Float=0f):Float{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        return sp.getFloat(key,0f)
+        return sp.getFloat(key,defValue)
     }
-    fun getLong(name: String,key: String):Long{
+    fun getLong(name: String,key: String,defValue: Long=0):Long{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        return sp.getLong(key,0)
+        return sp.getLong(key,defValue)
     }
 }

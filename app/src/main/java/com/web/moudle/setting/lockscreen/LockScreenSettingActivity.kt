@@ -16,13 +16,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.request.transition.Transition
-import com.web.common.base.BaseActivity
-import com.web.common.base.BaseAdapter
-import com.web.common.base.BaseGlideTarget
-import com.web.common.base.BaseViewHolder
+import com.web.common.base.*
 import com.web.common.constant.Constant
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.ColorPickerDialog
+import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.DrawableItemDecoration
 import com.web.moudle.lockScreen.ui.LockScreenActivity
@@ -40,6 +38,7 @@ class LockScreenSettingActivity : BaseActivity() {
     private var mColor = SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor)
 
     init {
+        colorList.add(getColor(R.color.themeColor))
         colorList.add(Color.RED)
         colorList.add(Color.GREEN)
         colorList.add(Color.BLACK)
@@ -225,7 +224,7 @@ class LockScreenSettingActivity : BaseActivity() {
         }
 
         fun getBgColor(): Int {
-            return SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor)
+            return SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor,ResUtil.getColor(R.color.themeColor))
         }
 
         fun setBgImagePath(path: String) {

@@ -906,6 +906,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			index=cursor.getColumnIndex("_size");
 			int size=cursor.getInt(index);
 
+
+
 			for(ScanMusicType type:types){
 				if(!type.isScanable())continue;
 				if(path!=null&&path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
@@ -921,6 +923,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 					Music music=new Music(out[0].substring(0,lastIndex),out[1],path);
 					index=cursor.getColumnIndex("duration");
 					music.setDuration(cursor.getInt(index));
+					index=cursor.getColumnIndex("_id");
+					music.setSong_id(cursor.getInt(index));
+					index=cursor.getColumnIndex("album_id");
+					music.setAlbum_id(cursor.getInt(index));
 					Music m=DataSupport.where("path=?",music.getPath()).findFirst(Music.class);
 					if(m==null){
 						music.save();

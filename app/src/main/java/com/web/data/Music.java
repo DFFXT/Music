@@ -14,6 +14,8 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     private String path;
     private int groupId;
     private int duration;
+    private int song_id;
+    private int album_id;
     public Music(){}
     public Music(String musicName,String singer,String path){
         this.musicName=musicName;
@@ -102,5 +104,21 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public int getSong_id() {
+        return song_id;
+    }
+
+    public void setSong_id(int song_id) {
+        this.song_id = song_id;
+    }
+
+    public int getAlbum_id() {
+        return album_id;
+    }
+
+    public void setAlbum_id(int album_id) {
+        this.album_id = album_id;
     }
 }
