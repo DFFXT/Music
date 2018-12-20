@@ -45,6 +45,7 @@ import com.web.moudle.music.page.control.ui.SelectorListAlert;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.player.PlayInterface;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
+import com.web.moudle.musicSearch.InternetMusicActivity;
 import com.web.moudle.preference.SP;
 import com.web.moudle.search.SearchActivity;
 import com.web.moudle.setting.ui.SettingActivity;

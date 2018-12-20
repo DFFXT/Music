@@ -1,4 +1,4 @@
-package com.web.moudle.music.model;
+package com.web.moudle.musicSearch.model;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PageKeyedDataSource;
@@ -24,11 +24,11 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.web.moudle.music.model.InternetViewModel.CODE_JSON_ERROR;
-import static com.web.moudle.music.model.InternetViewModel.CODE_NET_ERROR;
-import static com.web.moudle.music.model.InternetViewModel.CODE_NO_DATA;
-import static com.web.moudle.music.model.InternetViewModel.CODE_OK;
-import static com.web.moudle.music.model.InternetViewModel.CODE_URL_ERROR;
+import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_JSON_ERROR;
+import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_NET_ERROR;
+import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_NO_DATA;
+import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_OK;
+import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_URL_ERROR;
 
 public class InternetDataSource extends PageKeyedDataSource<String,InternetMusicDetail> {
     private String keyWords;

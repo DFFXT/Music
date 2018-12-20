@@ -1,4 +1,4 @@
-package com.web.moudle.music.model;
+package com.web.moudle.musicSearch.model;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

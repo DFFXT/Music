@@ -1,4 +1,4 @@
-package com.web.moudle.music.page.control.adapter
+package com.web.moudle.musicSearch.adapter
 
 import android.arch.paging.PagedListAdapter
 import android.content.Context
@@ -11,7 +11,7 @@ import com.web.data.InternetMusicDetail
 import com.web.web.R
 
 class InternetMusicAdapter(private val context: Context) : PagedListAdapter<InternetMusicDetail, BaseViewHolder>(diff) {
-    var listener:OnItemClickListener?=null
+    var listener: OnItemClickListener?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return BaseViewHolder(LayoutInflater.from(context).inflate(R.layout.music_internet_item,parent,false))

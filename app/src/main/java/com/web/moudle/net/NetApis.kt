@@ -4,7 +4,7 @@ import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd
 import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
-import com.web.moudle.music.model.bean.RowMusicData
+import com.web.moudle.musicSearch.bean.RowMusicData
 import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.search.bean.DefSearchRes
 import com.web.moudle.search.bean.SearchSug

@@ -1,4 +1,4 @@
-package com.web.moudle.music.page;
+package com.web.moudle.musicSearch;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -22,8 +22,8 @@ import com.web.config.Shortcut;
 import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicForPlay;
 import com.web.misc.TopBarLayout;
-import com.web.moudle.music.model.InternetViewModel;
-import com.web.moudle.music.page.control.adapter.InternetMusicAdapter;
+import com.web.moudle.musicSearch.model.InternetViewModel;
+import com.web.moudle.musicSearch.adapter.InternetMusicAdapter;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.moudle.search.SearchActivity;

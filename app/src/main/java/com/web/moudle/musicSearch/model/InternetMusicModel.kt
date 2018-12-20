@@ -1,4 +1,4 @@
-package com.web.moudle.music.model
+package com.web.moudle.musicSearch.model
 
 import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd

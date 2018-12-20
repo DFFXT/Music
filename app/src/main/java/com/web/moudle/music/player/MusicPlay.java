@@ -233,7 +233,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         setSessionToken(sessionCompat.getSessionToken());
         sessionCompat.setActive(true);
 
-        if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noLockScreen)){
+        if(!SP.INSTANCE.getBoolean(Constant.spName,Constant.SpKey.noLockScreen,false)){
 			lockScreen();
 		}
 		//**耳塞插拔注册广播

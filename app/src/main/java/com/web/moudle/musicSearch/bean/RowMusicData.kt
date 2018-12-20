@@ -1,4 +1,4 @@
-package com.web.moudle.music.model.bean
+package com.web.moudle.musicSearch.bean
 
 import com.web.data.InternetMusic
 
