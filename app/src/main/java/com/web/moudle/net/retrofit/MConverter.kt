@@ -12,8 +12,11 @@ class MConverter<T>(val type: Type):Converter<ResponseBody,T> {
         if(res.startsWith("(")){
             return JSON.parseObject(res.substring(1,res.length-1),type)
         }
-        Log.i("log",res)
         return JSON.parseObject(res,type)
     }
-
+}
+class StringConverter(val type: Type):Converter<ResponseBody,String> {
+    override fun convert(value: ResponseBody): String {
+        return value.string()
+    }
 }

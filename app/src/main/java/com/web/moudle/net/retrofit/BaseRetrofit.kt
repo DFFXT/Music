@@ -1,5 +1,6 @@
 package com.web.moudle.net.retrofit
 
+import com.alibaba.fastjson.support.retrofit.Retrofit2ConverterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -18,7 +19,13 @@ open class BaseRetrofit {
     private var retrofit:Retrofit = Retrofit.Builder()
             .baseUrl("http://tingapi.ting.baidu.com/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ConverterFactory())
+            .addConverterFactory(ConverterFactory(ConverterFactory.TYPE_JSON))
+            .client(client)
+            .build()
+
+    private var retrofitNoConverter=Retrofit.Builder()
+            .baseUrl("http://tingapi.ting.baidu.com/")
+            .addConverterFactory(ConverterFactory(ConverterFactory.TYPE_STRING))
             .client(client)
             .build()
 
@@ -32,5 +39,8 @@ open class BaseRetrofit {
             map[t.name]=cl
         }
         return cl!!
+    }
+    fun <T:Any> obtainClassNoConverter(t:Class<T>):T{
+        return retrofitNoConverter.create(t)
     }
 }

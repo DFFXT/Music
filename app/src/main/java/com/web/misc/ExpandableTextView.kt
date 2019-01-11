@@ -27,7 +27,7 @@ class ExpandableTextView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var paint: TextPaint = TextPaint()
     private var staticLayout: StaticLayout? = null
-    private var mWidth = 0
+
     private val bottomDrawableHeight = ViewUtil.dpToPx(25f)
     private var requestMeasure = true
 
@@ -67,21 +67,22 @@ class ExpandableTextView @JvmOverloads constructor(
     private var fullHeight = 0
     private var hideHeight = 0
     private val touchControl = MotionEventControl()
-    private var isExpand:Boolean = false
+    private var isExpand: Boolean = false
     private var expandAnimator: ValueAnimator? = null
     private var hideAnimator: ValueAnimator? = null
     private var duration = 400L
 
-    private var arrowScale=0f
+    private var arrowScale = 0f
+
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView)
         textSize = ta.getFloat(R.styleable.ExpandableTextView_attr_textSize, textSize)
         textColor = ta.getColor(R.styleable.ExpandableTextView_attr_color, textColor)
         text = ta.getString(R.styleable.ExpandableTextView_attr_text)
-        isExpand=ta.getBoolean(R.styleable.ExpandableTextView_attr_isExpand,isExpand)
+        isExpand = ta.getBoolean(R.styleable.ExpandableTextView_attr_isExpand, isExpand)
         ta.recycle()
         arrow = ResUtil.getBitmapFromDrawable(ResUtil.getDrawable(R.drawable.icon_back_black))
-        arrowScale=bottomDrawableHeight/arrow.width.toFloat()
+        arrowScale = bottomDrawableHeight / arrow.width.toFloat()
         touchControl.clickListener = {
             isShowFull = !isShowFull
             if (touchControl.originY > height - bottomDrawableHeight) {
@@ -102,7 +103,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 return true
             }
         })
-        paint.isAntiAlias=true
+        paint.isAntiAlias = true
     }
 
 
@@ -117,30 +118,30 @@ class ExpandableTextView @JvmOverloads constructor(
     }
 
     private fun setText() {
-        if (text == null || mWidth == 0 || !requestMeasure) {
+        if (text == null || width == 0 || !requestMeasure) {
             return
         }
         requestMeasure = false
         paint.textSize = textSize
-        staticLayout = StaticLayout.Builder.obtain(text!!, 0, text!!.length, paint, mWidth).build()
+        staticLayout = StaticLayout.Builder.obtain(text!!, 0, text!!.length, paint, width - paddingStart - paddingEnd).build()
         setHideFullHeight()
     }
 
     private var degree = 90f
-    private var arrowMatrix=Matrix()
+    private var arrowMatrix = Matrix()
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.save()
-        canvas.clipRect(paddingStart,paddingTop,width-paddingEnd,height-bottomDrawableHeight)
+        canvas.clipRect(paddingStart, paddingTop, width - paddingEnd, height - bottomDrawableHeight)
         canvas.translate(paddingStart.toFloat(), paddingTop.toFloat())
         paint.textSize = textSize
         paint.color = textColor
         staticLayout?.draw(canvas)
         canvas.restore()
-        arrowMatrix.setRotate(degree,arrow.width/2f,arrow.height/2f)
-        arrowMatrix.postScale(arrowScale,arrowScale)
-        arrowMatrix.postTranslate(width / 2f - bottomDrawableHeight/2f,height.toFloat() - bottomDrawableHeight - paddingBottom)
-        canvas.drawBitmap(arrow,arrowMatrix,paint)
+        arrowMatrix.setRotate(degree, arrow.width / 2f, arrow.height / 2f)
+        arrowMatrix.postScale(arrowScale, arrowScale)
+        arrowMatrix.postTranslate(width / 2f - bottomDrawableHeight / 2f, height.toFloat() - bottomDrawableHeight - paddingBottom)
+        canvas.drawBitmap(arrow, arrowMatrix, paint)
     }
 
 
@@ -159,7 +160,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 hideAnimator!!.addUpdateListener {
                     layoutParams.height = it.animatedValue as Int
                     layoutParams = layoutParams
-                    degree = -180*(layoutParams.height-fullHeight.toFloat())/(hideHeight-fullHeight)+90
+                    degree = -180 * (layoutParams.height - fullHeight.toFloat()) / (hideHeight - fullHeight) + 90
                 }
                 hideAnimator!!.start()
             }
@@ -175,7 +176,7 @@ class ExpandableTextView @JvmOverloads constructor(
                 expandAnimator!!.addUpdateListener {
                     layoutParams.height = it.animatedValue as Int
                     layoutParams = layoutParams
-                    degree = 180*(layoutParams.height-hideHeight.toFloat())/(fullHeight-hideHeight)-90
+                    degree = 180 * (layoutParams.height - hideHeight.toFloat()) / (fullHeight - hideHeight) - 90
                 }
             }
             expandAnimator!!.start()
@@ -198,14 +199,8 @@ class ExpandableTextView @JvmOverloads constructor(
         val hMode = MeasureSpec.getMode(heightMeasureSpec)
         var hSize = MeasureSpec.getSize(heightMeasureSpec)
         val needWidth = maxWidth() + paddingStart + paddingEnd
-        when (wMode) {
-            MeasureSpec.AT_MOST -> {//**wrap_content
-                wSize = min(needWidth.toInt(), wSize)
-                mWidth = wSize - paddingStart - paddingEnd
-            }
-            MeasureSpec.UNSPECIFIED -> mWidth = needWidth.toInt() - paddingStart - paddingEnd
-            MeasureSpec.EXACTLY -> //**match_parent|精确赋值
-                mWidth = wSize
+        if (wMode == MeasureSpec.AT_MOST) {
+            wSize = min(needWidth.toInt(), wSize)
         }
         setText()
         val needHeight = (if (staticLayout != null) staticLayout!!.height else 0) + paddingBottom + paddingTop + bottomDrawableHeight

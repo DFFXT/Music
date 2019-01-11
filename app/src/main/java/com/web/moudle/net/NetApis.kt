@@ -12,6 +12,8 @@ import com.web.moudle.singerEntry.bean.AlbumEntryBox
 import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.bean.SongEntryBox
 import io.reactivex.Observable
+import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -54,6 +56,9 @@ class NetApis {
 
         @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getAlbumList&format=json&order=2")
         fun getAlbumList(@Query("tinguid")uid:String,@Query("offset")offset:Int,@Query("limits")limit:Int):Observable<AlbumEntryBox>
+
+        @GET("http://music.taihe.com/data/artist/redirect")
+        fun getArtistId(@Query("id") fakeId:String):Call<Any>
     }
 
 }

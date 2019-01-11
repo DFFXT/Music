@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_module/singer/DataRequest.dart';
 
 
 class SingerView extends StatelessWidget {
@@ -45,9 +46,6 @@ class SingerState extends State<SingerView1>
 
   TabController _tabController;
 
-  int a(){
-
-  }
   @override
   void initState() {
     super.initState();
@@ -108,7 +106,8 @@ class SingerState extends State<SingerView1>
         });
       }
     });
-    getDate();
+    //getDate();
+    DataRequest().getRowSingerData("sdf");
   }
 
   @override
@@ -117,9 +116,9 @@ class SingerState extends State<SingerView1>
     _tabController.dispose();
   }
   Future<String> getDate() async{
-    MethodChannel channel=MethodChannel("io");
-    final String date= await channel.invokeMethod("getDate");
-    print(date);
+    //MethodChannel channel=MethodChannel("io");
+    //final String date= await channel.invokeMethod("getDate");
+    //print(date);
     return null;
   }
 }
