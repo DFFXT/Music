@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="singleMusic">单曲：</string>
+    <string name="album">专辑：</string>
+    <string name="district">地区：</string>
+    <string name="singer">歌手：</string>
+</resources>

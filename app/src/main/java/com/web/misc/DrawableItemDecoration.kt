@@ -9,11 +9,11 @@ import android.widget.LinearLayout
 /**
  * RecyclerView添加底部或者右部间隔和分割图
  */
-class DrawableItemDecoration(private val orientation: Int,private val gap: Int, private var drawable: Drawable) : GapItemDecoration(
-        0,
-        0,
-        if (orientation == LinearLayoutManager.HORIZONTAL) gap else 0,
-        if (orientation == LinearLayoutManager.VERTICAL) gap else 0
+class DrawableItemDecoration(left:Int=0,private val top:Int=0,private val right:Int=0,bottom:Int=0,private val orientation: Int, private var drawable: Drawable) : GapItemDecoration(
+        left,
+        top,
+        right,
+        bottom
 ){
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDraw(c, parent, state)
@@ -25,7 +25,7 @@ class DrawableItemDecoration(private val orientation: Int,private val gap: Int, 
             for(index in 0 until parent.childCount){
                 val lp=parent.getChildAt(index).layoutParams as RecyclerView.LayoutParams
                 val top=parent.getChildAt(index).bottom + lp.bottomMargin
-                drawable.setBounds(parentLeft,top,parentRight,top+gap)
+                drawable.setBounds(parentLeft,top,parentRight,top+this.top)
                 drawable.draw(c)
             }
         }else if(orientation==LinearLayout.HORIZONTAL){
@@ -33,7 +33,7 @@ class DrawableItemDecoration(private val orientation: Int,private val gap: Int, 
             for(index in 0 until parent.childCount){
                 val lp=parent.getChildAt(index).layoutParams as RecyclerView.LayoutParams
                 val left=parent.getChildAt(index).right + lp.marginEnd
-                drawable.setBounds(left,parentTop,left+gap,parentBottom)
+                drawable.setBounds(left,parentTop,left+this.right,parentBottom)
                 drawable.draw(c)
             }
         }

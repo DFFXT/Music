@@ -39,7 +39,7 @@ class SingleTextListAlert {
     fun build() {
         view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as RecyclerView
         view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        view.addItemDecoration(DrawableItemDecoration(LinearLayout.VERTICAL,4,ResUtil.getDrawable(R.drawable.recycler_divider)))
+        view.addItemDecoration(DrawableItemDecoration(orientation = LinearLayout.VERTICAL,bottom = 4,drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         adapter = SingleTextAdapter(context, list)
         adapter!!.itemClickListener=itemClickListener
         view.adapter = adapter

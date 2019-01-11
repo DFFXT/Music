@@ -3,6 +3,8 @@ package com.web.web;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -15,6 +17,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.fluttermodule.host.MainActivity;
 import com.web.common.base.BaseActivity;
 import com.web.config.GetFiles;
 import com.web.moudle.music.page.MusicActivity;
@@ -29,6 +32,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import dalvik.system.DexClassLoader;
+import io.flutter.app.FlutterActivityDelegate;
+import io.flutter.facade.Flutter;
+import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.view.FlutterNativeView;
+import io.flutter.view.FlutterView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -53,6 +63,7 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 
 	@Override
 	public void initView() {
+
 		Index.requestWritePermission(this);
 		findId();
 		makeData();
@@ -121,6 +132,13 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
         }
 
+		/*View v=Flutter.createView(this,getLifecycle(),"sfdsfafsdfasdfsd");
+
+		new MainActivity().onCreate(null);
+		setContentView(v);*/
+
+		Intent intent=new Intent(this,MainActivity.class);
+		startActivity(intent);
 
 
 
@@ -135,6 +153,10 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 			butList.get(i).setOnClickListener(this);
 			butList.get(i).setOnTouchListener(this);
 		}
+		butList.get(0).postDelayed(()->{
+			Intent intent=new Intent(this,MainActivity.class);
+			startActivity(intent);
+		},2000);
 	}
 	void fillTextAndColor(){//--填充界面
 		for(int i=0;i<Math.min(butList.size(),name.length);i++){

@@ -8,16 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 
 abstract class BaseFragment :Fragment(){
-    private var mRootView:View?=null
+    private var created=false
+    var rootView:View?=null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if(mRootView!=null)return mRootView
-        this.mRootView =inflater.inflate(getLayoutId(),container,false)
-        initView(mRootView!!)
-        return this.mRootView
+        if(rootView!=null)return rootView
+        this.rootView =inflater.inflate(getLayoutId(),container,false)
+        initView(rootView!!)
+        return this.rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        created=true
+        viewCreated(view,savedInstanceState)
     }
     fun isInit():Boolean{
-        return mRootView!=null
+        return created
     }
     @LayoutRes abstract fun getLayoutId():Int
     abstract fun initView(rootView:View)
+    abstract fun viewCreated(view: View, savedInstanceState: Bundle?)
+    override fun onDestroy() {
+        super.onDestroy()
+        created=false
+    }
 }

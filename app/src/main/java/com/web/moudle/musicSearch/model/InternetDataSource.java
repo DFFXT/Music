@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.web.common.base.BaseObserver;
+import com.web.common.base.BaseSingleObserver;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.config.GetFiles;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicDetailList;
 import com.web.data.SearchResultBd;
+import com.web.moudle.musicSearch.bean.SimpleMusicInfo;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -24,13 +26,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
+
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_JSON_ERROR;
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_NET_ERROR;
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_NO_DATA;
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_OK;
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_URL_ERROR;
 
-public class InternetDataSource extends PageKeyedDataSource<String,InternetMusicDetail> {
+public class InternetDataSource extends PageKeyedDataSource<String,SimpleMusicInfo> {
     private String keyWords;
     private int page=1;
     private int pageSize=10;
@@ -45,16 +50,16 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
     }
 
     @Override
-    public void loadInitial(@NonNull LoadInitialParams<String> params, @NonNull LoadInitialCallback<String, InternetMusicDetail> callback) {
+    public void loadInitial(@NonNull LoadInitialParams<String> params, @NonNull LoadInitialCallback<String, SimpleMusicInfo> callback) {
         load(callback,0);
     }
 
     @Override
-    public void loadBefore(@NonNull LoadParams<String> params, @NonNull LoadCallback<String, InternetMusicDetail> callback) {
+    public void loadBefore(@NonNull LoadParams<String> params, @NonNull LoadCallback<String, SimpleMusicInfo> callback) {
     }
 
     @Override
-    public void loadAfter(@NonNull LoadParams<String> params, @NonNull LoadCallback<String, InternetMusicDetail> callback) {
+    public void loadAfter(@NonNull LoadParams<String> params, @NonNull LoadCallback<String, SimpleMusicInfo> callback) {
         setPage(page+1);
         load(callback,1);
         /*model.search(keyWords,page,pageSize).subscribe(new BaseObserver<SearchResultBd>() {
@@ -73,7 +78,29 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
     }
 
     private void load(@NonNull Object callback,int flg){
-        model.search(keyWords,page,pageSize).subscribe(new BaseObserver<SearchResultBd>() {
+        model.getSimpleMusic(keyWords,page).subscribe(new BaseSingleObserver<ArrayList<SimpleMusicInfo>>() {
+            @Override
+            public void onSuccess(ArrayList<SimpleMusicInfo> res) {
+                if(res.size()==0){
+                    wrapper.setCode(LiveDataWrapper.CODE_NO_DATA);
+                    liveData.postValue(wrapper);
+                }else{
+                    if(flg==0){
+                        ((LoadInitialCallback)callback).onResult(res,"","");
+                    }else if(flg==1){
+                        ((LoadCallback)callback).onResult(res,"");
+                    }
+                }
+
+            }
+            @Override
+            public void error(@NotNull Throwable e) {
+                wrapper.setCode(LiveDataWrapper.CODE_ERROR);
+                liveData.postValue(wrapper);
+            }
+        });
+        //***
+        /*model.search(keyWords,page,pageSize).subscribe(new BaseObserver<SearchResultBd>() {
             @Override
             public void onNext(SearchResultBd rowMusicData) {
                 StringBuilder builder=new StringBuilder();
@@ -103,7 +130,7 @@ public class InternetDataSource extends PageKeyedDataSource<String,InternetMusic
             public void error(@NotNull Throwable e) {
                 e.printStackTrace();
             }
-        });
+        });*/
     }
     /**
      *  搜索

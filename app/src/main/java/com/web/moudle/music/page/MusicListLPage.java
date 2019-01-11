@@ -1,5 +1,6 @@
 package com.web.moudle.music.page;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.web.moudle.music.player.bean.SongSheet;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -241,13 +243,19 @@ public class MusicListLPage extends BaseMusicPage implements KeyBackListener {
         return R.layout.music_list;
     }
 
+
+    @Override
+    public void viewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
+
+    }
+
     @Override
     public void initView(@NotNull View rootView) {
         rv_musicList =rootView.findViewById(R.id.musicExpandableList);
         indexBar=rootView.findViewById(R.id.indexBar_musicList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(rootView.getContext(),LinearLayoutManager.VERTICAL,false);
         rv_musicList.setLayoutManager(layoutManager);
-        rv_musicList.addItemDecoration(new DrawableItemDecoration(LinearLayout.VERTICAL,4,ResUtil.getDrawable(R.drawable.recycler_divider)));
+        rv_musicList.addItemDecoration(new DrawableItemDecoration(0,0,0,4,LinearLayout.VERTICAL,ResUtil.getDrawable(R.drawable.recycler_divider)));
         if(data!=null){
             adapter=new LocalMusicAdapter(rootView.getContext(),data.getMusicList());
         }else {

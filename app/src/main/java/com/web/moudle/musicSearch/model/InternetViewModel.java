@@ -8,11 +8,19 @@ import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 
 import com.web.common.base.BaseObserver;
+import com.web.common.base.BaseSingleObserver;
+import com.web.common.base.SingleSchedulerTransform;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicDetailList;
+import com.web.moudle.musicSearch.bean.SimpleMusicInfo;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 
 /**
  * 网络搜索
@@ -28,7 +36,7 @@ public class InternetViewModel extends ViewModel {
 
     private InternetDataSource dataSource;
     private PagedList.Config config;
-    private LiveData<PagedList<InternetMusicDetail>> pagedListLiveData;
+    private LiveData<PagedList<SimpleMusicInfo>> pagedListLiveData;
     private MutableLiveData<InternetMusicDetailList> musicDetail;
     private MutableLiveData<LiveDataWrapper> status;
     private LiveDataWrapper wrapper;
@@ -55,11 +63,11 @@ public class InternetViewModel extends ViewModel {
         return status;
     }
 
-    public LiveData<PagedList<InternetMusicDetail>> getMusicList(){
+    public LiveData<PagedList<SimpleMusicInfo>> getMusicList(){
         if(pagedListLiveData==null)
-            pagedListLiveData= new LivePagedListBuilder<>(new DataSource.Factory<String,InternetMusicDetail>(){
+            pagedListLiveData= new LivePagedListBuilder<>(new DataSource.Factory<String,SimpleMusicInfo>(){
                 @Override
-                public DataSource<String,InternetMusicDetail> create() {
+                public DataSource<String,SimpleMusicInfo> create() {
                     return dataSource;
                 }
             },config).build();
@@ -82,6 +90,37 @@ public class InternetViewModel extends ViewModel {
                         e.printStackTrace();
                         wrapper.setCode(CODE_ERROR);
                         status.postValue(wrapper);
+                    }
+                });
+    }
+
+
+    private LiveDataWrapper<LiveDataWrapper<ArrayList<SimpleMusicInfo>>> simpleMusicList=new LiveDataWrapper<>();
+    private LiveDataWrapper<ArrayList<SimpleMusicInfo>> simpleMusicWrapper=new LiveDataWrapper<>();
+
+    /**
+     * 搜索歌曲
+     * @param keyword kw
+     * @param page page
+     */
+    public void getSimpleMusic(String keyword,int page){
+        model.getSimpleMusic(keyword,page)
+                .subscribe(new SingleObserver<ArrayList<SimpleMusicInfo>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ArrayList<SimpleMusicInfo> simpleMusicInfos) {
+                        simpleMusicWrapper.setCode(LiveDataWrapper.CODE_OK);
+                        simpleMusicWrapper.setValue(simpleMusicInfos);
+                        simpleMusicList.setValue(simpleMusicWrapper);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
     }

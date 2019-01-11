@@ -87,6 +87,7 @@ private fun View.mShowLoading(w: Int = 0, h: Int = 0) {
         loadingView = mLoadingView
     }
     val p = parent as ViewGroup
+    p.removeView(mLoadingView)//**防止连续调用addView
     p.addView(mLoadingView, max(width, w), max(height, h))
     mLoadingView.y = y - p.paddingTop
     mLoadingView.x = x - p.paddingStart

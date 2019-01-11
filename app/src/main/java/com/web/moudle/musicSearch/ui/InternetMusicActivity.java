@@ -1,46 +1,39 @@
-package com.web.moudle.musicSearch;
+package com.web.moudle.musicSearch.ui;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.web.common.base.BaseActivity;
-import com.web.common.tool.MToast;
-import com.web.common.util.ResUtil;
+import com.web.common.base.BaseFragment;
+import com.web.common.base.BaseFragmentPagerAdapter;
 import com.web.common.util.ViewUtil;
-import com.web.config.Shortcut;
-import com.web.data.InternetMusicDetail;
-import com.web.data.InternetMusicForPlay;
 import com.web.misc.TopBarLayout;
-import com.web.moudle.musicSearch.model.InternetViewModel;
 import com.web.moudle.musicSearch.adapter.InternetMusicAdapter;
-import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.musicDownload.service.FileDownloadService;
 import com.web.moudle.search.SearchActivity;
 import com.web.web.R;
+
+import java.util.ArrayList;
 
 public class InternetMusicActivity extends BaseActivity {
     private final static int RESULT_CODE_SEARCH = 1;
     public final static String KEYWORD = "keyword";
-    private SmartRefreshLayout smartRefreshLayout;
-    private RecyclerView recyclerView;
-    private InternetViewModel vm;
+
+    private ArrayList<BaseSearchFragment> pageList=new ArrayList<>();
     private TopBarLayout topBarLayout;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     private String keyWords;
     private InternetMusicAdapter adapter;
 
     private void initData() {
         keyWords = getIntent().getStringExtra(KEYWORD);
+
     }
 
     @Override
@@ -51,37 +44,63 @@ public class InternetMusicActivity extends BaseActivity {
     @Override
     public void initView() {
         initData();
-        recyclerView = findViewById(R.id.internetMusic);
-        smartRefreshLayout = findViewById(R.id.smartRefreshLayout);
+        tabLayout=findViewById(R.id.tabLayout);
+        viewPager=findViewById(R.id.viewPager);
+        //recyclerView = findViewById(R.id.internetMusic);
+        //smartRefreshLayout = findViewById(R.id.smartRefreshLayout);
         topBarLayout = findViewById(R.id.topBar);
         topBarLayout.setEndImageListener(v -> {
             SearchActivity.actionStart(this, RESULT_CODE_SEARCH);
         });
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(manager);
+        //recyclerView.setLayoutManager(manager);
 
         DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         decoration.setDrawable(ViewUtil.getDrawable(R.drawable.recycler_divider));
-        recyclerView.addItemDecoration(decoration);
+        //recyclerView.addItemDecoration(decoration);
         adapter = new InternetMusicAdapter(this);
-        vm = ViewModelProviders.of(this).get(InternetViewModel.class);
+        //vm = ViewModelProviders.of(this).get(InternetViewModel.class);
 
-        recyclerView.setAdapter(adapter);
-        adapter.setListener(this::downloadConsider);
+        //recyclerView.setAdapter(adapter);
+        //adapter.setListener(this::downloadConsider);
 
 
-        smartRefreshLayout.setEnableRefresh(false);
+        /*smartRefreshLayout.setEnableRefresh(false);
         smartRefreshLayout.setEnableOverScrollDrag(true);
         smartRefreshLayout.setEnableLoadMore(true);
-        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(this));
+        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(this));*/
 
 
-        init();
-        search(keyWords);
+        /*init();
+        search(keyWords);*/
+
+
+
+        pageList.add(new MusicFragment());
+        pageList.add(new ArtistFragment());
+        pageList.add(new AlbumFragment());
+        Bundle b=new Bundle();
+        b.putString(MusicFragment.keyword,keyWords);
+        for(BaseSearchFragment f:pageList){
+            f.setArguments(b);
+        }
+        viewPager.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(),pageList));
+        viewPager.setOffscreenPageLimit(Integer.MAX_VALUE);
+        tabLayout.setTabIndicatorFullWidth(false);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+
+        tabLayout.getTabAt(0).setText(getText(R.string.music));
+        tabLayout.getTabAt(1).setText(getText(R.string.singer));
+        tabLayout.getTabAt(2).setText(getText(R.string.albumEntry_albumList));
+
+
+
+
     }
 
-    private void init() {
+    /*private void init() {
         vm.observerMusicDetail().observe(this, detailList -> {
             if (detailList == null) return;
             downloadConsider(detailList.getSongList().get(0));
@@ -117,24 +136,16 @@ public class InternetMusicActivity extends BaseActivity {
         });
     }
 
-    private void closeKeyBord() {//--close键盘
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
-        }
-    }
 
 
 
-
-    /**
+    *//**
      * 外部调用搜索
      *
      * @param keyword 关键词
-     */
+     *//*
     public void search(String keyword) {
         smartRefreshLayout.setNoMoreData(false);
-        closeKeyBord();
         vm.setKeyWords(keyword);
         vm.getMusicList().observe(this, pl -> {
             adapter.submitList(pl);
@@ -142,11 +153,11 @@ public class InternetMusicActivity extends BaseActivity {
         this.keyWords = keyword;
     }
 
-    /**
+    *//**
      * 网络音乐点击
      *
-     * @param music p
-     */
+     * //@param music p
+     *//*
     @SuppressLint("SetTextI18n")
     private void downloadConsider(InternetMusicDetail music) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -177,7 +188,7 @@ public class InternetMusicActivity extends BaseActivity {
                 "\n时长：" + ResUtil.timeFormat("mm:ss", music.getDuration() * 1000) +
                 "\n大小：" + ResUtil.getFileSize(music.getSize()));
         builder.show();
-    }
+    }*/
 
 
     @Override
@@ -185,7 +196,9 @@ public class InternetMusicActivity extends BaseActivity {
         if (resultCode != RESULT_OK) return;
         if (data == null) return;
         if (requestCode == RESULT_CODE_SEARCH) {
-            search(data.getStringExtra(SearchActivity.INPUT_DATA));
+            keyWords=data.getStringExtra(SearchActivity.INPUT_DATA);
+            viewPager.setCurrentItem(0);
+
         }
     }
 

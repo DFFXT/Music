@@ -111,9 +111,8 @@
         <activity android:name="com.web.moudle.setting.lockscreen.LockScreenSettingActivity" />
         <activity android:name="com.web.moudle.search.SearchActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.web.moudle.musicSearch.InternetMusicActivity" />
+        <activity android:name="com.web.moudle.musicSearch.ui.InternetMusicActivity" />
         <activity android:name="com.web.moudle.albumEntry.ui.AlbumEntryActivity" />
-        <activity android:name="com.web.moudle.singerEntry.MusicDetailActivity" />
         <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivity" />
         <activity android:name="com.web.moudle.musicEntry.ui.MusicDetailActivity" />
 

@@ -51,8 +51,7 @@ class AlbumEntryActivity : BaseActivity() {
         model = ViewModelProviders.of(this)[AlbumEntryViewModel::class.java]
         model.albumResponse.observe(this, Observer<LiveDataWrapper<AlbumResponse>> { data ->
             if (data != null) {
-                if (data.code == DetailMusicViewModel.CODE_OK) {
-
+                if (data.code == LiveDataWrapper.CODE_OK) {
                     val res = data.value
                     findViewById<TextView>(R.id.tv_musicName).text = res.albumInfo.albumName
                     findViewById<TextView>(R.id.tv_mainSinger).text = res.albumInfo.artistName
@@ -75,7 +74,7 @@ class AlbumEntryActivity : BaseActivity() {
                     rv_albumList.adapter=adapter
                     rootView.showContent()
                     //model.getLyrics(res.songInfo.lrcLink)
-                } else if (data.code == DetailMusicViewModel.CODE_ERROR) {
+                } else if (data.code == LiveDataWrapper.CODE_ERROR) {
                     rootView.showError()
                     rootView.errorClickLinsten = View.OnClickListener {
                         model.getAlbumInfo(id)
@@ -88,7 +87,7 @@ class AlbumEntryActivity : BaseActivity() {
         })
         model.lyrics.observe(this, Observer { wrapper ->
             if (wrapper == null) return@Observer
-            if (wrapper.code == DetailMusicViewModel.CODE_OK) {
+            if (wrapper.code == LiveDataWrapper.CODE_OK) {
                 val builder=StringBuilder()
                 wrapper.value.forEach {
                     builder.append(it.line)
@@ -120,7 +119,7 @@ class AlbumEntryActivity : BaseActivity() {
             }
         })
         rv_albumList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-        rv_albumList.addItemDecoration(DrawableItemDecoration(LinearLayoutManager.VERTICAL,20,getDrawable(R.drawable.dash_line_1px)!!))
+        rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
     }
 
     private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {

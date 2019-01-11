@@ -30,7 +30,8 @@ class SingerEntryViewModel:ViewModel() {
                     singerInfoWrapper.value=it
                     singerInfo.value=singerInfoWrapper
                 },onError = {
-                    it.printStackTrace()
+                    singerInfoWrapper.code=LiveDataWrapper.CODE_ERROR
+                    singerInfo.value=singerInfoWrapper
                 })
     }
 

@@ -1,5 +1,6 @@
 package com.web.moudle.music.page;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.web.moudle.music.player.MusicPlay;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +88,11 @@ public class LyricPage extends BaseMusicPage {
     @Override
     public int getLayoutId() {
         return R.layout.music_lyrics_view;
+    }
+
+    @Override
+    public void viewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
+
     }
 
     @Override
