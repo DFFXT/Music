@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -32,6 +33,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import dalvik.system.DexClassLoader;
+import io.flutter.app.FlutterActivity;
 import io.flutter.app.FlutterActivityDelegate;
 import io.flutter.facade.Flutter;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -60,6 +62,8 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 	public int getLayoutId(){
 		return(R.layout.index);
 	}
+
+
 
 	@Override
 	public void initView() {

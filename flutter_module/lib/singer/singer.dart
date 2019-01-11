@@ -29,7 +29,7 @@ class SingerView1 extends StatefulWidget {
 
 class SingerState extends State<SingerView1>
     with SingleTickerProviderStateMixin {
-  GlobalKey _nestedScrollView = GlobalKey();
+  GlobalKey _image = GlobalKey();
   NestedScrollView _scrollView;
   String size = "1x0000000000000";
   SingerTitle _singerTitle = SingerTitle(
@@ -74,7 +74,7 @@ class SingerState extends State<SingerView1>
             ),
             flexibleSpace: GestureDetector(
               child: Container(
-                key: _nestedScrollView,
+                key: _image,
                 child: FlexibleSpaceBar(
                   centerTitle: true,
                   background: Image.asset("images/singer_default_icon.png"),
@@ -82,7 +82,7 @@ class SingerState extends State<SingerView1>
                 ),
               ),
               onTap: () {
-                print(_nestedScrollView.currentContext.size);
+                print(_image.currentContext.size);
               },
             ),
           )
@@ -101,11 +101,10 @@ class SingerState extends State<SingerView1>
     );
 
     _scrollView.controller.addListener(() {
-      if (_nestedScrollView.currentContext.size.height < 200) {}
+      if (_image.currentContext.size.height < 200) {}
       if (_singerTitle.state.mounted) {
         _singerTitle.state.setState(() {
-          _singerTitle.state.opacity =
-              1 - _nestedScrollView.currentContext.size.height / 200;
+          _singerTitle.state.setProperty(opacity: (1-_image.currentContext.size.height/300.0)*4-1) ;
         });
       }
     });
