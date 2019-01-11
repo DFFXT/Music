@@ -3,7 +3,7 @@ package com.web.moudle.musicSearch.ui
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
-import android.content.Context
+import android.database.Observable
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -12,28 +12,36 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.showContent
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
+import com.web.common.tool.MToast
 import com.web.misc.GapItemDecoration
-import com.web.moudle.albumEntry.ui.AlbumEntryActivity
-import com.web.moudle.musicSearch.adapter.SimpleAlbumAdapter
 import com.web.moudle.musicSearch.adapter.SimpleArtistAdapter
-import com.web.moudle.musicSearch.bean.SimpleAlbumInfo
+import com.web.moudle.musicSearch.adapter.SimpleSheetAdapter
 import com.web.moudle.musicSearch.bean.SimpleArtistInfo
-import com.web.moudle.musicSearch.model.AlbumViewModel
+import com.web.moudle.musicSearch.bean.SimpleSongSheet
 import com.web.moudle.musicSearch.model.ArtistViewModel
+import com.web.moudle.musicSearch.model.SheetViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.web.R
-import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
-class AlbumFragment:BaseSearchFragment() {
-    private lateinit var vm: AlbumViewModel
-    private lateinit var adapter:SimpleAlbumAdapter
+class SheetFragment:BaseSearchFragment() {
+    private lateinit var vm: SheetViewModel
+    private lateinit var adapter: SimpleSheetAdapter
     override fun getLayoutId(): Int {
         return R.layout.fragment_music_search
     }
 
     override fun initView(rootView: View) {
-        vm= ViewModelProviders.of(this)[AlbumViewModel::class.java]
+        vm= ViewModelProviders.of(this)[SheetViewModel::class.java]
+
+        vm.artistId.observe(this, Observer<String> {
+            if(it!=null){
+                SingerEntryActivity.actionStart(context!!,it!!)
+            }else{
+                MToast.showToast(context!!,getString(R.string.dataAnalyzeError))
+            }
+
+        })
     }
 
     override fun viewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,17 +51,20 @@ class AlbumFragment:BaseSearchFragment() {
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
         rv_musicList.layoutManager= LinearLayoutManager(context)
-        rv_musicList.addItemDecoration(GapItemDecoration(bottom = 20,left = 12,right = 20,remainEndPadding = true))
-        adapter= SimpleAlbumAdapter()
+
+        rv_musicList.addItemDecoration(GapItemDecoration(bottom = 20,left = 20))
+        adapter= SimpleSheetAdapter()
         adapter.itemClick={
-            if(it!=null){
-                AlbumEntryActivity.actionStart(context!!,it.albumId)
+            if(it!=null){//**无法提通过这个artistId获取正确信息，必须通过一次跳转获取真正的artistId
+                //http://music.taihe.com/data/artist/redirect?id=14413780
+                //vm.getRedirectHeader(it.artistId)
+                //SingerEntryActivity.actionStart(context!!,it.artistId)
             }
         }
         rv_musicList.adapter=adapter
 
         vm.status.observe(this,Observer<LiveDataWrapper<Throwable>>{
-            if(it!!.code== LiveDataWrapper.CODE_NO_DATA){
+            if(it!!.code==LiveDataWrapper.CODE_NO_DATA){
                 smartRefreshLayout.setNoMoreData(true)
             }
         })
@@ -65,10 +76,9 @@ class AlbumFragment:BaseSearchFragment() {
         if(!isInit())return
         rootView?.showLoading()
         smartRefreshLayout.setNoMoreData(false)
-        vm.search(keyword).observe(this,Observer<PagedList<SimpleAlbumInfo>>{
+        vm.search(keyword).observe(this,Observer<PagedList<SimpleSongSheet>>{
             adapter.submitList(it)
             rootView?.showContent()
         })
     }
-
 }

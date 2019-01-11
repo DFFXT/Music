@@ -8,6 +8,7 @@ import com.web.data.SearchResultBd
 import com.web.moudle.musicSearch.bean.SimpleAlbumInfo
 import com.web.moudle.musicSearch.bean.SimpleArtistInfo
 import com.web.moudle.musicSearch.bean.SimpleMusicInfo
+import com.web.moudle.musicSearch.bean.SimpleSongSheet
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.DataTransform
@@ -121,6 +122,31 @@ class InternetMusicModel : BaseRetrofit() {
                     list.add(SimpleAlbumInfo(albumName,albumId,albumImage,artistName,artistId,publishTime))
                 }
                 emitter.onSuccess(list)
+            }catch (e:Exception){
+                emitter.onError(e)
+            }
+        }
+    }
+
+    fun getSheetList(keyword: String,page: Int):Single<ArrayList<SimpleSongSheet>>{
+        return Single.create<ArrayList<SimpleSongSheet>> {emitter->
+            try {
+                val data=ArrayList<SimpleSongSheet>()
+                val doc = Jsoup.connect("http://musicmini.qianqian.com/2018/app/search/searchListUgc.php?qword=$keyword&type=4").get()
+                val box = doc.getElementsByClass("search_gedan_list")[0]
+                val list=box.getElementsByTag("li")
+                list.forEach {li->
+                    val songSheetId=li.attr("data-gedanid")
+                    val sheetIcon = li.getElementsByClass("img_border")[0].child(0).attr("key")
+                    val contentBox = li.getElementsByClass("text_border")[0]
+                    val sheetName=contentBox.child(0).child(0).text()
+                    val songCount=contentBox.child(1).getElementsByClass("songnum")[0].text()
+                    val creator=contentBox.child(1).getElementsByClass("gedanuser")[0].text()
+                    var playCount=contentBox.child(1).getElementsByClass("listennum")[0].text()
+                    playCount=playCount.substring(playCount.lastIndexOf(":")+1)
+                    data.add(SimpleSongSheet(songSheetId,sheetName,sheetIcon,creator,songCount,playCount))
+                }
+                emitter.onSuccess(data)
             }catch (e:Exception){
                 emitter.onError(e)
             }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_sheetIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        tools:src="@color/themeColor"/>
+    <TextView
+        android:id="@+id/tv_sheetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        tools:text="Name"/>
+    <TextView
+        android:id="@+id/tv_songCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_vertical"
+        tools:text="125首"/>
+    <TextView
+        android:id="@+id/tv_sheetCreator"
+        android:layout_width="wrap_content"
+        android:maxWidth="150dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        tools:text="我我我我我我我我我我我我"/>
+
+    <TextView
+        android:id="@+id/tv_playCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="60dp"
+        android:text="@string/playCount"/>
+    <TextView
+        android:id="@+id/tv_playCount"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginTop="16dp"
+        android:text="@string/district"
+        tools:text="中国"/>
+</FrameLayout>

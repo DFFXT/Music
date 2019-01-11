@@ -80,6 +80,7 @@ public class InternetMusicActivity extends BaseActivity {
         pageList.add(new MusicFragment());
         pageList.add(new ArtistFragment());
         pageList.add(new AlbumFragment());
+        pageList.add(new SheetFragment());
         Bundle b=new Bundle();
         b.putString(MusicFragment.keyword,keyWords);
         for(BaseSearchFragment f:pageList){
@@ -94,6 +95,7 @@ public class InternetMusicActivity extends BaseActivity {
         tabLayout.getTabAt(0).setText(getText(R.string.music));
         tabLayout.getTabAt(1).setText(getText(R.string.singer));
         tabLayout.getTabAt(2).setText(getText(R.string.albumEntry_albumList));
+        tabLayout.getTabAt(3).setText(getText(R.string.songSheet));
 
 
 
