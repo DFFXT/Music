@@ -19,9 +19,7 @@ import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.WindowUtil
-import com.web.data.InternetMusicDetail
 import com.web.misc.GapItemDecoration
-import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.singerEntry.adapter.SingerAlbumAdapter
 import com.web.moudle.singerEntry.adapter.SingerSongAdapter
 import com.web.moudle.singerEntry.bean.AlbumEntryBox
@@ -35,9 +33,9 @@ class SingerEntryActivity : BaseActivity() {
     private lateinit var id: String
     private lateinit var model: SingerEntryViewModel
 
-    private val limit=9
+    private val limit = 9
 
-    private lateinit var rootView:ViewGroup
+    private lateinit var rootView: ViewGroup
     override fun getLayoutId(): Int {
         return R.layout.activity_singer_entry
     }
@@ -50,8 +48,8 @@ class SingerEntryActivity : BaseActivity() {
             if (data != null) {
                 if (data.code == LiveDataWrapper.CODE_OK) {
                     //**请求音乐列表
-                    model.getSongList(id,0,limit)
-                    model.getAlbumList(id,0,limit)
+                    model.getSongList(id, 0, limit)
+                    model.getAlbumList(id, 0, limit)
                     val res = data.value
                     tv_singerName.text = res.name
                     tv_country.text = res.country
@@ -62,10 +60,10 @@ class SingerEntryActivity : BaseActivity() {
                     tv_totalAlbums.text = res.albumTotal
                     tv_totalMV.text = "${res.totalMv}"
 
-                    if(TextUtils.isEmpty(res.introduction)){
-                        tv_introductionLabel.text=getString(R.string.singer_introduction_empty)
-                    }else{
-                        ex_introduction.text=res.introduction
+                    if (TextUtils.isEmpty(res.introduction)) {
+                        tv_introductionLabel.text = getString(R.string.singer_introduction_empty)
+                    } else {
+                        ex_introduction.text = res.introduction
                     }
 
                     //**加载图片
@@ -80,6 +78,7 @@ class SingerEntryActivity : BaseActivity() {
                         }
                     })
                     rv_singerEntry.showLoading()
+                    rv_albumEntry.showLoading()
                     rootView.showContent()
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
                     rootView.showError()
@@ -94,48 +93,62 @@ class SingerEntryActivity : BaseActivity() {
         })
 
         //**音乐列表观测
-        model.songList.observe(this,Observer<LiveDataWrapper<SongEntryBox>>{wrapper->
-            if(wrapper==null)return@Observer
-            if(wrapper.code==LiveDataWrapper.CODE_OK){
-                rv_singerEntry.showContent()
-                rv_singerEntry.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-                rv_singerEntry.addItemDecoration(GapItemDecoration(right = 20,remainEndPadding = true))
-                val adapter=SingerSongAdapter(this@SingerEntryActivity,wrapper.value.songList)
-                rv_singerEntry.adapter=adapter
-                if(wrapper.value.haveMore==0){
-                    tv_moreMusic.visibility=View.GONE
+        model.songList.observe(this, Observer<LiveDataWrapper<SongEntryBox>> { wrapper ->
+            if (wrapper == null) return@Observer
+            if (wrapper.code == LiveDataWrapper.CODE_OK) {
+                if (wrapper.value.songList == null) {
+                    group_musicReference.visibility = View.GONE
+                    rv_singerEntry.hideLoading()
+                    return@Observer
                 }
-            }else if(wrapper.code==LiveDataWrapper.CODE_ERROR){
+                rv_singerEntry.showContent()
+                rv_singerEntry.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                rv_singerEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
+                val adapter = SingerSongAdapter(this@SingerEntryActivity, wrapper.value.songList!!)
+                rv_singerEntry.adapter = adapter
+                val num = if (wrapper.value.num == null) 0 else wrapper.value.num!!.toInt()
+                if (wrapper.value.haveMore == 0 || wrapper.value.songList!!.size == num) {
+                    //只能使text为空，添加在了group里面，group里面的view不能单独隐藏
+                    tv_moreMusic.text = ""
+                }
+            } else if (wrapper.code == LiveDataWrapper.CODE_ERROR) {
                 rv_singerEntry.showError()
             }
         })
 
         //**专辑列表观测
-        model.albumList.observe(this,Observer<LiveDataWrapper<AlbumEntryBox>>{wrapper->
-            if(wrapper==null)return@Observer
-            if(wrapper.code==LiveDataWrapper.CODE_OK){
-                rv_albumEntry.showContent()
-                rv_albumEntry.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-                rv_albumEntry.addItemDecoration(GapItemDecoration(right = 20,remainEndPadding = true))
-                val adapter= SingerAlbumAdapter(this@SingerEntryActivity,wrapper.value.albumList)
-                rv_albumEntry.adapter=adapter
-                if(wrapper.value.haveMore==0){
-                    tv_moreAlbum.visibility=View.GONE
+        model.albumList.observe(this, Observer<LiveDataWrapper<AlbumEntryBox>> { wrapper ->
+            if (wrapper == null) return@Observer
+            if (wrapper.code == LiveDataWrapper.CODE_OK) {
+                if (wrapper.value.albumList == null) {
+                    group_albumReference.visibility = View.GONE
+                    rv_albumEntry.hideLoading()
+                    return@Observer
                 }
-            }else if(wrapper.code==LiveDataWrapper.CODE_ERROR){
+                rv_albumEntry.showContent()
+                rv_albumEntry.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                rv_albumEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
+                val adapter = SingerAlbumAdapter(this@SingerEntryActivity, wrapper.value.albumList!!)
+                rv_albumEntry.adapter = adapter
+                val num = if (wrapper.value.num == null) 0 else wrapper.value.num!!.toInt()
+                if (wrapper.value.haveMore == 0 || wrapper.value.albumList!!.size == num) {
+                    tv_moreAlbum.text = ""
+                }
+            } else if (wrapper.code == LiveDataWrapper.CODE_ERROR) {
                 rv_albumEntry.showError()
             }
         })
 
         model.getArtistInfo(id)
+        tv_moreAlbum.visibility = View.GONE
     }
 
     override fun initView() {
-        rootView=findViewById(R.id.rootView)
+        rootView = findViewById(R.id.rootView)
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
         loadData()
-        val toolbar=findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         findViewById<AppBarLayout>(R.id.appBarLayout).addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             val offset = -dy
             when (offset) {
@@ -149,8 +162,6 @@ class SingerEntryActivity : BaseActivity() {
                 }
             }
         })
-
-
 
 
     }
@@ -171,7 +182,6 @@ class SingerEntryActivity : BaseActivity() {
                 format = info.bitRate.format
         )
     }*/
-
 
 
     companion object {

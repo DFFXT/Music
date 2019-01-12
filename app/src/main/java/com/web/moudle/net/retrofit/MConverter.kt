@@ -1,6 +1,5 @@
 package com.web.moudle.net.retrofit
 
-import android.util.Log
 import com.alibaba.fastjson.JSON
 import okhttp3.ResponseBody
 import retrofit2.Converter

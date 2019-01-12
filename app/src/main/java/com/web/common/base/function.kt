@@ -34,6 +34,7 @@ fun RecyclerView.setItemDecoration(itemDecoration: RecyclerView.ItemDecoration){
     for(i in 0 until itemDecorationCount){
         removeItemDecorationAt(0)
     }
+    addItemDecoration(itemDecoration)
 }
 
 

@@ -54,14 +54,13 @@ class MusicFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager=LinearLayoutManager(context)
+        rv_musicList.layoutManager=LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.rar),orientation = LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
         adapter=InternetMusicAdapter(context!!)
         adapter.listener = object : InternetMusicAdapter.OnItemClickListener {
             override fun itemClick(music: SimpleMusicInfo) {
                 MusicDetailActivity.actionStart(context!!,music.songId)
-                //vm.getMusicDetail(music.songId)
             }
         }
         rv_musicList.adapter=adapter

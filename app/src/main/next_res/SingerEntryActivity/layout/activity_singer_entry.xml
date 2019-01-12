@@ -218,6 +218,11 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_introductionLabel"/>
 
 
+            <android.support.constraint.Group
+                android:id="@+id/group_musicReference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="x_singerEntryLabel,tv_moreMusic,rv_singerEntry"/>
             <View
                 android:id="@+id/v_songBg"
                 android:layout_width="match_parent"
@@ -258,6 +263,12 @@
                 android:clipToPadding="false"
                 app:layout_constraintTop_toBottomOf="@id/x_singerEntryLabel"/>
 
+
+            <android.support.constraint.Group
+                android:id="@+id/group_albumReference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="x_singerAlbumLabel,tv_moreAlbum,rv_albumEntry"/>
 
             <TextView
                 android:id="@+id/x_singerAlbumLabel"

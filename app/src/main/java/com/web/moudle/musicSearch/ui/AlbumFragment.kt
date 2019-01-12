@@ -13,6 +13,8 @@ import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
+import com.web.common.util.ResUtil
+import com.web.misc.DrawableItemDecoration
 import com.web.misc.GapItemDecoration
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicSearch.adapter.SimpleAlbumAdapter
@@ -44,7 +46,8 @@ class AlbumFragment:BaseSearchFragment() {
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
         rv_musicList.layoutManager= LinearLayoutManager(context)
-        rv_musicList.setItemDecoration(GapItemDecoration(bottom = 20,left = 12,right = 20,remainEndPadding = true))
+        rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
         adapter= SimpleAlbumAdapter()
         adapter.itemClick={
             if(it!=null){
