@@ -6,14 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v7.graphics.Palette
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.support.v7.widget.ViewUtils
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.SimpleAdapter
 import android.widget.TextView
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.*
@@ -22,21 +26,16 @@ import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
-import com.web.data.InternetMusicDetail
 import com.web.misc.DrawableItemDecoration
 import com.web.misc.ExpandableTextView
-import com.web.misc.GapItemDecoration
 import com.web.moudle.albumEntry.adapter.AlbumListAdapter
 import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.albumEntry.bean.OtherSong
 import com.web.moudle.albumEntry.model.AlbumEntryViewModel
-import com.web.moudle.musicEntry.model.DetailMusicViewModel
-import com.web.moudle.musicDownload.service.FileDownloadService
-import com.web.moudle.musicEntry.bean.MusicDetailInfo
+import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_album_entry.*
 import kotlinx.android.synthetic.main.activity_music_detail.*
-import java.lang.StringBuilder
 
 class AlbumEntryActivity : BaseActivity() {
     private lateinit var id: String
@@ -70,10 +69,8 @@ class AlbumEntryActivity : BaseActivity() {
                             findViewById<ImageView>(R.id.iv_bigImage_detailMusicActivity).setImageBitmap(resource)
                         }
                     })
-                    val adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
-                    rv_albumList.adapter=adapter
+                    rv_albumList.adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
                     rootView.showContent()
-                    //model.getLyrics(res.songInfo.lrcLink)
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
                     rootView.showError()
                     rootView.errorClickLinsten = View.OnClickListener {
@@ -103,7 +100,7 @@ class AlbumEntryActivity : BaseActivity() {
         rootView=findViewById(R.id.rootView)
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
-        loadData()
+
         val toolbar=findViewById<Toolbar>(R.id.toolbar)
         findViewById<AppBarLayout>(R.id.appBarLayout).addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             val offset = -dy
@@ -118,8 +115,10 @@ class AlbumEntryActivity : BaseActivity() {
                 }
             }
         })
-        rv_albumList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        val manager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        rv_albumList.layoutManager=manager
         rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
+        loadData()
     }
 
     /*private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
