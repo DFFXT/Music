@@ -199,7 +199,7 @@
 
 
             <TextView
-                android:id="@+id/tv_albumListLabel"
+                android:id="@+id/tv_introductionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/singer_introduction"
@@ -215,7 +215,7 @@
                 android:layout_marginEnd="10dp"
                 app:layout_constraintStart_toEndOf="@id/gl"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_albumListLabel"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_introductionLabel"/>
 
 
             <View

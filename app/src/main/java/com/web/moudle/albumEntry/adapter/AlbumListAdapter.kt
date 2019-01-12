@@ -1,6 +1,7 @@
 package com.web.moudle.albumEntry.adapter
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,11 @@ import com.web.web.R
 class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherSong>):BaseAdapter<OtherSong>(list) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: OtherSong?) {
         val songInfo=list[position]
+        if(TextUtils.isEmpty(songInfo.version)){
+            holder.bindText(R.id.tv_albumName,songInfo.title)
+        }else{
+            holder.bindText(R.id.tv_albumName,songInfo.title+" - "+songInfo.version)
+        }
         holder.bindText(R.id.tv_albumName,songInfo.title+" - "+songInfo.version)
         holder.bindText(R.id.tv_duration,ResUtil.timeFormat("mm:ss",songInfo.duration.toLong()*1000))
         if(songInfo.hasMv==0){

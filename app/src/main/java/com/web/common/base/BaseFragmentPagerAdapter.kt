@@ -41,6 +41,13 @@ class BaseFragmentPagerAdapter(private val fm: FragmentManager, private val mLis
 
 
     override fun getItemPosition(@NonNull `object`: Any): Int {
+        for(i in mList.indices){
+            if(mList[i]==`object`) return i
+        }
         return POSITION_NONE
+    }
+
+    override fun getItemId(position: Int): Long {
+        return mList[position].hashCode().toLong()
     }
 }

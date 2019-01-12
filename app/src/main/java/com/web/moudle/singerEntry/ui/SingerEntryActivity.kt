@@ -10,6 +10,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.v7.graphics.Palette
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -61,7 +62,12 @@ class SingerEntryActivity : BaseActivity() {
                     tv_totalAlbums.text = res.albumTotal
                     tv_totalMV.text = "${res.totalMv}"
 
-                    ex_introduction.text=res.introduction
+                    if(TextUtils.isEmpty(res.introduction)){
+                        tv_introductionLabel.text=getString(R.string.singer_introduction_empty)
+                    }else{
+                        ex_introduction.text=res.introduction
+                    }
+
                     //**加载图片
                     ImageLoad.loadAsBitmap(res.avatar500).into(object : BaseGlideTarget() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -149,7 +155,7 @@ class SingerEntryActivity : BaseActivity() {
 
     }
 
-    private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
+    /*private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
         val res = info.songInfo
         return InternetMusicDetail(
                 songId = res.songId,
@@ -164,7 +170,7 @@ class SingerEntryActivity : BaseActivity() {
                 albumName = res.albumName,
                 format = info.bitRate.format
         )
-    }
+    }*/
 
 
 

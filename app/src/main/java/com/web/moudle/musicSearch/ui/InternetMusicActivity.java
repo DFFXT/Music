@@ -93,106 +93,14 @@ public class InternetMusicActivity extends BaseActivity {
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
         tabLayout.getTabAt(0).setText(getText(R.string.music));
-        tabLayout.getTabAt(1).setText(getText(R.string.singer));
-        tabLayout.getTabAt(2).setText(getText(R.string.albumEntry_albumList));
+        tabLayout.getTabAt(1).setText(getText(R.string.singer_tab));
+        tabLayout.getTabAt(2).setText(getText(R.string.album_tab));
         tabLayout.getTabAt(3).setText(getText(R.string.songSheet));
 
 
 
 
     }
-
-    /*private void init() {
-        vm.observerMusicDetail().observe(this, detailList -> {
-            if (detailList == null) return;
-            downloadConsider(detailList.getSongList().get(0));
-        });
-        vm.getStatus().observe(this, wrapper -> {
-            if (wrapper == null) return;
-            switch (wrapper.getCode()) {
-                case InternetViewModel.CODE_OK: {
-                    smartRefreshLayout.finishLoadMore();
-                }
-                break;
-                case InternetViewModel.CODE_NO_DATA: {
-                    smartRefreshLayout.setNoMoreData(true);
-                    //MToast.showToast(this, ResUtil.getString(R.string.noMoreData));
-                }
-                break;
-                case InternetViewModel.CODE_JSON_ERROR: {
-                    MToast.showToast(this, ResUtil.getString(R.string.dataAnalyzeError));
-                }
-                break;
-                case InternetViewModel.CODE_URL_ERROR: {
-                    MToast.showToast(this, ResUtil.getString(R.string.urlAnalyzeError));
-                }
-                break;
-                case InternetViewModel.CODE_NET_ERROR: {
-                    MToast.showToast(this, ResUtil.getString(R.string.noInternet));
-                }
-                break;
-                case InternetViewModel.CODE_ERROR: {
-                    MToast.showToast(this, ResUtil.getString(R.string.unkownError));
-                }
-            }
-        });
-    }
-
-
-
-
-    *//**
-     * 外部调用搜索
-     *
-     * @param keyword 关键词
-     *//*
-    public void search(String keyword) {
-        smartRefreshLayout.setNoMoreData(false);
-        vm.setKeyWords(keyword);
-        vm.getMusicList().observe(this, pl -> {
-            adapter.submitList(pl);
-        });
-        this.keyWords = keyword;
-    }
-
-    *//**
-     * 网络音乐点击
-     *
-     * //@param music p
-     *//*
-    @SuppressLint("SetTextI18n")
-    private void downloadConsider(InternetMusicDetail music) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.create();
-        builder.setPositiveButton("取消", (arg0, arg1) -> {
-
-        });
-        builder.setNeutralButton("在线试听", (dialog, which) -> new Thread(() -> {
-            InternetMusicForPlay info = new InternetMusicForPlay();
-            info.setMusicName(Shortcut.validatePath(music.getSongName()));
-            info.setSinger(Shortcut.validatePath(music.getArtistName()));
-            info.setPath(music.getSongLink());
-            info.setImgAddress(music.getSingerIconSmall());
-            info.setLrcLink(music.getLrcLink());
-            MusicPlay.play(InternetMusicActivity.this,info);
-
-        }).start());
-        builder.setNegativeButton("下载(" + ResUtil.getFileSize(music.getSize()) + ")", (arg0, arg1) -> {
-            //**网络获取的时间以秒为单位、后面需要毫秒(媒体库里面的单位为毫秒)
-            music.setDuration(music.getDuration() * 1000);
-            FileDownloadService.addTask(InternetMusicActivity.this, music);
-        });
-
-        builder.setTitle(music.getSongName());
-        TextView tv_songName = new TextView(this);
-        tv_songName.setTextColor(this.getResources().getColor(R.color.white, this.getTheme()));
-        builder.setMessage("歌手：" + music.getArtistName() +
-                "\n时长：" + ResUtil.timeFormat("mm:ss", music.getDuration() * 1000) +
-                "\n大小：" + ResUtil.getFileSize(music.getSize()));
-        builder.show();
-    }*/
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode != RESULT_OK) return;
@@ -200,7 +108,9 @@ public class InternetMusicActivity extends BaseActivity {
         if (requestCode == RESULT_CODE_SEARCH) {
             keyWords=data.getStringExtra(SearchActivity.INPUT_DATA);
             viewPager.setCurrentItem(0);
-
+            for(int i=0;i<pageList.size();i++){
+                pageList.get(i).search(keyWords);
+            }
         }
     }
 

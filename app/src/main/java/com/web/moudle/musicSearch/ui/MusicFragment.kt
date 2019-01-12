@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
@@ -54,7 +55,7 @@ class MusicFragment:BaseSearchFragment() {
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
         rv_musicList.layoutManager=LinearLayoutManager(context)
-        rv_musicList.addItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
+        rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
                 drawable = ResUtil.getDrawable(R.drawable.rar),orientation = LinearLayoutManager.VERTICAL))
         adapter=InternetMusicAdapter(context!!)
         adapter.listener = object : InternetMusicAdapter.OnItemClickListener {

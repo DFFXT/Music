@@ -122,7 +122,7 @@ class AlbumEntryActivity : BaseActivity() {
         rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
     }
 
-    private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
+    /*private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
         val res = info.songInfo
         return InternetMusicDetail(
                 songId = res.songId,
@@ -137,7 +137,7 @@ class AlbumEntryActivity : BaseActivity() {
                 albumName = res.albumName,
                 format = info.bitRate.format
         )
-    }
+    }*/
 
 
     companion object {

@@ -1,5 +1,6 @@
 package com.web.common.base
 
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,17 @@ fun <T : Any> Observable<T>.get(onNext: (T) -> Unit, onError: ((Throwable) -> Un
         }
     })
 }
+
+/**
+ * 设置RecyclerView的ItemDecoration ，顺便清除以前的
+ */
+fun RecyclerView.setItemDecoration(itemDecoration: RecyclerView.ItemDecoration){
+    for(i in 0 until itemDecorationCount){
+        removeItemDecorationAt(0)
+    }
+}
+
+
 
 //**loading动画中的点击事件
 var View.loadingClickListen: View.OnClickListener?

@@ -24,6 +24,7 @@
     <string name="singer_totalAlbums">专辑：</string>
     <string name="singer_totalMv">相关视频：</string>
     <string name="singer_introduction">简介：</string>
+    <string name="singer_introduction_empty">简介：无</string>
     <string name="singer_musicAbout">相关音乐</string>
     <string name="singer_albumAbout">相关专辑</string>
     <string name="singer_MVAbout">相关视频</string>

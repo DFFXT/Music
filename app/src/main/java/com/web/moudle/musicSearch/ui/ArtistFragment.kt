@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
@@ -49,7 +50,7 @@ class ArtistFragment:BaseSearchFragment() {
 
         rv_musicList.layoutManager= LinearLayoutManager(context)
 
-        rv_musicList.addItemDecoration(GapItemDecoration(bottom = 20,left = 20))
+        rv_musicList.setItemDecoration(GapItemDecoration(bottom = 20,left = 20))
         adapter= SimpleArtistAdapter()
         adapter.itemClick={
             if(it!=null){//**无法提通过这个artistId获取正确信息，必须通过一次跳转获取真正的artistId
