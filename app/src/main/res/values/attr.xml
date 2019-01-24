@@ -32,4 +32,12 @@
         <attr name="attr_color" format="color"/>
         <attr name="attr_isExpand" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="RoundImageView">
+        <attr name="iv_radius" format="dimension"/>
+        <attr name="iv_type" format="enum">
+            <enum name="round" value="0"/>
+            <enum name="circle" value="1"/>
+        </attr>
+    </declare-styleable>
 </resources>

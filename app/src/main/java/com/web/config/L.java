@@ -83,7 +83,7 @@ public class L extends BaseAdapter{
 				iconId=R.drawable.rar;
 			}/*else if(name.endsWith(".mp3")){
 				
-			}else if(name.endsWith(".js")){
+			}else if(name.endsWith(".encrypt.js")){
 				
 			}else if(name.endsWith(".gif")){
 				

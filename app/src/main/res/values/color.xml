@@ -19,4 +19,6 @@
     <color name="lightDark">#22111111</color>
     <color name="toastBackground">#222222</color>
     <color name="black">#000000</color>
+
+    <color name="tag_color1">#6cc</color>
 </resources>

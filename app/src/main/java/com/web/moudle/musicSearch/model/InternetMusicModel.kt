@@ -48,8 +48,8 @@ class InternetMusicModel : BaseRetrofit() {
         return Single.create<ArrayList<SimpleMusicInfo>> { emitter->
             try {
                 val list= ArrayList<SimpleMusicInfo>()
-                val ele = Jsoup.connect("http://musicmini.qianqian.com/2018/app/search/searchListUgc.php?qword=$keyword&page=$page").get()
-                val tbody=ele.getElementsByTag("tbody")
+                val doc = Jsoup.connect("http://musicmini.qianqian.com/2018/app/search/searchListUgc.php?qword=$keyword&page=$page").get()
+                val tbody=doc.getElementsByTag("tbody")
                 if(tbody==null){
                     emitter.onSuccess(list)
                     return@create

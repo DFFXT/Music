@@ -31,4 +31,6 @@
 
 	<dimen name="music_control_size">40dp</dimen>
 
+	<dimen name="entryBigImageSize">250dp</dimen>
+
 </resources>

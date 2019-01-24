@@ -115,6 +115,7 @@
         <activity android:name="com.web.moudle.albumEntry.ui.AlbumEntryActivity" />
         <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivity" />
         <activity android:name="com.web.moudle.musicEntry.ui.MusicDetailActivity" />
+        <activity android:name="com.web.moudle.songSheetEntry.ui.SongSheetActivity" />
 
     </application>
 

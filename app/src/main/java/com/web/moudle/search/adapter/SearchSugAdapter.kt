@@ -10,6 +10,7 @@ import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.search.bean.SearchSug
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
+import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.web.R
 
 class SearchSugAdapter(var searchSug: SearchSug) : RecyclerView.Adapter<BaseViewHolder>() {
@@ -41,14 +42,22 @@ class SearchSugAdapter(var searchSug: SearchSug) : RecyclerView.Adapter<BaseView
                     AlbumEntryActivity.actionStart(it.context,albumSug.albumId)
                 }
             }
-            in itemCount - searchSug.artistList.size until itemCount -> {//**歌手
-                val relativeP = p - (itemCount - searchSug.artistList.size)
+            in itemCount - searchSug.artistList.size -searchSug.songSheetList.size until itemCount-searchSug.songSheetList.size -> {//**歌手
+                val relativeP = p - (itemCount - searchSug.artistList.size-searchSug.songSheetList.size)
                 val artist=searchSug.artistList[relativeP]
                 holder.bindText(R.id.tv_name, artist.artistName)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.singer_sug_icon)
                 holder.itemView.setOnClickListener {
-                    Log.i("log","'+++++   ${artist.uid}")
-                    SingerEntryActivity.actionStart(it.context,artist.uid)//?????
+                    SingerEntryActivity.actionStart(it.context,artist.uid)
+                }
+            }
+            in itemCount-searchSug.songSheetList.size until itemCount->{
+                val relativeP = p - (itemCount -searchSug.songSheetList.size)
+                val sheet=searchSug.songSheetList[relativeP]
+                holder.bindText(R.id.tv_name, sheet.songSheetName)
+                holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.def_song_sheet_icon)
+                holder.itemView.setOnClickListener {
+                    SongSheetActivity.actionStart(it.context,sheet.songSheetId)
                 }
             }
         }

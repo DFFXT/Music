@@ -42,6 +42,7 @@ class SearchViewModel : ViewModel() {
                     }
 
                     override fun error(e: Throwable) {
+                        e.printStackTrace()
                         wrapper.code = CODE_INTERNET_ERROR
                         status.value = wrapper
                     }

@@ -6,11 +6,15 @@ void main() => runApp(run(window.defaultRouteName));
 
 StatelessWidget run(String routeName){
   switch(routeName){
-    case "singerView":{
+    case "SingerView":{
       return SingerView();
     }
   }
-  return null;
+  return Container(
+    child: Center(
+      child: Text("default View!",textDirection: TextDirection.ltr,),
+    ),
+  );
 }
 
 

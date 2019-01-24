@@ -26,6 +26,7 @@ class AlbumEntryViewModel : ViewModel() {
                             albumResponse.value=albumWrapper
                         },
                         onError = {
+                            it.printStackTrace()
                             albumWrapper.code= LiveDataWrapper.CODE_ERROR
                             albumResponse.value=albumWrapper
                         }

@@ -12,5 +12,5 @@ data class AlbumResponse(
         @JSONField(name = "share_title")
         val shareTitle:String,
         @JSONField(name = "songlist")
-        val otherSong: ArrayList<OtherSong>
+        val otherSong: ArrayList<OtherSong>?= ArrayList()
 )

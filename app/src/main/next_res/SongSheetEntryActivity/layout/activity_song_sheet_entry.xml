@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapseToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:statusBarScrim="@color/themeColor"
+            app:contentScrim="@color/themeColor"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/iv_sheetIcon"
+                android:layout_width="@dimen/entryBigImageSize"
+                android:layout_height="@dimen/entryBigImageSize"
+                android:layout_gravity="center"
+                android:src="@drawable/singer_default_icon" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:contentInsetStart="0dp"
+                app:layout_collapseMode="pin">
+
+                <com.web.misc.TopBarLayout
+                    android:id="@+id/topBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:topBar_startImage="@drawable/icon_back_black"
+                    app:topBar_tint="@color/white"/>
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.constraint.Guideline
+                android:id="@+id/gl"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintGuide_begin="20dp"/>
+            <TextView
+                android:id="@+id/tv_sheetName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize_big"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/gl"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                tools:text="xxxx" />
+            <TextView
+                android:id="@+id/tv_tagLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag"
+                android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toEndOf="@id/gl"
+                app:layout_constraintTop_toBottomOf="@id/tv_sheetName"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:textSize="@dimen/textSize_small"
+                app:layout_constraintStart_toEndOf="@id/tv_tagLabel"
+                app:layout_constraintTop_toTopOf="@id/tv_tagLabel"
+                app:layout_constraintEnd_toStartOf="@id/tv_downloadMusic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                tools:text="123567"
+                />
+            <TextView
+                android:id="@+id/tv_sheetCreateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sheetCreateTime"
+                android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toEndOf="@id/gl"
+                app:layout_constraintTop_toBottomOf="@id/tv_tagLabel"/>
+            <TextView
+                android:id="@+id/tv_sheetCreateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize_small"
+                app:layout_constraintStart_toEndOf="@id/tv_sheetCreateLabel"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_sheetCreateLabel"
+                tools:text="1234567"
+                />
+
+
+
+
+
+            <TextView
+                android:id="@+id/tv_introductionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/singer_introduction"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toEndOf="@id/gl"
+                app:layout_constraintTop_toBottomOf="@id/tv_sheetCreateLabel"/>
+            <com.web.misc.ExpandableTextView
+                android:id="@+id/ex_introduction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintStart_toEndOf="@id/gl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_introductionLabel"/>
+
+
+            <View
+                android:id="@+id/v_songBg"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/ex_introduction"
+                app:layout_constraintBottom_toBottomOf="@id/rv_sheetSong"
+                android:elevation="3dp"/>
+            <TextView
+                android:id="@+id/tv_songLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/song"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:elevation="3dp"
+                app:layout_constraintStart_toEndOf="@id/gl"
+                app:layout_constraintTop_toTopOf="@id/v_songBg"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_sheetSong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:elevation="3dp"
+                android:clipToPadding="false"
+                app:layout_constraintTop_toBottomOf="@id/tv_songLabel"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

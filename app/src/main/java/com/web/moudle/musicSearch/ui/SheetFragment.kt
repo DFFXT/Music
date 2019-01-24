@@ -19,6 +19,7 @@ import com.web.moudle.musicSearch.adapter.SimpleSheetAdapter
 import com.web.moudle.musicSearch.bean.SimpleSongSheet
 import com.web.moudle.musicSearch.model.SheetViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
+import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
@@ -55,7 +56,7 @@ class SheetFragment:BaseSearchFragment() {
         adapter= SimpleSheetAdapter()
         adapter.itemClick={
             if(it!=null){//**进入歌单
-
+                SongSheetActivity.actionStart(context!!,it.sheetId)
             }
         }
         rv_musicList.adapter=adapter

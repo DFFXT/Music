@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.web.misc.RoundImageView
+        android:id="@+id/iv_musicIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:iv_radius="5dp"
+        tools:background="@drawable/singer_default_icon"/>
+    <TextView
+        android:id="@+id/tv_musicName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/textSize_normal"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="MusicName"
+        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="5dp">
+        <TextView
+            android:id="@+id/tv_singerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSize_small"
+            android:maxLines="1"
+            tools:text="singerName"
+            />
+        <TextView
+            android:id="@+id/tv_albumName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="@dimen/textSize_small"
+            android:gravity="end"
+            android:layout_weight="1"
+            tools:text="albumName"/>
+    </LinearLayout>
+
+</FrameLayout>

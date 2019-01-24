@@ -26,8 +26,8 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/iv_bigImage_detailMusicActivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/entryBigImageSize"
+                    android:layout_height="@dimen/entryBigImageSize"
                     android:layout_gravity="center"
                     android:src="@drawable/singer_default_icon" />
                 <ImageView
@@ -87,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_mainSinger"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_musicName"/>
             <TextView
                 android:id="@+id/tv_mainSinger"
@@ -105,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_durationLabel"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_mainSingerLabel"/>
             <TextView
                 android:id="@+id/tv_duration"
@@ -121,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_album"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_durationLabel"/>
             <TextView
                 android:id="@+id/tv_album"
@@ -137,6 +140,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_publishTime"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_albumLabel"/>
             <TextView
                 android:id="@+id/tv_publishTime"
@@ -153,6 +157,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_publishCompany"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_publishTimeLabel"/>
             <TextView
                 android:id="@+id/tv_publishCompany"
@@ -169,6 +174,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_listenTimes"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_publishCompanyLabel"/>
             <TextView
                 android:id="@+id/tv_listenTimes"
@@ -199,6 +205,7 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/textSize_big"
                 android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_listenTimesLabel"/>
             <com.web.misc.ExpandableTextView
                 android:id="@+id/lyricsView"

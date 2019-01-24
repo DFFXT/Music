@@ -2,11 +2,13 @@ package com.web.moudle.search.bean
 
 import com.alibaba.fastjson.annotation.JSONField
 
-data class SearchSug(
+class SearchSug {
         @JSONField(name = "song")
-        val musicSugList: ArrayList<MusicSug>,
+        var musicSugList: ArrayList<MusicSug> = ArrayList()
         @JSONField(name = "album")
-        val albumList: ArrayList<AlbumSug>,
+        var albumList: ArrayList<AlbumSug> = ArrayList()
         @JSONField(name = "artist")
-        val artistList: ArrayList<ArtistSug>
-)
+        var artistList: ArrayList<ArtistSug> =ArrayList()
+
+        var songSheetList: ArrayList<SongSheetSug> = ArrayList()
+}

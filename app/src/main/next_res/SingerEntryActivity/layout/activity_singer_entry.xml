@@ -22,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/iv_bigImage_detailMusicActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/entryBigImageSize"
+                android:layout_height="@dimen/entryBigImageSize"
                 android:layout_gravity="center"
                 android:src="@drawable/singer_default_icon" />
 

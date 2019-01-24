@@ -42,11 +42,12 @@ class SearchActivity : BaseActivity() {
             tv_type.visibility= View.VISIBLE
             tv_type.text=ResUtil.getString(R.string.searchView_desc)
             res.recommendSug.recommendSongs.addAll(res.hotSearchSug.songList)
-            setSearchData(SearchSug(
-                    res.recommendSug.recommendSongs,
-                    ArrayList(),
-                    res.hotSearchSug.artistSugList
-            ))
+            val sug=SearchSug()
+            sug.musicSugList=res.recommendSug.recommendSongs
+            sug.albumList=ArrayList()
+            sug.artistList=res.hotSearchSug.artistSugList
+            sug.songSheetList=res.hotSearchSug.playList
+            setSearchData(sug)
         })
 
         viewModel.defSearch(System.currentTimeMillis())

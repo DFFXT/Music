@@ -11,11 +11,13 @@ import com.web.moudle.search.bean.SearchSug
 import com.web.moudle.singerEntry.bean.AlbumEntryBox
 import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.bean.SongEntryBox
+import com.web.moudle.songSheetEntry.bean.SongSheetInfo
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.sql.Timestamp
 
 class NetApis {
     interface Music {
@@ -59,6 +61,12 @@ class NetApis {
 
         @GET("http://music.taihe.com/data/artist/redirect")
         fun getArtistId(@Query("id") fakeId:String):Call<Any>
+    }
+    interface SongSheetEntry{
+        //**获取歌单信息
+        @GET("http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo")
+        fun getSongSheetList(@Query("timestamp") timestamp: String,@Query("param") param:String,@Query("sign") sign:String):Observable<SongSheetInfo>
+
     }
 
 }

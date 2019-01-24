@@ -26,6 +26,7 @@ import com.web.moudle.music.page.MusicActivity;
 import com.web.moudle.net.NetApis;
 import com.web.moudle.net.baseBean.BaseNetBean;
 import com.web.moudle.net.retrofit.MConverter;
+import com.web.moudle.songSheetEntry.adapter.JSEngine;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,9 +139,10 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
         }
 
-		/*View v=Flutter.createView(this,getLifecycle(),"sfdsfafsdfasdfsd");
 
-		new MainActivity().onCreate(null);
+
+		/*View v=Flutter.createView(this,getLifecycle(),"SingerView");
+
 		setContentView(v);*/
 
 		//Intent intent=new Intent(this,ArtistActivity.class);

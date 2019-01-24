@@ -59,7 +59,8 @@ class AlbumEntryActivity : BaseActivity() {
                     findViewById<TextView>(R.id.tv_publishCompany).text = res.albumInfo.publishCompany
                     findViewById<TextView>(R.id.tv_listenTimes).text =res.albumInfo.listenNum
                     findViewById<ExpandableTextView>(R.id.ex_introduction).text=res.albumInfo.info
-                    ImageLoad.loadAsBitmap(res.albumInfo.pic500).into(object : BaseGlideTarget() {
+                    bitmapColorSet(res.albumInfo.pic500,findViewById(R.id.iv_bigImage_detailMusicActivity),findViewById(R.id.collapseToolbarLayout))
+/*                    ImageLoad.loadAsBitmap(res.albumInfo.pic500).into(object : BaseGlideTarget() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                             Palette.from(resource).generate {
                                 it?.vibrantSwatch?.let { sw ->
@@ -68,7 +69,7 @@ class AlbumEntryActivity : BaseActivity() {
                             }
                             findViewById<ImageView>(R.id.iv_bigImage_detailMusicActivity).setImageBitmap(resource)
                         }
-                    })
+                    })*/
                     rv_albumList.adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
                     rootView.showContent()
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {

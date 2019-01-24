@@ -1,9 +1,14 @@
 package com.web.common.base
 
+import android.graphics.Bitmap
+import android.support.design.widget.CollapsingToolbarLayout
+import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.bumptech.glide.request.transition.Transition
 import com.web.common.imageLoader.glide.GlideApp
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.ViewUtil
@@ -27,6 +32,26 @@ fun <T : Any> Observable<T>.get(onNext: (T) -> Unit, onError: ((Throwable) -> Un
     })
 }
 
+
+//<editor-fold desc="从网络加载图片到bitmapImageView，并将计算后的颜色给bitmapColorView作为背景">
+fun bitmapColorSet(path:String?,bitmapImageView:ImageView,bitmapColorView:View){
+    ImageLoad.loadAsBitmap(path).into(object : BaseGlideTarget() {
+        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+            Palette.from(resource).generate {
+                it?.vibrantSwatch?.let { sw ->
+                    bitmapColorView.setBackgroundColor(sw.rgb)
+                }
+            }
+            bitmapImageView.setImageBitmap(resource)
+        }
+    })
+}
+//</editor-fold>
+
+
+
+
+//<editor-fold desc="View 的 loading功能">
 /**
  * 设置RecyclerView的ItemDecoration ，顺便清除以前的
  */
@@ -157,3 +182,4 @@ fun View.showContent(){
     hideLoading()
     hideError()
 }
+//</editor-fold>
