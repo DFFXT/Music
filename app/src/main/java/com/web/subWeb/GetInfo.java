@@ -10,7 +10,7 @@ import java.net.URLConnection;
 public class GetInfo{
 	public JSONObject get(String hash){
 		try{
-			String ask="http://m.kugou.com/app/i/getSongInfo.php?hash="+hash+"&cmd=playInfo";
+			String ask="http://m.kugou.com/app/i/getSongInfo2.php?hash="+hash+"&cmd=playInfo";
 			JSONObject json=new JSONObject(OpURL(ask));
 
 			String path=json.getString("url");

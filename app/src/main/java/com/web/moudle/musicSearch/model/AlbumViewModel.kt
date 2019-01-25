@@ -7,8 +7,7 @@ import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.web.common.bean.LiveDataWrapper
-import com.web.moudle.musicSearch.bean.SimpleAlbumInfo
-import com.web.moudle.musicSearch.bean.SimpleArtistInfo
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 
 class AlbumViewModel:ViewModel() {
 
@@ -23,7 +22,7 @@ class AlbumViewModel:ViewModel() {
     fun search(keyword:String?):LiveData<PagedList<SimpleAlbumInfo>>{
         dataSource.keyword=keyword
         dataSource.page=1
-        return LivePagedListBuilder(object :DataSource.Factory<String,SimpleAlbumInfo>(){
+        return LivePagedListBuilder(object :DataSource.Factory<String, SimpleAlbumInfo>(){
             override fun create(): DataSource<String, SimpleAlbumInfo> {
                 return dataSource
             }

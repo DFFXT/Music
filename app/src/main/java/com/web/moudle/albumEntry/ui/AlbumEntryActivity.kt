@@ -123,7 +123,7 @@ class AlbumEntryActivity : BaseActivity() {
     }
 
     /*private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
-        val res = info.songInfo
+        val res = info.songInfo2
         return InternetMusicDetail(
                 songId = res.songId,
                 songName = res.title,

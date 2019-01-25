@@ -3,23 +3,48 @@ package com.web.moudle.musicSearch.adapter
 import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.support.v7.util.DiffUtil
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.web.common.base.BaseViewHolder
-import com.web.moudle.musicSearch.bean.SimpleMusicInfo
+import com.web.common.imageLoader.glide.ImageLoad
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
+import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R
 
 class InternetMusicAdapter(private val context: Context) : PagedListAdapter<SimpleMusicInfo, BaseViewHolder>(diff) {
     var listener: OnItemClickListener?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return BaseViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_music,parent,false))
+        return BaseViewHolder(LayoutInflater.from(context).inflate(R.layout.item_sheet_song,parent,false))
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val item= getItem(position) ?: return
-        holder.bindText(R.id.musicName,item.songTitle)
-        holder.bindText(R.id.singerName,item.artist)
+        var start=item.musicName.indexOf(InternetMusicActivity.keyWords)
+        if(start>=0){
+            val end = start+ InternetMusicActivity.keyWords.length
+            val spannable= SpannableString(item.musicName)
+            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+            holder.bindSpannable(R.id.tv_musicName,spannable)
+        }else{
+            holder.bindText(R.id.tv_musicName,item.musicName)
+        }
+        start=item.author.indexOf(InternetMusicActivity.keyWords)
+        if(start>=0){
+            val end = start+ InternetMusicActivity.keyWords.length
+            val spannable= SpannableString(item.author)
+            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+            holder.bindSpannable(R.id.tv_singerName,spannable)
+        }else{
+            holder.bindText(R.id.tv_singerName,item.author)
+        }
+
+
+        holder.bindText(R.id.tv_albumName,item.albumTitle)
+        ImageLoad.load(item.picSmall).into(holder.findViewById(R.id.iv_musicIcon))
         //holder.bindText(R.id.size,ResUtil.getFileSize(item.size))
         //holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))
         holder.rootView.setOnClickListener {
@@ -40,6 +65,6 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
         }
     }
     interface OnItemClickListener{
-        fun itemClick(music:SimpleMusicInfo)
+        fun itemClick(music: SimpleMusicInfo)
     }
 }

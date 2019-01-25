@@ -8,12 +8,9 @@ import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 
 import com.web.common.base.BaseObserver;
-import com.web.common.base.BaseSingleObserver;
-import com.web.common.base.SingleSchedulerTransform;
 import com.web.common.bean.LiveDataWrapper;
-import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicDetailList;
-import com.web.moudle.musicSearch.bean.SimpleMusicInfo;
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -97,12 +94,12 @@ public class InternetViewModel extends ViewModel {
 
     private LiveDataWrapper<LiveDataWrapper<ArrayList<SimpleMusicInfo>>> simpleMusicList=new LiveDataWrapper<>();
     private LiveDataWrapper<ArrayList<SimpleMusicInfo>> simpleMusicWrapper=new LiveDataWrapper<>();
-
-    /**
+/*
+    *//**
      * 搜索歌曲
      * @param keyword kw
      * @param page page
-     */
+     *//*
     public void getSimpleMusic(String keyword,int page){
         model.getSimpleMusic(keyword,page)
                 .subscribe(new SingleObserver<ArrayList<SimpleMusicInfo>>() {
@@ -123,5 +120,5 @@ public class InternetViewModel extends ViewModel {
 
                     }
                 });
-    }
+    }*/
 }

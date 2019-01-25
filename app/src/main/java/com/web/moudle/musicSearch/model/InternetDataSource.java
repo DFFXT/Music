@@ -10,10 +10,9 @@ import com.web.common.base.BaseSingleObserver;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.config.GetFiles;
 import com.web.data.InternetMusic;
-import com.web.data.InternetMusicDetail;
-import com.web.data.InternetMusicDetailList;
-import com.web.data.SearchResultBd;
-import com.web.moudle.musicSearch.bean.SimpleMusicInfo;
+import com.web.moudle.musicSearch.bean.SearchWrapper0;
+import com.web.moudle.musicSearch.bean.next.SearchMusicWrapper1;
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -25,9 +24,6 @@ import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
 
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_JSON_ERROR;
 import static com.web.moudle.musicSearch.model.InternetViewModel.CODE_NET_ERROR;
@@ -78,17 +74,18 @@ public class InternetDataSource extends PageKeyedDataSource<String,SimpleMusicIn
     }
 
     private void load(@NonNull Object callback,int flg){
-        model.getSimpleMusic(keyWords,page).subscribe(new BaseSingleObserver<ArrayList<SimpleMusicInfo>>() {
+        model.getSimpleMusic(keyWords,page).subscribe(new BaseObserver<SearchWrapper0<SearchMusicWrapper1>>() {
             @Override
-            public void onSuccess(ArrayList<SimpleMusicInfo> res) {
-                if(res.size()==0){
+            public void onNext(SearchWrapper0<SearchMusicWrapper1> res) {
+                ArrayList<SimpleMusicInfo> list=res.getResult().getSearchSongWrapper2().getSongList();
+                if(list.size()==0){
                     wrapper.setCode(LiveDataWrapper.CODE_NO_DATA);
                     liveData.postValue(wrapper);
                 }else{
                     if(flg==0){
-                        ((LoadInitialCallback)callback).onResult(res,"","");
+                        ((LoadInitialCallback)callback).onResult(list,"","");
                     }else if(flg==1){
-                        ((LoadCallback)callback).onResult(res,"");
+                        ((LoadCallback)callback).onResult(list,"");
                     }
                 }
 

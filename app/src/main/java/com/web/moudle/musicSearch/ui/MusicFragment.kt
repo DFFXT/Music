@@ -5,10 +5,8 @@ import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
@@ -22,12 +20,11 @@ import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicDetailList
 import com.web.data.InternetMusicForPlay
 import com.web.misc.DrawableItemDecoration
-import com.web.misc.GapItemDecoration
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.musicDownload.service.FileDownloadService
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.adapter.InternetMusicAdapter
-import com.web.moudle.musicSearch.bean.SimpleMusicInfo
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.model.InternetViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_music_search.*

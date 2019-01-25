@@ -2,23 +2,37 @@ package com.web.moudle.musicSearch.adapter
 
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
-import com.web.moudle.musicSearch.bean.SimpleArtistInfo
-import com.web.moudle.musicSearch.bean.SimpleSongSheet
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
+import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R
 
 class SimpleSheetAdapter:PagedListAdapter<SimpleSongSheet,BaseViewHolder>(diff) {
     var itemClick:((SimpleSongSheet?)->Unit)?=null
     override fun onBindViewHolder(holder : BaseViewHolder, p1: Int) {
-        val item= getItem(p1)
-        holder.bindText(R.id.tv_sheetName,item?.sheetName)
-        holder.bindText(R.id.tv_songCount,item?.songCount.toString())
-        holder.bindText(R.id.tv_sheetCreator,item?.sheetCreator)
-        holder.bindText(R.id.tv_playCount,item?.playCount)
-        ImageLoad.load(item?.sheetIcon).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_sheetIcon))
+        val item= getItem(p1)?:return
+
+
+        val start=item.stdSheetName().indexOf(InternetMusicActivity.keyWords)
+        if(start>=0){
+            val end = start+ InternetMusicActivity.keyWords.length
+            val spannable= SpannableString(item.stdSheetName())
+            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+            holder.bindSpannable(R.id.tv_sheetName,spannable)
+        }else{
+            holder.bindText(R.id.tv_sheetName,item.stdSheetName())
+        }
+
+        holder.bindText(R.id.tv_songCount,item.songCount)
+        holder.bindText(R.id.tv_sheetCreator,item.userInfo.userName)
+        holder.bindText(R.id.tv_playCount,item.playCount)
+        ImageLoad.load(item.sheetIcon).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_sheetIcon))
         holder.itemView.setOnClickListener {
             itemClick?.invoke(item)
         }

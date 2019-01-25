@@ -14,9 +14,8 @@ import com.web.common.bean.LiveDataWrapper
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration
-import com.web.misc.GapItemDecoration
 import com.web.moudle.musicSearch.adapter.SimpleSheetAdapter
-import com.web.moudle.musicSearch.bean.SimpleSongSheet
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
 import com.web.moudle.musicSearch.model.SheetViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity

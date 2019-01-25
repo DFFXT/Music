@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
@@ -25,10 +26,14 @@ import com.web.web.R
 import kotlinx.android.synthetic.main.activity_song_sheet_entry.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SongSheetActivity:BaseActivity() {
     private lateinit var model:SongSheetViewModel
     private lateinit var sheetId:String
+    private var page=0
+
+    private val songList=ArrayList<Songlist>()
 
     override fun getLayoutId(): Int= R.layout.activity_song_sheet_entry
 
@@ -41,6 +46,10 @@ class SongSheetActivity:BaseActivity() {
                 rootView.showError()
                 return@Observer
             }
+            if(it.result.have_more==0){
+                srl_sheetSong.setEnableLoadMore(false)
+            }
+            page++
             bitmapColorSet(it.result.info.list_pic_middle,findViewById(R.id.iv_sheetIcon),collapseToolbarLayout)
             findViewById<TextView>(R.id.tv_sheetName).text=it.result.info.list_title
             tv_sheetCreateTime.text=SimpleDateFormat("YYYY-MM-dd", Locale.CHINA).format(Date(it.result.info.createtime*1000))
@@ -54,12 +63,25 @@ class SongSheetActivity:BaseActivity() {
             val tagArray=it.result.info.list_tag.split(",")
             initTag(tagArray)
             initSongList(it.result.songlist)
+            srl_sheetSong.finishLoadMore()
             rootView.showContent()
         })
 
         rootView.showLoading()
-        model.getSongSheetInfo(sheetId,0)
+        model.getSongSheetInfo(sheetId,page)
 
+        srl_sheetSong.setEnableRefresh(false)
+        srl_sheetSong.setOnLoadMoreListener {
+            model.getSongSheetInfo(sheetId,page)
+        }
+
+        /*layout_nestedScrollView.setOnScrollChangeListener { scroll: NestedScrollView, _: Int, top: Int, _: Int, oldT: Int ->
+            if(top+scroll.height>scroll.getChildAt(0).height-100){
+                srl_sheetSong.autoLoadMore()
+            }
+            Log.i("log","--->${rv_sheetSong.computeVerticalScrollOffset()}  ${rv_sheetSong.computeVerticalScrollRange()} ${rv_sheetSong.computeVerticalScrollExtent()}")
+
+        }*/
     }
 
     private fun initTag(tags:List<String>){
@@ -68,9 +90,16 @@ class SongSheetActivity:BaseActivity() {
         rv_tag.adapter=SheetTagAdapter(this,tags)
     }
     private fun initSongList(songList:List<Songlist>){
-        rv_sheetSong.layoutManager=LinearLayoutManager(this)
-        rv_sheetSong.addItemDecoration(DrawableItemDecoration(left = ViewUtil.dpToPx(20f),right = ViewUtil.dpToPx(15f),bottom = 10,drawable = getDrawable(R.drawable.dash_line_1px)!!,orientation = LinearLayoutManager.VERTICAL))
-        rv_sheetSong.adapter= SongSheetListAdapter(this, songList)
+        if(this.songList.size==0){
+            this.songList.addAll(songList)
+            rv_sheetSong.layoutManager=LinearLayoutManager(this)
+            rv_sheetSong.addItemDecoration(DrawableItemDecoration(left = ViewUtil.dpToPx(20f),right = ViewUtil.dpToPx(15f),bottom = 10,drawable = getDrawable(R.drawable.dash_line_1px)!!,orientation = LinearLayoutManager.VERTICAL))
+            rv_sheetSong.adapter= SongSheetListAdapter(this, this.songList)
+        }else{
+            this.songList.addAll(songList)
+            rv_sheetSong.adapter?.notifyDataSetChanged()
+            rv_sheetSong.requestLayout()
+        }
     }
 
 

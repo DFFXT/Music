@@ -7,7 +7,7 @@ import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.web.common.bean.LiveDataWrapper
-import com.web.moudle.musicSearch.bean.SimpleArtistInfo
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import retrofit2.Call

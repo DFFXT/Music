@@ -20,7 +20,7 @@
         android:ellipsize="end"
         tools:text="MusicName"
         />
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,20 +31,30 @@
             android:id="@+id/tv_singerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textSize="@dimen/textSize_small"
             android:maxLines="1"
+            android:ellipsize="end"
             tools:text="singerName"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_albumName"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constrainedWidth="true"
             />
         <TextView
             android:id="@+id/tv_albumName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:ellipsize="end"
+            android:maxWidth="200dp"
             android:textSize="@dimen/textSize_small"
             android:gravity="end"
-            android:layout_weight="1"
-            tools:text="albumName"/>
-    </LinearLayout>
+            tools:text="albumName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constrainedWidth="true"/>
+    </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

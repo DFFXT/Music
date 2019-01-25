@@ -3,10 +3,8 @@ package com.web.moudle.musicSearch.ui
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
-import android.database.Observable
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.View
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
@@ -16,9 +14,8 @@ import com.web.common.bean.LiveDataWrapper
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration
-import com.web.misc.GapItemDecoration
 import com.web.moudle.musicSearch.adapter.SimpleArtistAdapter
-import com.web.moudle.musicSearch.bean.SimpleArtistInfo
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 import com.web.moudle.musicSearch.model.ArtistViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.web.R

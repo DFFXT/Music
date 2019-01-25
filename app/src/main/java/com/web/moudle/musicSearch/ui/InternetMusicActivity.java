@@ -23,12 +23,11 @@ public class InternetMusicActivity extends BaseActivity {
 
     private ArrayList<BaseSearchFragment> pageList = new ArrayList<>();
     private ViewPager viewPager;
-    private String keyWords;
-
+    public static String keyWords;
+    private TopBarLayout topBarLayout;
 
     private void initData() {
         keyWords = getIntent().getStringExtra(KEYWORD);
-
     }
 
     @Override
@@ -41,6 +40,7 @@ public class InternetMusicActivity extends BaseActivity {
         initData();
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
+        topBarLayout=findViewById(R.id.topBar);
 
         TopBarLayout topBarLayout = findViewById(R.id.topBar);
         topBarLayout.setEndImageListener(v -> SearchActivity.actionStart(this, RESULT_CODE_SEARCH));
@@ -68,15 +68,20 @@ public class InternetMusicActivity extends BaseActivity {
         Objects.requireNonNull(tabLayout.getTabAt(2)).setText(getText(R.string.album_tab));
         Objects.requireNonNull(tabLayout.getTabAt(3)).setText(getText(R.string.songSheet));
 
+        setTitle();
 
     }
 
+    private void setTitle(){
+        topBarLayout.setMainTitle(keyWords+"-"+getString(R.string.search));
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode != RESULT_OK) return;
         if (data == null) return;
         if (requestCode == RESULT_CODE_SEARCH) {
             keyWords = data.getStringExtra(SearchActivity.INPUT_DATA);
+            setTitle();
             viewPager.setCurrentItem(0);
             for (int i = 0; i < pageList.size(); i++) {
                 pageList.get(i).search(keyWords);
