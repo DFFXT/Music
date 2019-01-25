@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON
 import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd
 import com.web.moudle.musicSearch.bean.SearchWrapper0
-import com.web.moudle.musicSearch.bean.next.SearchAlbumWrapper1
-import com.web.moudle.musicSearch.bean.next.SearchArtistWrapper1
-import com.web.moudle.musicSearch.bean.next.SearchMusicWrapper1
-import com.web.moudle.musicSearch.bean.next.SearchSongSheetWrapper1
+import com.web.moudle.musicSearch.bean.next.*
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
@@ -70,8 +67,18 @@ class InternetMusicModel : BaseRetrofit() {
                 .albumSearch(keyword,20,page)
     }
 
+    /**
+     * 获取歌单信息
+     */
     fun getSheetList(keyword: String,page: Int):Observable<SearchWrapper0<SearchSongSheetWrapper1>>{
         return obtainClass(NetApis.Music::class.java)
                 .songSheetSearch(keyword,20,page)
+    }
+    /**
+     * 获取视频信息
+     */
+    fun getVideoList(keyword: String,page: Int):Observable<SearchWrapper0<SearchVideoWrapper1>>{
+        return obtainClass(NetApis.Music::class.java)
+                .videoSearch(keyword,20,page)
     }
 }

@@ -37,56 +37,65 @@ class NetApis {
         fun searchSug(@Query("word") word: String): Observable<BaseNetBean<SearchSug>>
 
         @GET("http://sug.qianqian.com/info/suggestion?format=json&word=&version=2&from=web&third_type=0&client_type=0")
-        fun defSearch(@Query("_") time:Long):Observable<BaseNetBean<DefSearchRes>>
-
+        fun defSearch(@Query("_") time: Long): Observable<BaseNetBean<DefSearchRes>>
 
 
         //**混合搜索**可以用单一搜索组合代替
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&page_no=1&page_size=30&type=-1&data_source=0&isNew=1&use_cluster=1")
-        fun multiSearch(@Query("query") query: String):Observable<SearchWrapper0<SearchMultiWrapper1>>
+        fun multiSearch(@Query("query") query: String): Observable<SearchWrapper0<SearchMultiWrapper1>>
 
 
-        
         //**搜索单一歌曲
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=0&data_source=0&isNew=1&use_cluster=1")
-        fun musicSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int):Observable<SearchWrapper0<SearchMusicWrapper1>>
+        fun musicSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchMusicWrapper1>>
+
         //**搜索歌手
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=1&data_source=0&isNew=1&use_cluster=1")
-        fun artistSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int):Observable<SearchWrapper0<SearchArtistWrapper1>>
+        fun artistSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchArtistWrapper1>>
+
         //**搜索专辑
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=2&data_source=0&isNew=1&use_cluster=1")
-        fun albumSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int):Observable<SearchWrapper0<SearchAlbumWrapper1>>
+        fun albumSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchAlbumWrapper1>>
+
         //**搜索歌单
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=10&data_source=0&isNew=1&use_cluster=1")
-        fun songSheetSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int):Observable<SearchWrapper0<SearchSongSheetWrapper1>>
+        fun songSheetSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchSongSheetWrapper1>>
+
+        //**视频搜索
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=14&data_source=0&isNew=1&use_cluster=1")
+        fun videoSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchVideoWrapper1>>
+
     }
 
     interface SongEntry {
         @GET("http://musicapi.taihe.com/v1/restserver/ting?method=baidu.ting.song.playAAC")
         fun getMusicDetail(@Query("songid") songId: String): Observable<MusicDetailInfo>
     }
-    interface AlbumEntry{
+
+    interface AlbumEntry {
         @GET("http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.album.getAlbumInfo")
-        fun getAlbumInfo(@Query("album_id") albumId:String):Observable<AlbumResponse>
+        fun getAlbumInfo(@Query("album_id") albumId: String): Observable<AlbumResponse>
     }
-    interface SingerEntry{
+
+    interface SingerEntry {
         //@GET("http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.artist.getInfo&artistid=90")
         @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.artist.getinfo&format=json")
-        fun getArtistInfo(@Query("tinguid") uid:String):Observable<SingerInfo>
+        fun getArtistInfo(@Query("tinguid") uid: String): Observable<SingerInfo>
 
         @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getSongList&format=json&order=2")
-        fun getSongList(@Query("tinguid") uid:String,@Query("offset") offset:Int,@Query("limits") limit:Int):Observable<SongEntryBox>
+        fun getSongList(@Query("tinguid") uid: String, @Query("offset") offset: Int, @Query("limits") limit: Int): Observable<SongEntryBox>
 
         @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getAlbumList&format=json&order=2")
-        fun getAlbumList(@Query("tinguid")uid:String,@Query("offset")offset:Int,@Query("limits")limit:Int):Observable<AlbumEntryBox>
+        fun getAlbumList(@Query("tinguid") uid: String, @Query("offset") offset: Int, @Query("limits") limit: Int): Observable<AlbumEntryBox>
 
         @GET("http://music.taihe.com/data/artist/redirect")
-        fun getArtistId(@Query("id") fakeId:String):Call<Any>
+        fun getArtistId(@Query("id") fakeId: String): Call<Any>
     }
-    interface SongSheetEntry{
+
+    interface SongSheetEntry {
         //**获取歌单信息
         @GET("http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo")
-        fun getSongSheetList(@Query("timestamp") timestamp: String,@Query("param") param:String,@Query("sign") sign:String):Observable<SongSheetInfo>
+        fun getSongSheetList(@Query("timestamp") timestamp: String, @Query("param") param: String, @Query("sign") sign: String): Observable<SongSheetInfo>
 
     }
 

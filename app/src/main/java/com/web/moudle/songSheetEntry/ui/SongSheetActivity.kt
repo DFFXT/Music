@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.*
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
@@ -70,18 +71,11 @@ class SongSheetActivity:BaseActivity() {
         rootView.showLoading()
         model.getSongSheetInfo(sheetId,page)
 
+        srl_sheetSong.setRefreshFooter(ClassicsFooter(this))
         srl_sheetSong.setEnableRefresh(false)
         srl_sheetSong.setOnLoadMoreListener {
             model.getSongSheetInfo(sheetId,page)
         }
-
-        /*layout_nestedScrollView.setOnScrollChangeListener { scroll: NestedScrollView, _: Int, top: Int, _: Int, oldT: Int ->
-            if(top+scroll.height>scroll.getChildAt(0).height-100){
-                srl_sheetSong.autoLoadMore()
-            }
-            Log.i("log","--->${rv_sheetSong.computeVerticalScrollOffset()}  ${rv_sheetSong.computeVerticalScrollRange()} ${rv_sheetSong.computeVerticalScrollExtent()}")
-
-        }*/
     }
 
     private fun initTag(tags:List<String>){

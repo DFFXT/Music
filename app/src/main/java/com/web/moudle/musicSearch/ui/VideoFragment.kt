@@ -14,23 +14,22 @@ import com.web.common.bean.LiveDataWrapper
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration
-import com.web.moudle.musicSearch.adapter.SimpleSheetAdapter
-import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
-import com.web.moudle.musicSearch.viewModel.SheetViewModel
+import com.web.moudle.musicSearch.adapter.VideoSheetAdapter
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleVideoInfo
+import com.web.moudle.musicSearch.viewModel.VideoViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
-import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
-class SheetFragment:BaseSearchFragment() {
-    private lateinit var vm: SheetViewModel
-    private lateinit var adapter: SimpleSheetAdapter
+class VideoFragment:BaseSearchFragment() {
+    private lateinit var vm: VideoViewModel
+    private lateinit var adapter: VideoSheetAdapter
     override fun getLayoutId(): Int {
         return R.layout.fragment_music_search
     }
 
     override fun initView(rootView: View) {
-        vm= ViewModelProviders.of(this)[SheetViewModel::class.java]
+        vm= ViewModelProviders.of(this)[VideoViewModel::class.java]
 
         vm.artistId.observe(this, Observer<String> {
             if(it!=null){
@@ -52,10 +51,10 @@ class SheetFragment:BaseSearchFragment() {
 
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
                 drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
-        adapter= SimpleSheetAdapter()
+        adapter= VideoSheetAdapter()
         adapter.itemClick={
-            if(it!=null){//**进入歌单
-                SongSheetActivity.actionStart(context!!,it.sheetId)
+            if(it!=null){//**进入mv
+                //SongSheetActivity.actionStart(context!!,it)
             }
         }
         rv_musicList.adapter=adapter
@@ -73,7 +72,7 @@ class SheetFragment:BaseSearchFragment() {
         if(!isInit())return
         rootView?.showLoading()
         smartRefreshLayout.setNoMoreData(false)
-        vm.search(keyword).observe(this,Observer<PagedList<SimpleSongSheet>>{
+        vm.search(keyword).observe(this,Observer<PagedList<SimpleVideoInfo>>{
             adapter.submitList(it)
             rootView?.showContent()
         })

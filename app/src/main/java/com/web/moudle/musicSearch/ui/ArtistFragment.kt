@@ -16,7 +16,7 @@ import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration
 import com.web.moudle.musicSearch.adapter.SimpleArtistAdapter
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
-import com.web.moudle.musicSearch.model.ArtistViewModel
+import com.web.moudle.musicSearch.viewModel.ArtistViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_music_search.*

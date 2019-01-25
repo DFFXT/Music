@@ -1,4 +1,4 @@
-package com.web.moudle.musicSearch.model;
+package com.web.moudle.musicSearch.viewModel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -11,6 +11,8 @@ import com.web.common.base.BaseObserver;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.data.InternetMusicDetailList;
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo;
+import com.web.moudle.musicSearch.model.InternetDataSource;
+import com.web.moudle.musicSearch.model.InternetMusicModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -94,31 +96,5 @@ public class InternetViewModel extends ViewModel {
 
     private LiveDataWrapper<LiveDataWrapper<ArrayList<SimpleMusicInfo>>> simpleMusicList=new LiveDataWrapper<>();
     private LiveDataWrapper<ArrayList<SimpleMusicInfo>> simpleMusicWrapper=new LiveDataWrapper<>();
-/*
-    *//**
-     * 搜索歌曲
-     * @param keyword kw
-     * @param page page
-     *//*
-    public void getSimpleMusic(String keyword,int page){
-        model.getSimpleMusic(keyword,page)
-                .subscribe(new SingleObserver<ArrayList<SimpleMusicInfo>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onSuccess(ArrayList<SimpleMusicInfo> simpleMusicInfos) {
-                        simpleMusicWrapper.setCode(LiveDataWrapper.CODE_OK);
-                        simpleMusicWrapper.setValue(simpleMusicInfos);
-                        simpleMusicList.setValue(simpleMusicWrapper);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
-    }*/
 }

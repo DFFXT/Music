@@ -1,4 +1,4 @@
-package com.web.moudle.musicSearch.model
+package com.web.moudle.musicSearch.viewModel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -8,6 +8,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.web.common.bean.LiveDataWrapper
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
+import com.web.moudle.musicSearch.model.SheetDataSource
 
 class SheetViewModel : ViewModel() {
 

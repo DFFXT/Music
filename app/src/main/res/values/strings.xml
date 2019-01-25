@@ -31,7 +31,6 @@
 
 	<string name="delete">删除</string>
 	<string name="deleteLocalFile">删除本地文件</string>
-	<string name="video">视频</string>
 	<string name="music">音乐</string>
 
 	<string name="updata">web有更新</string>
@@ -99,6 +98,7 @@
 	<string name="page_lyrics">歌词</string>
 	<string name="playList">播放列表</string>
 	<string name="songSheet">歌单</string>
+	<string name="video">视频</string>
 	<string name="lyrics_noLyrics">没有歌词—(〃´-ω･) </string>
 	<string name="dataAnalyzeError">数据解析错误</string>
 	<string name="noInternet">网络错误</string>

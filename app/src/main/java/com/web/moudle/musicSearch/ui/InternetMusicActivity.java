@@ -52,6 +52,7 @@ public class InternetMusicActivity extends BaseActivity {
         pageList.add(new ArtistFragment());
         pageList.add(new AlbumFragment());
         pageList.add(new SheetFragment());
+        pageList.add(new VideoFragment());
         Bundle b = new Bundle();
         b.putString(MusicFragment.keyword, keyWords);
         for (BaseSearchFragment f : pageList) {
@@ -67,6 +68,7 @@ public class InternetMusicActivity extends BaseActivity {
         Objects.requireNonNull(tabLayout.getTabAt(1)).setText(getText(R.string.singer_tab));
         Objects.requireNonNull(tabLayout.getTabAt(2)).setText(getText(R.string.album_tab));
         Objects.requireNonNull(tabLayout.getTabAt(3)).setText(getText(R.string.songSheet));
+        Objects.requireNonNull(tabLayout.getTabAt(4)).setText(getText(R.string.video));
 
         setTitle();
 

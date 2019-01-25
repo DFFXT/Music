@@ -25,7 +25,7 @@ import com.web.moudle.musicDownload.service.FileDownloadService
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.adapter.InternetMusicAdapter
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
-import com.web.moudle.musicSearch.model.InternetViewModel
+import com.web.moudle.musicSearch.viewModel.InternetViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
