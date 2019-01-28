@@ -4,23 +4,20 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
-import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.*
-import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
 import com.web.config.Shortcut
 import com.web.misc.DrawableItemDecoration
 import com.web.misc.GapItemDecoration
+import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.songSheetEntry.adapter.SheetTagAdapter
 import com.web.moudle.songSheetEntry.adapter.SongSheetListAdapter
-import com.web.moudle.songSheetEntry.bean.SongSheetInfo
+import com.web.moudle.songSheetEntry.bean.SongSheetInfoBox
 import com.web.moudle.songSheetEntry.bean.Songlist
 import com.web.moudle.songSheetEntry.model.SongSheetViewModel
 import com.web.web.R
@@ -42,7 +39,7 @@ class SongSheetActivity:BaseActivity() {
         WindowUtil.setImmersedStatusBar(window)
         sheetId=intent.getStringExtra(INTENT_DATA)
         model=ViewModelProviders.of(this)[SongSheetViewModel::class.java]
-        model.songSheetInfo.observe(this, Observer<SongSheetInfo> {
+        model.songSheetInfo.observe(this, Observer<BaseNetBean<SongSheetInfoBox>> {
             if(it==null||it.error_code!=22000){
                 rootView.showError()
                 return@Observer

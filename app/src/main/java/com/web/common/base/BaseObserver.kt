@@ -18,6 +18,7 @@ abstract class BaseObserver<T> : Observer<T> {
     open fun error(e:Throwable){}
     @CallSuper
     override fun onError(e: Throwable) {
+        e.printStackTrace()
         if(e is UnknownHostException){
             AndroidSchedulers.mainThread().scheduleDirect{
                 MToast.showToast(MyApplication.context,ResUtil.getString(R.string.noInternet))

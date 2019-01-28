@@ -5,7 +5,7 @@ import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 
 data class SearchArtistWrapper2 (
         @JSONField(name = "artist_list")
-        val artistList:ArrayList<SimpleArtistInfo>,
+        val artistList:ArrayList<SimpleArtistInfo>?= arrayListOf(),
         @JSONField(name = "total")
         val total:Int
 )

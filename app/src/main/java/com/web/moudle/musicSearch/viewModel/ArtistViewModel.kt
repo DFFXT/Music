@@ -8,7 +8,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.web.common.bean.LiveDataWrapper
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
-import com.web.moudle.musicSearch.model.SingerDataSource
+import com.web.moudle.musicSearch.model.ArtistDataSource
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import retrofit2.Call
@@ -20,7 +20,7 @@ class ArtistViewModel : ViewModel() {
     val artistId = MutableLiveData<String>()
     private val model = BaseRetrofit()
     val status = MutableLiveData<LiveDataWrapper<Throwable>>()
-    private val dataSource = SingerDataSource(status)
+    private val dataSource = ArtistDataSource(status)
     private var config: PagedList.Config = PagedList.Config.Builder()
             .setPageSize(20)
             .setInitialLoadSizeHint(20)

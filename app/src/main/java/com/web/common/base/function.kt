@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.SeekBar
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.imageLoader.glide.GlideApp
 import com.web.common.imageLoader.glide.ImageLoad
@@ -43,6 +44,24 @@ fun bitmapColorSet(path:String?,bitmapImageView:ImageView,bitmapColorView:View){
                 }
             }
             bitmapImageView.setImageBitmap(resource)
+        }
+    })
+}
+//</editor-fold>
+
+
+//<editor-fold desc="给seekBar添加seek触发">
+fun SeekBar.onSeekTo(onSeekTo:((Int)->Unit)){
+    setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar) {
+            onSeekTo.invoke(seekBar.progress)
         }
     })
 }

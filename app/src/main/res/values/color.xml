@@ -21,4 +21,5 @@
     <color name="black">#000000</color>
 
     <color name="tag_color1">#6cc</color>
+    <color name="videoControllerBg">#66000000</color>
 </resources>

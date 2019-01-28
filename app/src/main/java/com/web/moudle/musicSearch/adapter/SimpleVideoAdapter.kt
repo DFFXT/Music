@@ -9,12 +9,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
-import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleVideoInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R
 
-class VideoSheetAdapter:PagedListAdapter<SimpleVideoInfo,BaseViewHolder>(diff) {
+class SimpleVideoAdapter:PagedListAdapter<SimpleVideoInfo,BaseViewHolder>(diff) {
     var itemClick:((SimpleVideoInfo?)->Unit)?=null
     override fun onBindViewHolder(holder : BaseViewHolder, p1: Int) {
         val item= getItem(p1)?:return

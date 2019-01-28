@@ -10,7 +10,7 @@ import java.util.List;
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class Result {
+public class SongSheetInfoBox {
 
     private String comment_num;
     private Info info;

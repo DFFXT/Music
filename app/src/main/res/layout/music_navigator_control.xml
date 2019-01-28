@@ -55,6 +55,8 @@
 		android:layout_alignTop="@id/music_icon"
 		android:layout_toEndOf="@id/music_icon"
 		android:layout_toStartOf="@id/pre"
+		android:text="musicName"
+		android:textColor="@color/black"
         />
     <TextView 
        android:id="@+id/singer"
@@ -68,6 +70,8 @@
        android:layout_below="@id/song"
        android:layout_toEndOf="@id/music_icon"
        android:layout_toStartOf="@id/pre"
+		android:textColor="@color/black"
+		android:text="musicName"
        />
 	
 </RelativeLayout>

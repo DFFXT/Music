@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.web.common.util.UncaughtException;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    public static String INTENT_DATA="_mData";
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         //Thread.setDefaultUncaughtExceptionHandler(UncaughtException.INSTANCE);
@@ -22,4 +23,5 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     abstract public @LayoutRes int getLayoutId();
     abstract public void initView();
+
 }

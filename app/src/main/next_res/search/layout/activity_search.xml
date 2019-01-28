@@ -12,7 +12,6 @@
         android:id="@+id/searchView_searchActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:fitsSystemWindows="true"
         app:searchView_hint="@string/searchView_hint"
         app:searchView_autoFocus="true"

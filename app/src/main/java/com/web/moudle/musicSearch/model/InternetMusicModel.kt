@@ -1,25 +1,18 @@
 package com.web.moudle.musicSearch.model
 
-import com.alibaba.fastjson.JSON
 import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd
-import com.web.moudle.musicSearch.bean.SearchWrapper0
 import com.web.moudle.musicSearch.bean.next.*
-import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
-import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
-import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
-import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.DataTransform
+import com.web.moudle.net.retrofit.ResultTransform
 import com.web.moudle.net.retrofit.SchedulerTransform
 import io.reactivex.Observable
-import io.reactivex.Single
-import org.jsoup.Jsoup
-import java.lang.Exception
 
 class InternetMusicModel : BaseRetrofit() {
 
+    private val pageSize=30
     fun search(keyword: String){
 
     }
@@ -47,38 +40,43 @@ class InternetMusicModel : BaseRetrofit() {
     }
 
     //**搜索歌曲简单信息
-    fun getSimpleMusic(keyword:String,page:Int):Observable<SearchWrapper0<SearchMusicWrapper1>>{
+    fun getSimpleMusic(keyword:String,page:Int):Observable<SearchMusicWrapper1>{
         return obtainClass(NetApis.Music::class.java)
-                .musicSearch(keyword,20,page)
+                .musicSearch(keyword,pageSize,page)
+                .compose(ResultTransform())
     }
 
     //**搜索歌手信息
 
-    fun getArtistList(keyword:String,page:Int):Observable<SearchWrapper0<SearchArtistWrapper1>>{
+    fun getArtistList(keyword:String,page:Int):Observable<SearchArtistWrapper1>{
         return obtainClass(NetApis.Music::class.java)
-                .artistSearch(keyword,20,page)
+                .artistSearch(keyword,pageSize,page)
+                .compose(ResultTransform())
     }
 
     /**
      * 获取专辑信息
      */
-    fun getAlbumList(keyword: String,page: Int):Observable<SearchWrapper0<SearchAlbumWrapper1>>{
+    fun getAlbumList(keyword: String,page: Int):Observable<SearchAlbumWrapper1>{
         return obtainClass(NetApis.Music::class.java)
-                .albumSearch(keyword,20,page)
+                .albumSearch(keyword,pageSize,page)
+                .compose(ResultTransform())
     }
 
     /**
      * 获取歌单信息
      */
-    fun getSheetList(keyword: String,page: Int):Observable<SearchWrapper0<SearchSongSheetWrapper1>>{
+    fun getSheetList(keyword: String,page: Int):Observable<SearchSongSheetWrapper1>{
         return obtainClass(NetApis.Music::class.java)
-                .songSheetSearch(keyword,20,page)
+                .songSheetSearch(keyword,pageSize,page)
+                .compose(ResultTransform())
     }
     /**
      * 获取视频信息
      */
-    fun getVideoList(keyword: String,page: Int):Observable<SearchWrapper0<SearchVideoWrapper1>>{
+    fun getVideoList(keyword: String,page: Int):Observable<SearchVideoWrapper1>{
         return obtainClass(NetApis.Music::class.java)
-                .videoSearch(keyword,20,page)
+                .videoSearch(keyword,pageSize,page)
+                .compose(ResultTransform())
     }
 }

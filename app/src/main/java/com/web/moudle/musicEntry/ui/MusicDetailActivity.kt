@@ -34,8 +34,8 @@ import kotlinx.android.synthetic.main.activity_music_detail.*
 class MusicDetailActivity : BaseActivity() {
     private lateinit var id: String
     private lateinit var model: DetailMusicViewModel
-    private var connection:MusicPlay.Connect?=null
-    private var serviceConnection:ServiceConnection?=null
+    private var connection: MusicPlay.Connect? = null
+    private var serviceConnection: ServiceConnection? = null
     override fun getLayoutId(): Int {
         return R.layout.activity_music_detail
     }
@@ -75,17 +75,17 @@ class MusicDetailActivity : BaseActivity() {
                     rootView.showContent()
                     //**获取歌词
                     model.getLyrics(res.songInfo.lrcLink)
-                    val music= InternetMusicForPlay()
-                    music.imgAddress=res.songInfo.picSmall
-                    music.lrcLink=res.songInfo.lrcLink
-                    music.musicName=res.songInfo.title
-                    music.singer=res.songInfo.artistName
-                    music.path=res.bitRate.songLink
+                    val music = InternetMusicForPlay()
+                    music.imgAddress = res.songInfo.picSmall
+                    music.lrcLink = res.songInfo.lrcLink
+                    music.musicName = res.songInfo.title
+                    music.singer = res.songInfo.artistName
+                    music.path = res.bitRate.songLink
 
 
-                    var theSameMusic=false
+                    var theSameMusic = false
                     //**播放器观测者
-                    val observer=object:PlayerObserver(){
+                    val observer = object : PlayerObserver() {
                         override fun play() {
                             if (theSameMusic)
                                 iv_playIconSwitch.setImageResource(R.drawable.icon_play_white)
@@ -96,35 +96,36 @@ class MusicDetailActivity : BaseActivity() {
                         }
 
                         override fun load(groupIndex: Int, childIndex: Int, m: Music?, maxTime: Int) {
-                            if(music==m){
-                                theSameMusic=true
+                            if (m!=null&&musicEqual(music,m)) {
+                                theSameMusic = true
                                 play()
-                            }else{
-                                theSameMusic=false
+                            } else {
+                                theSameMusic = false
                                 pause()
                             }
                         }
                     }
 
-                    val intent=Intent(this@MusicDetailActivity,MusicPlay::class.java)
+                    val intent = Intent(this@MusicDetailActivity, MusicPlay::class.java)
                     intent.action = MusicPlay.BIND
-                    serviceConnection=object :ServiceConnection{
+                    serviceConnection = object : ServiceConnection {
                         override fun onServiceDisconnected(name: ComponentName?) {
                         }
 
                         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                            connection=service as MusicPlay.Connect
-                            connection?.addObserver(this@MusicDetailActivity,observer)
+                            connection = service as MusicPlay.Connect
+                            connection!!.addObserver(this@MusicDetailActivity, observer)
+                            connection!!.getPlayerInfo()
                         }
                     }
                     //**连接 播放器
-                    bindService(intent,serviceConnection!!,BIND_AUTO_CREATE)
+                    bindService(intent, serviceConnection!!, BIND_AUTO_CREATE)
 
                     iv_playIconSwitch.setOnClickListener {
-                        connection?.let {con->
-                            if(con.config.music==music){
+                        connection?.let { con ->
+                            if (con.config.music == music) {
                                 con.changePlayerPlayingStatus()
-                            }else{
+                            } else {
                                 con.playInternet(music)
                             }
                         }
@@ -145,12 +146,12 @@ class MusicDetailActivity : BaseActivity() {
         model.lyrics.observe(this, Observer { wrapper ->
             if (wrapper == null) return@Observer
             if (wrapper.code == DetailMusicViewModel.CODE_OK) {
-                val builder=StringBuilder()
+                val builder = StringBuilder()
                 wrapper.value.forEach {
                     builder.append(it.line)
                     builder.append("\n")
                 }
-                lyricsView.text=builder.toString()
+                lyricsView.text = builder.toString()
             }
         })
         model.getDetail(id)
@@ -160,7 +161,7 @@ class MusicDetailActivity : BaseActivity() {
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
         loadData()
-        val toolbar=findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             val offset = -dy
             when (offset) {
@@ -174,6 +175,21 @@ class MusicDetailActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    /**
+     * 比较音乐是否是同一个地址
+     * http://zhangmenshiting.qianqian.com/data2/music/0cc6430b863f1fc6032a29d42218ddcd/598649096/598649096.m4a?xcode=ec27389241337245e9c5304b21fec782
+     * 没次xcode
+     **/
+    private fun musicEqual(m1: Music, m2: Music):Boolean {
+        if(m1.path==m2.path)return true
+        val index1=m1.path.indexOf("?")
+        val index2=m2.path.indexOf("?")
+        if(index1<0||index2<0)return false
+        if(m1.path.substring(0,index1)==m2.path.substring(0,index2))return true
+        return false
+
     }
 
     private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
@@ -195,7 +211,7 @@ class MusicDetailActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if(serviceConnection!=null){
+        if (serviceConnection != null) {
             unbindService(serviceConnection!!)
         }
 

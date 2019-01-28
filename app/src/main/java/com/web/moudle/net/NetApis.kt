@@ -5,19 +5,21 @@ import com.web.data.SearchResultBd
 import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicSearch.bean.RowMusicData
-import com.web.moudle.musicSearch.bean.SearchWrapper0
 import com.web.moudle.musicSearch.bean.next.*
+import com.web.moudle.net.baseBean.BaseDataBean
 import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.search.bean.DefSearchRes
 import com.web.moudle.search.bean.SearchSug
 import com.web.moudle.singerEntry.bean.AlbumEntryBox
 import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.bean.SongEntryBox
-import com.web.moudle.songSheetEntry.bean.SongSheetInfo
+import com.web.moudle.songSheetEntry.bean.SongSheetInfoBox
+import com.web.moudle.videoEntry.bean.VideoInfoBox
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 class NetApis {
     interface Music {
@@ -25,45 +27,45 @@ class NetApis {
 
         @Deprecated("use baidu api instead")
         @GET("http://mobilecdn.kugou.com/api/v3/search/song?format=jsonp")
-        fun search(@Query("keyword") keyword: String, @Query("page") page: Int): Observable<BaseNetBean<RowMusicData>>
+        fun search(@Query("keyword") keyword: String, @Query("page") page: Int): Observable<BaseDataBean<RowMusicData>>
 
         @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.search.common&format=json")
         fun searchBd(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchResultBd>
 
         @GET("http://music.taihe.com/data/music/links?")
-        fun musicInfo(@Query("songIds") songIds: String): Observable<BaseNetBean<InternetMusicDetailList>>
+        fun musicInfo(@Query("songIds") songIds: String): Observable<BaseDataBean<InternetMusicDetailList>>
 
         @GET("http://sug.qianqian.com/info/suggestion?format=json")
-        fun searchSug(@Query("word") word: String): Observable<BaseNetBean<SearchSug>>
+        fun searchSug(@Query("word") word: String): Observable<BaseDataBean<SearchSug>>
 
         @GET("http://sug.qianqian.com/info/suggestion?format=json&word=&version=2&from=web&third_type=0&client_type=0")
-        fun defSearch(@Query("_") time: Long): Observable<BaseNetBean<DefSearchRes>>
+        fun defSearch(@Query("_") time: Long): Observable<BaseDataBean<DefSearchRes>>
 
 
         //**混合搜索**可以用单一搜索组合代替
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&page_no=1&page_size=30&type=-1&data_source=0&isNew=1&use_cluster=1")
-        fun multiSearch(@Query("query") query: String): Observable<SearchWrapper0<SearchMultiWrapper1>>
+        fun multiSearch(@Query("query") query: String): Observable<BaseNetBean<SearchMultiWrapper1>>
 
 
         //**搜索单一歌曲
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=0&data_source=0&isNew=1&use_cluster=1")
-        fun musicSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchMusicWrapper1>>
+        fun musicSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<BaseNetBean<SearchMusicWrapper1>>
 
         //**搜索歌手
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=1&data_source=0&isNew=1&use_cluster=1")
-        fun artistSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchArtistWrapper1>>
+        fun artistSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<BaseNetBean<SearchArtistWrapper1>>
 
         //**搜索专辑
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=2&data_source=0&isNew=1&use_cluster=1")
-        fun albumSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchAlbumWrapper1>>
+        fun albumSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<BaseNetBean<SearchAlbumWrapper1>>
 
         //**搜索歌单
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=10&data_source=0&isNew=1&use_cluster=1")
-        fun songSheetSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchSongSheetWrapper1>>
+        fun songSheetSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<BaseNetBean<SearchSongSheetWrapper1>>
 
         //**视频搜索
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=14&data_source=0&isNew=1&use_cluster=1")
-        fun videoSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<SearchWrapper0<SearchVideoWrapper1>>
+        fun videoSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<BaseNetBean<SearchVideoWrapper1>>
 
     }
 
@@ -95,8 +97,15 @@ class NetApis {
     interface SongSheetEntry {
         //**获取歌单信息
         @GET("http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo")
-        fun getSongSheetList(@Query("timestamp") timestamp: String, @Query("param") param: String, @Query("sign") sign: String): Observable<SongSheetInfo>
+        fun getSongSheetList(@Query("timestamp") timestamp: String, @Query("param") param: String, @Query("sign") sign: String): Observable<BaseNetBean<SongSheetInfoBox>>
 
+    }
+    interface VideoEntry{
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&provider=11%2C12&method=baidu.ting.mv.playMV&format=json&song_id=&definition=0")
+        fun getVideoInfo(@Query("mv_id") mvId:String):Observable<BaseNetBean<VideoInfoBox>>
+
+        @GET
+        fun getMvUrl(@Url fakeUrl: String): Call<Any>
     }
 
 }

@@ -57,26 +57,14 @@ public class InternetDataSource extends PageKeyedDataSource<String,SimpleMusicIn
     public void loadAfter(@NonNull LoadParams<String> params, @NonNull LoadCallback<String, SimpleMusicInfo> callback) {
         setPage(page+1);
         load(callback,1);
-        /*model.search(keyWords,page,pageSize).subscribe(new BaseObserver<SearchResultBd>() {
-            @Override
-            public void onNext(SearchResultBd rowMusicData) {
-                callback.onResult(rowMusicData.getSong_list(),"");
-            }
-
-            @Override
-            public void error(@NotNull Throwable e) {
-                wrapper.setCode(CODE_JSON_ERROR);
-                liveData.postValue(wrapper);
-            }
-        });*/
 
     }
 
     private void load(@NonNull Object callback,int flg){
-        model.getSimpleMusic(keyWords,page).subscribe(new BaseObserver<SearchWrapper0<SearchMusicWrapper1>>() {
+        model.getSimpleMusic(keyWords,page).subscribe(new BaseObserver<SearchMusicWrapper1>() {
             @Override
-            public void onNext(SearchWrapper0<SearchMusicWrapper1> res) {
-                ArrayList<SimpleMusicInfo> list=res.getResult().getSearchSongWrapper2().getSongList();
+            public void onNext(SearchMusicWrapper1 res) {
+                ArrayList<SimpleMusicInfo> list=res.getSearchSongWrapper2().getSongList();
                 if(list.size()==0){
                     wrapper.setCode(LiveDataWrapper.CODE_NO_DATA);
                     liveData.postValue(wrapper);

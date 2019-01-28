@@ -14,40 +14,32 @@ class VideoDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Throw
     private val wrapper=LiveDataWrapper<Throwable>()
     private val model=InternetMusicModel()
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, SimpleVideoInfo>) {
-        keyword?.let {
-            model.getVideoList(it,page).subscribe(object : BaseObserver<SearchWrapper0<SearchVideoWrapper1>>(){
-
-                override fun onNext(res: SearchWrapper0<SearchVideoWrapper1>) {
-                    val t=res.result.searchVideoWrapper2.videoList
-                    if(t.size==0){
-                        wrapper.code=LiveDataWrapper.CODE_NO_DATA
-                        liveData.postValue(wrapper)
-                    }else{
-                        callback.onResult(t,"","")
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    super.onError(e)
-                    e.printStackTrace()
-                }
-            })
+        load {
+            callback.onResult(it,"","")
         }
-
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, SimpleVideoInfo>) {
+        load {
+            callback.onResult(it,"")
+        }
+    }
+    private fun load(callback:((List<SimpleVideoInfo>)->Unit)){
         keyword?.let {
-            page++
-            model.getVideoList(it,page).subscribe(object :BaseObserver<SearchWrapper0<SearchVideoWrapper1>>(){
-                override fun onNext(res: SearchWrapper0<SearchVideoWrapper1>) {
-                    val t=res.result.searchVideoWrapper2.videoList
-                    if(t.size==0){
+            model.getVideoList(it,page).subscribe(object :BaseObserver<SearchVideoWrapper1>(){
+                override fun onNext(t: SearchVideoWrapper1) {
+                    page++
+                    val list=t.searchVideoWrapper2.videoList
+                    if(list.size==0){
                         wrapper.code=LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
                     }else{
-                        callback.onResult(t,"")
+                        callback.invoke(list)
                     }
+                }
+
+                override fun error(e: Throwable) {
+                    e.printStackTrace()
                 }
             })
         }

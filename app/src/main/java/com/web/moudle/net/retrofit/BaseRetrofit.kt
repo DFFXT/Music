@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 open class BaseRetrofit {
     private val map=ConcurrentHashMap<String,Any>(5)
+
     private val client=OkHttpClient.Builder().addInterceptor { chain ->
         val request=chain.request()
                 .newBuilder()
@@ -42,5 +43,28 @@ open class BaseRetrofit {
     }
     fun <T:Any> obtainClassNoConverter(t:Class<T>):T{
         return retrofitNoConverter.create(t)
+    }
+
+    private var redirectClient:OkHttpClient?=null
+    private var noRedirectRetrofit:Retrofit?=null
+    //**禁止重定向
+    fun <T:Any> obtainClassNoConverterNoRedrect(t:Class<T>):T{
+        if(redirectClient==null){
+            redirectClient=OkHttpClient.Builder()
+                    .followRedirects(false)
+                    .addInterceptor { chain ->
+                val request=chain.request()
+                        .newBuilder()
+                        .removeHeader("User-Agent")
+                        .addHeader("User-Agent","xxx")
+                return@addInterceptor chain.proceed(request.build())
+            }.build()
+            noRedirectRetrofit=Retrofit.Builder()
+                    .baseUrl("http://tingapi.ting.baidu.com/")
+                    .addConverterFactory(ConverterFactory(ConverterFactory.TYPE_STRING))
+                    .client(redirectClient!!)
+                    .build()
+        }
+        return noRedirectRetrofit!!.create(t)
     }
 }

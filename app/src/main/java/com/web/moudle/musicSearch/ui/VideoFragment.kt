@@ -14,16 +14,17 @@ import com.web.common.bean.LiveDataWrapper
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration
-import com.web.moudle.musicSearch.adapter.VideoSheetAdapter
+import com.web.moudle.musicSearch.adapter.SimpleVideoAdapter
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleVideoInfo
 import com.web.moudle.musicSearch.viewModel.VideoViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
+import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
 class VideoFragment:BaseSearchFragment() {
     private lateinit var vm: VideoViewModel
-    private lateinit var adapter: VideoSheetAdapter
+    private lateinit var adapter: SimpleVideoAdapter
     override fun getLayoutId(): Int {
         return R.layout.fragment_music_search
     }
@@ -51,10 +52,10 @@ class VideoFragment:BaseSearchFragment() {
 
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
                 drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
-        adapter= VideoSheetAdapter()
+        adapter= SimpleVideoAdapter()
         adapter.itemClick={
             if(it!=null){//**进入mv
-                //SongSheetActivity.actionStart(context!!,it)
+                VideoEntryActivity.actionStart(context!!,it.mvId)
             }
         }
         rv_musicList.adapter=adapter
