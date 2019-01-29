@@ -4,9 +4,11 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.view.View
 import com.web.common.base.BaseActivity
+import com.web.common.base.errorClickLinsten
 import com.web.common.base.onSeekTo
 import com.web.common.base.showError
 import com.web.common.util.ResUtil
@@ -25,7 +27,9 @@ class VideoEntryActivity : BaseActivity() {
     private lateinit var videoId: String
     override fun getLayoutId(): Int = R.layout.activity_video_entry
     private lateinit var model: VideoViewModel
-    private val FINISH=1
+    private val FINISH = 1
+    private val STAY = 2
+    private var url: String? = null
 
     override fun initView() {
         videoId = intent.getStringExtra(INTENT_DATA)
@@ -35,10 +39,10 @@ class VideoEntryActivity : BaseActivity() {
                 vv_video.showError()
                 return@Observer
             }
-            if(it.fileInfo.source_path.contains("http://dispatcher.video.qiyi.com")){
-                val index=it.fileInfo.source_path.indexOf("?")
-                VideoWebViewActivity.actionStartForResult(this,"http://m.iqiyi.com/shareplay.html?${it.fileInfo.source_path.substring(index+1)}&operator=0&musicch=ppzs&fr=android&ver=6.9.1.0&cid=qc_100001_300089&coop=coop_baidump3&fullscreen=0&autoplay=1&source=&purl=",FINISH)
-            }else{
+            if (it.fileInfo.source_path.contains("http://dispatcher.video.qiyi.com")) {
+                val index = it.fileInfo.source_path.indexOf("?")
+                VideoWebViewActivity.actionStartForResult(this, "http://m.iqiyi.com/shareplay.html?${it.fileInfo.source_path.substring(index + 1)}&operator=0&musicch=ppzs&fr=android&ver=6.9.1.0&cid=qc_100001_300089&coop=coop_baidump3&fullscreen=0&autoplay=1&source=&purl=", FINISH)
+            } else {
                 model.getVideoUrl(it.fileInfo.source_path)
             }
         })
@@ -48,6 +52,7 @@ class VideoEntryActivity : BaseActivity() {
                 vv_video.showError()
                 return@Observer
             }
+            url = it
             vv_video.setVideoURI(Uri.parse(it))
         })
 
@@ -81,8 +86,14 @@ class VideoEntryActivity : BaseActivity() {
         vv_video.setOnCompletionListener {
 
         }
-        vv_video.setOnErrorListener { mp, what, extra ->
-
+        vv_video.setOnErrorListener { _, _, extra ->
+            if (extra == -2147483648) {///***不知道为什么，荣耀meta10很多视频都不能播放，只能跳转的到webView中来播放
+                val bitmap = ResUtil.getDrawableRotate(R.drawable.icon_back_black, 180f)
+                vv_video.showError(getString(R.string.video_unknownError), BitmapDrawable(resources, bitmap))
+                vv_video.errorClickLinsten = View.OnClickListener {
+                    VideoWebViewActivity.actionStartForResult(this, url!!, STAY)
+                }
+            }
             true
         }
     }
@@ -129,7 +140,7 @@ class VideoEntryActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode==FINISH){
+        if (requestCode == FINISH) {
             finish()
         }
     }

@@ -1,6 +1,8 @@
 package com.web.common.base
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
@@ -9,9 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.TextView
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.imageLoader.glide.GlideApp
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
 import com.web.web.R
@@ -155,10 +159,11 @@ private fun View.mShowLoading(w: Int = 0, h: Int = 0) {
     }
 }
 
+
 /**
  * 错误界面
  */
-fun View.showError() {
+fun View.showError(tip:String?=null,drawable:Drawable?=null) {
     hideLoading()
     var mErrorView = errorView
     if (mErrorView == null) {
@@ -167,12 +172,16 @@ fun View.showError() {
         errorView = mErrorView
         mErrorView as ViewGroup
     }
+    if(tip!=null)
+        mErrorView.findViewById<TextView>(R.id.tv_errorTip).text=tip
+    if(drawable!=null)
+        mErrorView.findViewById<ImageView>(R.id.iv_refresh).setImageDrawable(drawable)
     val p = parent as ViewGroup
     p.addView(mErrorView, width, height)
     mErrorView.y = y - p.paddingTop
     mErrorView.x = x - p.paddingStart
     mErrorView.setOnClickListener { v ->
-        loadingClickListen?.let {
+        errorClickLinsten?.let {
             (it).onClick(v)
         }
     }

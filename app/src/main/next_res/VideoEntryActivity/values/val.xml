@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="video_unknownError">播放出错，进入网页播放</string>
+</resources>
