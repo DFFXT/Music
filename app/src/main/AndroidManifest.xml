@@ -19,6 +19,7 @@
 
     <application
         android:name="com.web.common.base.MyApplication"
+        android:networkSecurityConfig="@xml/net_security"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
