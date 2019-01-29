@@ -20,13 +20,12 @@ class VideoViewModel:ViewModel() {
                      val fileInfo=JSON.parseObject(it.rowJson.getJSONObject(it.min_definition).toJSONString(),FileInfo::class.java)
                      it.fileInfo=fileInfo
                      videoInfo.value=it
-                     getVideoUrl(it.fileInfo.source_path)
                  }, onError = {
                             videoInfo.value=null
                         }
                 )
     }
-    private fun getVideoUrl(fakeUrl:String){
+    fun getVideoUrl(fakeUrl:String){
         model.getRealPlayAddress(fakeUrl){
             videoUrl.value=it
         }

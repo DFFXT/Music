@@ -25,6 +25,7 @@ class VideoEntryActivity : BaseActivity() {
     private lateinit var videoId: String
     override fun getLayoutId(): Int = R.layout.activity_video_entry
     private lateinit var model: VideoViewModel
+    private val FINISH=1
 
     override fun initView() {
         videoId = intent.getStringExtra(INTENT_DATA)
@@ -33,6 +34,12 @@ class VideoEntryActivity : BaseActivity() {
             if (it == null) {
                 vv_video.showError()
                 return@Observer
+            }
+            if(it.fileInfo.source_path.contains("http://dispatcher.video.qiyi.com")){
+                val index=it.fileInfo.source_path.indexOf("?")
+                VideoWebViewActivity.actionStartForResult(this,"http://m.iqiyi.com/shareplay.html?${it.fileInfo.source_path.substring(index+1)}&operator=0&musicch=ppzs&fr=android&ver=6.9.1.0&cid=qc_100001_300089&coop=coop_baidump3&fullscreen=0&autoplay=1&source=&purl=",FINISH)
+            }else{
+                model.getVideoUrl(it.fileInfo.source_path)
             }
         })
 
@@ -121,6 +128,11 @@ class VideoEntryActivity : BaseActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode==FINISH){
+            finish()
+        }
+    }
 
     companion object {
         @JvmStatic

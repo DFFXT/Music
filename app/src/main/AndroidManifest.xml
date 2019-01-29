@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.web.web"
     android:installLocation="auto"
     android:versionCode="1"
@@ -22,7 +23,8 @@
         android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppStyle">
+        android:theme="@style/AppStyle"
+        tools:ignore="UnusedAttribute">
         <!--<activity android:name="com.web.moudle.albumEntry.ui.MusicDetailActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -111,12 +113,17 @@
         <activity android:name="com.web.moudle.setting.lockscreen.LockScreenSettingActivity" />
         <activity android:name="com.web.moudle.search.SearchActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.web.moudle.musicSearch.ui.InternetMusicActivity" />
+        <activity android:name="com.web.moudle.musicSearch.ui.InternetMusicActivity"
+            android:configChanges="keyboard|orientation|screenSize"/>
         <activity android:name="com.web.moudle.albumEntry.ui.AlbumEntryActivity" />
         <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivity" />
         <activity android:name="com.web.moudle.musicEntry.ui.MusicDetailActivity" />
         <activity android:name="com.web.moudle.songSheetEntry.ui.SongSheetActivity" />
         <activity android:name="com.web.moudle.videoEntry.ui.VideoEntryActivity" />
+        <activity android:name="com.web.moudle.videoEntry.ui.VideoWebViewActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboard|orientation|screenSize"
+            />
 
     </application>
 
