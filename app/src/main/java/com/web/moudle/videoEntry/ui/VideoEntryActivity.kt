@@ -5,11 +5,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
+import android.media.MediaPlayer
+import android.view.SurfaceHolder
 import android.view.View
+import android.widget.SeekBar
 import com.web.common.base.BaseActivity
 import com.web.common.base.errorClickLinsten
-import com.web.common.base.onSeekTo
 import com.web.common.base.showError
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
@@ -30,6 +31,8 @@ class VideoEntryActivity : BaseActivity() {
     private val FINISH = 1
     private val STAY = 2
     private var url: String? = null
+    private var player:MediaPlayer= MediaPlayer()
+    private var seekBarTouch=false
 
     override fun initView() {
         videoId = intent.getStringExtra(INTENT_DATA)
@@ -53,7 +56,9 @@ class VideoEntryActivity : BaseActivity() {
                 return@Observer
             }
             url = it
-            vv_video.setVideoURI(Uri.parse(it))
+            player.setDataSource(it)
+            player.prepareAsync()
+            //vv_video.setVideoURI(Uri.parse(it))
         })
 
         initVideoController()
@@ -62,31 +67,51 @@ class VideoEntryActivity : BaseActivity() {
 
     private fun initVideoController() {
         ViewUtil.setHeight(vv_video, (ViewUtil.screenWidth() * 9 / 16f).toInt())
+        vv_video.holder.addCallback(SurfaceViewCallback())
         frame_videoStatus.setOnClickListener { toggleShow() }
         vv_video.setOnClickListener { toggleShow() }
         iv_videoStatus.setOnClickListener {
-            if (vv_video.isPlaying) {
+            if (player.isPlaying) {
                 videoPause()
             } else {
                 videoStart()
                 toggleShow()
             }
         }
-        mc_videoController.bar.onSeekTo {
-            vv_video.seekTo(it)
-        }
+        mc_videoController.bar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                mc_videoController.tv_videoCurrentTime.text=ResUtil.timeFormat("mm:ss",seekBar.progress.toLong())
+                if(fromUser){
+                    preClickTime = System.currentTimeMillis()
+                }
+            }
 
-        vv_video.setOnPreparedListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                seekBarTouch=true
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                player.seekTo(seekBar.progress)
+                seekBarTouch=false
+                hideController()
+            }
+        })
+
+        player.setOnSeekCompleteListener {
+            if(player.isPlaying)
+                videoStart()
+        }
+        player.setOnPreparedListener {
             videoStart()
             toggleShow()
             mc_videoController.bar.max = it.duration
             val r = ResUtil.timeFormat("mm:ss", it.duration.toLong())
             mc_videoController.tv_videoMaxTime.text = r
         }
-        vv_video.setOnCompletionListener {
+        player.setOnCompletionListener {
 
         }
-        vv_video.setOnErrorListener { _, _, extra ->
+        player.setOnErrorListener { _, _, extra ->
             if (extra == -2147483648) {///***不知道为什么，荣耀meta10很多视频都不能播放，只能跳转的到webView中来播放
                 val bitmap = ResUtil.getDrawableRotate(R.drawable.icon_back_black, 180f)
                 vv_video.showError(getString(R.string.video_unknownError), BitmapDrawable(resources, bitmap))
@@ -98,43 +123,52 @@ class VideoEntryActivity : BaseActivity() {
         }
     }
 
+
     private fun videoStart() {
         iv_videoStatus.setImageResource(R.drawable.icon_video_play)
-        vv_video.start()
+        player.start()
         run()
     }
 
     private fun videoPause() {
+        position=player.currentPosition
         iv_videoStatus.setImageResource(R.drawable.icon_video_pause)
-        vv_video.pause()
+        player.pause()
     }
 
     private var preClickTime = 0L
-    private fun toggleShow() {
+    private fun toggleShow(forceShow:Boolean?=false) {
         if (g_controlGroup.visibility != View.VISIBLE) {
             g_controlGroup.visibility = View.VISIBLE
-            mc_videoController.postDelayed({
-                if (System.currentTimeMillis() - preClickTime >= 3500) {
-                    g_controlGroup.visibility = View.GONE
-                }
-            }, 3500)
+            preClickTime = System.currentTimeMillis()
+            hideController()
         } else {
             g_controlGroup.visibility = View.GONE
         }
-        preClickTime = System.currentTimeMillis()
 
+
+    }
+    private fun hideController(){
+        mc_videoController.postDelayed({
+            if (System.currentTimeMillis() - preClickTime >= 3500&&!seekBarTouch) {
+                g_controlGroup.visibility = View.GONE
+            }
+        }, 3500)
     }
 
 
+    private var position=0
     private val execute = ThreadPoolExecutor(1, 1, 10, TimeUnit.MILLISECONDS, LinkedBlockingDeque())
     private fun run() {
         execute.execute {
-            while (vv_video.isPlaying) {
-                runOnUiThread {
-                    mc_videoController.bar.progress = vv_video.currentPosition
-                    mc_videoController.tv_videoCurrentTime.text = ResUtil.timeFormat("mm:ss", vv_video.currentPosition.toLong())
+            while (player.isPlaying) {
+                if(!seekBarTouch){
+                    runOnUiThread {
+                        position=player.currentPosition
+                        mc_videoController.bar.progress = player.currentPosition
+                    }
                 }
-                Shortcut.sleep(1000)
+                Shortcut.sleep(400)
             }
         }
     }
@@ -144,6 +178,30 @@ class VideoEntryActivity : BaseActivity() {
             finish()
         }
     }
+
+    override fun onDestroy() {
+        player.release()
+        super.onDestroy()
+    }
+
+    inner class SurfaceViewCallback:SurfaceHolder.Callback{
+        override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+
+        }
+
+        override fun surfaceDestroyed(holder: SurfaceHolder?) {
+            videoPause()
+            player.setDisplay(null)
+        }
+
+        override fun surfaceCreated(holder: SurfaceHolder) {
+            player.setDisplay(holder)
+            player.seekTo(player.currentPosition)
+            toggleShow()
+        }
+    }
+
+
 
     companion object {
         @JvmStatic

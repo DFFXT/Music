@@ -1,5 +1,7 @@
 package com.web.common.util;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -63,5 +65,16 @@ public class ViewUtil {
         }
         v.setLayoutParams(lp);
     }
+
+    public static Bitmap getViewBitmap(View view){
+        /*Bitmap bitmap=Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas=new Canvas(bitmap);
+        view.draw(canvas);*/
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap=view.getDrawingCache();
+        view.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+
 
 }
