@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import android.webkit.WebViewClient
 import com.web.common.base.BaseActivity
 import com.web.web.R
@@ -15,6 +16,7 @@ class VideoWebViewActivity:BaseActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun initView() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         wv_webView.webViewClient= WebViewClient()
         wv_webView.settings.javaScriptEnabled=true
         wv_webView.loadUrl(intent.getStringExtra(INTENT_DATA))
