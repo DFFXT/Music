@@ -12,13 +12,13 @@ import com.web.common.base.BaseSingleObserver;
 import com.web.common.tool.MToast;
 import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
-import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
+import com.web.moudle.musicDownload.ui.DownloadNotification;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,16 +39,21 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FileDownloadService extends Service {
     public final static String ACTION_DOWNLOAD = "com.web.web.File.download";
-    private GetFiles gfFiles = new GetFiles();
     private Connect connect;
     private ArrayList<DownloadListener> listeners = new ArrayList<>();
     private List<DownloadMusic> downloadList = new ArrayList<>();//**下载列表
     private List<DownloadMusic> downloadingList = new ArrayList<>();
     private int maxDownloadingCount = 3;
 
+
+    private DownloadNotification notification;
+
     @Override
     public IBinder onBind(Intent intent) {
-        if (connect == null) connect = new Connect();
+        if (connect == null){
+            notification=new DownloadNotification(this);
+            connect = new Connect();
+        }
         return connect;
     }
 
@@ -254,6 +259,7 @@ public class FileDownloadService extends Service {
                 MToast.showToast(FileDownloadService.this, ResUtil.getString(R.string.download_urlError));
                 return;
             }
+            notification.notifyChange(getDownloadingNum());
             URL Url = new URL(music.getSongLink());
             HttpURLConnection connection = (HttpURLConnection) Url.openConnection();
             connection.setRequestMethod("GET");
@@ -318,6 +324,7 @@ public class FileDownloadService extends Service {
      * 下载完成告知播放器
      */
     private void complete(DownloadMusic dm) {
+        notification.cancel();
         downloadList.remove(dm);
         dm.getInternetMusicDetail().delete();
         listChange();

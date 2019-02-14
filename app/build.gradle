@@ -64,6 +64,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.9.2'
     implementation project(path: ':flutter_module/.android/app')
     implementation files('src/main/bin/rhino-1.7.9.jar')
+
+    implementation 'com.danikula:videocache:2.6.4'
+
 }
 repositories {
     mavenCentral()

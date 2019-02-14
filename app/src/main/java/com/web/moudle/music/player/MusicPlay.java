@@ -35,7 +35,6 @@ import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
 import com.web.config.Shortcut;
-import com.web.data.InternetMusicDetail;
 import com.web.data.InternetMusicForPlay;
 import com.web.data.Music;
 import com.web.data.MusicGroup;
@@ -44,7 +43,7 @@ import com.web.data.PlayerConfig;
 import com.web.data.ScanMusicType;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.music.player.bean.SongSheet;
-import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
@@ -370,27 +369,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		 * 播放下一首
 		 */
 		public void next(){
-
 			waitMusic.clear();
-			config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
-		    int nextChildIndex=1+childIndex;
-		    if(!canPlay(groupIndex,nextChildIndex)){
-		        if(groupIndex<0) groupIndex=0;
-		        if(nextChildIndex<0) nextChildIndex=0;
-		        if(nextChildIndex>=musicList.get(groupIndex).size()) nextChildIndex=0;
-		        if(nextChildIndex<musicList.get(groupIndex).size()) {
-		        	play(groupIndex,nextChildIndex);
-				}
-
-            }
-			else if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.LOCAL){
-				play(groupIndex,childIndex+1);
-			}
 			//**在线播放下一首---------当做本地播放
-			else if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.INTERNET){
-		    	config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
-				play(groupIndex,childIndex+1);
-			}
+			config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
+			play(groupIndex,nextIndex());
 		}
 
 		/**
@@ -399,17 +381,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public void pre(){
 			waitMusic.clear();
 			config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
-		    int preChildIndex=childIndex-1;
-			if(!canPlay(groupIndex,preChildIndex)){
-			    if(groupIndex<0) groupIndex=0;
-                if(preChildIndex<0){
-                    preChildIndex=musicList.get(groupIndex).size()-1;
-			        if (preChildIndex>=0) play(groupIndex,preChildIndex);
-                }
-            }
-			else{
-				play(groupIndex,childIndex-1);
-			}
+			play(groupIndex,preIndex());
 		}
 		//***切换播放状态
 		public void changePlayerPlayingStatus(){
@@ -480,33 +452,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		public Music getPlayingMusic(){
 			return config.getMusic();
 		}
-		public void download(InternetMusicDetail music){
-			String originMusicName=music.getSongName();
-			for(int i=1;i<10;i++){//***音乐查重
-				Music localMusic=DataSupport.where("path=?",Shortcut.createPath(music)).findFirst(Music.class);
-				if(localMusic!=null){
-					File file=new File(Shortcut.createPath(music));
-					if(file.exists()&&file.isFile()){//**存在记录，有文件
-						if(music.getSize()==file.length()){
-							//**文件完全相同
-							return;
-						}
-						else {//**文件不同
-							music.setSongName(originMusicName+"("+i+")");
-						}
-					}
-					else {//**存在记录，文件丢失
-						music.setSongName(localMusic.getPath());
-						music.setPath(localMusic.getPath());
-						break;
-					}
-				}else {//**没有重复记录
-					music.setPath(Shortcut.createPath(music));
-				}
-			}
-			FileDownloadService.addTask(MusicPlay.this,music);
-		}
-
 		/**
 		 * 播放在线音乐
 		 * @param music music
@@ -574,6 +519,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	 * @return bool
 	 */
 	private boolean canPlay(int group,int child) {
+		if(config.getMusicOrigin()==PlayerConfig.MusicOrigin.INTERNET){//**来源为网络时可播放
+			return true;
+		}
 		if(group>=0&&child>=0){
 			if(group<musicList.size()){
                 return child < musicList.get(group).size();
@@ -584,6 +532,16 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private boolean canPlay(){
 	    return canPlay(groupIndex,childIndex);
     }
+    private int nextIndex(){
+		int index;
+		if(childIndex+1>=musicList.get(groupIndex).size()) index=0;
+		else index=childIndex+1;
+		return index;
+	}
+	private int preIndex(){
+		if(childIndex-1<0) return Math.max(musicList.get(groupIndex).size()-1,0);
+		else return childIndex-1;
+	}
 
 	/**
 	 * 加载等待歌曲
@@ -608,7 +566,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		player.reset();
 		try {
 			config.setPrepared(false);
-			player.setDataSource(music.getPath());
+			player.setDataSource(InternetProxy.proxyUrl(music.getPath()));
+			//player.setDataSource(music.getPath());
 			player.prepareAsync();
 		} catch (IOException e) {//***播放异常，如果是文件不存在则删除记录
 			if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.LOCAL){
@@ -687,7 +646,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 				.setExtras(bundle)
 				.setActions(PlaybackStateCompat.ACTION_SEEK_TO)
 				.build();
-		sessionCompat.setPlaybackState(stateCompat);
+		try {
+			sessionCompat.setPlaybackState(stateCompat);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 	/**

@@ -4,6 +4,7 @@ import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import java.io.*
 import java.lang.Exception
+import java.lang.StringBuilder
 import java.net.URL
 
 object IOUtil{
@@ -16,12 +17,12 @@ object IOUtil{
      */
     @JvmStatic
     @WorkerThread
-    fun streamCopy(inputStream:InputStream,outputStream:OutputStream,progressCallBack:((Int)->Unit)?=null,stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null){
+    fun streamCopy(inputStream:InputStream,outputStream:OutputStream,progressCallBack:((Int)->Unit)?=null,stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null):Int{
+        var offset=0
         inputStream.use {input->
             BufferedInputStream(input).use {bis->
                 outputStream.use {out->
                     BufferedOutputStream(out).use {bos->
-                        var offset=0
                         val byte=ByteArray(1024*50)
                         var length:Int
                         while (true){
@@ -36,6 +37,7 @@ object IOUtil{
                             }
                             offset+=length
                             bos.write(byte,0,length)
+                            bos.flush()
                             progressCallBack?.invoke(offset)
                         }
                     }
@@ -43,6 +45,7 @@ object IOUtil{
             }
 
         }
+        return offset
     }
 
     @JvmStatic
@@ -86,6 +89,17 @@ object IOUtil{
             e.printStackTrace()
         }
 
+    }
+
+    @JvmStatic
+    @WorkerThread
+    fun streamToBuilder(inputStream: InputStream){
+        val builder=StringBuilder()
+        inputStream.use {input->
+            BufferedInputStream(input).use {bis->
+                bis.readBytes()
+            }
+        }
     }
 
 }

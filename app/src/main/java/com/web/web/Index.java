@@ -3,11 +3,8 @@ package com.web.web;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -18,10 +15,8 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.fluttermodule.host.MainActivity;
-import com.example.fluttermodule.host.artist.ArtistActivity;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.web.common.base.BaseActivity;
-import com.web.config.GetFiles;
 import com.web.moudle.music.page.MusicActivity;
 import com.web.moudle.net.NetApis;
 import com.web.moudle.net.baseBean.BaseNetBean;
@@ -30,32 +25,24 @@ import com.web.moudle.songSheetEntry.adapter.JSEngine;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import dalvik.system.DexClassLoader;
-import io.flutter.app.FlutterActivity;
-import io.flutter.app.FlutterActivityDelegate;
-import io.flutter.facade.Flutter;
-import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-
-import io.flutter.view.FlutterNativeView;
-import io.flutter.view.FlutterView;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Converter;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import okhttp3.Connection;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.http.Url;
 
 @SuppressLint("InlinedApi")
 public class Index extends BaseActivity implements OnClickListener,OnTouchListener{
@@ -76,6 +63,51 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 		makeData();
 		fillTextAndColor();
 		go();
+
+		//HttpProxyCacheServer server=new HttpProxyCacheServer(this);
+
+
+		new Thread(()->{
+			try {
+
+
+
+
+
+
+
+
+				Thread.sleep(2000);
+				/*OkHttpClient client=new OkHttpClient();
+				Response response=client.newCall(new Request.Builder().url(server.getProxyUrl("http://www.baidu.com")).build()).execute();
+				Log.i("log","res->"+response.body().string());
+				response.close();*/
+
+
+				Socket socket=new Socket("127.0.0.2",8888);
+
+				OutputStream os=socket.getOutputStream();
+				os.write("sdfsadf".getBytes());
+				os.flush();
+
+				InputStream is=socket.getInputStream();
+				byte b[]=new byte[1024];
+				int len;
+				ByteBuffer builder=ByteBuffer.allocate(1024);
+				while ((len=is.read(b))>=0){
+					builder.put(b,0,len);
+				}
+				Log.i("log","-------->"+new String(builder.array()));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();
+
+
 		/*Retrofit.Builder builder=new Retrofit.Builder()
 				.baseUrl("http://59.37.96.220/")
 				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
