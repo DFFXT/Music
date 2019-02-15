@@ -38,8 +38,8 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
 
     override fun onBindItemView(holder: BaseViewHolder, position: Int, item: Music?) {
         val tvMusicName=holder.bindText(R.id.musicName, item?.musicName)
-        val tvSingerName=holder.bindText(R.id.singerName, item?.singer)
-        holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item!!.duration.toLong()))
+        val tvSingerName=holder.bindText(R.id.singerName, item?.singer+if(item!!.album!=null) " - "+item.album else "")
+        holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration.toLong()))
         holder.findViewById<ImageView>(R.id.add).setOnClickListener {
             if(isSelect){
                 select(position)

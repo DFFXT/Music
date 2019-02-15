@@ -45,7 +45,7 @@ class MusicDetailActivity : BaseActivity() {
         model = ViewModelProviders.of(this)[DetailMusicViewModel::class.java]
         model.detailMusic.observe(this, Observer<LiveDataWrapper<MusicDetailInfo>> { data ->
             if (data != null) {
-                if (data.code == DetailMusicViewModel.CODE_OK) {
+                if (data.code == LiveDataWrapper.CODE_OK) {
                     val res = data.value
                     tv_musicName.text = res.songInfo.title
                     tv_mainSinger.text = res.songInfo.artistName
@@ -132,7 +132,7 @@ class MusicDetailActivity : BaseActivity() {
                     }
 
 
-                } else if (data.code == DetailMusicViewModel.CODE_ERROR) {
+                } else if (data.code == LiveDataWrapper.CODE_ERROR) {
                     rootView.showError()
                     rootView.errorClickLinsten = View.OnClickListener {
                         model.getDetail(songId = id)
@@ -145,7 +145,7 @@ class MusicDetailActivity : BaseActivity() {
         })
         model.lyrics.observe(this, Observer { wrapper ->
             if (wrapper == null) return@Observer
-            if (wrapper.code == DetailMusicViewModel.CODE_OK) {
+            if (wrapper.code == LiveDataWrapper.CODE_OK) {
                 val builder = StringBuilder()
                 wrapper.value.forEach {
                     builder.append(it.line)

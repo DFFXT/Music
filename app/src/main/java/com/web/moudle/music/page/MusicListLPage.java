@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MusicListLPage extends BaseMusicPage implements KeyBackListener {
+public class MusicListLPage extends BaseMusicPage {
     public final static String pageName="MusicList";
     private MusicList<Music> data;
     private RecyclerView rv_musicList;
@@ -312,12 +312,4 @@ public class MusicListLPage extends BaseMusicPage implements KeyBackListener {
 
     }
 
-    @Override
-    public boolean keyBackPressed() {
-        /*if(adapter.isSelect()){
-            adapter.setSelect(false);
-            return true;
-        }*/
-        return false;
-    }
 }

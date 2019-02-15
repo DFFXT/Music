@@ -77,7 +77,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
     private List<BaseMusicPage> pageList = new ArrayList<>();
 
     private SelectorListAlert listAlert;
-    private List<KeyBackListener> backObserver = new ArrayList<>();
 
     public int getLayoutId() {//---活动启动入口
         return R.layout.restruct_music_layout;
@@ -89,7 +88,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
         setToolbar();
         musicListLPage = new MusicListLPage();
         pageList.add(musicListLPage);
-        addBackListener(musicListLPage);
         setTitle(musicListLPage);
         setAdapter();
         startService(new Intent(this, MusicPlay.class));
@@ -629,20 +627,5 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
         }
     }
 
-    public void addBackListener(KeyBackListener listener) {
-        backObserver.add(0, listener);
-    }
-
-    public void removeBackListener(KeyBackListener listener) {
-        backObserver.remove(listener);
-    }
-
-    @Override
-    public void onBackPressed() {
-        for (KeyBackListener listener : backObserver) {
-            if (listener.keyBackPressed()) return;
-        }
-        super.onBackPressed();
-    }
 }
 

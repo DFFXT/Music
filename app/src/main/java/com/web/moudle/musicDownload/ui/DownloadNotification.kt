@@ -13,6 +13,7 @@ class DownloadNotification(ctx: Context) : BaseNotification(ctx, "downloaing", "
 
     init {
         val intent = Intent(ctx, MusicDownLoadActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         pIntent = PendingIntent.getActivity(ctx, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

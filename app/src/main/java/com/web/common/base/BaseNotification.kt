@@ -8,8 +8,10 @@ import android.support.annotation.LayoutRes
 import android.widget.RemoteViews
 import com.web.web.R
 
-
-abstract class BaseNotification(private val context: Context, private val id: String, name: String) {
+/**
+ * 原生通知
+ */
+abstract class BaseNotification(private val context: Context,id: String, name: String) {
     private var builder: Notification.Builder
     private var notificationId=0
 
@@ -26,7 +28,8 @@ abstract class BaseNotification(private val context: Context, private val id: St
     protected fun createChannel(id: String, name: String) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
-           manager().createNotificationChannel(channel)
+            channel.setSound(null,null)
+            manager().createNotificationChannel(channel)
         }
     }
     protected fun manager():NotificationManager{

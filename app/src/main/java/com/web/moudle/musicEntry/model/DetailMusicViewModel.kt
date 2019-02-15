@@ -6,16 +6,10 @@ import com.web.common.base.BaseSingleObserver
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
-import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.music.page.lyrics.model.LyricsLine
+import com.web.moudle.musicEntry.bean.MusicDetailInfo
 
 class DetailMusicViewModel : ViewModel() {
-    companion object {
-        const val CODE_INTERNET_ERROR=1
-        const val CODE_NO_DATA=2
-        const val CODE_ERROR=2
-        const val CODE_OK=2
-    }
     private val model = MusicDetailModel()
     val detailMusic = MutableLiveData<LiveDataWrapper<MusicDetailInfo>>()
     val lyrics = MutableLiveData<LiveDataWrapper<ArrayList<LyricsLine>>>()
@@ -26,19 +20,19 @@ class DetailMusicViewModel : ViewModel() {
         model.getMusicDetail(songId)
                 .get(
                         onNext = {res->
-                            detailMusicWrapper.code= CODE_OK
+                            detailMusicWrapper.code= LiveDataWrapper.CODE_OK
                             detailMusicWrapper.value=res
                             detailMusic.value=detailMusicWrapper
                         },
                         onError = {
-                            detailMusicWrapper.code= CODE_ERROR
+                            detailMusicWrapper.code= LiveDataWrapper.CODE_ERROR
                             detailMusic.value=detailMusicWrapper
                         }
                 )
     }
     fun getLyrics(lrcLink:String){
         if(Shortcut.isStrictEmpty(lrcLink)){
-            lyricsWrapper.code= CODE_NO_DATA
+            lyricsWrapper.code= LiveDataWrapper.CODE_NO_DATA
             lyricsWrapper.value=ArrayList()
             lyrics.value=lyricsWrapper
             return
@@ -46,12 +40,12 @@ class DetailMusicViewModel : ViewModel() {
         model.getLyrics(lrcLink)
                 .subscribe(object :BaseSingleObserver<ArrayList<LyricsLine>>(){
                     override fun error(e: Throwable) {
-                        lyricsWrapper.code= CODE_ERROR
+                        lyricsWrapper.code= LiveDataWrapper.CODE_ERROR
                         lyrics.value=lyricsWrapper
                     }
 
                     override fun onSuccess(t: ArrayList<LyricsLine>) {
-                        lyricsWrapper.code= CODE_OK
+                        lyricsWrapper.code= LiveDataWrapper.CODE_OK
                         lyricsWrapper.value=t
                         lyrics.value=lyricsWrapper
                     }

@@ -1,6 +1,7 @@
 package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
+import android.app.KeyguardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -98,8 +99,9 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         }
         if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.N_MR1)
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
-        else
-            setShowWhenLocked(true)
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                setShowWhenLocked(true)
+            }
         showTime()
         iv_lockScreen_pre.setOnClickListener(this)
         iv_lockScreen_status.setOnClickListener(this)
@@ -298,6 +300,14 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                 }
             }
 
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val manager=getSystemService(KeyguardManager::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.requestDismissKeyguard(this,null)
         }
     }
 

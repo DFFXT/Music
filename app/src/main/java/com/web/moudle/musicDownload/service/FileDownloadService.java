@@ -49,9 +49,14 @@ public class FileDownloadService extends Service {
     private DownloadNotification notification;
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        notification=new DownloadNotification(this);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         if (connect == null){
-            notification=new DownloadNotification(this);
             connect = new Connect();
         }
         return connect;
@@ -154,6 +159,12 @@ public class FileDownloadService extends Service {
             switch (action) {
                 case ACTION_DOWNLOAD: {
                     InternetMusicDetail music = (InternetMusicDetail) intent.getSerializableExtra("music");
+
+                    if(downloadList.size()==0){
+                        //**此处需要请求下载列表，请求以前的下载
+                        if(connect==null)connect=new Connect();
+                        connect.getDownloadList();
+                    }
                     addMusic(music);
                 }
                 break;
@@ -260,7 +271,7 @@ public class FileDownloadService extends Service {
                 MToast.showToast(FileDownloadService.this, ResUtil.getString(R.string.download_urlError));
                 return;
             }
-            notification.notifyChange(getDownloadingNum());
+            notifyNotification();
             URL Url = new URL(music.getSongLink());
             HttpURLConnection connection = (HttpURLConnection) Url.openConnection();
             connection.setRequestMethod("GET");
@@ -306,10 +317,20 @@ public class FileDownloadService extends Service {
         for (DownloadListener listener : listeners) {
             listener.listChanged(downloadList);
         }
+        notifyNotification();
+    }
 
+    private void notifyNotification(){
+        int num=getDownloadingNum();
+        if(num>0){//**正在下载的为0 则取消显示
+            notification.notifyChange(getDownloadingNum());
+        }else{
+            notification.cancel();
+        }
     }
 
     private void statusChange(DownloadMusic dm) {
+        notifyNotification();
         for (DownloadListener listener : listeners) {
             listener.statusChange(dm.getInternetMusicDetail().getId(), dm.getStatus() == DownloadMusic.DOWNLOAD_DOWNLOADING);
         }
@@ -325,7 +346,7 @@ public class FileDownloadService extends Service {
      * 下载完成告知播放器
      */
     private void complete(DownloadMusic dm) {
-        notification.cancel();
+        notifyNotification();
         downloadList.remove(dm);
         dm.getInternetMusicDetail().delete();
         listChange();

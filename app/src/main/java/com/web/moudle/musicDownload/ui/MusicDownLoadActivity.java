@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.web.common.base.BaseActivity;
@@ -16,6 +17,7 @@ import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
+import com.web.misc.DrawableItemDecoration;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
@@ -46,6 +48,8 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 	public void initView() {
         rv_download=findViewById(R.id.list);
         rv_download.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        rv_download.addItemDecoration(new DrawableItemDecoration(0,0,0,5, LinearLayout.VERTICAL,getDrawable(R.drawable.recycler_divider)));
+
 		connect();
 		TopBarLayout topBarLayout=findViewById(R.id.topBar_musicDownload);
 		topBarLayout.setMainTitle(ResUtil.getString(R.string.downloadManager));

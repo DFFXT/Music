@@ -25,6 +25,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
@@ -856,7 +857,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		if(cursor==null)return;
 		List<ScanMusicType> types=DataSupport.findAll(ScanMusicType.class);
 		if(types.size()==0){//**如果扫描设置不存在，就采用默认扫描设置
-			String suffix[]=new String[]{".mp3",".ogg",".wav"};
+			String suffix[]=new String[]{".mp3",".m4a",".ogg",".wav"};
 			for(String str:suffix){
 				ScanMusicType scanMusicType=new ScanMusicType(str,1024*50,true);
 				scanMusicType.save();
@@ -870,11 +871,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			index=cursor.getColumnIndex("_size");
 			int size=cursor.getInt(index);
 
-
-
 			for(ScanMusicType type:types){
 				if(!type.isScanable())continue;
-				if(path!=null&&path.endsWith(type.getScanSuffix())&&size>=type.getMinFileSize()){
+				if(path!=null&&path.toLowerCase().endsWith(type.getScanSuffix().toLowerCase())&&size>=type.getMinFileSize()){
 					int lastSeparatorChar = path.lastIndexOf(File.separatorChar);
 					//**文件名包含后缀
 					String fileName=path;
@@ -891,6 +890,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 					music.setSong_id(cursor.getInt(index));
 					index=cursor.getColumnIndex("album_id");
 					music.setAlbum_id(cursor.getInt(index));
+					index=cursor.getColumnIndex("album");
+					music.setAlbum(cursor.getString(index));
+
 					Music m=DataSupport.where("path=?",music.getPath()).findFirst(Music.class);
 					if(m==null){
 						music.save();
@@ -904,6 +906,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			}
 		}
 		cursor.close();
+		Log.i("log","--->scan");
 		AndroidSchedulers.mainThread().scheduleDirect(()-> MToast.showToast(MyApplication.context,ResUtil.getString(R.string.scanOver)));
 		scanningMusicLock.unlock();
 	}
