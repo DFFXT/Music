@@ -9,10 +9,15 @@ import com.web.moudle.musicSearch.bean.SearchWrapper0
 import com.web.moudle.musicSearch.bean.next.SearchArtistWrapper1
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 
-class ArtistDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Throwable>>):PageKeyedDataSource<String, SimpleArtistInfo> (){
+class ArtistDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>>):PageKeyedDataSource<String, SimpleArtistInfo> (){
     var keyword:String?=null
+        set(value){
+            field=value
+            page=1
+        }
     var page:Int=1
-    private val wrapper=LiveDataWrapper<Throwable>()
+    private var total=0
+    private val wrapper=LiveDataWrapper<Int>()
     private val model=InternetMusicModel()
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, SimpleArtistInfo>) {
         size=0
@@ -33,11 +38,17 @@ class ArtistDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Thro
                     page++
                     val list= t.searchArtistWrapper2.artistList ?: return
                     size+=list.size
-                    if(list.size==0||size==t.searchArtistWrapper2.total){
+                    if(list.size==0&&t.searchArtistWrapper2.total!=0){
                         wrapper.code=LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
                     }
                     callback.invoke(list)
+                    if(total!=t.searchArtistWrapper2.total){
+                        wrapper.code=LiveDataWrapper.CODE_OK
+                        wrapper.value=t.searchArtistWrapper2.total
+                        liveData.postValue(wrapper)
+                        total=t.searchArtistWrapper2.total
+                    }
                 }
 
                 override fun error(e: Throwable) {

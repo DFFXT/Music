@@ -96,6 +96,7 @@ public class FileDownloadService extends Service {
                     dm.getInternetMusicDetail().delete();
                     if (dm.getStatus() != DownloadMusic.DOWNLOAD_DOWNLOADING) {
                         FileDownloadService.this.delete(dm.getInternetMusicDetail());
+                        downloadList.remove(dm);
                     }
                     dm.setStatus(DownloadMusic.DOWNLOAD_DELETE);
                     break;
@@ -354,6 +355,7 @@ public class FileDownloadService extends Service {
 
     /**
      * 添加一个下载任务
+     * 以名称、文件大小来判断歌曲是否相同
      *
      * @param context context
      * @param music   music

@@ -19,7 +19,7 @@ class ArtistViewModel : ViewModel() {
 
     val artistId = MutableLiveData<String>()
     private val model = BaseRetrofit()
-    val status = MutableLiveData<LiveDataWrapper<Throwable>>()
+    val status = MutableLiveData<LiveDataWrapper<Int>>()
     private val dataSource = ArtistDataSource(status)
     private var config: PagedList.Config = PagedList.Config.Builder()
             .setPageSize(20)

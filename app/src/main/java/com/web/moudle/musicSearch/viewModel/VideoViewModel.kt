@@ -15,7 +15,7 @@ class VideoViewModel : ViewModel() {
 
     val artistId = MutableLiveData<String>()
 
-    val status = MutableLiveData<LiveDataWrapper<Throwable>>()
+    val status = MutableLiveData<LiveDataWrapper<Int>>()
     private val dataSource = VideoDataSource(status)
     private var config: PagedList.Config = PagedList.Config.Builder()
             .setPageSize(20)

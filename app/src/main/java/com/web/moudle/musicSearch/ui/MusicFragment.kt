@@ -70,31 +70,15 @@ class MusicFragment:BaseSearchFragment() {
             if (detailList == null) return@Observer
             downloadConsider(detailList.songList[0])
         })
-        vm.status.observe(this, Observer<LiveDataWrapper<Any>>{ wrapper ->
+        vm.status.observe(this, Observer<LiveDataWrapper<Int>>{ wrapper ->
             if (wrapper == null) return@Observer
             when (wrapper.code) {
                 LiveDataWrapper.CODE_NO_DATA->{
                     smartRefreshLayout.setNoMoreData(true)
                 }
-                /*InternetViewModel.CODE_OK -> {
-                    smartRefreshLayout.finishLoadMore()
+                LiveDataWrapper.CODE_OK -> {
+                    searchCallBack?.invoke(wrapper.value)
                 }
-                InternetViewModel.CODE_NO_DATA -> {
-                    smartRefreshLayout.setNoMoreData(true)
-                    //MToast.showToast(this, ResUtil.getString(R.string.noMoreData));
-                }
-                InternetViewModel.CODE_JSON_ERROR -> {
-                    MToast.showToast(context!!, ResUtil.getString(R.string.dataAnalyzeError))
-                }
-                InternetViewModel.CODE_URL_ERROR -> {
-                    MToast.showToast(context!!, ResUtil.getString(R.string.urlAnalyzeError))
-                }
-                InternetViewModel.CODE_NET_ERROR -> {
-                    MToast.showToast(context!!, ResUtil.getString(R.string.noInternet))
-                }
-                InternetViewModel.CODE_ERROR -> {
-                    MToast.showToast(context!!, ResUtil.getString(R.string.unkownError))
-                }*/
             }
         })
     }
@@ -115,7 +99,6 @@ class MusicFragment:BaseSearchFragment() {
             adapter.submitList(pl)
             rootView?.showContent()
         })
-
     }
 
     /**
@@ -136,8 +119,8 @@ class MusicFragment:BaseSearchFragment() {
                 info.musicName = Shortcut.validatePath(music.songName)
                 info.singer = Shortcut.validatePath(music.artistName)
                 info.path = music.songLink
-                info.setImgAddress(music.singerIconSmall)
-                info.setLrcLink(music.lrcLink)
+                info.imgAddress = music.singerIconSmall
+                info.lrcLink = music.lrcLink
                 MusicPlay.play(context, info)
 
             }.start()

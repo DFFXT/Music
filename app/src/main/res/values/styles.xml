@@ -38,5 +38,9 @@
     <style name="search_focus">
         <item name="android:textColor">@color/themeColor</item>
     </style>
+    <style name="searchResultNumber">
+        <item name="android:textColor">@color/themeColor</item>
+        <item name="android:textSize">@dimen/textSize_small</item>
+    </style>
 
 </resources>

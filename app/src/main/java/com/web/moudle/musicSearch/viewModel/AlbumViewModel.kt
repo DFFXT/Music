@@ -12,7 +12,7 @@ import com.web.moudle.musicSearch.model.AlbumDataSource
 
 class AlbumViewModel:ViewModel() {
 
-    val status=MutableLiveData<LiveDataWrapper<Throwable>>()
+    val status=MutableLiveData<LiveDataWrapper<Int>>()
     private val dataSource= AlbumDataSource(status)
     private var config:PagedList.Config = PagedList.Config.Builder()
             .setPageSize(20)

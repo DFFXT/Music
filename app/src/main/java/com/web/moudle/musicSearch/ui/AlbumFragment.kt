@@ -48,9 +48,11 @@ class AlbumFragment:BaseSearchFragment() {
         }
         rv_musicList.adapter=adapter
 
-        vm.status.observe(this,Observer<LiveDataWrapper<Throwable>>{
+        vm.status.observe(this,Observer<LiveDataWrapper<Int>>{
             if(it!!.code== LiveDataWrapper.CODE_NO_DATA){
                 smartRefreshLayout.setNoMoreData(true)
+            }else if(it.code==LiveDataWrapper.CODE_OK){
+                searchCallBack?.invoke(it.value)
             }
         })
 

@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.TextAppearanceSpan;
 
 import com.web.common.base.BaseActivity;
 import com.web.common.base.BaseFragmentPagerAdapter;
@@ -25,9 +29,17 @@ public class InternetMusicActivity extends BaseActivity {
     private ViewPager viewPager;
     public static String keyWords;
     private TopBarLayout topBarLayout;
+    private CharSequence[] item;
 
     private void initData() {
         keyWords = getIntent().getStringExtra(KEYWORD);
+        item=new CharSequence[]{
+                getText(R.string.music),
+                getText(R.string.singer_tab),
+                getText(R.string.album_tab),
+                getText(R.string.songSheet),
+                getText(R.string.video)
+        };
     }
 
     @Override
@@ -55,24 +67,40 @@ public class InternetMusicActivity extends BaseActivity {
         pageList.add(new VideoFragment());
         Bundle b = new Bundle();
         b.putString(MusicFragment.keyword, keyWords);
-        for (BaseSearchFragment f : pageList) {
-            f.setArguments(b);
-        }
+
         viewPager.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(), pageList));
         viewPager.setOffscreenPageLimit(pageList.size());
         tabLayout.setTabIndicatorFullWidth(false);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
-        Objects.requireNonNull(tabLayout.getTabAt(0)).setText(getText(R.string.music));
-        Objects.requireNonNull(tabLayout.getTabAt(1)).setText(getText(R.string.singer_tab));
-        Objects.requireNonNull(tabLayout.getTabAt(2)).setText(getText(R.string.album_tab));
-        Objects.requireNonNull(tabLayout.getTabAt(3)).setText(getText(R.string.songSheet));
-        Objects.requireNonNull(tabLayout.getTabAt(4)).setText(getText(R.string.video));
+        int pageIndex=0;
+        for (BaseSearchFragment f : pageList) {
+            f.setArguments(b);
+            int finalPageIndex = pageIndex;
+            f.setSearchCallBack((number)->{
+                String num;
+                if(number>999) num="999+";
+                else num=""+number;
+                Objects.requireNonNull(tabLayout.getTabAt(finalPageIndex)).setText(addNumber(item[finalPageIndex],num));
+                return null;
+            });
+            Objects.requireNonNull(tabLayout.getTabAt(pageIndex)).setText(item[pageIndex]);
+            pageIndex++;
+        }
+
+
 
         setTitle();
 
     }
+    private Spannable addNumber(CharSequence text,String number){
+        SpannableString spannable=new SpannableString(text+"("+number+")");
+        spannable.setSpan(new TextAppearanceSpan(this,R.style.searchResultNumber),text.length(),spannable.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        return spannable;
+    }
+
+
 
     private void setTitle(){
         topBarLayout.setMainTitle(keyWords+"-"+getString(R.string.search));

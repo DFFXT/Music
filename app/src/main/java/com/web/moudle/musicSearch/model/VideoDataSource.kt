@@ -8,10 +8,15 @@ import com.web.moudle.musicSearch.bean.SearchWrapper0
 import com.web.moudle.musicSearch.bean.next.SearchVideoWrapper1
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleVideoInfo
 
-class VideoDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Throwable>>):PageKeyedDataSource<String, SimpleVideoInfo> (){
+class VideoDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>>):PageKeyedDataSource<String, SimpleVideoInfo> (){
     var keyword:String?=null
+        set(value){
+            field=value
+            page=1
+        }
     var page:Int=1
-    private val wrapper=LiveDataWrapper<Throwable>()
+    private var total=0
+    private val wrapper=LiveDataWrapper<Int>()
     private val model=InternetMusicModel()
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, SimpleVideoInfo>) {
         load {
@@ -30,11 +35,17 @@ class VideoDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Throw
                 override fun onNext(t: SearchVideoWrapper1) {
                     page++
                     val list=t.searchVideoWrapper2.videoList
-                    if(list.size==0){
+                    if(list.size==0&&t.searchVideoWrapper2.total!=0){
                         wrapper.code=LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
                     }else{
                         callback.invoke(list)
+                        if(total!=t.searchVideoWrapper2.total){
+                            total=t.searchVideoWrapper2.total
+                            wrapper.code=LiveDataWrapper.CODE_OK
+                            wrapper.value=total
+                            liveData.postValue(wrapper)
+                        }
                     }
                 }
 
