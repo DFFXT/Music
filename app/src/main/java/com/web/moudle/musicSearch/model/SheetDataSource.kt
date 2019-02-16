@@ -12,6 +12,7 @@ class SheetDataSource(private val liveData: MutableLiveData<LiveDataWrapper<Int>
         set(value){
             field=value
             page=1
+            total=0
         }
     var page: Int = 1
     private var total=0
@@ -34,12 +35,17 @@ class SheetDataSource(private val liveData: MutableLiveData<LiveDataWrapper<Int>
             model.getSheetList(it, page).subscribe(object : BaseObserver<SearchSongSheetWrapper1>() {
                 override fun onNext(res: SearchSongSheetWrapper1) {
                     page++
-                    val t = res.searchSongSheetWrapper2.songList
-                    if (t.size == 0&&res.searchSongSheetWrapper2.total!=0) {
+                    val box = res.searchSongSheetWrapper2
+                    if(box.total==0){
+                        wrapper.code=LiveDataWrapper.CODE_OK
+                        wrapper.value=0
+                        liveData.postValue(wrapper)
+                    }
+                    else if (box.songList==null||box.songList.size == 0&&res.searchSongSheetWrapper2.total!=0) {
                         wrapper.code = LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
                     } else {
-                        callback.invoke(t)
+                        callback.invoke(box.songList)
                         if(total!=res.searchSongSheetWrapper2.total){
                             wrapper.code=LiveDataWrapper.CODE_OK
                             wrapper.value=res.searchSongSheetWrapper2.total

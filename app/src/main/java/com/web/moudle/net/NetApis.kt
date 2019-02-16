@@ -3,6 +3,8 @@ package com.web.moudle.net
 import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd
 import com.web.moudle.albumEntry.bean.AlbumResponse
+import com.web.moudle.billboard.bean.BillBoardList
+import com.web.moudle.billboradDetail.bean.NetMusicBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicSearch.bean.RowMusicData
 import com.web.moudle.musicSearch.bean.next.*
@@ -67,6 +69,15 @@ class NetApis {
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=6.9.1.0&channel=ppzs&operator=0&method=baidu.ting.search.merge&format=json&type=14&data_source=0&isNew=1&use_cluster=1")
         fun videoSearch(@Query("query") keyword: String, @Query("page_size") pageSize: Int, @Query("page_no") page: Int): Observable<BaseNetBean<SearchVideoWrapper1>>
 
+    }
+
+    interface Recommend{
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billCategory&format=json&kflag=2")
+        fun billboard():Observable<BillBoardList>
+    }
+    interface NetMusicList{
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billList&format=json&offset=0&size=30")
+        fun requestList(@Query("type") type:Int):Observable<NetMusicBox>
     }
 
     interface SongEntry {

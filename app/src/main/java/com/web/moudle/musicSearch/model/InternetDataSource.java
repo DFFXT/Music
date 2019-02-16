@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import com.web.common.base.BaseObserver;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.moudle.musicSearch.bean.next.SearchMusicWrapper1;
+import com.web.moudle.musicSearch.bean.next.next.SearchSongSheetWrapper2;
+import com.web.moudle.musicSearch.bean.next.next.SearchSongWrapper2;
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,15 +50,20 @@ public class InternetDataSource extends PageKeyedDataSource<String,SimpleMusicIn
         model.getSimpleMusic(keyWords, page).subscribe(new BaseObserver<SearchMusicWrapper1>() {
             @Override
             public void onNext(SearchMusicWrapper1 res) {
-                ArrayList<SimpleMusicInfo> list = res.getSearchSongWrapper2().getSongList();
-                if (list.size() == 0&&res.getSearchSongWrapper2().getTotal()!=0) {
+                SearchSongWrapper2 box = res.getSearchSongWrapper2();
+                if(box.getTotal()==0){
+                    wrapper.setCode(LiveDataWrapper.CODE_OK);
+                    wrapper.setValue(0);
+                    liveData.postValue(wrapper);
+                }
+                else if (box.getSongList()==null||box.getSongList().size() == 0&&res.getSearchSongWrapper2().getTotal()!=0) {
                     wrapper.setCode(LiveDataWrapper.CODE_NO_DATA);
                     liveData.postValue(wrapper);
                 } else {
                     if (flg == 0) {
-                        ((LoadInitialCallback) callback).onResult(list, "", "");
+                        ((LoadInitialCallback) callback).onResult(box.getSongList(), "", "");
                     } else if (flg == 1) {
-                        ((LoadCallback) callback).onResult(list, "");
+                        ((LoadCallback) callback).onResult(box.getSongList(), "");
                     }
                     if (total != res.getSearchSongWrapper2().getTotal()) {
                         total = res.getSearchSongWrapper2().getTotal();
@@ -78,6 +85,7 @@ public class InternetDataSource extends PageKeyedDataSource<String,SimpleMusicIn
     public void setKeyWords(String keyWords) {
         this.keyWords = keyWords;
         setPage(1);
+        total=0;
     }
 
     private void setPage(int page) {

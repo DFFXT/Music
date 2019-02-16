@@ -1,7 +1,7 @@
 package com.web.moudle.notification;
 
 import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.music.page.MusicActivity;
+import com.web.moudle.music.page.local.MusicActivity;
 import com.web.web.R;
 
 import android.app.Notification;
@@ -12,7 +12,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.widget.RemoteViews;
 
 /*

@@ -163,7 +163,7 @@ private fun View.mShowLoading(w: Int = 0, h: Int = 0) {
 /**
  * 错误界面
  */
-fun View.showError(tip:String?=null,drawable:Drawable?=null) {
+fun View.showError(tip:String?=null,drawable:Drawable?=null):ViewGroup {
     hideLoading()
     var mErrorView = errorView
     if (mErrorView == null) {
@@ -185,6 +185,7 @@ fun View.showError(tip:String?=null,drawable:Drawable?=null) {
             (it).onClick(v)
         }
     }
+    return mErrorView as ViewGroup
 }
 
 /**

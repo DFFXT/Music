@@ -13,6 +13,7 @@ class VideoDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>>
         set(value){
             field=value
             page=1
+            total=0
         }
     var page:Int=1
     private var total=0
@@ -34,12 +35,17 @@ class VideoDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>>
             model.getVideoList(it,page).subscribe(object :BaseObserver<SearchVideoWrapper1>(){
                 override fun onNext(t: SearchVideoWrapper1) {
                     page++
-                    val list=t.searchVideoWrapper2.videoList
-                    if(list.size==0&&t.searchVideoWrapper2.total!=0){
+                    val box=t.searchVideoWrapper2
+                    if(box.total==0){
+                        wrapper.code=LiveDataWrapper.CODE_OK
+                        wrapper.value=0
+                        liveData.postValue(wrapper)
+                    }
+                    else if(box.videoList==null||box.videoList.size==0&&t.searchVideoWrapper2.total!=0){
                         wrapper.code=LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
                     }else{
-                        callback.invoke(list)
+                        callback.invoke(box.videoList)
                         if(total!=t.searchVideoWrapper2.total){
                             total=t.searchVideoWrapper2.total
                             wrapper.code=LiveDataWrapper.CODE_OK

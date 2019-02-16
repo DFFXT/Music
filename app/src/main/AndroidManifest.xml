@@ -46,7 +46,7 @@
             android:process=":remote" />
 
         <activity
-            android:name="com.web.moudle.music.page.MusicActivity"
+            android:name="com.web.moudle.music.page.local.MusicActivity"
             android:label="@string/outerMusicLabel"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -87,7 +87,7 @@
         <activity android:name=".Alarm_Activity" />
         <activity android:name=".Ring" />
 
-        <receiver android:name="com.web.moudle.music.page.control.receiver.EarPlugReceiver">
+        <receiver android:name="com.web.moudle.music.page.local.control.receiver.EarPlugReceiver">
             <intent-filter android:priority="999999999">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
@@ -125,6 +125,8 @@
             android:screenOrientation="landscape"
             android:configChanges="keyboard|orientation|screenSize"
             />
+        <activity android:name="com.web.moudle.billboard.BillBoardActivity" />
+        <activity android:name="com.web.moudle.billboradDetail.NetMusicListActivity" />
 
     </application>
 

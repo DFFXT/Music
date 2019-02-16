@@ -5,6 +5,8 @@ import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -12,6 +14,7 @@ import android.widget.TextView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
+import com.web.common.base.showError
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.ResUtil
@@ -78,6 +81,12 @@ class MusicFragment:BaseSearchFragment() {
                 }
                 LiveDataWrapper.CODE_OK -> {
                     searchCallBack?.invoke(wrapper.value)
+                    if(wrapper.value==0){
+                        smartRefreshLayout.showError("没有数据", ColorDrawable())
+                                .setBackgroundColor(Color.TRANSPARENT)
+                    }else{
+                        smartRefreshLayout.showContent()
+                    }
                 }
             }
         })

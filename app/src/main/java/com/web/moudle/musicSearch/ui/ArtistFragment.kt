@@ -3,12 +3,15 @@ package com.web.moudle.musicSearch.ui
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
+import com.web.common.base.showError
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.tool.MToast
@@ -66,6 +69,12 @@ class ArtistFragment:BaseSearchFragment() {
                 smartRefreshLayout.setNoMoreData(true)
             }else if(it.code==LiveDataWrapper.CODE_OK){
                 searchCallBack?.invoke(it.value)
+                if(it.value==0){
+                    smartRefreshLayout.showError("没有数据", ColorDrawable())
+                            .setBackgroundColor(Color.TRANSPARENT)
+                }else{
+                    smartRefreshLayout.showContent()
+                }
             }
         })
 

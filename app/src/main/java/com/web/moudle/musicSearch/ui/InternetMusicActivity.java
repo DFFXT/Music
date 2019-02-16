@@ -11,6 +11,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 
 import com.web.common.base.BaseActivity;
 import com.web.common.base.BaseFragmentPagerAdapter;
@@ -79,10 +80,14 @@ public class InternetMusicActivity extends BaseActivity {
             f.setArguments(b);
             int finalPageIndex = pageIndex;
             f.setSearchCallBack((number)->{
-                String num;
-                if(number>999) num="999+";
-                else num=""+number;
-                Objects.requireNonNull(tabLayout.getTabAt(finalPageIndex)).setText(addNumber(item[finalPageIndex],num));
+                if(number>0){
+                    String num;
+                    if(number>999) num="999+";
+                    else num=""+number;
+                    Objects.requireNonNull(tabLayout.getTabAt(finalPageIndex)).setText(addNumber(item[finalPageIndex],num));
+                }else{
+                    Objects.requireNonNull(tabLayout.getTabAt(finalPageIndex)).setText(item[finalPageIndex]);
+                }
                 return null;
             });
             Objects.requireNonNull(tabLayout.getTabAt(pageIndex)).setText(item[pageIndex]);

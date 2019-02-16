@@ -12,6 +12,7 @@ class AlbumDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>>
         set(value){
             field=value
             page=1
+            total=0
         }
     var page:Int=1
     private var total=0
@@ -33,12 +34,18 @@ class AlbumDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>>
             model.getAlbumList(it,page).subscribe(object :BaseObserver<SearchAlbumWrapper1>(){
                 override fun onNext(res: SearchAlbumWrapper1) {
                     page++
-                    val t=res.searchAlbumWrapper2.albumList
-                    if(t.size==0&&res.searchAlbumWrapper2.total!=0){
+
+                    val box=res.searchAlbumWrapper2
+                    if(box.total==0){
+                        wrapper.code=LiveDataWrapper.CODE_OK
+                        wrapper.value=0
+                        liveData.postValue(wrapper)
+                    }
+                    else if(box.albumList == null ||box.albumList.size==0&&box.total!=0){
                         wrapper.code=LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
                     }else{
-                        callback.invoke(t)
+                        callback.invoke(box.albumList)
                         if(total!=res.searchAlbumWrapper2.total){
                             wrapper.code=LiveDataWrapper.CODE_OK
                             wrapper.value=res.searchAlbumWrapper2.total

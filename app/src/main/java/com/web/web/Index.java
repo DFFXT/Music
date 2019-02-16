@@ -15,34 +15,19 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.danikula.videocache.HttpProxyCacheServer;
 import com.web.common.base.BaseActivity;
-import com.web.moudle.music.page.MusicActivity;
-import com.web.moudle.net.NetApis;
-import com.web.moudle.net.baseBean.BaseNetBean;
-import com.web.moudle.net.retrofit.MConverter;
-import com.web.moudle.songSheetEntry.adapter.JSEngine;
+import com.web.moudle.music.page.local.MusicActivity;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import dalvik.system.DexClassLoader;
-import okhttp3.Connection;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.http.Url;
 
 @SuppressLint("InlinedApi")
 public class Index extends BaseActivity implements OnClickListener,OnTouchListener{

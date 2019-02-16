@@ -14,13 +14,13 @@ class ArtistDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>
         set(value){
             field=value
             page=1
+            total=0
         }
     var page:Int=1
     private var total=0
     private val wrapper=LiveDataWrapper<Int>()
     private val model=InternetMusicModel()
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, SimpleArtistInfo>) {
-        size=0
         load {
             callback.onResult(it,"","")
         }
@@ -30,25 +30,32 @@ class ArtistDataSource(private val liveData:MutableLiveData<LiveDataWrapper<Int>
          load {            callback.onResult(it,"")
         }
     }
-    private var size=0
+
     private fun load(callback:((List<SimpleArtistInfo>)->Unit)){
         keyword?.let {
             model.getArtistList(it,page).subscribe(object :BaseObserver<SearchArtistWrapper1>(){
                 override fun onNext(t: SearchArtistWrapper1) {
                     page++
-                    val list= t.searchArtistWrapper2.artistList ?: return
-                    size+=list.size
-                    if(list.size==0&&t.searchArtistWrapper2.total!=0){
+                    val box= t.searchArtistWrapper2
+                    if(box.total==0){
+                        wrapper.code=LiveDataWrapper.CODE_OK
+                        wrapper.value=0
+                        liveData.postValue(wrapper)
+                    }
+                    else if(box.artistList==null||box.artistList.size==0&&t.searchArtistWrapper2.total!=0){
                         wrapper.code=LiveDataWrapper.CODE_NO_DATA
                         liveData.postValue(wrapper)
+                        return
+                    }else{
+                        callback.invoke(box.artistList)
+                        if(total!=box.total){
+                            wrapper.code=LiveDataWrapper.CODE_OK
+                            wrapper.value=t.searchArtistWrapper2.total
+                            liveData.postValue(wrapper)
+                            total=t.searchArtistWrapper2.total
+                        }
                     }
-                    callback.invoke(list)
-                    if(total!=t.searchArtistWrapper2.total){
-                        wrapper.code=LiveDataWrapper.CODE_OK
-                        wrapper.value=t.searchArtistWrapper2.total
-                        liveData.postValue(wrapper)
-                        total=t.searchArtistWrapper2.total
-                    }
+
                 }
 
                 override fun error(e: Throwable) {

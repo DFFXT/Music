@@ -74,7 +74,7 @@ object ResUtil {
         return bitmapOp(bitmap,matrix)
     }
     @JvmStatic
-    fun getDrawableRotate(@DrawableRes drawableId: Int,degree:Float=0f):Bitmap{
+    fun getBitmapRotate(@DrawableRes drawableId: Int, degree:Float=0f):Bitmap{
         val mBitmap= getBitmapFromDrawable(getDrawable(drawableId))
         val res= getBitmapRotate(mBitmap,degree)
         mBitmap.recycle()

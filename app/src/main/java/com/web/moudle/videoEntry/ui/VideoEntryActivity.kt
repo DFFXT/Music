@@ -113,7 +113,7 @@ class VideoEntryActivity : BaseActivity() {
         }
         player.setOnErrorListener { _, _, extra ->
             if (extra == -2147483648) {///***不知道为什么，荣耀meta10很多视频都不能播放，只能跳转的到webView中来播放
-                val bitmap = ResUtil.getDrawableRotate(R.drawable.icon_back_black, 180f)
+                val bitmap = ResUtil.getBitmapRotate(R.drawable.icon_back_black, 180f)
                 vv_video.showError(getString(R.string.video_unknownError), BitmapDrawable(resources, bitmap))
                 vv_video.errorClickLinsten = View.OnClickListener {
                     VideoWebViewActivity.actionStartForResult(this, url!!, STAY)

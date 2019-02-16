@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="10dp"
+    xmlns:tools="http://schemas.android.com/tools">
+    <TextView
+        android:id="@+id/tv_billboardName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_big"
+        tools:text="新歌榜"/>
+    <TextView
+        android:id="@+id/tv_no1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_normal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:maxLines="1"
+        tools:text="name1"/>
+    <TextView
+        android:id="@+id/tv_no2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_normal"
+        android:layout_marginStart="20dp"
+        android:maxLines="1"
+        tools:text="name2"/>
+    <TextView
+        android:id="@+id/tv_no3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_normal"
+        android:layout_marginStart="20dp"
+        android:maxLines="1"
+        tools:text="name2"/>
+</LinearLayout>
