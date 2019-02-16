@@ -34,6 +34,8 @@ data class SimpleMusicInfo(
         val songId:String,
         @JSONField(name = "ting_uid")
         val uid:String,
+        @JSONField(name = "all_artist_ting_uid")
+        val allUid:String?=null,
 
         @JSONField(name = "title")
         val musicName:String,

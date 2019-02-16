@@ -76,7 +76,7 @@ class NetApis {
         fun billboard():Observable<BillBoardList>
     }
     interface NetMusicList{
-        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billList&format=json&offset=0&size=30")
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billList&format=json&offset=0&size=100")
         fun requestList(@Query("type") type:Int):Observable<NetMusicBox>
     }
 

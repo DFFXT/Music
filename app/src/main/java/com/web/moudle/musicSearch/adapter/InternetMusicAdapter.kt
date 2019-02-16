@@ -7,11 +7,14 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
+import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.web.R
 
 class InternetMusicAdapter(private val context: Context) : PagedListAdapter<SimpleMusicInfo, BaseViewHolder>(diff) {
@@ -41,9 +44,14 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
         }else{
             holder.bindText(R.id.tv_singerName,item.author)
         }
+        holder.findViewById<View>(R.id.tv_singerName).setOnClickListener {
+            SingerEntryActivity.actionStart(it.context,item.uid)
+        }
 
 
-        holder.bindText(R.id.tv_albumName,item.albumTitle)
+        holder.bindText(R.id.tv_albumName,item.albumTitle).setOnClickListener {
+            AlbumEntryActivity.actionStart(it.context,item.albumId)
+        }
         ImageLoad.load(item.picSmall).into(holder.findViewById(R.id.iv_musicIcon))
         //holder.bindText(R.id.size,ResUtil.getFileSize(item.size))
         //holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))

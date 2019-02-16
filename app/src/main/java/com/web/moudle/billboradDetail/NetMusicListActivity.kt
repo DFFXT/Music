@@ -42,6 +42,9 @@ class NetMusicListActivity:BaseActivity() {
 
             tv_title.text=title
             tv_updateTime.text="更新时间: "+it.billboardInfo.update_date
+            if(it.billboardInfo.billboard_songnum.toInt()>100){
+                it.billboardInfo.billboard_songnum="100"
+            }
             tv_musicCount.text="共${it.billboardInfo.billboard_songnum}首"
             rv_netMusicList.adapter=NetMusicListAdapter(it.list)
             collapseToolbarLayout.setBackgroundColor(Color.parseColor(it.billboardInfo.bg_color.replace("0x","#")))
@@ -49,6 +52,7 @@ class NetMusicListActivity:BaseActivity() {
             tv_title.setTextColor(textColor)
             tv_updateTime.setTextColor(textColor)
             tv_musicCount.setTextColor(textColor)
+            topBar.setTint(textColor)
             rootView.showContent()
         })
         rv_netMusicList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
