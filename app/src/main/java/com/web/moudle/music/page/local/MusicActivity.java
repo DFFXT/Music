@@ -91,7 +91,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
         musicListLPage = new MusicListLPage();
         pageList.add(new RecommendPage());
         pageList.add(musicListLPage);
-        setTitle(musicListLPage);
+        musicListLPage.setTitle(tv_title);
         setAdapter();
         startService(new Intent(this, MusicPlay.class));
         setListener();
@@ -107,8 +107,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
 
     @SuppressLint("RestrictedApi")
     private void setToolbar() {
-        arrowDown = new BitmapDrawable(getResources(), ResUtil.getBitmapRotate(R.drawable.icon_back_black, -90));
-        arrowDown.setBounds(0, 0, 50, 50);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(ResUtil.getString(R.string.page_local));
         tv_title = (TextView) toolbar.getChildAt(0);
@@ -151,25 +149,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
     }
 
     private TextView tv_title;
-    private Drawable arrowDown;
 
-    private void setTitle(BaseMusicPage page) {
-        switch (page.getPageName()) {
-            case MusicListLPage.pageName: {
-                tv_title.setText(ResUtil.getString(R.string.page_local));
-                if (groupList != null) {
-                    tv_title.setCompoundDrawables(null, null, arrowDown, null);
-                }
-            }
-            break;
-            case LyricPage.pageName: {
-                tv_title.setText(ResUtil.getString(R.string.page_lyrics));
-                tv_title.setCompoundDrawables(null, null, null, null);
-            }
-            break;
-        }
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -339,22 +319,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
             @Override
             public void onPageSelected(int position) {
                 Shortcut.closeKeyBord(MusicActivity.this, viewPager);
-
-
-                BaseMusicPage page = pageList.get(position);
-                //if(searchView!=null&&!InternetMusicActivity.pageName.equals(page.getPageName()))
-                //searchView.onActionViewCollapsed();
-                switch (page.getPageName()) {
-                    case MusicListLPage.pageName: {
-                        toolbar.setTitle(ResUtil.getString(R.string.page_local));
-                    }
-                    break;
-                    case LyricPage.pageName: {
-                        toolbar.setTitle(ResUtil.getString(R.string.page_lyrics));
-                    }
-                    break;
-                }
-                setTitle(page);
+                pageList.get(position).setTitle(tv_title);
 
             }
 
@@ -571,13 +536,14 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
                     musicListLPage.setData(groupIndex, list.get(groupIndex));
                     this.groupList = list;
                     this.groupIndex = groupIndex;
-                    setTitle(getCurrentPage());
+
+                    getCurrentPage().setTitle(tv_title);
                 }
             } else {
                 musicListLPage.setData(groupIndex, list.get(groupIndex));
                 this.groupList = list;
                 this.groupIndex = groupIndex;
-                setTitle(getCurrentPage());
+                getCurrentPage().setTitle(tv_title);
             }
         });
     }

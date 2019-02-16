@@ -1,5 +1,9 @@
 package com.web.moudle.music.page.local;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
@@ -46,6 +51,7 @@ public class MusicListLPage extends BaseMusicPage {
     private LocalMusicAdapter adapter;
     private MusicPlay.Connect connect;
     private int groupIndex=0;
+    private Drawable arrowDown;
 
 
 
@@ -207,6 +213,13 @@ public class MusicListLPage extends BaseMusicPage {
         return pageName;
     }
 
+    @Override
+    public void setTitle(@NotNull TextView textView) {
+        textView.setText(ResUtil.getString(R.string.page_local));
+        textView.setCompoundDrawables(null, null, arrowDown, null);
+        textView.setCompoundDrawableTintMode(PorterDuff.Mode.SRC_ATOP);
+    }
+
     /**
      * 设置主音乐页面的数据
      * @param data data
@@ -246,7 +259,9 @@ public class MusicListLPage extends BaseMusicPage {
 
     @Override
     public void viewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
-
+        arrowDown = new BitmapDrawable(getResources(), ResUtil.getBitmapRotate(R.drawable.icon_back_black, -90));
+        arrowDown.setBounds(0, 0, 50, 50);
+        arrowDown.setTint(Color.WHITE);
     }
 
     @Override

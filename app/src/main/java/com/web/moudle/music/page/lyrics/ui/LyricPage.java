@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
@@ -47,6 +48,12 @@ public class LyricPage extends BaseMusicPage {
     @Override
     public String getPageName() {
         return pageName;
+    }
+
+    @Override
+    public void setTitle(@NotNull TextView textView) {
+        textView.setText(ResUtil.getString(R.string.page_lyrics));
+        textView.setCompoundDrawables(null, null, null, null);
     }
 
     public void loadLyrics(){//--设置歌词内容
