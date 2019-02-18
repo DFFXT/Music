@@ -15,8 +15,10 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.web.common.base.BaseActivity;
 import com.web.moudle.music.page.local.MusicActivity;
+import com.web.moudle.songSheetEntry.adapter.JSEngine;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,48 +51,8 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 		fillTextAndColor();
 		go();
 
-		//HttpProxyCacheServer server=new HttpProxyCacheServer(this);
 
 
-		new Thread(()->{
-			try {
-
-
-
-
-
-
-
-
-				Thread.sleep(2000);
-				/*OkHttpClient client=new OkHttpClient();
-				Response response=client.newCall(new Request.Builder().url(server.getProxyUrl("http://www.baidu.com")).build()).execute();
-				Log.i("log","res->"+response.body().string());
-				response.close();*/
-
-
-				Socket socket=new Socket("127.0.0.2",8888);
-
-				OutputStream os=socket.getOutputStream();
-				os.write("sdfsadf".getBytes());
-				os.flush();
-
-				InputStream is=socket.getInputStream();
-				byte b[]=new byte[1024];
-				int len;
-				ByteBuffer builder=ByteBuffer.allocate(1024);
-				while ((len=is.read(b))>=0){
-					builder.put(b,0,len);
-				}
-				Log.i("log","-------->"+new String(builder.array()));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}).start();
 
 
 		/*Retrofit.Builder builder=new Retrofit.Builder()

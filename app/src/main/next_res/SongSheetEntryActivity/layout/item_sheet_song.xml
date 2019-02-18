@@ -38,10 +38,30 @@
             android:layout_marginEnd="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_albumName"
-            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintEnd_toStartOf="@id/tv_hasMv"
             app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             />
+
+        <TextView
+            android:id="@+id/tv_hasMv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tv_singerName"
+            app:layout_constraintEnd_toStartOf="@id/tv_albumName"
+            app:layout_constraintTop_toTopOf="@id/tv_singerName"
+            app:layout_constraintHorizontal_bias="1"
+            android:text="@string/albumEntry_MV"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/textSize_small"
+            android:layout_marginEnd="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:background="@drawable/radius_border_4dp"
+            android:tint="@color/themeColor"
+            android:visibility="invisible"
+            />
+
         <TextView
             android:id="@+id/tv_albumName"
             android:layout_width="wrap_content"

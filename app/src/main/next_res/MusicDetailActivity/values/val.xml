@@ -3,7 +3,7 @@
     <string name="musicDetailActivity_mainSinger">主唱：</string>
     <string name="musicDetailActivity_durationLabel">时长：</string>
     <string name="musicDetailActivity_album">专辑：</string>
-    <string name="musicDetailActivity_publishTime">发行时间：</string>
+    <string name="musicDetailActivity_publishTime">时间：</string>
     <string name="musicDetailActivity_publishCompany">发行公司：</string>
     <string name="musicDetailActivity_listenTimes">播放次数：</string>
     <string name="musicDetailActivity_lyrics">歌词</string>

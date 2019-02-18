@@ -4,38 +4,23 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.v7.graphics.Palette
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.support.v7.widget.ViewUtils
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.SimpleAdapter
 import android.widget.TextView
-import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
-import com.web.common.imageLoader.glide.ImageLoad
-import com.web.common.util.ResUtil
-import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
 import com.web.misc.DrawableItemDecoration
 import com.web.misc.ExpandableTextView
 import com.web.moudle.albumEntry.adapter.AlbumListAdapter
 import com.web.moudle.albumEntry.bean.AlbumResponse
-import com.web.moudle.albumEntry.bean.OtherSong
 import com.web.moudle.albumEntry.model.AlbumEntryViewModel
-import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_album_entry.*
-import kotlinx.android.synthetic.main.activity_music_detail.*
 
 class AlbumEntryActivity : BaseActivity() {
     private lateinit var id: String
@@ -60,16 +45,6 @@ class AlbumEntryActivity : BaseActivity() {
                     findViewById<TextView>(R.id.tv_listenTimes).text =res.albumInfo.listenNum
                     findViewById<ExpandableTextView>(R.id.ex_introduction).text=res.albumInfo.info
                     bitmapColorSet(res.albumInfo.pic500,findViewById(R.id.iv_bigImage_detailMusicActivity),findViewById(R.id.collapseToolbarLayout))
-/*                    ImageLoad.loadAsBitmap(res.albumInfo.pic500).into(object : BaseGlideTarget() {
-                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                            Palette.from(resource).generate {
-                                it?.vibrantSwatch?.let { sw ->
-                                    findViewById<CollapsingToolbarLayout>(R.id.collapseToolbarLayout).setBackgroundColor(sw.rgb)
-                                }
-                            }
-                            findViewById<ImageView>(R.id.iv_bigImage_detailMusicActivity).setImageBitmap(resource)
-                        }
-                    })*/
                     rv_albumList.adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
                     rootView.showContent()
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
@@ -91,7 +66,7 @@ class AlbumEntryActivity : BaseActivity() {
                     builder.append(it.line)
                     builder.append("\n")
                 }
-                lyricsView.text=builder.toString()
+                ex_introduction.text=builder.toString()
             }
         })
         model.getAlbumInfo(id)
@@ -102,42 +77,12 @@ class AlbumEntryActivity : BaseActivity() {
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
 
-        val toolbar=findViewById<Toolbar>(R.id.toolbar)
-        findViewById<AppBarLayout>(R.id.appBarLayout).addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
-            val offset = -dy
-            when (offset) {
-                appBar.totalScrollRange -> {//**完全折叠
-                    appBar.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                    toolbar.setBackgroundColor(getColor(R.color.themeColor))
-                }
-                else -> {
-                    toolbar.setBackgroundColor(Color.TRANSPARENT)
-                    appBar.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-                }
-            }
-        })
         val manager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
         rv_albumList.layoutManager=manager
         rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
         loadData()
     }
 
-    /*private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
-        val res = info.songInfo2
-        return InternetMusicDetail(
-                songId = res.songId,
-                songName = res.title,
-                artistName = res.artistName,
-                duration = res.duration.toInt(),
-                size = info.bitRate.fileSize,
-                lrcLink = res.lrcLink,
-                songLink = info.bitRate.songLink,
-                singerIconSmall = res.picSmall,
-                albumId = res.albumId,
-                albumName = res.albumName,
-                format = info.bitRate.format
-        )
-    }*/
 
 
     companion object {

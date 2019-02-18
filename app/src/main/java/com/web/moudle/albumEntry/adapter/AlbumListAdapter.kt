@@ -12,6 +12,7 @@ import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
 import com.web.moudle.albumEntry.bean.OtherSong
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
+import com.web.moudle.videoEntry.ui.VideoEntryActivity
 
 import com.web.web.R
 
@@ -24,10 +25,12 @@ class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherS
             holder.bindText(R.id.tv_albumName,item.title+" - "+item.version)
         }
         holder.bindText(R.id.tv_duration,ResUtil.timeFormat("mm:ss",item.duration.toLong()*1000))
+        val mv=holder.findViewById<View>(R.id.tv_hasMv)
         if(item.hasMv==0){
-            holder.findViewById<View>(R.id.tv_hasMv).visibility=View.GONE
+            mv.visibility=View.GONE
         }else{
-            holder.findViewById<View>(R.id.tv_hasMv).visibility=View.VISIBLE
+            mv.visibility=View.VISIBLE
+            mv.setOnClickListener { VideoEntryActivity.actionStart(it.context,songId = item.songId) }
         }
         holder.itemView.setOnClickListener {
             MusicDetailActivity.actionStart(it.context,item.songId)

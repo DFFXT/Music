@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="50dp"
                     android:textSize="30sp"
                     android:textColor="@color/white"
                     tools:text="新歌榜"/>
@@ -67,8 +67,7 @@
                     android:id="@+id/topBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:topBar_startImage="@drawable/icon_back_black"
-                    app:topBar_tint="@color/white"/>
+                    app:topBar_startImage="@drawable/icon_back_black"/>
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>

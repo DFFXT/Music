@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import com.web.moudle.billboard.BillBoardActivity
+import com.web.moudle.billboradDetail.NetMusicListActivity
 import com.web.moudle.music.page.BaseMusicPage
 import com.web.moudle.music.player.MusicPlay
 import com.web.web.R
@@ -30,6 +31,9 @@ class RecommendPage :BaseMusicPage(){
     override fun initView(rootView: View) {
         rootView.tv_billboard.setOnClickListener {
             BillBoardActivity.actionStart(context!!)
+        }
+        rootView.tv_todayRecommend.setOnClickListener {
+            NetMusicListActivity.actionStart(context!!,getString(R.string.todayRecommend))
         }
     }
 

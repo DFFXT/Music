@@ -6,12 +6,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.widget.LinearLayout
-import com.web.common.base.BaseActivity
-import com.web.common.base.showContent
-import com.web.common.base.showError
-import com.web.common.base.showLoading
+import com.web.common.base.*
+import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.misc.DrawableItemDecoration
 import com.web.moudle.billboradDetail.adapter.NetMusicListAdapter
@@ -41,7 +41,7 @@ class NetMusicListActivity:BaseActivity() {
             }
 
             tv_title.text=title
-            tv_updateTime.text="更新时间: "+it.billboardInfo.update_date
+            tv_updateTime.text=ResUtil.getString(R.string.updateTime,it.billboardInfo.update_date)
             if(it.billboardInfo.billboard_songnum.toInt()>100){
                 it.billboardInfo.billboard_songnum="100"
             }
@@ -53,13 +53,36 @@ class NetMusicListActivity:BaseActivity() {
             tv_updateTime.setTextColor(textColor)
             tv_musicCount.setTextColor(textColor)
             topBar.setTint(textColor)
+            topBar.setMainTitleColor(textColor)
             rootView.showContent()
         })
         rv_netMusicList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
         rv_netMusicList.addItemDecoration(DrawableItemDecoration(left = 10,top = 10,right = 10,bottom = 10,
                 orientation =  LinearLayout.VERTICAL,drawable = getDrawable(R.drawable.recycler_divider)))
-        model.requestList(type)
+        if(type==-1){
+            model.requestRecommend()
+        }else{
+            model.requestList(type)
+        }
 
+
+        appBarLayout.addOnOffsetChangedListener(object :BaseAppBarLayoutOffsetChangeListener(){
+            override fun offsetChanged(state: Int, position: Int) {
+                when(state){
+                    BaseAppBarLayoutOffsetChangeListener.STATE_COLLAPSE->{
+                        topBar.setMainTitle(title)
+                                .alpha=1f
+                    }
+                    BaseAppBarLayoutOffsetChangeListener.STATE_EXPANDING->{
+                        var alpha=1-(appBarLayout.totalScrollRange-position)/appBarLayout.totalScrollRange.toFloat()
+                        if(alpha<0.5f) alpha=0f
+                        topBar.setMainTitle(title)
+                                .alpha=alpha*0.5f
+                    }
+                }
+            }
+
+        })
         rootView.showLoading(true)
     }
 
@@ -72,6 +95,12 @@ class NetMusicListActivity:BaseActivity() {
             val intent= Intent(ctx,NetMusicListActivity::class.java)
             intent.putExtra(INTENT_DATA,title)
             intent.putExtra(LIST_TYPE,type)
+            ctx.startActivity(intent)
+        }
+        @JvmStatic
+        fun actionStart(ctx: Context,title:String){
+            val intent= Intent(ctx,NetMusicListActivity::class.java)
+            intent.putExtra(INTENT_DATA,title)
             ctx.startActivity(intent)
         }
     }

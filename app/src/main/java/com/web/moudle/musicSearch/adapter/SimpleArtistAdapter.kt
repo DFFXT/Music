@@ -7,9 +7,13 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.web.common.base.BaseViewHolder
+import com.web.common.base.isStrictEmpty
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.config.Shortcut
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R

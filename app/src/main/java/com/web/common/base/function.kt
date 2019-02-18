@@ -212,3 +212,15 @@ fun View.showContent(){
     hideError()
 }
 //</editor-fold>
+
+
+/**
+ * 使用方法：if(str.isStrictEmpty()!=false){//str为空....}
+ */
+fun String.isStrictEmpty():Boolean{
+    val string=toString()
+    for (i in 0 until string.length) {
+        if (string[i] != ' ') return false
+    }
+    return true
+}

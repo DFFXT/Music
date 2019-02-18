@@ -1,6 +1,5 @@
 package com.web.moudle.videoEntry.model
 
-import com.web.moudle.musicSearch.bean.next.SearchVideoWrapper1
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.ResultTransform
@@ -12,9 +11,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class VideoModel:BaseRetrofit() {
-    fun getVideoInfo(videoId:String):Observable<VideoInfoBox>{
+    fun getVideoInfo(videoId:String="",songId:String=""):Observable<VideoInfoBox>{
         return obtainClass(NetApis.VideoEntry::class.java)
-                .getVideoInfo(videoId)
+                .getVideoInfo(videoId,songId)
                 .compose(ResultTransform())
                 .compose(SchedulerTransform())
     }

@@ -1,6 +1,8 @@
 package com.web.common.util
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
@@ -16,6 +18,10 @@ object ResUtil {
     fun getString(@StringRes id: Int): String {
         return LitePalApplication.getContext().resources.getString(id)
     }
+    @JvmStatic
+    fun getString(@StringRes id:Int, vararg params:Any):String{
+        return String.format(ResUtil.getString(id),*params)
+    }
 
     /**
      * @param pattern mm:ss
@@ -26,7 +32,7 @@ object ResUtil {
         return format.format(Date(time))
     }
     @JvmStatic
-    fun getFileSize(size:Long):String{
+    fun getFileSize(size :Long):String{
         val format= DecimalFormat("0.00")
         return when(size){
             in 0..1024*1024-> format.format(size/1024F)+"KB"

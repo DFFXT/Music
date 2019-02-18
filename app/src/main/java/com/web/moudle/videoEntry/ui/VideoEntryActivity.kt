@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit
 
 class VideoEntryActivity : BaseActivity() {
     private lateinit var videoId: String
+    private lateinit var songId:String
     override fun getLayoutId(): Int = R.layout.activity_video_entry
     private lateinit var model: VideoViewModel
     private val FINISH = 1
@@ -36,6 +37,7 @@ class VideoEntryActivity : BaseActivity() {
 
     override fun initView() {
         videoId = intent.getStringExtra(INTENT_DATA)
+        songId = intent.getStringExtra(SONG_ID)
         model = ViewModelProviders.of(this)[VideoViewModel::class.java]
         model.videoInfo.observe(this, Observer<VideoInfoBox> {
             if (it == null) {
@@ -62,7 +64,7 @@ class VideoEntryActivity : BaseActivity() {
         })
 
         initVideoController()
-        model.getVideoInfo(videoId)
+        model.getVideoInfo(videoId = videoId,songId = songId)
     }
 
     private fun initVideoController() {
@@ -204,10 +206,12 @@ class VideoEntryActivity : BaseActivity() {
 
 
     companion object {
+        private const val SONG_ID="songId"
         @JvmStatic
-        fun actionStart(ctx: Context, videoId: String) {
+        fun actionStart(ctx: Context, videoId: String="",songId:String="") {
             val intent = Intent(ctx, VideoEntryActivity::class.java)
             intent.putExtra(INTENT_DATA, videoId)
+            intent.putExtra(SONG_ID, songId)
             ctx.startActivity(intent)
         }
 

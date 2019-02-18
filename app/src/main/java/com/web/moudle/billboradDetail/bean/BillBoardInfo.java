@@ -2,7 +2,6 @@
   * Copyright 2019 bejson.com 
   */
 package com.web.moudle.billboradDetail.bean;
-import java.util.Date;
 
 /**
  * Auto-generated: 2019-02-15 19:13:11

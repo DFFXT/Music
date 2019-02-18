@@ -8,8 +8,8 @@ import com.web.common.base.MyApplication
 object ImageLoad {
     @JvmStatic
     fun load(path:String?):GlideRequest<Drawable>{
-        return GlideApp.with(MyApplication.context).load(path).diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true).centerCrop()
+        return GlideApp.with(MyApplication.context).load(path).diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .skipMemoryCache(false).centerCrop()
     }
     @JvmStatic
     fun loadAsBitmap(path:String?):GlideRequest<Bitmap>{

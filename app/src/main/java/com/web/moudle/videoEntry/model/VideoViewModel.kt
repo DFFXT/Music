@@ -13,8 +13,8 @@ class VideoViewModel:ViewModel() {
     val videoInfo=MutableLiveData<VideoInfoBox>()
     val videoUrl=MutableLiveData<String>()
 
-    fun getVideoInfo(videoId:String){
-        model.getVideoInfo(videoId)
+    fun getVideoInfo(videoId:String="",songId:String=""){
+        model.getVideoInfo(videoId,songId)
                 .get(
                  onNext = {
                      val fileInfo=JSON.parseObject(it.rowJson.getJSONObject(it.min_definition).toJSONString(),FileInfo::class.java)

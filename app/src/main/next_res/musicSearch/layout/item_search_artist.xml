@@ -56,15 +56,6 @@
         android:textSize="@dimen/textSize_small"
         tools:text="11"/>
     <TextView
-        android:id="@+id/tv_districtLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="60dp"
-        android:textSize="@dimen/textSize_small"
-        android:text="@string/district"/>
-    <TextView
         android:id="@+id/tv_district"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
@@ -72,6 +63,5 @@
         android:layout_marginTop="16dp"
         android:maxLines="1"
         android:textSize="@dimen/textSize_small"
-        android:text="@string/district"
         tools:text="中国"/>
 </FrameLayout>

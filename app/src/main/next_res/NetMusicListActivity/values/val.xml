@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="todayRecommend">今日推荐</string>
+    <string name="updateTime">更新时间 %s</string>
+</resources>

@@ -13,5 +13,13 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/billboard"
         />
+    <TextView
+        android:id="@+id/tv_todayRecommend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/todayRecommend"
+        />
 
 </android.support.constraint.ConstraintLayout>

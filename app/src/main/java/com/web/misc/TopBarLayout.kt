@@ -22,6 +22,7 @@ class TopBarLayout : FrameLayout {
     private var endImageView: ImageView
     private var mainTitle: TextView
     private var subtitle: TextView
+    private var mainTitleColor:Int=Color.WHITE
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -32,8 +33,10 @@ class TopBarLayout : FrameLayout {
         subtitle.setTextColor(ta.getColor(R.styleable.TopBarLayout_topBar_subtitleColor, Color.BLACK))
         mainTitle.text = ta.getString(R.styleable.TopBarLayout_topBar_mainTitleText)
         subtitle.text = ta.getString(R.styleable.TopBarLayout_topBar_subtitleText)
+
+        mainTitleColor=ta.getColor(R.styleable.TopBarLayout_topBar_mainTitleColor,mainTitleColor)
         if (ta.hasValue(R.styleable.TopBarLayout_topBar_tint)) {
-            val tint = ColorStateList.valueOf(ta.getColor(R.styleable.TopBarLayout_topBar_tint, 0))
+            val tint = ColorStateList.valueOf(ta.getColor(R.styleable.TopBarLayout_topBar_tint,0))
             startImageView.imageTintList = tint
             endImageView.imageTintList = tint
         }
@@ -73,8 +76,9 @@ class TopBarLayout : FrameLayout {
         endImageView.setImageResource(res)
     }
 
-    fun setMainTitle(title: String) {
+    fun setMainTitle(title: String):TextView {
         mainTitle.text = title
+        return mainTitle
     }
 
     fun setSubtitle(subtitle: String) {
@@ -86,6 +90,12 @@ class TopBarLayout : FrameLayout {
         val tint = ColorStateList.valueOf(color)
         startImageView.imageTintList = tint
         endImageView.imageTintList = tint
+    }
+
+    fun setMainTitleColor(@ColorInt color:Int):TextView{
+        mainTitleColor=color
+        mainTitle.setTextColor(color)
+        return mainTitle
     }
 
 

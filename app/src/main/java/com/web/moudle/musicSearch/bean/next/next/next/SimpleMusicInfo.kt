@@ -14,8 +14,8 @@ data class SimpleMusicInfo(
         val allArtistId:String,
         @JSONField(name = "all_rate")
         val allRate:String,
-        @JSONField(name = "artist_id")
-        val artistId:String,
+        /*@JSONField(name = "artist_id")
+        val artistId:String,*/
         @JSONField(name = "author")
         val author:String,
         @JSONField(name = "biaoshi")
@@ -24,8 +24,8 @@ data class SimpleMusicInfo(
         val hasFilmTv:String,
         @JSONField(name = "has_mv")
         val hasMV:Int,
-        @JSONField(name = "lrclink")
-        val lrcLink:String,
+        /*@JSONField(name = "lrclink")
+        val lrcLink:String,*/
         @JSONField(name = "pic_small")
         val picSmall:String?,
         @JSONField(name = "si_proxycompany")
