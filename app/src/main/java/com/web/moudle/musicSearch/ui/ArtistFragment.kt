@@ -59,7 +59,7 @@ class ArtistFragment:BaseSearchFragment() {
             if(it!=null){//**无法提通过这个artistId获取正确信息，必须通过一次跳转获取真正的artistId
                 //http://music.taihe.com/data/artist/redirect?id=14413780
                 vm.getRedirectHeader(it.artistId)
-                //SingerEntryActivity.actionStart(context!!,it.artistId)
+                //SingerEntryActivity.actionStartSingerMusic(context!!,it.artistId)
             }
         }
         rv_musicList.adapter=adapter

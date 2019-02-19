@@ -215,7 +215,7 @@ fun View.showContent(){
 
 
 /**
- * 使用方法：if(str.isStrictEmpty()!=false){//str为空....}
+ * 使用方法：if(str?.isStrictEmpty()!=false){//str为空....}
  */
 fun String.isStrictEmpty():Boolean{
     val string=toString()

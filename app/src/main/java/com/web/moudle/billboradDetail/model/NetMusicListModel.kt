@@ -5,6 +5,8 @@ import com.web.moudle.billboradDetail.bean.RecommendMusicBox
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.net.retrofit.BaseRetrofit
+import com.web.moudle.singerEntry.bean.AlbumEntryBox
+import com.web.moudle.singerEntry.bean.SongEntryBox
 import io.reactivex.Observable
 
 class NetMusicListModel:BaseRetrofit() {
@@ -13,9 +15,19 @@ class NetMusicListModel:BaseRetrofit() {
         return obtainClass(NetApis.NetMusicList::class.java)
                 .requestList(type)
     }
-    fun requestRecommend():Observable<BaseNetBean<RecommendMusicBox>>{
+    fun requestRecommend(page:Int,pageSize:Int):Observable<BaseNetBean<RecommendMusicBox>>{
         return obtainClass(NetApis.NetMusicList::class.java)
-                .requestRecommend()
+                .requestRecommend(page,pageSize)
+    }
+
+    fun requestSingerAllMusic(uid:String,offset:Int,limits:Int):Observable<SongEntryBox>{
+        return obtainClass(NetApis.SingerEntry::class.java)
+                .getSongList(uid,offset,limits)
+    }
+
+    fun requestSingerAllAlbum(uid:String,offset:Int,limits:Int):Observable<AlbumEntryBox>{
+        return obtainClass(NetApis.SingerEntry::class.java)
+                .getAlbumList(uid,offset,limits)
     }
 
 }

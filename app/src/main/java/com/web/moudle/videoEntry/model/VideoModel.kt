@@ -19,7 +19,7 @@ class VideoModel:BaseRetrofit() {
     }
 
     fun getRealPlayAddress(fakeUrl:String,callback:((String?)->Unit)){
-        obtainClassNoConverterNoRedrect(NetApis.VideoEntry::class.java)
+        obtainClassNoConverterNoRedirect(NetApis.VideoEntry::class.java)
                 .getMvUrl(fakeUrl)
                 .enqueue(object : Callback<Any> {
                     override fun onFailure(call: Call<Any>, t: Throwable) {

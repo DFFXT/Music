@@ -80,8 +80,11 @@ class NetApis {
     interface NetMusicList{
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billList&format=json&offset=0&size=100")
         fun requestList(@Query("type") type:Int):Observable<NetMusicBox>
-        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.song.userRecSongList&format=json&page_no=1&page_size=30")
-        fun requestRecommend():Observable<BaseNetBean<RecommendMusicBox>>
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.song.userRecSongList&format=json")
+        fun requestRecommend(@Query("page_no") page: Int,@Query("page_size") pageSize: Int):Observable<BaseNetBean<RecommendMusicBox>>
+
+        //@GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.artist.getSongList&format=json&order=2")
+        //fun requestSingerAllMusic(@Query("tinguid") uid:String,@Query("offset") offset: Int,@Query("limits") limits:Int):Observable<SongEntryBox>
     }
 
     interface SongEntry {
@@ -102,7 +105,7 @@ class NetApis {
         @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getSongList&format=json&order=2")
         fun getSongList(@Query("tinguid") uid: String, @Query("offset") offset: Int, @Query("limits") limit: Int): Observable<SongEntryBox>
 
-        @GET("http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.artist.getAlbumList&format=json&order=2")
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.artist.getAlbumList&format=json&order=1")
         fun getAlbumList(@Query("tinguid") uid: String, @Query("offset") offset: Int, @Query("limits") limit: Int): Observable<AlbumEntryBox>
 
         @GET("http://music.taihe.com/data/artist/redirect")

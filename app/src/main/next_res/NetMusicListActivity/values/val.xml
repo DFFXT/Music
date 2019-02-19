@@ -2,4 +2,6 @@
 <resources>
     <string name="todayRecommend">今日推荐</string>
     <string name="updateTime">更新时间 %s</string>
+    <string name="netMusicTextColor">0x999999</string>
+    <string name="netMusicBgColor">0x93bff1</string>
 </resources>

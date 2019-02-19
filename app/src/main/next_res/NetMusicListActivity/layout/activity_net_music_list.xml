@@ -83,12 +83,13 @@
             android:layout_height="wrap_content">
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/smartRefreshLayout"
+                app:srlEnableRefresh="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_netMusicList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="400dp"
                     android:paddingTop="10dp"
                     android:clipToPadding="false"
                     android:overScrollMode="never"

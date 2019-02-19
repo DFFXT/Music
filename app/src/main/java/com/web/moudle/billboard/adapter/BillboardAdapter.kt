@@ -41,7 +41,7 @@ class BillboardAdapter(data:List<Content>):BaseAdapter<Content>(data) {
 
 
         holder.itemView.setOnClickListener {
-            NetMusicListActivity.actionStart(ctx,item.name,item.type)
+            NetMusicListActivity.actionStartSingerMusic(ctx,item.name,item.type)
         }
 
 

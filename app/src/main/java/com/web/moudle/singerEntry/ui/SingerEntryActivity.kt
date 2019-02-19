@@ -10,7 +10,6 @@ import android.support.design.widget.AppBarLayout
 import android.support.v7.graphics.Palette
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -20,6 +19,7 @@ import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.WindowUtil
 import com.web.misc.GapItemDecoration
+import com.web.moudle.billboradDetail.NetMusicListActivity
 import com.web.moudle.singerEntry.adapter.SingerAlbumAdapter
 import com.web.moudle.singerEntry.adapter.SingerSongAdapter
 import com.web.moudle.singerEntry.bean.AlbumEntryBox
@@ -60,7 +60,7 @@ class SingerEntryActivity : BaseActivity() {
                     tv_totalAlbums.text = res.albumTotal
                     tv_totalMV.text = "${res.totalMv}"
 
-                    if (TextUtils.isEmpty(res.introduction)) {
+                    if (res.introduction?.isStrictEmpty()!=false) {
                         tv_introductionLabel.text = getString(R.string.singer_introduction_empty)
                     } else {
                         ex_introduction.text = res.introduction
@@ -106,10 +106,14 @@ class SingerEntryActivity : BaseActivity() {
                 rv_singerEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
                 val adapter = SingerSongAdapter(this@SingerEntryActivity, wrapper.value.songList!!)
                 rv_singerEntry.adapter = adapter
-                val num = if (wrapper.value.num == null) 0 else wrapper.value.num!!.toInt()
+                val num = wrapper.value.total
                 if (wrapper.value.haveMore == 0 || wrapper.value.songList!!.size == num) {
                     //只能使text为空，添加在了group里面，group里面的view不能单独隐藏
                     tv_moreMusic.text = ""
+                }else{
+                    tv_moreMusic.setOnClickListener {
+                        NetMusicListActivity.actionStartSingerMusic(it.context,tv_singerName.text.toString(),id)
+                    }
                 }
             } else if (wrapper.code == LiveDataWrapper.CODE_ERROR) {
                 rv_singerEntry.showError()
@@ -133,6 +137,10 @@ class SingerEntryActivity : BaseActivity() {
                 val num = if (wrapper.value.num == null) 0 else wrapper.value.num!!.toInt()
                 if (wrapper.value.haveMore == 0 || wrapper.value.albumList!!.size == num) {
                     tv_moreAlbum.text = ""
+                }else{
+                    tv_moreAlbum.setOnClickListener {
+                        NetMusicListActivity.actionStartSingerAlbum(it.context,tv_singerName.text.toString(),id)
+                    }
                 }
             } else if (wrapper.code == LiveDataWrapper.CODE_ERROR) {
                 rv_albumEntry.showError()

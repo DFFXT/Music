@@ -33,7 +33,7 @@ class RecommendPage :BaseMusicPage(){
             BillBoardActivity.actionStart(context!!)
         }
         rootView.tv_todayRecommend.setOnClickListener {
-            NetMusicListActivity.actionStart(context!!,getString(R.string.todayRecommend))
+            NetMusicListActivity.actionStartSingerMusic(context!!,getString(R.string.todayRecommend))
         }
     }
 

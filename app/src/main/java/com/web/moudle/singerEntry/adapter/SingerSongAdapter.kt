@@ -7,12 +7,12 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.web.moudle.singerEntry.bean.SongEntryItem
+import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.web.R
 
-class SingerSongAdapter(private val ctx:Context,private val list:ArrayList<SongEntryItem>): BaseAdapter<SongEntryItem>(list) {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SongEntryItem?) {
-        holder.bindText(R.id.tv_musicName,item?.title)
+class SingerSongAdapter(private val ctx:Context,private val list:ArrayList<SimpleMusicInfo>): BaseAdapter<SimpleMusicInfo>(list) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SimpleMusicInfo?) {
+        holder.bindText(R.id.tv_musicName,item?.musicName)
         holder.rootView.setOnClickListener {
             MusicDetailActivity.actionStart(it.context,item!!.songId)
         }

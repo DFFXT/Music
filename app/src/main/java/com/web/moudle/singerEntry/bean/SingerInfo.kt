@@ -24,7 +24,7 @@ data class SingerInfo (
         @JSONField(name = "constellation")
         val  constellation:String,
         @JSONField(name = "intro")
-        val introduction:String,
+        val introduction:String?=null,
         @JSONField(name = "company")
         val company:String,
         @JSONField(name = "country")

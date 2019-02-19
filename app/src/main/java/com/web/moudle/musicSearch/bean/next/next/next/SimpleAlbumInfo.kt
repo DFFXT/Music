@@ -16,7 +16,7 @@ data class SimpleAlbumInfo (
         @JSONField(name = "publishtime")
         val publishTime:String?,
         @JSONField(name = "company")
-        val company:String,
+        val company:String?,
         @JSONField(name = "hot")
         val hot:Int
 ){

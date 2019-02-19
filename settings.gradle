@@ -1,4 +1,4 @@
-include ':app',":flutter_module/.android/app"
+include ':app'//,":flutter_module/.android/app"
 setBinding(new Binding([gradle: this]))
 evaluate(new File(
         rootDir.path,
