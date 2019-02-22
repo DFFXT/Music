@@ -1,9 +1,5 @@
 package com.web.moudle.notification;
 
-import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.music.page.local.MusicActivity;
-import com.web.web.R;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,6 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.RemoteViews;
+
+import com.web.moudle.lyrics.LyricsActivity;
+import com.web.moudle.music.player.MusicPlay;
+import com.web.web.R;
 
 /*
  * 音乐通知栏管理
@@ -87,8 +87,8 @@ public class MyNotification{
 		PendingIntent pPause=PendingIntent.getService(context, 3,makeIntent(MusicPlay.ACTION_STATUS_CHANGE), PendingIntent.FLAG_UPDATE_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.pause, pPause);
 		
-		//--进入播放器
-		Intent enterIntent=new Intent(context, MusicActivity.class).
+		//--进入歌词界面
+		Intent enterIntent=new Intent(context, LyricsActivity.class).
 				addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.op, enter);

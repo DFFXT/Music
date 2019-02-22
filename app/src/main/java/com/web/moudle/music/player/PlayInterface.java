@@ -14,4 +14,5 @@ public interface PlayInterface {
     void musicListChange(int group,List<MusicList<Music>> list);
     void playTypeChanged(PlayerConfig.PlayType playType);
     void musicOriginChanged(PlayerConfig.MusicOrigin origin);
+    void bufferingUpdate(int percent);
 }

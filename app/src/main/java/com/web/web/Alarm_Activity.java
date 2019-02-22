@@ -1,9 +1,5 @@
 package com.web.web;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -16,12 +12,17 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import androidx.core.app.NotificationCompat;
 
 @SuppressLint("SimpleDateFormat") public class Alarm_Activity extends Activity{
 	Intent intent;

@@ -1,10 +1,8 @@
 package com.web.common.util
 
-import android.support.annotation.WorkerThread
 import android.text.TextUtils
+import androidx.annotation.WorkerThread
 import java.io.*
-import java.lang.Exception
-import java.lang.StringBuilder
 import java.net.URL
 
 object IOUtil{

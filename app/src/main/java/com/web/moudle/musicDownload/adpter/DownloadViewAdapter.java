@@ -1,8 +1,6 @@
 package com.web.moudle.musicDownload.adpter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +8,6 @@ import android.view.ViewGroup;
 import com.web.common.base.BaseAdapter;
 import com.web.common.base.BaseViewHolder;
 import com.web.common.util.ResUtil;
-import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.web.R;
@@ -19,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 
 public class DownloadViewAdapter extends BaseAdapter<DownloadMusic> {

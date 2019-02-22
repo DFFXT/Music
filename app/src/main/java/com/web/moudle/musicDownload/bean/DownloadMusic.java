@@ -1,9 +1,8 @@
 package com.web.moudle.musicDownload.bean;
 
-import android.support.annotation.IntDef;
-
-import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
+
+import androidx.annotation.IntDef;
 
 public class DownloadMusic {
     public final static int DOWNLOAD_WAIT=1;

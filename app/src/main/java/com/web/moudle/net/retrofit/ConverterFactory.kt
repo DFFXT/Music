@@ -1,6 +1,6 @@
 package com.web.moudle.net.retrofit
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit

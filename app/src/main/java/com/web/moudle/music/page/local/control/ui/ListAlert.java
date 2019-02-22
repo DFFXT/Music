@@ -2,22 +2,23 @@ package com.web.moudle.music.page.local.control.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.web.data.Music;
-import com.web.moudle.music.page.local.control.interf.ListSelectListener;
-import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack;
-import com.web.moudle.music.page.local.control.adapter.WaitPlayListAdapter;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
+import com.web.data.Music;
+import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack;
+import com.web.moudle.music.page.local.control.adapter.WaitPlayListAdapter;
+import com.web.moudle.music.page.local.control.interf.ListSelectListener;
 import com.web.web.R;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ListAlert {
     private Context context;

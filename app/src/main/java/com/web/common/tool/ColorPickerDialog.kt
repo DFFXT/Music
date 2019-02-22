@@ -3,11 +3,11 @@ package com.web.common.tool
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
-import android.support.v4.graphics.ColorUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.core.graphics.ColorUtils
 import com.web.common.util.ResUtil
 import com.web.misc.ColorPicker
 import com.web.web.R

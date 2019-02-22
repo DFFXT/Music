@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.web.moudle.music.page.lyrics.ui.LyricsView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lyricListView"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/lock"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/locked"
-        android:contentDescription="@null"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
-</com.web.moudle.music.page.lyrics.ui.LyricsView>
+    android:layout_height="match_parent"
+    >
+
+    <com.web.moudle.lyrics.LyricsView
+        android:id="@+id/lv_lyrics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/iv_lock"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/locked"
+            android:contentDescription="@null"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:elevation="3dp"/>
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/icon_back_black"
+            android:background="@color/white"
+            android:elevation="3dp"/>
+    </com.web.moudle.lyrics.LyricsView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

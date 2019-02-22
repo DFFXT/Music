@@ -1,8 +1,7 @@
 package com.web.moudle.songSheetEntry.model
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import com.alibaba.fastjson.JSON
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.web.common.base.get
 import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.songSheetEntry.bean.SongSheetInfoBox

@@ -95,6 +95,9 @@ class NetApis {
     interface AlbumEntry {
         @GET("http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.album.getAlbumInfo")
         fun getAlbumInfo(@Query("album_id") albumId: String): Observable<AlbumResponse>
+
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.plaza.newIndex&cuid=C08F3FE0D20BC1C506E601E6367BFD54&")
+        fun ff():Call<Any>
     }
 
     interface SingerEntry {

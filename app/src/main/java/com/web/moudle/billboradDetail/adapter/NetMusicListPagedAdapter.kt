@@ -1,7 +1,5 @@
 package com.web.moudle.billboradDetail.adapter
 
-import android.arch.paging.PagedListAdapter
-import android.support.v7.util.DiffUtil
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
@@ -10,6 +8,8 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity

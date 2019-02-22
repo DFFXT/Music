@@ -13,7 +13,6 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
-import android.support.constraint.ConstraintLayout
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
@@ -22,6 +21,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
 import com.web.common.base.BaseGlideTarget
@@ -32,7 +32,7 @@ import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
-import com.web.moudle.music.page.lyrics.model.LyricsLine
+import com.web.moudle.lyrics.LyricsLine
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R
@@ -46,7 +46,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     private var stateCompat:PlaybackStateCompat?=null
     private val lyrics= arrayListOf<LyricsLine>()
     private val arrowBitmap = arrayOfNulls<Bitmap>(2)
-    private lateinit var params:ConstraintLayout.LayoutParams
+    private lateinit var params: ConstraintLayout.LayoutParams
     private var marginEnd=0
     val receiver=object :ResultReceiver(Handler(Looper.getMainLooper())){
         override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {

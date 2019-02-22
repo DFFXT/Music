@@ -2,13 +2,12 @@ package com.web.moudle.music.page.local.control.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.DrawableItemDecoration
@@ -20,7 +19,7 @@ class SingleTextListAlert {
     private var dialog: AlertDialog? = null
     private var builder: AlertDialog.Builder
     var list: List<String>? = null
-    private lateinit var view: RecyclerView
+    private lateinit var view: androidx.recyclerview.widget.RecyclerView
     var itemClickListener: ((Int)->Unit)? = null
     private var adapter: SingleTextAdapter? = null
     constructor(context: Context, title:String) {
@@ -37,8 +36,8 @@ class SingleTextListAlert {
     }
 
     fun build() {
-        view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as RecyclerView
-        view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as androidx.recyclerview.widget.RecyclerView
+        view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         view.addItemDecoration(DrawableItemDecoration(orientation = LinearLayout.VERTICAL,bottom = 4,drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         adapter = SingleTextAdapter(context, list)
         adapter!!.itemClickListener=itemClickListener

@@ -1,6 +1,6 @@
 package com.web.common.base
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.web.R

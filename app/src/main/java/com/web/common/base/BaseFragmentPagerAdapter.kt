@@ -1,12 +1,9 @@
 package com.web.common.base
 
-import android.support.annotation.NonNull
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 
-class BaseFragmentPagerAdapter(private val fm: FragmentManager, private val mList: List<Fragment>) : FragmentPagerAdapter(fm) {
+class BaseFragmentPagerAdapter(private val fm: androidx.fragment.app.FragmentManager, private val mList: List<androidx.fragment.app.Fragment>) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
 
     override fun getCount(): Int =mList.size
@@ -21,7 +18,7 @@ class BaseFragmentPagerAdapter(private val fm: FragmentManager, private val mLis
     @NonNull
     override fun instantiateItem(@NonNull container: ViewGroup, position: Int): Any {
         //**获取旧数据
-        var fragment = super.instantiateItem(container, position) as Fragment
+        var fragment = super.instantiateItem(container, position) as androidx.fragment.app.Fragment
         //**对比数据的一致性
         if (fragment === getItem(position)) return fragment
         //**新数据替换旧数据
@@ -35,7 +32,7 @@ class BaseFragmentPagerAdapter(private val fm: FragmentManager, private val mLis
         return fragment
     }
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return mList[position]
     }
 

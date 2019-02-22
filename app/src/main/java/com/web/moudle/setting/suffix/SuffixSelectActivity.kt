@@ -2,9 +2,9 @@ package com.web.moudle.setting.suffix
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.TextUtils
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.base.BaseActivity
 import com.web.data.ScanMusicType
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
@@ -21,7 +21,7 @@ class SuffixSelectActivity: BaseActivity() {
     }
 
     override fun initView() {
-        rv_suffixSelect.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        rv_suffixSelect.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         tv_addAndSave.setOnClickListener {
             rv_suffixSelect.adapter?.let {adapter->
                 types.add(ScanMusicType("",10240,true))

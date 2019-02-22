@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootView_lockScreenActivity"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -71,7 +71,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <com.web.moudle.music.page.lyrics.ui.LyricsView
+    <com.web.moudle.lyrics.LyricsView
         android:id="@+id/lyricView_lockScreen"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -135,4 +135,4 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

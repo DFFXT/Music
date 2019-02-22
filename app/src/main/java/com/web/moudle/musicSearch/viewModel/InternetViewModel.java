@@ -1,16 +1,16 @@
 package com.web.moudle.musicSearch.viewModel;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-import android.arch.paging.DataSource;
-import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PagedList;
-
 import com.web.common.bean.LiveDataWrapper;
 import com.web.data.InternetMusicDetailList;
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo;
 import com.web.moudle.musicSearch.model.InternetDataSource;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 /**
  * 网络搜索

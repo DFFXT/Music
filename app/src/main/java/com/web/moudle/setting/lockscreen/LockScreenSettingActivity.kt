@@ -6,17 +6,18 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.transition.Transition
-import com.web.common.base.*
+import com.web.common.base.BaseActivity
+import com.web.common.base.BaseAdapter
+import com.web.common.base.BaseGlideTarget
+import com.web.common.base.BaseViewHolder
 import com.web.common.constant.Constant
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.ColorPickerDialog
@@ -54,8 +55,8 @@ class LockScreenSettingActivity : BaseActivity() {
 
     override fun initView() {
         view_s_lock_colorSelected.setImageDrawable(ColorDrawable(mColor))
-        rv_s_lock_colorList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(orientation = LinearLayoutManager.HORIZONTAL, right = 10, drawable = getDrawable(R.drawable.refresh)!!))
+        rv_s_lock_colorList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(orientation = androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, right = 10, drawable = getDrawable(R.drawable.refresh)!!))
         view_s_lock_colorSelected.setOnClickListener { colorPick() }
         sw_lockScreenMode.setOnClickListener {
             if (getMode() == LockScreenActivity.BG_MODE_COLOR) {

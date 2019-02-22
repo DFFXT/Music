@@ -3,16 +3,12 @@ package com.web.moudle.musicSearch.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
-import android.util.Log;
 
+import com.google.android.material.tabs.TabLayout;
 import com.web.common.base.BaseActivity;
 import com.web.common.base.BaseFragmentPagerAdapter;
 import com.web.misc.TopBarLayout;
@@ -21,6 +17,10 @@ import com.web.web.R;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.viewpager.widget.ViewPager;
 
 public class InternetMusicActivity extends BaseActivity {
     private final static int RESULT_CODE_SEARCH = 1;

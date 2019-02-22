@@ -1,19 +1,18 @@
 package com.web.moudle.singerEntry.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.support.design.widget.AppBarLayout
-import android.support.v7.graphics.Palette
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.appbar.AppBarLayout
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
@@ -69,7 +68,7 @@ class SingerEntryActivity : BaseActivity() {
                     //**加载图片
                     ImageLoad.loadAsBitmap(res.avatar500).into(object : BaseGlideTarget() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                            Palette.from(resource).generate {
+                            androidx.palette.graphics.Palette.from(resource).generate {
                                 it?.vibrantSwatch?.let { sw ->
                                     findViewById<View>(R.id.collapseToolbarLayout).setBackgroundColor(sw.rgb)
                                 }
@@ -102,7 +101,7 @@ class SingerEntryActivity : BaseActivity() {
                     return@Observer
                 }
                 rv_singerEntry.showContent()
-                rv_singerEntry.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                rv_singerEntry.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
                 rv_singerEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
                 val adapter = SingerSongAdapter(this@SingerEntryActivity, wrapper.value.songList!!)
                 rv_singerEntry.adapter = adapter
@@ -130,7 +129,7 @@ class SingerEntryActivity : BaseActivity() {
                     return@Observer
                 }
                 rv_albumEntry.showContent()
-                rv_albumEntry.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                rv_albumEntry.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
                 rv_albumEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
                 val adapter = SingerAlbumAdapter(this@SingerEntryActivity, wrapper.value.albumList!!)
                 rv_albumEntry.adapter = adapter

@@ -1,8 +1,8 @@
 package com.web.common.base
 
-import android.support.design.widget.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout
 
-abstract class BaseAppBarLayoutOffsetChangeListener:AppBarLayout.OnOffsetChangedListener {
+abstract class BaseAppBarLayoutOffsetChangeListener: AppBarLayout.OnOffsetChangedListener {
     companion object {
         const val STATE_COLLAPSE=0
         const val STATE_EXPANDING=1

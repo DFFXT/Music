@@ -1,6 +1,5 @@
 package com.web.moudle.music.player;
 
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -68,6 +63,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.media.MediaBrowserServiceCompat;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -271,6 +271,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	public class Connect extends Binder {
 		Connect(){
 			player.setLooping(false);
+			player.setOnBufferingUpdateListener((p,percent)-> play.bufferingUpdate(percent));
 			player.setOnPreparedListener(mp -> {
 				config.setPrepared(true);
 				musicLoad();

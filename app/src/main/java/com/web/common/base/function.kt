@@ -2,10 +2,6 @@ package com.web.common.base
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.v7.graphics.Palette
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +11,7 @@ import android.widget.TextView
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.imageLoader.glide.GlideApp
 import com.web.common.imageLoader.glide.ImageLoad
-import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
-import com.web.common.util.WindowUtil
 import com.web.web.R
 import io.reactivex.Observable
 import kotlin.math.max
@@ -42,7 +36,7 @@ fun <T : Any> Observable<T>.get(onNext: (T) -> Unit, onError: ((Throwable) -> Un
 fun bitmapColorSet(path:String?,bitmapImageView:ImageView,bitmapColorView:View){
     ImageLoad.loadAsBitmap(path).into(object : BaseGlideTarget() {
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-            Palette.from(resource).generate {
+            androidx.palette.graphics.Palette.from(resource).generate {
                 it?.vibrantSwatch?.let { sw ->
                     bitmapColorView.setBackgroundColor(sw.rgb)
                 }
@@ -78,7 +72,7 @@ fun SeekBar.onSeekTo(onSeekTo:((Int)->Unit)){
 /**
  * 设置RecyclerView的ItemDecoration ，顺便清除以前的
  */
-fun RecyclerView.setItemDecoration(itemDecoration: RecyclerView.ItemDecoration){
+fun androidx.recyclerview.widget.RecyclerView.setItemDecoration(itemDecoration: androidx.recyclerview.widget.RecyclerView.ItemDecoration){
     for(i in 0 until itemDecorationCount){
         removeItemDecorationAt(0)
     }
@@ -132,12 +126,23 @@ fun View.showLoading(isRootLoading: Boolean = false) {
         isRootLoading -> {
             mShowLoading(ViewUtil.screenWidth(), ViewUtil.screenHeight())
         }
-        else -> post {
-            mShowLoading()
+        else -> {
+            if(width!=ViewGroup.LayoutParams.WRAP_CONTENT&&
+                    width!=ViewGroup.LayoutParams.MATCH_PARENT&&
+                    height!=ViewGroup.LayoutParams.WRAP_CONTENT&&
+                    height!=ViewGroup.LayoutParams.MATCH_PARENT){
+                mShowLoading()
+            }else{
+                post {
+                    mShowLoading()
+                }
+            }
+
         }
     }
-
 }
+
+
 
 private fun View.mShowLoading(w: Int = 0, h: Int = 0) {
     hideError()
@@ -194,13 +199,18 @@ fun View.showError(tip:String?=null,drawable:Drawable?=null):ViewGroup {
 fun View.hideLoading() {
     val mLoadingView = loadingView
     if (mLoadingView != null) {
-        (parent as ViewGroup).removeView(mLoadingView)
+        post{
+            (parent as ViewGroup).removeView(mLoadingView)
+        }
+
     }
 }
 fun View.hideError(){
     val mErrorView = errorView
     if(mErrorView!=null){
-        (parent as ViewGroup).removeView(mErrorView)
+        post {
+            (parent as ViewGroup).removeView(mErrorView)
+        }
     }
 }
 

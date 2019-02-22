@@ -1,10 +1,10 @@
 package com.web.moudle.billboard
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.base.BaseActivity
 import com.web.common.base.showContent
 import com.web.common.base.showError
@@ -41,7 +41,7 @@ class BillBoardActivity:BaseActivity() {
 
 
 
-        rv_billboard.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        rv_billboard.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         rv_billboard.addItemDecoration(GapItemDecoration(left = 10,right = 10,bottom = 10))
         model?.getBillboard()
         rootView.showLoading(true)

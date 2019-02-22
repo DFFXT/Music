@@ -1,10 +1,10 @@
 package com.web.common.base
 
-import android.app.*
+import android.app.Notification
 import android.content.Context
 import android.os.Build
-import android.support.annotation.LayoutRes
 import android.widget.RemoteViews
+import androidx.annotation.LayoutRes
 import com.web.web.R
 
 

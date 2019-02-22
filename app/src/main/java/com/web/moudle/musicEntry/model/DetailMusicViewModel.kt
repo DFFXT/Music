@@ -1,12 +1,12 @@
 package com.web.moudle.musicEntry.model
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.web.common.base.BaseSingleObserver
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
-import com.web.moudle.music.page.lyrics.model.LyricsLine
+import com.web.moudle.lyrics.LyricsLine
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 
 class DetailMusicViewModel : ViewModel() {

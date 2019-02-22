@@ -7,20 +7,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Outline;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,14 +28,14 @@ import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
+import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
-import com.web.moudle.music.page.lyrics.ui.LyricPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
 import com.web.moudle.music.page.local.control.ui.SelectorListAlert;
 import com.web.moudle.music.page.recommend.RecommendPage;
 import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.music.player.PlayInterface;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
+import com.web.moudle.musicEntry.ui.PlayerObserver;
 import com.web.moudle.musicSearch.ui.InternetMusicActivity;
 import com.web.moudle.preference.SP;
 import com.web.moudle.search.SearchActivity;
@@ -57,7 +46,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicActivity extends BaseActivity implements OnClickListener, PlayInterface {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+public class MusicActivity extends BaseActivity implements OnClickListener {
 
     private int RESULT_CODE_SEARCH = 1;
 
@@ -72,13 +72,117 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
     private ViewPager viewPager;
     private PagerAdapter adapter;
     private MusicListLPage musicListLPage;
-    private LyricPage lyricPage;
     private MusicPlay.Connect connect;
     private List<MusicList<Music>> groupList;
     private int groupIndex = -1;
     private List<BaseMusicPage> pageList = new ArrayList<>();
 
     private SelectorListAlert listAlert;
+    private PlayerObserver observer=new PlayerObserver(){
+        @Override
+        public void load(int groupIndex, int childIndex, Music music, int maxTime) {
+            bar.setMax(maxTime / 1000);
+            if (music == null) {
+                songname.setText(null);
+                singer.setText(null);
+            } else {
+                songname.setText(music.getMusicName());
+                singer.setText(music.getSinger());
+            }
+            if (connect.getConfig().getBitmap() == null) {
+                iv_singerIcon.setImageResource(R.drawable.singer_default_icon);
+            } else {
+                iv_singerIcon.setImageBitmap(connect.getConfig().getBitmap());
+            }
+
+            play();
+            musicListLPage.loadMusic(groupIndex, childIndex);
+        }
+
+        @Override
+        public void play() {
+            pause.setImageResource(R.drawable.icon_play_black);
+            if (listAlert != null && connect.getConfig().getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {
+                listAlert.setIndex(connect.getWaitIndex());
+            }
+        }
+
+        @Override
+        public void pause() {
+            pause.setImageResource(R.drawable.icon_pause_black);
+        }
+
+        @Override
+        public void playTypeChanged(PlayerConfig.PlayType playType) {
+            showPlayType(playType);
+        }
+
+        @Override
+        public void currentTime(int group, int child, int time) {
+            runOnUiThread(() -> bar.setProgress(time / 1000));
+        }
+
+        @Override
+        public void musicListChange(int group, List<MusicList<Music>> list) {
+            runOnUiThread(() -> {
+
+                if (list == null || list.size() == 0 || list.get(0).size() == 0) {
+                    if (!SP.INSTANCE.getBoolean(Constant.spName, Constant.SpKey.noNeedScan,false)) {
+                        new AlertDialog.Builder(MusicActivity.this)
+                                .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
+                                .setNegativeButton(ResUtil.getString(R.string.no), null)
+                                .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> connect.scanLocalMusic()).create().show();
+                    } else if (list != null) {
+                        musicListLPage.setData(group, list.get(group));
+                        groupList = list;
+                        groupIndex = group;
+
+                        getCurrentPage().setTitle(tv_title);
+                    }
+                } else {
+                    musicListLPage.setData(group, list.get(group));
+                    groupList = list;
+                    groupIndex = group;
+                    getCurrentPage().setTitle(tv_title);
+                }
+            });
+        }
+
+        @Override
+        public void bufferingUpdate(int percent) {
+            bar.setSecondaryProgress((int) (percent*bar.getMax()/100f));
+        }
+
+        /***
+         * 音乐源发生了变化
+         * @param origin origin
+         */
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void musicOriginChanged(PlayerConfig.MusicOrigin origin) {
+            runOnUiThread(() -> {
+                switch (origin) {
+                    case LOCAL: {
+                        tv_musicOrigin.setText("LOCAL");
+                    }
+                    break;
+                    case INTERNET: {
+                        tv_musicOrigin.setText("INTERNET");
+                    }
+                    break;
+                    case WAIT: {
+                        tv_musicOrigin.setText("LIST");
+                    }
+                    break;
+                    case STORAGE: {
+                        tv_musicOrigin.setText("STORAGE");
+                    }
+                    break;
+                }
+            });
+
+        }
+    };
 
     public int getLayoutId() {//---活动启动入口
         return R.layout.restruct_music_layout;
@@ -103,6 +207,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth() / 10f);
             }
         });
+        //iv_singerIcon.setOnClickListener(v-> LyricsActivity.actionStart(this));
     }
 
     @SuppressLint("RestrictedApi")
@@ -117,7 +222,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.three_h_line);
         }
-        toolbar.setNavigationOnClickListener(v -> drawer.openDrawer(Gravity.START));
+        toolbar.setNavigationOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
         tv_title.setOnClickListener(v -> {
             switch (pageList.get(viewPager.getCurrentItem()).getPageName()) {
                 case MusicListLPage.pageName: {
@@ -201,6 +306,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
         viewPager = findViewById(R.id.viewPager);
 
         View v = findViewById(R.id.musicControlBox);
+        v.setOnClickListener(view->LyricsActivity.actionStart(this));
         bar = v.findViewById(R.id.bar);
         Drawable d = getDrawable(R.drawable.icon_seekbar_dot_pressed);
         if (d != null) {
@@ -231,8 +337,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
         v.findViewById(R.id.goDownload).setOnClickListener(this);
         v.findViewById(R.id.item_setting1).setOnClickListener(this);
         tv_musicOrigin.setOnClickListener(this);
-        singer.setOnClickListener(this);
-        songname.setOnClickListener(this);
 
 
     }
@@ -250,7 +354,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 connect = (MusicPlay.Connect) service;
-                connect.addObserver(MusicActivity.this,MusicActivity.this);
+                connect.addObserver(MusicActivity.this,observer);
                 connect.getList(0);
                 getIntentData();//*************8获取输入数据
                 for (BaseMusicPage page : pageList) {
@@ -300,8 +404,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
             public void onStopTrackingTouch(SeekBar arg0) {
                 int progress = arg0.getProgress();
                 connect.seekTo(progress * 1000);
-                if (lyricPage != null)
-                    lyricPage.lyricsRun(progress * 1000);
                 //currentTime(-1,-1,arg0.getProgress()*100);
             }
 
@@ -334,13 +436,13 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
             case R.id.goDownload: {
                 Intent intent = new Intent(this, MusicDownLoadActivity.class);
                 startActivity(intent);
-                drawer.closeDrawer(Gravity.START);
+                drawer.closeDrawer(GravityCompat.START);
             }
             break;
 
             case R.id.download: {
                 MusicDownLoadActivity.actionStart(this);
-                drawer.closeDrawer(Gravity.START);
+                drawer.closeDrawer(GravityCompat.START);
             }
             break;
             case R.id.pre: {
@@ -363,18 +465,16 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
                 break;
             case R.id.item_setting1: {
                 SettingActivity.actionStart(this);
-                drawer.closeDrawer(Gravity.START);
+                drawer.closeDrawer(GravityCompat.START);
                 return;
             }
             case R.id.scanLocalMusic: {//--扫描本地文件
                 SP.INSTANCE.putValue(Constant.spName, Constant.SpKey.clearAll, false);
                 connect.scanLocalMusic();
                 MToast.showToast(this, ResUtil.getString(R.string.musicIsScanning));
-                drawer.closeDrawer(Gravity.START);
+                drawer.closeDrawer(GravityCompat.START);
             }
             break;
-            case R.id.songname:
-            case R.id.singer:
             case R.id.musicOrigin: {
                 if (connect.getConfig().getMusicOrigin() != PlayerConfig.MusicOrigin.WAIT) return;
                 if (listAlert == null) {
@@ -464,120 +564,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener, Play
     }
 
 
-    @Override
-    public void load(int groupIndex, int childIndex, Music music, int maxTime) {
-        bar.setMax(maxTime / 1000);
-        if (music == null) {
-            songname.setText("");
-            singer.setText("");
-        } else {
-            songname.setText(music.getMusicName());
-            singer.setText(music.getSinger());
-        }
-        if (connect.getConfig().getBitmap() == null) {
-            iv_singerIcon.setImageResource(R.drawable.singer_default_icon);
-        } else {
-            iv_singerIcon.setImageBitmap(connect.getConfig().getBitmap());
-        }
 
-        play();
-        musicListLPage.loadMusic(groupIndex, childIndex);
-        if (noSuchPage(LyricPage.pageName)) {
-            lyricPage = new LyricPage();
-            lyricPage.setConnect(connect);
-            pageList.add(lyricPage);
-            adapter.notifyDataSetChanged();
-        }
-        if (lyricPage != null) {
-            lyricPage.setConnect(connect);
-            lyricPage.loadLyrics();
-        }
-    }
-
-    @Override
-    public void play() {
-        pause.setImageResource(R.drawable.icon_play_black);
-        if (listAlert != null && connect.getConfig().getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {
-            listAlert.setIndex(connect.getWaitIndex());
-        }
-    }
-
-    @Override
-    public void pause() {
-        pause.setImageResource(R.drawable.icon_pause_black);
-    }
-
-    @Override
-    public void playTypeChanged(PlayerConfig.PlayType playType) {
-        showPlayType(playType);
-    }
-
-    @Override
-    public void currentTime(int group, int child, int time) {
-        runOnUiThread(() -> {
-            bar.setProgress(time / 1000);
-            if (lyricPage != null) {
-                lyricPage.lyricsRun(time);
-            }
-        });
-    }
-
-    @Override
-    public void musicListChange(int groupIndex, List<MusicList<Music>> list) {
-        runOnUiThread(() -> {
-
-            if (list == null || list.size() == 0 || list.get(0).size() == 0) {
-                if (!SP.INSTANCE.getBoolean(Constant.spName, Constant.SpKey.noNeedScan,false)) {
-                    new AlertDialog.Builder(this)
-                            .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
-                            .setNegativeButton(ResUtil.getString(R.string.no), null)
-                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> connect.scanLocalMusic()).create().show();
-                } else if (list != null) {
-                    musicListLPage.setData(groupIndex, list.get(groupIndex));
-                    this.groupList = list;
-                    this.groupIndex = groupIndex;
-
-                    getCurrentPage().setTitle(tv_title);
-                }
-            } else {
-                musicListLPage.setData(groupIndex, list.get(groupIndex));
-                this.groupList = list;
-                this.groupIndex = groupIndex;
-                getCurrentPage().setTitle(tv_title);
-            }
-        });
-    }
-
-
-    /***
-     * 音乐源发生了变化
-     * @param origin origin
-     */
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void musicOriginChanged(PlayerConfig.MusicOrigin origin) {
-        runOnUiThread(() -> {
-            switch (origin) {
-                case LOCAL: {
-                    tv_musicOrigin.setText("LOCAL");
-                }
-                break;
-                case INTERNET: {
-                    tv_musicOrigin.setText("INTERNET");
-                }
-                break;
-                case WAIT: {
-                    tv_musicOrigin.setText("LIST");
-                }
-                break;
-                case STORAGE: {
-                    tv_musicOrigin.setText("STORAGE");
-                }
-                break;
-            }
-        });
-
-    }
 
     public void onDestroy() {
         if (serviceConnection != null) {

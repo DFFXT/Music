@@ -1,23 +1,15 @@
 package com.web.moudle.billboradDetail.model
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import android.arch.paging.DataSource
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
-import com.web.common.base.get
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.web.common.bean.LiveDataWrapper
-import com.web.common.util.ResUtil
 import com.web.moudle.billboradDetail.adapter.NetMusicListDataSource
 import com.web.moudle.billboradDetail.bean.BillBoardInfo
-import com.web.moudle.billboradDetail.bean.NetMusicBox
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
-import com.web.moudle.net.retrofit.ResultTransform
-import com.web.moudle.net.retrofit.SchedulerTransform
-import com.web.web.R
-import java.text.SimpleDateFormat
-import java.util.*
 
 class NetMusicListViewModel : ViewModel() {
 

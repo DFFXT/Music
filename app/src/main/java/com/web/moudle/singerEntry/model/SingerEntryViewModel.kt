@@ -1,11 +1,10 @@
 package com.web.moudle.singerEntry.model
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.moudle.singerEntry.bean.AlbumEntryBox
-import com.web.moudle.singerEntry.bean.AlbumEntryItem
 import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.bean.SongEntryBox
 

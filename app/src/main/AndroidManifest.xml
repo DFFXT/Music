@@ -38,7 +38,7 @@
             android:authorities="sfdsfs"
             android:grantUriPermissions="true"
             android:exported="false"
-            android:name="android.support.v4.content.FileProvider">
+            android:name="androidx.core.content.FileProvider">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths"/>
         </provider>
         <receiver
@@ -127,6 +127,7 @@
             />
         <activity android:name="com.web.moudle.billboard.BillBoardActivity" />
         <activity android:name="com.web.moudle.billboradDetail.NetMusicListActivity" />
+        <activity android:name="com.web.moudle.lyrics.LyricsActivity" />
 
     </application>
 

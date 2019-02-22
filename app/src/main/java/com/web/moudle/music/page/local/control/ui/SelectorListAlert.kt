@@ -2,12 +2,11 @@ package com.web.moudle.music.page.local.control.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
@@ -19,7 +18,7 @@ class SelectorListAlert {
     private var dialog: AlertDialog? = null
     private var builder: AlertDialog.Builder
     var list: List<String>? = null
-    private var view: RecyclerView? = null
+    private var view: androidx.recyclerview.widget.RecyclerView? = null
     var listSelectListener: ListSelectListener? = null
     private var index = -1
     var canTouchRemove=false
@@ -44,8 +43,8 @@ class SelectorListAlert {
     }
 
     fun build() {
-        view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as RecyclerView
-        view!!.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as androidx.recyclerview.widget.RecyclerView
+        view!!.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
 
         adapter = SimpleSelectListAdapter(context, list)
         adapter!!.setListener(listSelectListener)

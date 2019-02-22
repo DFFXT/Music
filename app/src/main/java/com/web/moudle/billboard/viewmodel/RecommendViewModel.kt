@@ -1,7 +1,7 @@
 package com.web.moudle.billboard.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.web.common.base.get
 import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.billboard.model.RecommendModel

@@ -1,19 +1,16 @@
 package com.web.moudle.musicSearch.model;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.paging.PageKeyedDataSource;
-import android.support.annotation.NonNull;
-
 import com.web.common.base.BaseObserver;
 import com.web.common.bean.LiveDataWrapper;
 import com.web.moudle.musicSearch.bean.next.SearchMusicWrapper1;
-import com.web.moudle.musicSearch.bean.next.next.SearchSongSheetWrapper2;
 import com.web.moudle.musicSearch.bean.next.next.SearchSongWrapper2;
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.paging.PageKeyedDataSource;
 
 
 public class InternetDataSource extends PageKeyedDataSource<String,SimpleMusicInfo> {

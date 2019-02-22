@@ -3,8 +3,6 @@ package com.web.moudle.music.page.local.control.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,9 @@ import com.web.moudle.music.page.local.control.interf.RemoveItemListener;
 import com.web.web.R;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> implements RemoveItemListener {
     private Context context;

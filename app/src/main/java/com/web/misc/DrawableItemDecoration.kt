@@ -2,7 +2,6 @@ package com.web.misc
 
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
 
 /**
@@ -14,7 +13,7 @@ class DrawableItemDecoration(left:Int=0,private val top:Int=0,private val right:
         right,
         bottom
 ){
-    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+    override fun onDraw(c: Canvas, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         super.onDraw(c, parent, state)
         val parentLeft = parent.paddingLeft
         val parentRight = parent.width - parent.paddingRight
@@ -22,7 +21,7 @@ class DrawableItemDecoration(left:Int=0,private val top:Int=0,private val right:
         val parentBottom = parent.height - parent.paddingBottom
         if(orientation==LinearLayout.VERTICAL){
             for(index in 0 until parent.childCount){
-                val lp=parent.getChildAt(index).layoutParams as RecyclerView.LayoutParams
+                val lp=parent.getChildAt(index).layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
                 val top=parent.getChildAt(index).bottom + lp.bottomMargin
                 drawable?.setBounds(parentLeft,top,parentRight,top+this.bottom)
 
@@ -31,7 +30,7 @@ class DrawableItemDecoration(left:Int=0,private val top:Int=0,private val right:
         }else if(orientation==LinearLayout.HORIZONTAL){
 
             for(index in 0 until parent.childCount){
-                val lp=parent.getChildAt(index).layoutParams as RecyclerView.LayoutParams
+                val lp=parent.getChildAt(index).layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
                 val left=parent.getChildAt(index).right + lp.marginEnd
                 drawable?.setBounds(left,parentTop,left+this.right,parentBottom)
                 drawable?.draw(c)

@@ -33,4 +33,8 @@ open class PlayerObserver:PlayInterface {
     override fun musicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
 
     }
+
+    override fun bufferingUpdate(percent: Int) {
+
+    }
 }

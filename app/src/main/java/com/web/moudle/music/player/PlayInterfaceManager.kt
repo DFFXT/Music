@@ -1,8 +1,8 @@
 package com.web.moudle.music.player
 
-import android.arch.lifecycle.GenericLifecycleObserver
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.web.data.Music
 import com.web.data.MusicList
 import com.web.data.PlayerConfig
@@ -16,8 +16,8 @@ class PlayInterfaceManager:PlayInterface {
         }
         //**观测者变动
 
-        owner.lifecycle.addObserver(object :GenericLifecycleObserver{
-            override fun onStateChanged(source: LifecycleOwner?, event: Lifecycle.Event?) {
+        owner.lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 if(event==Lifecycle.Event.ON_DESTROY){
                     observerList.remove(observer)
                     owner.lifecycle.removeObserver(this)
@@ -64,6 +64,12 @@ class PlayInterfaceManager:PlayInterface {
     override fun musicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
         observerList.forEach {
             it.musicOriginChanged(origin)
+        }
+    }
+
+    override fun bufferingUpdate(percent: Int) {
+        observerList.forEach {
+            it.bufferingUpdate(percent)
         }
     }
 }

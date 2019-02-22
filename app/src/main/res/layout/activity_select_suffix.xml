@@ -12,7 +12,7 @@
         android:background="@color/themeColor"
         app:topBar_mainTitleText="@string/setting_suffix_select"
         app:topBar_startImage="@drawable/icon_back_black"/>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:paddingTop="20dp"

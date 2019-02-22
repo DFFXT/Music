@@ -1,8 +1,8 @@
 package com.web.data;
 
-import android.support.annotation.Nullable;
-
 import java.io.Serializable;
+
+import androidx.annotation.Nullable;
 
 public class InternetMusicForPlay extends Music implements Serializable {
     private String imgAddress;

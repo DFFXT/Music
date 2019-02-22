@@ -1,9 +1,9 @@
 package com.web.moudle.billboradDetail.adapter
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.paging.PageKeyedDataSource
-import android.support.annotation.IntDef
 import android.util.Log
+import androidx.annotation.IntDef
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.PageKeyedDataSource
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.ResUtil

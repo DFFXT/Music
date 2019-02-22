@@ -1,12 +1,12 @@
 package com.web.data;
 
-import android.support.annotation.IntDef;
-
 import com.alibaba.fastjson.annotation.JSONField;
 
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+
+import androidx.annotation.IntDef;
 
 public class InternetMusic extends DataSupport implements Serializable {
 

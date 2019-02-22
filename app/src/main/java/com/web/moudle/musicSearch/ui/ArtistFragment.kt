@@ -1,13 +1,13 @@
 package com.web.moudle.musicSearch.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
@@ -50,16 +50,16 @@ class ArtistFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= LinearLayoutManager(context)
+        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context)
 
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
         adapter= SimpleArtistAdapter()
         adapter.itemClick={
             if(it!=null){//**无法提通过这个artistId获取正确信息，必须通过一次跳转获取真正的artistId
                 //http://music.taihe.com/data/artist/redirect?id=14413780
                 vm.getRedirectHeader(it.artistId)
-                //SingerEntryActivity.actionStartSingerMusic(context!!,it.artistId)
+                //SingerEntryActivity.actionStartBillboard(context!!,it.artistId)
             }
         }
         rv_musicList.adapter=adapter

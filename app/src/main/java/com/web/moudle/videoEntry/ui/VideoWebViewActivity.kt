@@ -3,9 +3,9 @@ package com.web.moudle.videoEntry.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import com.web.common.base.BaseActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_video_web_view.*

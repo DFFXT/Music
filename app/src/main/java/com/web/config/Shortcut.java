@@ -2,17 +2,17 @@ package com.web.config;
 
 import android.content.Context;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.moudle.music.player.MusicPlay;
 
 import java.io.File;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Size;
 
 public class Shortcut {
     public static MusicPlay.Connect connect;

@@ -2,8 +2,8 @@ package com.web.moudle.musicEntry.model
 
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
+import com.web.moudle.lyrics.LyricsLine
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
-import com.web.moudle.music.page.lyrics.model.LyricsLine
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.SchedulerTransform
@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 class MusicDetailModel:BaseRetrofit() {
     fun getMusicDetail(songId:String):Observable<MusicDetailInfo>{

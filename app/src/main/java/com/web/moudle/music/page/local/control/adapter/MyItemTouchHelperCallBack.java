@@ -1,9 +1,9 @@
 package com.web.moudle.music.page.local.control.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-
 import com.web.moudle.music.page.local.control.interf.RemoveItemListener;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback{
 

@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.RectF
-import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import com.web.web.R
 
 class RoundImageView @JvmOverloads constructor(

@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'singer/singer.dart';
-void main() => runApp(run(window.defaultRouteName));
+import 'package:flutter_module/recommend/Recommend.dart';
+import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
-
-StatelessWidget run(String routeName){
-  switch(routeName){
-    case "SingerView":{
-      return SingerView();
-    }
-  }
-  return Container(
-    child: Center(
-      child: Text("default View!",textDirection: TextDirection.ltr,),
-    ),
-  );
+void main() {
+  //debugPaintSizeEnabled = true;
+  runApp(run(window.defaultRouteName));
 }
 
+
+StatelessWidget run(String routeName) {
+  switch (routeName) {
+    case "SingerView":
+      {
+        return SingerView();
+      }
+    case "RecommendView":
+      {
+        return Recommend();
+      }
+    default :
+      {
+        return Recommend();
+      }
+  }
+}
 

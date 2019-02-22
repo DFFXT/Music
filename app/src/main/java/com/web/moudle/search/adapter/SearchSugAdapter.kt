@@ -1,7 +1,5 @@
 package com.web.moudle.search.adapter
 
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,7 @@ import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.web.R
 
-class SearchSugAdapter(var searchSug: SearchSug) : RecyclerView.Adapter<BaseViewHolder>() {
+class SearchSugAdapter(var searchSug: SearchSug) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p: Int): BaseViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.search_sug_item, parent, false)
         return BaseViewHolder(v)

@@ -2,9 +2,9 @@ package com.web.common.base
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.danikula.videocache.HttpProxyCacheServer
 import com.web.common.util.UncaughtException
 import com.web.moudle.net.proxy.InternetProxy
+import io.flutter.view.FlutterMain
 import org.litepal.LitePalApplication
 
 class MyApplication : LitePalApplication(){
@@ -14,6 +14,7 @@ class MyApplication : LitePalApplication(){
         Thread.setDefaultUncaughtExceptionHandler(UncaughtException)
         context= applicationContext
         InternetProxy.startProxy()
+        FlutterMain.startInitialization(this)
         //proxy= HttpProxyCacheServer(this)
     }
     companion object {

@@ -1,17 +1,16 @@
 package com.web.moudle.billboradDetail
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.LinearLayout
-import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.ResUtil
@@ -70,7 +69,7 @@ class NetMusicListActivity:BaseActivity() {
             topBar.setMainTitleColor(textColor)
             rootView.showContent()
         })
-        rv_netMusicList.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        rv_netMusicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         rv_netMusicList.addItemDecoration(DrawableItemDecoration(left = 10,top = 10,right = 10,bottom = 10,
                 orientation =  LinearLayout.VERTICAL,drawable = getDrawable(R.drawable.recycler_divider)))
 
@@ -132,7 +131,7 @@ class NetMusicListActivity:BaseActivity() {
          * 排行榜
          */
         @JvmStatic
-        fun actionStartSingerMusic(ctx:Context, title:String, type:Int){
+        fun actionStartBillboard(ctx:Context, title:String, type:Int){
             val intent= Intent(ctx,NetMusicListActivity::class.java)
             intent.putExtra(INTENT_DATA,title)
             intent.putExtra(REQUEST_TYPE,NetMusicType.TYPE_BILLBOARD.ordinal)
@@ -144,7 +143,7 @@ class NetMusicListActivity:BaseActivity() {
          * 今日推荐
          */
         @JvmStatic
-        fun actionStartSingerMusic(ctx: Context, title:String){
+        fun actionStartRecommend(ctx: Context, title:String){
             val intent= Intent(ctx,NetMusicListActivity::class.java)
             intent.putExtra(INTENT_DATA,title)
             intent.putExtra(REQUEST_TYPE,NetMusicType.TYPE_TODAY_RECOMMEND.ordinal)

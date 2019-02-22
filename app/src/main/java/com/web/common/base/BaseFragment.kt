@@ -1,18 +1,22 @@
 package com.web.common.base
 
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 
-abstract class BaseFragment :Fragment(){
+abstract class BaseFragment : androidx.fragment.app.Fragment(){
     private var created=false
     var rootView:View?=null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if(rootView!=null)return rootView
-        this.rootView =inflater.inflate(getLayoutId(),container,false)
+        if(getLayoutId()!=0){
+            this.rootView =inflater.inflate(getLayoutId(),container,false)
+        }else{
+            this.rootView=getLayoutView()
+        }
+
         initView(rootView!!)
         return this.rootView
     }
@@ -25,8 +29,11 @@ abstract class BaseFragment :Fragment(){
         return created
     }
     @LayoutRes abstract fun getLayoutId():Int
+    open fun getLayoutView():View?{
+        throw Exception("need a view")
+    }
     abstract fun initView(rootView:View)
-    abstract fun viewCreated(view: View, savedInstanceState: Bundle?)
+    open fun viewCreated(view: View, savedInstanceState: Bundle?){}
     override fun onDestroy() {
         super.onDestroy()
         created=false

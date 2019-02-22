@@ -1,11 +1,10 @@
 package com.web.moudle.videoEntry.model
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.alibaba.fastjson.JSON
 import com.web.common.base.get
 import com.web.moudle.videoEntry.bean.FileInfo
-import com.web.moudle.videoEntry.bean.RemoteFiles
 import com.web.moudle.videoEntry.bean.VideoInfoBox
 
 class VideoViewModel:ViewModel() {

@@ -1,7 +1,5 @@
 package com.web.moudle.videoEntry.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
@@ -9,6 +7,8 @@ import android.media.MediaPlayer
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.SeekBar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.web.common.base.BaseActivity
 import com.web.common.base.errorClickLinsten
 import com.web.common.base.showError

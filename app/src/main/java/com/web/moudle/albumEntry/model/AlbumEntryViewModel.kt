@@ -1,13 +1,12 @@
 package com.web.moudle.albumEntry.model
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.moudle.albumEntry.bean.AlbumResponse
+import com.web.moudle.lyrics.LyricsLine
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
-import com.web.moudle.music.page.lyrics.model.LyricsLine
-import com.web.moudle.musicEntry.model.DetailMusicViewModel
 
 class AlbumEntryViewModel : ViewModel() {
     private val model = AlbumEntryModel()

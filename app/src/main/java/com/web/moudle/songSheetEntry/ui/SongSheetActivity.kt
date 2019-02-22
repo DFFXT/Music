@@ -1,12 +1,12 @@
 package com.web.moudle.songSheetEntry.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.*
 import com.web.common.util.ViewUtil
@@ -76,15 +76,15 @@ class SongSheetActivity:BaseActivity() {
     }
 
     private fun initTag(tags:List<String>){
-        rv_tag.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        rv_tag.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         rv_tag.addItemDecoration(GapItemDecoration(left = 18,top = 5,remainEndPadding = true))
         rv_tag.adapter=SheetTagAdapter(this,tags)
     }
     private fun initSongList(songList:List<Songlist>){
         if(this.songList.size==0){
             this.songList.addAll(songList)
-            rv_sheetSong.layoutManager=LinearLayoutManager(this)
-            rv_sheetSong.addItemDecoration(DrawableItemDecoration(left = ViewUtil.dpToPx(20f),right = ViewUtil.dpToPx(15f),bottom = 10,drawable = getDrawable(R.drawable.dash_line_1px)!!,orientation = LinearLayoutManager.VERTICAL))
+            rv_sheetSong.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this)
+            rv_sheetSong.addItemDecoration(DrawableItemDecoration(left = ViewUtil.dpToPx(20f),right = ViewUtil.dpToPx(15f),bottom = 10,drawable = getDrawable(R.drawable.dash_line_1px)!!,orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
             rv_sheetSong.adapter= SongSheetListAdapter(this, this.songList)
         }else{
             this.songList.addAll(songList)

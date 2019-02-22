@@ -16,14 +16,14 @@
         app:topBar_mainTitleText="@string/setting_lockScreen_title"
         app:topBar_mainTitleColor="@color/white"
         />
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:paddingTop="20dp"
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_s_lock_colorList"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
@@ -106,10 +106,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_s_lock_setImageBackground"/>
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>

@@ -3,10 +3,9 @@ package com.web.common.base;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.v7.app.AppCompatActivity;
 
-import com.web.common.util.UncaughtException;
+import androidx.annotation.LayoutRes;
+import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static String INTENT_DATA="_mData";

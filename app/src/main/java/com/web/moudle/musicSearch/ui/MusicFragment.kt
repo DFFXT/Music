@@ -2,15 +2,15 @@ package com.web.moudle.musicSearch.ui
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
@@ -54,9 +54,9 @@ class MusicFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager=LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
         adapter=InternetMusicAdapter(context!!)
         adapter.listener = object : InternetMusicAdapter.OnItemClickListener {
             override fun itemClick(music: SimpleMusicInfo) {

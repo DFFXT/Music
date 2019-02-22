@@ -1,16 +1,13 @@
 package com.web.moudle.albumEntry.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.WindowUtil
@@ -77,9 +74,9 @@ class AlbumEntryActivity : BaseActivity() {
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
 
-        val manager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        val manager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         rv_albumList.layoutManager=manager
-        rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
+        rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
         loadData()
     }
 

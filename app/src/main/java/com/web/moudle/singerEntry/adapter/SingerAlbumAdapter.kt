@@ -7,9 +7,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
-import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
-import com.web.moudle.singerEntry.bean.AlbumEntryItem
 import com.web.web.R
 
 class SingerAlbumAdapter(private val ctx:Context, list:ArrayList<SimpleAlbumInfo>): BaseAdapter<SimpleAlbumInfo>(list) {

@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -27,6 +25,9 @@ import com.web.web.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 @SuppressLint("InlinedApi")
 public class MusicDownLoadActivity extends BaseActivity implements FileDownloadService.DownloadListener {

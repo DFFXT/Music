@@ -1,5 +1,9 @@
 package com.web.config;
 
+import android.annotation.SuppressLint;
+import android.os.Environment;
+import android.webkit.JavascriptInterface;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,32 +16,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.media.MediaPlayer;
-import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
-import android.util.Log;
-import android.webkit.JavascriptInterface;
-
-import com.web.data.InternetMusic;
+import androidx.annotation.WorkerThread;
 
 @SuppressLint("SimpleDateFormat") public class GetFiles {
 	public static File url=Environment.getExternalStorageDirectory();

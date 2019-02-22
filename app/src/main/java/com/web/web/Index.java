@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,22 +14,19 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.web.common.base.BaseActivity;
 import com.web.moudle.music.page.local.MusicActivity;
+import com.web.moudle.net.NetApis;
 import com.web.moudle.net.retrofit.BaseRetrofit;
-import com.web.moudle.songSheetEntry.adapter.JSEngine;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import androidx.core.app.ActivityCompat;
 import dalvik.system.DexClassLoader;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @SuppressLint("InlinedApi")
 public class Index extends BaseActivity implements OnClickListener,OnTouchListener{
@@ -52,6 +48,22 @@ public class Index extends BaseActivity implements OnClickListener,OnTouchListen
 		fillTextAndColor();
 		go();
 
+
+		new Thread(()->{
+            new BaseRetrofit().obtainClassNoConverter(NetApis.AlbumEntry.class)
+                    .ff()
+                    .enqueue(new Callback<Object>() {
+						@Override
+						public void onResponse(Call<Object> call, Response<Object> response) {
+							Log.i("log",response.body().toString());
+						}
+
+						@Override
+						public void onFailure(Call<Object> call, Throwable t) {
+							t.printStackTrace();
+						}
+					});
+        }).start();
 
 
 
