@@ -24,6 +24,7 @@ import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.musicDownload.service.FileDownloadService
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
 import com.web.web.R
@@ -57,8 +58,8 @@ class MusicDetailActivity : BaseActivity() {
                     drawable!!.setBounds(0, 0, ViewUtil.dpToPx(20f), ViewUtil.dpToPx(20f))
                     tv_downloadMusic.setCompoundDrawables(drawable, null, null, null)
                     tv_downloadMusic.setOnClickListener {
-                        Log.i("log","---${res.bitRate.bitrate}")
-                        //FileDownloadService.addTask(it.context, attributesMap(res))
+                        //Log.i("log","---${res.bitRate.bitrate}")
+                        FileDownloadService.addTask(it.context, attributesMap(res))
                     }
                     //**加载图片
                     ImageLoad.loadAsBitmap(res.songInfo.artistPic500x500).into(object : BaseGlideTarget() {

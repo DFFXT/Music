@@ -269,7 +269,7 @@ public class MusicListLPage extends BaseMusicPage {
     public void initView(@NotNull View rootView) {
         rv_musicList =rootView.findViewById(R.id.musicExpandableList);
         indexBar=rootView.findViewById(R.id.indexBar_musicList);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(rootView.getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(rootView.getContext(),RecyclerView.VERTICAL,false);
         rv_musicList.setLayoutManager(layoutManager);
         rv_musicList.addItemDecoration(new DrawableItemDecoration(0,0,0,4,LinearLayout.VERTICAL,ResUtil.getDrawable(R.drawable.recycler_divider)));
         if(data!=null){

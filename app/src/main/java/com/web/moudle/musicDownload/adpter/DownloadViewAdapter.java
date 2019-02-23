@@ -1,13 +1,17 @@
 package com.web.moudle.musicDownload.adpter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.web.common.base.BaseAdapter;
+import com.web.common.base.BaseMultiSelectAdapter;
 import com.web.common.base.BaseViewHolder;
 import com.web.common.util.ResUtil;
+import com.web.config.Shortcut;
 import com.web.data.InternetMusicDetail;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.web.R;
@@ -20,49 +24,133 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 
-public class DownloadViewAdapter extends BaseAdapter<DownloadMusic> {
+public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
 	private List<DownloadMusic> dataList;
 	private Context context;
-	private OnItemClickListener listener;
+	private OnItemClickListener itemClickListener;
+	private OnItemLongClickListener itemLongClickListener;
 	public DownloadViewAdapter(Context c, List<DownloadMusic> data){
-	    super(data);
+	    super(c,data);
 		dataList=data;
 		context=c;
 	}
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new BaseViewHolder(LayoutInflater.from(context).inflate(R.layout.download_listview,parent,false));
+    public View onCreateItemView(@NonNull ViewGroup parent, int viewType) {
+	    switch (viewType){
+	        case DownloadMusic.DOWNLOAD_COMPLETE_HEAD:{
+                return LayoutInflater.from(context).inflate(R.layout.view_textview,parent,false);
+            }
+            case DownloadMusic.DOWNLOAD_DOWNLOADING_HEAD:{
+                return LayoutInflater.from(context).inflate(R.layout.view_textview,parent,false);
+            }
+            default:{
+                return LayoutInflater.from(context).inflate(R.layout.download_listview,parent,false);
+            }
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NotNull BaseViewHolder holder, int position, @Nullable DownloadMusic item) {
+    public void onBindItemView(@NotNull BaseViewHolder holder, int position, @Nullable DownloadMusic item) {
 	    InternetMusicDetail music=dataList.get(position).getInternetMusicDetail();
-        holder.bindText(R.id.musicName,music.getSongName());
-        holder.bindText(R.id.hasDownload, ResUtil.getFileSize(music.getHasDownload())+"/");
-        holder.bindText(R.id.fullSize, ResUtil.getFileSize(music.getSize()));
-        holder.bindImage(R.id.downloadStatu,dataList.get(position).getStatus()==DownloadMusic.DOWNLOAD_DOWNLOADING?R.drawable.icon_play_black :R.drawable.icon_pause_black)
-        .setOnClickListener(v->{
-            if(listener!=null){
-                listener.itemClick(v,position);
+        int status=dataList.get(position).getStatus();
+        switch (status) {
+            case DownloadMusic.DOWNLOAD_COMPLETE_HEAD: {
+                TextView tv =holder.bindText(R.id.textView,ResUtil.getString(R.string.downloadComplete));
+                tv.setBackgroundResource(R.color.gray);
+                tv.setPadding(20,10,10,10);
+            }break;
+            case DownloadMusic.DOWNLOAD_DOWNLOADING_HEAD: {
+                Log.i("log","000->"+((ViewGroup)holder.itemView).getChildAt(0));
+                Log.i("log","000->"+((ViewGroup)holder.itemView).getChildAt(1));
+                Log.i("log","000->"+R.id.textView);
+                TextView tv=holder.bindText(R.id.textView,ResUtil.getString(R.string.downloading));
+                tv.setBackgroundResource(R.color.gray);
+                tv.setPadding(20,10,10,10);
+            }break;
+            default:{
+                holder.bindText(R.id.musicName,music.getSongName());
+                if(status==DownloadMusic.DOWNLOAD_COMPLETE){//**构建已完成item
+                    if(!Shortcut.isStrictEmpty(music.getAlbumName())){
+                        holder.bindText(R.id.hasDownload, music.getAlbumName()+" - ");
+                    }
+                    holder.bindText(R.id.fullSize,music.getArtistName());
+                    holder.findViewById(R.id.downloadStatu).setVisibility(View.GONE);
+                    holder.findViewById(R.id.close).setVisibility(View.GONE);
+                    if(position==dataList.size()-1){
+                        holder.itemView.setBackgroundResource(R.color.transparent);
+                    }else{
+                        holder.itemView.setBackgroundResource(R.drawable.bottom_dashline_1px);
+                    }
+                }else{//**构建正在下载的item
+                    holder.bindText(R.id.hasDownload, ResUtil.getFileSize(music.getHasDownload())+"/");
+                    holder.bindText(R.id.fullSize, ResUtil.getFileSize(music.getSize()));
+                    holder.bindImage(R.id.downloadStatu,status==DownloadMusic.DOWNLOAD_DOWNLOADING?R.drawable.icon_play_black :R.drawable.icon_pause_black)
+                            .setOnClickListener(v->{
+                                if(itemClickListener!=null){
+                                    itemClickListener.itemClick(v,position);
+                                }
+                            });
+                    holder.itemView.setOnClickListener(null);
+                    holder.rootView.findViewById(R.id.close).setOnClickListener(v->{//**删除
+                        if(itemClickListener!=null){
+                            itemClickListener.itemClick(v,position);
+                        }
+                    });
+                    if(dataList.get(position+1).getStatus()==DownloadMusic.DOWNLOAD_COMPLETE_HEAD){
+                        holder.itemView.setBackgroundResource(R.color.transparent);
+                    }else{
+                        holder.itemView.setBackgroundResource(R.drawable.bottom_dashline_1px);
+                    }
+                }
+                if(isSelect()){
+                    holder.itemView.setOnClickListener(v-> toggleSelect(position));
+                }
+                holder.itemView.setOnLongClickListener(v -> {
+                    if(isSelect())return true;
+                    setSelect(true);
+                    if(itemLongClickListener!=null)
+                        return itemLongClickListener.itemLongClick(v,position);
+                    return true;
+                });
             }
-        });
-        holder.rootView.findViewById(R.id.close).setOnClickListener(v->{
-            if(listener!=null){
-                listener.itemClick(v,position);
-            }
-        });
+        }
+
+
+
     }
 
 
-	public void setListener(OnItemClickListener listener) {
-		this.listener = listener;
+
+
+    public void setItemClickListener(OnItemClickListener listener) {
+		this.itemClickListener = listener;
 	}
 
+    public void setItemLongClickListener(OnItemLongClickListener itemLongClickListener) {
+        this.itemLongClickListener = itemLongClickListener;
+    }
 
+    @Override
+    public int getSelectType(int position) {
+	    int type=getViewType(position);
+        if(type==DownloadMusic.DOWNLOAD_COMPLETE_HEAD||type==DownloadMusic.DOWNLOAD_DOWNLOADING_HEAD){
+            return TYPE_NONE_SELECTOR;
+        }else{
+            return TYPE_LEFT_SELECTOR;
+        }
+    }
+
+    @Override
+    public int getViewType(int position) {
+        return dataList.get(position).getStatus();
+    }
     public interface OnItemClickListener{
-		void itemClick(View v,int position);
-	}
-
+        void itemClick(View v,int position);
+    }
+    public interface OnItemLongClickListener{
+        boolean itemLongClick(View v,int position);
+    }
 }

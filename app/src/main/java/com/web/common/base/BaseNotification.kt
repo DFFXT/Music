@@ -27,7 +27,7 @@ abstract class BaseNotification(private val context: Context,id: String, name: S
 
     protected fun createChannel(id: String, name: String) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT)
             channel.setSound(null,null)
             manager().createNotificationChannel(channel)
         }

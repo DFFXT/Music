@@ -43,6 +43,9 @@
 	<string name="search">搜索</string>
 
 	<string name="downloadManager">下载管理</string>
+	<string name="downloading">正在下载</string>
+	<string name="downloadComplete">下载完成</string>
+	<string name="alreadyInTask">已经在下载列表了</string>
 	<string name="selectPath">····</string>
 	<string name="downloadSure">下载</string>
 	<string name="baiduOnce">百度一下</string>

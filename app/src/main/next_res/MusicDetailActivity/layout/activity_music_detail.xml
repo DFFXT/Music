@@ -80,13 +80,14 @@
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constrainedWidth="true"
                 android:layout_marginTop="10dp"
-                tools:text="xxxx===========================" />
+                tools:text="xxxx" />
             <TextView
                 android:id="@+id/tv_mainSingerLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/musicDetailActivity_mainSinger"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_musicName"/>
             <TextView
@@ -98,7 +99,8 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_mainSingerLabel"
                 app:layout_constraintEnd_toStartOf="@id/tv_downloadMusic"
                 app:layout_constraintHorizontal_bias="0"
-                tools:text="1234567"
+                app:layout_constrainedWidth="true"
+                tools:text="1234567dddddddddddddddddddddd"
                 />
             <TextView
                 android:id="@+id/tv_durationLabel"
@@ -107,7 +109,7 @@
                 android:text="@string/musicDetailActivity_durationLabel"
                 android:layout_marginTop="@dimen/musicDetailActivity_descMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_mainSingerLabel"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_mainSinger"/>
             <TextView
                 android:id="@+id/tv_duration"
                 android:layout_width="wrap_content"

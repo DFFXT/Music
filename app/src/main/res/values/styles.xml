@@ -9,6 +9,10 @@
         <item name="android:screenOrientation">portrait</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">@color/themeColor</item>
+
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
     <!-- Application theme. -->
     <style name="AppTheme" parent="android:Theme.Translucent.NoTitleBar">

@@ -42,14 +42,14 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
         holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration.toLong()))
         holder.findViewById<ImageView>(R.id.add).setOnClickListener {
             if(isSelect){
-                select(position)
+                toggleSelect(position)
                 return@setOnClickListener
             }
             addListener?.invoke(position)
         }
         holder.rootView.setOnClickListener{
             if(isSelect){
-                select(position)
+                toggleSelect(position)
                 return@setOnClickListener
             }
             itemClickListener?.invoke(it,position)
@@ -69,4 +69,6 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
             tvSingerName.setTextColor(Color.BLACK)
         }
     }
+
+    override fun getSelectType(position: Int): Int =TYPE_LEFT_SELECTOR
 }

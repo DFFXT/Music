@@ -9,7 +9,10 @@ public class DownloadMusic {
     public final static int DOWNLOAD_PAUSE=2;
     public final static int DOWNLOAD_DOWNLOADING=3;
     public final static int DOWNLOAD_DELETE=4;
-    @IntDef({DOWNLOAD_WAIT,DOWNLOAD_PAUSE,DOWNLOAD_DOWNLOADING,DOWNLOAD_DELETE})
+    public final static int DOWNLOAD_COMPLETE=5;
+    public final static int DOWNLOAD_DOWNLOADING_HEAD=6;
+    public final static int DOWNLOAD_COMPLETE_HEAD=7;
+    @IntDef({DOWNLOAD_WAIT,DOWNLOAD_PAUSE,DOWNLOAD_DOWNLOADING,DOWNLOAD_DELETE,DOWNLOAD_COMPLETE,DOWNLOAD_DOWNLOADING_HEAD,DOWNLOAD_COMPLETE_HEAD})
     @interface DownloadStatus{}
     private InternetMusicDetail internetMusic;
     private @DownloadStatus int status;

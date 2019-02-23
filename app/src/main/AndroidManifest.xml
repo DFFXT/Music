@@ -97,7 +97,7 @@
         <service android:name="com.web.moudle.musicDownload.service.FileDownloadService" />
 
         <activity android:name="com.web.moudle.setting.ui.SettingActivity" />
-        <activity android:name="com.web.moudle.musicDownload.ui.MusicDownLoadActivity" />
+        <activity android:name="com.web.moudle.musicDownload.ui.MusicDownLoadActivity"/>
         <activity
             android:name="com.web.subWeb.File_download_sure"
             android:theme="@style/AppTheme" />
