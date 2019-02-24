@@ -200,9 +200,17 @@ class RecommendViewState extends State<RecommendView> {
         sheet.add(createHotSingerRow(r.modules[i]));
       }else if(r.modules[i].moduleId == "135"){
         sheet.add(createBigSong(r.modules[i],(){
-          channel.invokeMethod("actionStart_NetMusicListActivity", r.modules[i].result[0].conId);
+          channel.invokeMethod("actionStart_NetMusicListActivity",
+              netMusicIntent(r.modules[i].reason, r.modules[i].result[0].conId));
         }));
       }
     }
   }
+
+  //**跳转netMusicListActivity参数
+  String netMusicIntent(title,id)=>{
+    '"title"':'"$title"',
+    '"id"':'"$id"'
+  }.toString();
 }
+

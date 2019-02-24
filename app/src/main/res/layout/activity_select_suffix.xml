@@ -11,6 +11,8 @@
         android:fitsSystemWindows="true"
         android:background="@color/themeColor"
         app:topBar_mainTitleText="@string/setting_suffix_select"
+        app:topBar_tint="@color/white"
+        app:topBar_mainTitleColor="@color/white"
         app:topBar_startImage="@drawable/icon_back_black"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginStart="20dp"

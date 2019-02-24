@@ -205,7 +205,7 @@ class NetMusicListDataSource() : PageKeyedDataSource<String, SimpleMusicInfo>() 
                     musicName = it.albumName,
                     picSmall = it.albumImage,
                     siProxyCompany = "",
-                    tag = "",
+                    quality = "",
                     uid = uid
             ))
         }

@@ -19,9 +19,9 @@ data class SimpleMusicInfo(
         @JSONField(name = "author")
         val author:String,
         @JSONField(name = "biaoshi")
-        val tag:String, //**"vip,lossless,perm-1" vip和无损
+        val quality:String?=null, //**"vip,lossless,perm-1" vip和无损
         @JSONField(name = "has_filmtv")
-        val hasFilmTv:String,
+        val hasFilmTv:String?=null,
         @JSONField(name = "has_mv")
         val hasMV:Int,
         /*@JSONField(name = "lrclink")

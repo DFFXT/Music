@@ -24,6 +24,7 @@ import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.DrawableItemDecoration
+import com.web.misc.GapItemDecoration
 import com.web.moudle.lockScreen.ui.LockScreenActivity
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.preference.SP
@@ -39,7 +40,7 @@ class LockScreenSettingActivity : BaseActivity() {
     private var mColor = SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor)
 
     init {
-        colorList.add(getColor(R.color.themeColor))
+        colorList.add(ResUtil.getColor(R.color.themeColor))
         colorList.add(Color.RED)
         colorList.add(Color.GREEN)
         colorList.add(Color.BLACK)
@@ -56,7 +57,7 @@ class LockScreenSettingActivity : BaseActivity() {
     override fun initView() {
         view_s_lock_colorSelected.setImageDrawable(ColorDrawable(mColor))
         rv_s_lock_colorList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-        rv_s_lock_colorList.addItemDecoration(DrawableItemDecoration(orientation = androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, right = 10, drawable = getDrawable(R.drawable.refresh)!!))
+        rv_s_lock_colorList.addItemDecoration(GapItemDecoration(right = 10))
         view_s_lock_colorSelected.setOnClickListener { colorPick() }
         sw_lockScreenMode.setOnClickListener {
             if (getMode() == LockScreenActivity.BG_MODE_COLOR) {
@@ -225,7 +226,7 @@ class LockScreenSettingActivity : BaseActivity() {
         }
 
         fun getBgColor(): Int {
-            return SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor,ResUtil.getColor(R.color.themeColor))
+            return SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor, ResUtil.getColor(R.color.themeColor))
         }
 
         fun setBgImagePath(path: String) {

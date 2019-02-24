@@ -13,6 +13,7 @@
         android:background="@color/themeColor"
         android:fitsSystemWindows="true"
         app:topBar_startImage="@drawable/icon_back_black"
+        app:topBar_tint="@color/white"
         app:topBar_mainTitleText="@string/setting_lockScreen_title"
         app:topBar_mainTitleColor="@color/white"
         />

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.alibaba.fastjson.JSON
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.billboard.BillBoardActivity
 import com.web.moudle.billboradDetail.NetMusicListActivity
@@ -15,6 +16,7 @@ import io.flutter.facade.Flutter
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterView
 import kotlinx.android.synthetic.main.fragment_recommend.view.*
+import org.json.JSONObject
 
 class RecommendPage :BaseMusicPage(){
     private var flutterView:FlutterView?=null
@@ -54,7 +56,8 @@ class RecommendPage :BaseMusicPage(){
                         AlbumEntryActivity.actionStart(context!!,methodCall.arguments.toString())
                     }
                     "actionStart_NetMusicListActivity"->{
-                        NetMusicListActivity.actionStartSingerMusic(context!!,"0",methodCall.arguments.toString())
+                        val json=JSON.parseObject(methodCall.arguments.toString())
+                        NetMusicListActivity.actionStartSingerMusic(context!!,json.getString("title"),json.getString("id"))
                     }
 
                 }
