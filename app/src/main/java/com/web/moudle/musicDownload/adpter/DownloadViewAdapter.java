@@ -1,13 +1,11 @@
 package com.web.moudle.musicDownload.adpter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.web.common.base.BaseAdapter;
 import com.web.common.base.BaseMultiSelectAdapter;
 import com.web.common.base.BaseViewHolder;
 import com.web.common.util.ResUtil;
@@ -63,9 +61,6 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
                 tv.setPadding(20,10,10,10);
             }break;
             case DownloadMusic.DOWNLOAD_DOWNLOADING_HEAD: {
-                Log.i("log","000->"+((ViewGroup)holder.itemView).getChildAt(0));
-                Log.i("log","000->"+((ViewGroup)holder.itemView).getChildAt(1));
-                Log.i("log","000->"+R.id.textView);
                 TextView tv=holder.bindText(R.id.textView,ResUtil.getString(R.string.downloading));
                 tv.setBackgroundResource(R.color.gray);
                 tv.setPadding(20,10,10,10);

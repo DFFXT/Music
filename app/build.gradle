@@ -62,11 +62,16 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'org.jsoup:jsoup:1.9.2'
-    //implementation project(path: ':flutter_module/.android/app')
+
     implementation files('src/main/bin/rhino-1.7.9.jar')
-
     implementation 'com.danikula:videocache:2.6.4'
-
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
+}
+kotlin{             //开始协程实验性功能
+    experimental{
+        coroutines 'enable'
+    }
 }
 repositories {
     mavenCentral()

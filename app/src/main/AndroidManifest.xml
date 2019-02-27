@@ -35,7 +35,7 @@
         </activity>-->
         
         <provider
-            android:authorities="sfdsfs"
+            android:authorities="com.music.m"
             android:grantUriPermissions="true"
             android:exported="false"
             android:name="androidx.core.content.FileProvider">
@@ -120,7 +120,9 @@
         <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivity" />
         <activity android:name="com.web.moudle.musicEntry.ui.MusicDetailActivity" />
         <activity android:name="com.web.moudle.songSheetEntry.ui.SongSheetActivity" />
-        <activity android:name="com.web.moudle.videoEntry.ui.VideoEntryActivity" />
+        <activity android:name="com.web.moudle.videoEntry.ui.VideoEntryActivity"
+            android:configChanges="orientation|keyboardHidden"
+            />
         <activity android:name="com.web.moudle.videoEntry.ui.VideoWebViewActivity"
             android:screenOrientation="landscape"
             android:configChanges="keyboard|orientation|screenSize"

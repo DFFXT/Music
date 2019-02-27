@@ -159,12 +159,12 @@ public class MusicListLPage extends BaseMusicPage {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.remove:{
-                        connect.delete(false,groupIndex, getSelectedList());
-                        adapter.getSelectedSet().clear();
+                        connect.delete(false,groupIndex, adapter.getSelectList());
+                        adapter.getSelectSet().clear();
                     }break;
                     case R.id.deleteOrigin:{
-                        connect.delete(true,groupIndex, getSelectedList());
-                        adapter.getSelectedSet().clear();
+                        connect.delete(true,groupIndex, adapter.getSelectList());
+                        adapter.getSelectSet().clear();
                     }break;
                     case R.id.selectAll:{
                         adapter.setSelectAll(!adapter.isSelectAll());
@@ -181,20 +181,6 @@ public class MusicListLPage extends BaseMusicPage {
     }
 
 
-    /**
-     * 获取被选中的position
-     * @return
-     */
-    private List<Integer> getSelectedList(){
-        SparseBooleanArray hashSet=adapter.getSelectedSet();
-        ArrayList<Integer> list=new ArrayList<>();
-        for(int i=0;i<adapter.getItemCount();i++){
-            if(hashSet.get(i,false)){
-                list.add(i);
-            }
-        }
-        return list;
-    }
     /**
      * 设置连接接口
      * @param connect connect

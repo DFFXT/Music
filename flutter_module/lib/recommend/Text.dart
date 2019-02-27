@@ -19,11 +19,12 @@ Text MText(String text,{double size,color,weight}){
   if(weight!=null)fontWight=weight;
   return Text(
     text,
+    overflow: TextOverflow.ellipsis,
     style: TextStyle(
         decoration: TextDecoration.none,
         color: textColor,
         fontSize: fontSize,
-        fontWeight: fontWight
+        fontWeight: fontWight,
     ) ,
   );
 }

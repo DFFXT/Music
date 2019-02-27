@@ -10,10 +10,7 @@ class Recommend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: RecommendView(),
-      theme: ThemeData(
-          textTheme: TextTheme(
-              body1: TextStyle(fontSize: 16, decoration: TextDecoration.none))),
+      home: RecommendView()
     );
   }
 }
@@ -27,6 +24,7 @@ class RecommendView extends StatefulWidget {
 
 class RecommendViewState extends State<RecommendView> {
   List<Widget> sheet = new List();
+  Widget listView=MText("");
   MethodChannel channel = MethodChannel("recommend/io");
 
   @override
@@ -53,8 +51,8 @@ class RecommendViewState extends State<RecommendView> {
                 children: <Widget>[
                   GestureDetector(
                     child: Container(
-                      child: MText("今日推荐",size: 20,weight: FontWeight.bold),
-                      padding: EdgeInsets.all(10)
+                        child: MText("今日推荐",size: 20,weight: FontWeight.bold),
+                        padding: EdgeInsets.all(10)
                     ),
                     onTapUp: (d) {
                       channel.invokeMethod("todayRecommend");
@@ -62,8 +60,8 @@ class RecommendViewState extends State<RecommendView> {
                   ),
                   GestureDetector(
                     child: Container(
-                      child: MText("榜单",size: 20,weight: FontWeight.bold),
-                      padding: EdgeInsets.all(10)
+                        child: MText("榜单",size: 20,weight: FontWeight.bold),
+                        padding: EdgeInsets.all(10)
                     ),
                     onTapUp: (d) {
                       channel.invokeMethod("billboard");
@@ -80,7 +78,8 @@ class RecommendViewState extends State<RecommendView> {
                   children: sheet,
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
-              )
+              ),
+              listView,
             ],
           ),
           scrollDirection: Axis.vertical,
@@ -145,19 +144,20 @@ class RecommendViewState extends State<RecommendView> {
     );
   }
 
-  Widget createHotSinger(Result singer,{void Function() click}){
+  Widget createHotSinger(Result singer,{double width=60,double height=60,void Function() click}){
     return GestureDetector(
       onTapUp: (d){
         if(click!=null) click();
       },
-      child: Padding(
-        padding: EdgeInsets.only(right: 20),
-        child: Column(
-          children: <Widget>[
-            Image.network(singer.picUrl,width:60,height: 60),
-            MText(singer.conTitle)
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          Image.network(singer.picUrl,width:width,height: height,fit: BoxFit.fill,),
+          SizedBox(
+            child: MText(singer.conTitle),
+            width: width,
+          ),
+
+        ],
       ),
     );
   }
@@ -171,6 +171,31 @@ class RecommendViewState extends State<RecommendView> {
     });
     return Row(
       children: _list,
+    );
+  }
+  Widget createMVRow(Modules m){
+    /*List<Widget> _list=List();
+    m.result.forEach((e){
+      _list.add(createHotSinger(e,click: (){
+        channel.invokeMethod("actionStart_SingerEntryActivity",e.conId);
+      }));
+    });
+    Row(
+      children: _list,
+    );*/
+
+    return Expanded(
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount:1 ,
+        controller: ScrollController(),
+        padding: EdgeInsets.only(top: 10,right: 10,bottom: 10),
+        itemBuilder: (ctx,index){
+          return createHotSinger(m.result[index],width: 120,height: 40,click: (){
+
+          });
+        },
+      ),
     );
   }
 
@@ -203,14 +228,40 @@ class RecommendViewState extends State<RecommendView> {
           channel.invokeMethod("actionStart_NetMusicListActivity",
               netMusicIntent(r.modules[i].reason, r.modules[i].result[0].conId));
         }));
+      }else if(r.modules[i].moduleId == "147"){
+        var width=(MediaQuery.of(context).size.width-20)/2;
+        listView=Container(
+          padding: EdgeInsets.only(top: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              MText(r.modules[i].reason),
+              Container(
+                height: 150,
+                child: ListView.builder(
+                  itemCount: r.modules[i].result.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  controller: ScrollController(),
+                  itemBuilder: (ctx,index){
+                    return createHotSinger(r.modules[i].result[index],width: width,height: 120,click: (){
+                      channel.invokeMethod("actionStart_Video",r.modules[i].result[index].conId);
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
+        );
       }
     }
   }
 
   //**跳转netMusicListActivity参数
   String netMusicIntent(title,id)=>{
-    '"title"':'"$title"',
-    '"id"':'"$id"'
+    'title':'"$title"',
+    'id':'"$id"'
   }.toString();
+
 }
 

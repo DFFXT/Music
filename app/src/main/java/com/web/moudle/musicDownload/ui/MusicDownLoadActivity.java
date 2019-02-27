@@ -126,15 +126,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             toolsBar.setItemClick(id -> {
                 switch (id) {
                     case 1: {
-                        List<Integer> list = new ArrayList<>();
-                        SparseBooleanArray array = adapter.getSelectedSet();
-                        for (int i = 0; i < adapter.getItemCount(); i++) {
-                            if (array.get(i)) {
-                                list.add(dataList.get(i).getInternetMusicDetail().getId());
-                                if (list.size() == array.size()) break;
-                            }
-                        }
-                        connect.delete(list);
+                        connect.delete(adapter.getSelectList());
                         adapter.setSelect(false);
                         toolsBar.close();
                     }

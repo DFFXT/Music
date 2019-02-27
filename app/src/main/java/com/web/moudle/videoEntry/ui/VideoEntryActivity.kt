@@ -2,8 +2,11 @@ package com.web.moudle.videoEntry.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.SeekBar
@@ -98,6 +101,13 @@ class VideoEntryActivity : BaseActivity() {
                 hideController()
             }
         })
+        mc_videoController.iv_fullScreen.setOnClickListener {
+            requestedOrientation = if(resources.configuration.orientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }else{
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+        }
 
         player.setOnSeekCompleteListener {
             if(player.isPlaying)
@@ -112,6 +122,9 @@ class VideoEntryActivity : BaseActivity() {
         }
         player.setOnCompletionListener {
 
+        }
+        player.setOnBufferingUpdateListener { _, percent ->
+            mc_videoController.bar.secondaryProgress=percent*mc_videoController.bar.max/100
         }
         player.setOnErrorListener { _, _, extra ->
             if (extra == -2147483648) {///***不知道为什么，荣耀meta10很多视频都不能播放，只能跳转的到webView中来播放
@@ -201,6 +214,13 @@ class VideoEntryActivity : BaseActivity() {
             player.seekTo(player.currentPosition)
             toggleShow()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        Log.i("log","--->${newConfig.orientation}")
+        super.onConfigurationChanged(newConfig)
+
+
     }
 
 
