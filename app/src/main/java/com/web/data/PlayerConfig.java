@@ -1,6 +1,12 @@
 package com.web.data;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.web.config.GetFiles;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 public class PlayerConfig {
     //***播放模式
@@ -53,6 +59,17 @@ public class PlayerConfig {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+    public void setBitmapPath(String singerName){
+        try {
+            File file = new File(GetFiles.singerPath+singerName+".png");
+            if(file.exists()&&file.isFile()){//---存在图片
+                FileInputStream fis=new FileInputStream(file);
+                bitmap= BitmapFactory.decodeStream(fis);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isPrepared() {

@@ -55,7 +55,7 @@ class MusicFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        rv_musicList.layoutManager= LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
                 drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
         adapter=InternetMusicAdapter(context!!)
