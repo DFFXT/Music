@@ -58,7 +58,6 @@ class MusicDetailActivity : BaseActivity() {
                     drawable!!.setBounds(0, 0, ViewUtil.dpToPx(20f), ViewUtil.dpToPx(20f))
                     tv_downloadMusic.setCompoundDrawables(drawable, null, null, null)
                     tv_downloadMusic.setOnClickListener {
-                        //Log.i("log","---${res.bitRate.bitrate}")
                         FileDownloadService.addTask(it.context, attributesMap(res))
                     }
                     //**加载图片
@@ -75,12 +74,9 @@ class MusicDetailActivity : BaseActivity() {
                     rootView.showContent()
                     //**获取歌词
                     model.getLyrics(res.songInfo.lrcLink)
-                    val music = InternetMusicForPlay()
+                    val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
                     music.imgAddress = res.songInfo.picSmall
                     music.lrcLink = res.songInfo.lrcLink
-                    music.musicName = res.songInfo.title
-                    music.singer = res.songInfo.artistName
-                    music.path = res.bitRate.songLink
 
 
                     var theSameMusic = false

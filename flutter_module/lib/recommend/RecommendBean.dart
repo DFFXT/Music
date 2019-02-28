@@ -128,7 +128,13 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     method = json['method'];
     conId = json['con_id'];
+    if(conId==null){
+      conId=json['song_id'];
+    }
     conTitle = json['con_title'];
+    if(conTitle==null){
+      conTitle=json['title'];
+    }
     jump = json['jump'];
     picUrl = json['pic_url'];
     if(picUrl==null){

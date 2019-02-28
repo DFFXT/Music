@@ -430,6 +430,7 @@ public class FileDownloadService extends Service {
                 if (file.exists() && file.isFile()) {//**存在记录，有文件
                     if (music.getSize() == file.length()) {
                         //**文件完全相同
+                        MToast.showToast(context,ResUtil.getString(R.string.alreadyInTask));
                         return;
                     } else {//**文件不同
                         music.setSongName(originMusicName + "(" + i + ")");

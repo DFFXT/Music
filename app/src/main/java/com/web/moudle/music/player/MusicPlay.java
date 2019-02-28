@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
@@ -20,13 +21,13 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
+import com.web.common.tool.Ticker;
 import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.config.GetFiles;
@@ -43,6 +44,7 @@ import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
+import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.web.R;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -51,15 +53,13 @@ import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -71,10 +71,12 @@ import androidx.media.MediaBrowserServiceCompat;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import kotlinx.coroutines.Dispatchers;
 
 public class MusicPlay extends MediaBrowserServiceCompat {
 	public final static String BIND="not media bind";
 	public final static String ACTION_PLAY_INTERNET_MUSIC="com.web.web.MusicPlay.playInternetMusic";
+	public final static String ACTION_PLAY_LOCAL_MUSIC="com.web.web.MusicPlay.playLocalMusic";
 	public final static String ACTION_NEXT="com.web.web.MusicPlay.icon_next_black";
 	public final static String ACTION_PRE="com.web.web.MusicPlay.icon_pre_black";
 	public final static String ACTION_STATUS_CHANGE="com.web.web.MusicPlay.statusChange";
@@ -103,8 +105,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	private LockScreenReceiver lockScreenReceiver;
     private MediaSessionCompat sessionCompat;
 
-	private ThreadPoolExecutor executor;
 	private PlayerConfig config=new PlayerConfig();
+	private Ticker ticker;
 	//********耳塞插拔广播接收
 	private BroadcastReceiver headsetReceiver = new BroadcastReceiver() {
         @Override
@@ -155,7 +157,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		executor=new ThreadPoolExecutor(1,1,1, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
+		ticker=new Ticker(500, Dispatchers.getMain(),()->{
+            play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
+            sendDuring(player.getCurrentPosition());
+			return null;
+		});
         sessionCompat=new MediaSessionCompat(this,"2");
         sessionCompat.setCallback(new MediaSessionCompat.Callback() {
             @Override
@@ -483,7 +489,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		}
 
 		/**
-		 * 播放本地音乐
+		 * 播放本地音乐，就是从文件管理器里面跳转过来的音乐
 		 * @param music music
 		 */
 		public void playLocal(Music music){
@@ -572,6 +578,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			//player.setDataSource(music.getPath());
 			player.prepareAsync();
 		} catch (IOException e) {//***播放异常，如果是文件不存在则删除记录
+			if(e instanceof FileNotFoundException){
+				MToast.showToast(this,ResUtil.getString(R.string.fileNotFound));
+			}
 			if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.LOCAL){
 				deleteMusic(false,groupIndex, childIndex);
 				connect.next();
@@ -590,7 +599,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 		sessionCompat.setMetadata(metaDataBuilder.build());
 	}
-	public void musicPlay(){
+	private void musicPlay(){
 
 		//player.setPlaybackParams(player.getPlaybackParams().setSpeed(2));
 		Music music=config.getMusic();
@@ -602,14 +611,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		notification.setPlayStatus(true);
 		notification.setBitMap(config.getBitmap());
 		notification.show();
-		executor.execute(() -> {
-			while(player.isPlaying()){
-				play.currentTime(groupIndex,childIndex,player.getCurrentPosition());
-				sendDuring(player.getCurrentPosition());
-				Shortcut.sleep(500);
-			}
-		});
-        sendState(PlaybackStateCompat.STATE_PLAYING);
+		ticker.start();
+		try {
+			sendState(PlaybackStateCompat.STATE_PLAYING);
+		}catch (Exception e){e.printStackTrace();}
+
 	}
 	public void musicLoad(){
 		play.load(groupIndex,childIndex,config.getMusic(),getDuration());
@@ -621,6 +627,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		return player.getDuration();
 	}
 	private void musicPause(){
+	    ticker.stop();
 		player.pause();
         play.pause();
 		notification.setPlayStatus(false);
@@ -729,6 +736,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			}break;
 			case ACTION_PLAY_INTERNET_MUSIC:{
 				connect.playInternet((InternetMusicForPlay) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
+			}break;
+			case ACTION_PLAY_LOCAL_MUSIC:{
+				config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
+				loadMusic((Music) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
 			}break;
 		}
 		return START_NOT_STICKY;
@@ -844,8 +855,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 			});
 		}
-		musicListChange();
-
+		AndroidSchedulers.mainThread().scheduleDirect(this::musicListChange);
 		gettingMusicLock.unlock();
 	}
 	@WorkerThread
@@ -856,15 +866,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		SP.INSTANCE.putValue(Constant.spName,Constant.SpKey.noNeedScan,true);
 		Cursor cursor=getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,null);
 		if(cursor==null)return;
-		List<ScanMusicType> types=DataSupport.findAll(ScanMusicType.class);
-		if(types.size()==0){//**如果扫描设置不存在，就采用默认扫描设置
-			String suffix[]=new String[]{".mp3",".m4a",".ogg",".wav"};
-			for(String str:suffix){
-				ScanMusicType scanMusicType=new ScanMusicType(str,1024*50,true);
-				scanMusicType.save();
-				types.add(scanMusicType);
-			}
-		}
+		List<ScanMusicType> types= SuffixSelectActivity.getScanType();
 		String[] out=new String[2];
 		while (cursor.moveToNext()){
 			int index=cursor.getColumnIndex("_data");
@@ -907,7 +909,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 			}
 		}
 		cursor.close();
-		Log.i("log","--->scan");
 		AndroidSchedulers.mainThread().scheduleDirect(()-> MToast.showToast(MyApplication.context,ResUtil.getString(R.string.scanOver)));
 		scanningMusicLock.unlock();
 	}
@@ -922,6 +923,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 		Intent intent=new Intent(ctx,MusicPlay.class);
 		intent.putExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA,music);
 		intent.setAction(MusicPlay.ACTION_PLAY_INTERNET_MUSIC);
+		ctx.startService(intent);
+	}
+
+	public static void play(Context ctx,Music music){
+		Intent intent=new Intent(ctx,MusicPlay.class);
+		intent.putExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA,music);
+		intent.setAction(MusicPlay.ACTION_PLAY_LOCAL_MUSIC);
 		ctx.startService(intent);
 	}
 }

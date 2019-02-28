@@ -135,10 +135,10 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
         }
     }
 
-    fun getSelectList(): List<Int> {
-        val list = ArrayList<Int>()
+    fun <M:Any> getSelectList(interceptor:((T,Int)->M)): List<M> {
+        val list = ArrayList<M>()
         selectSet.forEach {
-            list.add(it)
+            list.add(interceptor.invoke(data!![it],it))
         }
         return list
     }

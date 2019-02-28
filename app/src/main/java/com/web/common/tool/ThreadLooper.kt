@@ -1,4 +1,4 @@
-package com.web.moudle.musicDownload.adpter
+package com.web.common.tool
 
 class ThreadLooper {
     var timeGap=500L

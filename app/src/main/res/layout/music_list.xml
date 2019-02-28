@@ -13,7 +13,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="0dp"
         android:paddingTop="10dp"
-        android:clipToPadding="true"
+        android:clipToPadding="false"
         android:divider="@drawable/recycler_divider"
         android:layerType="software"
         android:layout_width="0dp"

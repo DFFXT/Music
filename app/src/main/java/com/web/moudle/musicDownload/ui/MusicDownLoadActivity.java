@@ -7,20 +7,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.SparseBooleanArray;
+import android.util.Log;
 
 import com.web.common.base.BaseActivity;
+import com.web.common.tool.Ticker;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
+import com.web.data.Music;
 import com.web.misc.GapItemDecoration;
 import com.web.misc.ToolsBar;
 import com.web.misc.TopBarLayout;
+import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
-import com.web.moudle.musicDownload.adpter.ThreadLooper;
+import com.web.common.tool.ThreadLooper;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.musicEntry.ui.MusicDetailActivity;
 import com.web.moudle.net.NetApis;
 import com.web.web.R;
 
@@ -29,6 +33,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import kotlinx.coroutines.Dispatchers;
 
 @SuppressLint("InlinedApi")
 public class MusicDownLoadActivity extends BaseActivity implements FileDownloadService.DownloadListener {
@@ -40,7 +45,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
     private FileDownloadService.Connect connect;
     ToolsBar toolsBar;
 
-    private ThreadLooper looper = new ThreadLooper();
+    private Ticker looper;
     private Runnable runnable = () -> {
         List<DownloadMusic> list = connect.getDownloadingMusic();
         if (list.size() == 0) {
@@ -71,8 +76,8 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         topBarLayout.setMainTitle(ResUtil.getString(R.string.downloadManager));
         ViewUtil.transparentStatusBar(getWindow());
 
-        looper.setCallback(() -> {
-            runOnUiThread(runnable);
+        looper=new Ticker(500, Dispatchers.getMain(),()->{
+            runnable.run();
             return null;
         });
 
@@ -80,8 +85,6 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
     }
 
     private void connect() {
-
-
         Intent intent = new Intent(this, FileDownloadService.class);
         startService(intent);
         bindService(intent, serviceConnection = new ServiceConnection() {
@@ -101,23 +104,32 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
     private void setAdapter() {//--设置适配器
         adapter = new DownloadViewAdapter(MusicDownLoadActivity.this, dataList);
         adapter.setItemClickListener((view, position) -> {
-            int id = dataList.get(position).getInternetMusicDetail().getId();
+            InternetMusicDetail detail=dataList.get(position).getInternetMusicDetail();
+            int id = detail.getId();
             int status = dataList.get(position).getStatus();
-            if (view.getId() == R.id.downloadStatu) {
-                if (status == DownloadMusic.DOWNLOAD_DOWNLOADING) {
-                    connect.pause(id);
 
-                } else {
-                    connect.start(id);
-                }
-            } else if (view.getId() == R.id.close) {
-                new AlertDialog.Builder(MusicDownLoadActivity.this)
-                        .setTitle(ResUtil.getString(R.string.delete))
-                        .setMessage("\n\n")
-                        .setNegativeButton(ResUtil.getString(R.string.no), null)
-                        .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> {
-                            connect.delete(id);
-                        }).create().show();
+            switch (view.getId()){
+                case R.id.downloadStatu:{
+                    if (status == DownloadMusic.DOWNLOAD_DOWNLOADING) {
+                        connect.pause(id);
+                    } else {
+                        connect.start(id);
+                    }
+                }break;
+                case R.id.close:{
+                    new AlertDialog.Builder(MusicDownLoadActivity.this)
+                            .setTitle(ResUtil.getString(R.string.delete))
+                            .setMessage("\n\n")
+                            .setNegativeButton(ResUtil.getString(R.string.no), null)
+                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> connect.delete(id)).create().show();
+                }break;
+                case R.id.iv_play:{
+                    Music music=new Music(detail.getSongName(),detail.getArtistName(),detail.getPath());
+                    MusicPlay.play(this,music);
+                }break;
+                case R.id.item_parent:{
+                    MusicDetailActivity.actionStart(this,detail.getSongId());
+                }break;
             }
         });
         adapter.setItemLongClickListener((v, position) -> {
@@ -126,7 +138,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             toolsBar.setItemClick(id -> {
                 switch (id) {
                     case 1: {
-                        connect.delete(adapter.getSelectList());
+                        connect.delete(adapter.getSelectList((item,index)->item.getInternetMusicDetail().getId()));
                         adapter.setSelect(false);
                         toolsBar.close();
                     }

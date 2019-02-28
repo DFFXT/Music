@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
@@ -54,7 +55,7 @@ class MusicFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
                 drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
         adapter=InternetMusicAdapter(context!!)
@@ -124,10 +125,11 @@ class MusicFragment:BaseSearchFragment() {
         }
         builder.setNeutralButton("在线试听") { _, _ ->
             Thread {
-                val info = InternetMusicForPlay()
-                info.musicName = Shortcut.validatePath(music.songName)
-                info.singer = Shortcut.validatePath(music.artistName)
-                info.path = music.songLink
+                val info = InternetMusicForPlay(
+                        Shortcut.validatePath(music.songName),
+                        Shortcut.validatePath(music.artistName),
+                        music.songLink
+                )
                 info.imgAddress = music.singerIconSmall
                 info.lrcLink = music.lrcLink
                 MusicPlay.play(context, info)

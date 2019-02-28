@@ -8,6 +8,10 @@ public class InternetMusicForPlay extends Music implements Serializable {
     private String imgAddress;
     private String lrcLink;
 
+    public InternetMusicForPlay(String musicName,String singer,String path){
+        super(musicName,singer,path);
+    }
+
     @Nullable
     public String getImgAddress() {
         return imgAddress.replace("{size}","80");

@@ -43,6 +43,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import kotlin.jvm.functions.Function1;
 
 public class MusicListLPage extends BaseMusicPage {
     public final static String pageName="MusicList";
@@ -159,11 +160,11 @@ public class MusicListLPage extends BaseMusicPage {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.remove:{
-                        connect.delete(false,groupIndex, adapter.getSelectList());
+                        connect.delete(false,groupIndex, adapter.getSelectList((music,index) -> index));
                         adapter.getSelectSet().clear();
                     }break;
                     case R.id.deleteOrigin:{
-                        connect.delete(true,groupIndex, adapter.getSelectList());
+                        connect.delete(true,groupIndex, adapter.getSelectList((music,index) -> index));
                         adapter.getSelectSet().clear();
                     }break;
                     case R.id.selectAll:{
@@ -257,7 +258,7 @@ public class MusicListLPage extends BaseMusicPage {
         indexBar=rootView.findViewById(R.id.indexBar_musicList);
         LinearLayoutManager layoutManager=new LinearLayoutManager(rootView.getContext(),RecyclerView.VERTICAL,false);
         rv_musicList.setLayoutManager(layoutManager);
-        rv_musicList.addItemDecoration(new DrawableItemDecoration(0,0,0,4,LinearLayout.VERTICAL,ResUtil.getDrawable(R.drawable.recycler_divider)));
+        rv_musicList.addItemDecoration(new DrawableItemDecoration(0,0,0,50,LinearLayout.VERTICAL,ResUtil.getDrawable(R.drawable.recycler_divider)));
         if(data!=null){
             adapter=new LocalMusicAdapter(rootView.getContext(),data.getMusicList());
         }else {

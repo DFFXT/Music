@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
@@ -44,14 +45,14 @@ class SelectorListAlert {
 
     fun build() {
         view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as androidx.recyclerview.widget.RecyclerView
-        view!!.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        view!!.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         adapter = SimpleSelectListAdapter(context, list)
         adapter!!.setListener(listSelectListener)
         adapter!!.setIndex(index)
         view!!.adapter = adapter
         if(canTouchRemove){
-            val callback = MyItemTouchHelperCallBack(adapter)
+            val callback = MyItemTouchHelperCallBack(adapter!!)
             val helper = ItemTouchHelper(callback)
             helper.attachToRecyclerView(view)
         }

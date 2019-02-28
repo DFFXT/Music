@@ -68,11 +68,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
 }
-kotlin{             //开始协程实验性功能
-    experimental{
-        coroutines 'enable'
-    }
-}
+
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }

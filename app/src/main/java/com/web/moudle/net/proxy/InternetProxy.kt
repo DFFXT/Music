@@ -1,7 +1,5 @@
 package com.web.moudle.net.proxy
 
-import android.util.Log
-import com.danikula.videocache.HttpProxyCacheServer
 import com.web.common.util.IOUtil
 import java.net.ServerSocket
 import java.net.Socket
@@ -11,9 +9,7 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 object InternetProxy {
-    private val port=9999
-    private var socket:ServerSocket?=null
-    private val urlMap=HashMap<String,String>()
+    private const val port=9999
     private val pool=ThreadPoolExecutor(10,10,1,TimeUnit.SECONDS,LinkedBlockingDeque())
 
     private var run=true
@@ -22,16 +18,13 @@ object InternetProxy {
         run=false
     }
     fun startProxy() {
-        Thread{
+        pool.execute {
             val ss=ServerSocket(port)
             while (run){
                 val s=ss.accept()
                 requestMusic(s)
             }
-        }.start()
-
-
-
+        }
     }
     @JvmStatic
     fun proxyUrl(originUrl:String):String{
@@ -70,11 +63,10 @@ object InternetProxy {
             //**一个换行隔开
             builder.append("\n")
             val o=s.getOutputStream()
-            Log.i("log","----->\n$builder")
             o.write(builder.toString().toByteArray())
             try {
                 IOUtil.streamCopy(connection.inputStream,o)
-            }catch (e:Exception){
+            }catch (e:Throwable){
                 e.printStackTrace()
             }
             o.flush()

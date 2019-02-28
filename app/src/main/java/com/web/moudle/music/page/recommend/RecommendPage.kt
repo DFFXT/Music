@@ -11,6 +11,7 @@ import com.web.moudle.billboard.BillBoardActivity
 import com.web.moudle.billboradDetail.NetMusicListActivity
 import com.web.moudle.music.page.BaseMusicPage
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.web.web.R
@@ -65,6 +66,9 @@ class RecommendPage : BaseMusicPage() {
                 }
                 "actionStart_Video" -> {
                     VideoEntryActivity.actionStart(context!!, videoId = methodCall.arguments.toString())
+                }
+                "actionStart_MusicDetailActivity"->{
+                    MusicDetailActivity.actionStart(context!!,methodCall.arguments.toString())
                 }
 
             }

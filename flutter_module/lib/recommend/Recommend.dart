@@ -1,10 +1,11 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_module/recommend/Text.dart';
 import 'package:flutter/services.dart';
-import 'RecommendRequest.dart';
+import 'package:flutter_module/recommend/Text.dart';
+
 import 'RecommendBean.dart';
+import 'RecommendRequest.dart';
 
 class Recommend extends StatelessWidget {
   @override
@@ -25,6 +26,7 @@ class RecommendView extends StatefulWidget {
 class RecommendViewState extends State<RecommendView> {
   List<Widget> sheet = new List();
   Widget listView=MText("");
+  Widget hotMusic=MText("");
   MethodChannel channel = MethodChannel("recommend/io");
 
   @override
@@ -80,6 +82,7 @@ class RecommendViewState extends State<RecommendView> {
                 ),
               ),
               listView,
+              hotMusic
             ],
           ),
           scrollDirection: Axis.vertical,
@@ -118,7 +121,7 @@ class RecommendViewState extends State<RecommendView> {
   }
 
 
-  Widget createSheetWidget(Result sheetInfo, {void Function(Result res) click}) {
+  Widget createSheetWidget(Result sheetInfo, {double width=50,double height=50,void Function(Result res) click}) {
     return GestureDetector(
       onTapUp: (d) {
         if (click != null) click(sheetInfo);
@@ -131,8 +134,8 @@ class RecommendViewState extends State<RecommendView> {
           children: <Widget>[
             Image.network(
               sheetInfo.picUrl,
-              width: 50,
-              height: 50,
+              width: width,
+              height: height,
             ),
             Padding(
               padding: EdgeInsets.all(10),
@@ -173,30 +176,29 @@ class RecommendViewState extends State<RecommendView> {
       children: _list,
     );
   }
-  Widget createMVRow(Modules m){
-    /*List<Widget> _list=List();
-    m.result.forEach((e){
-      _list.add(createHotSinger(e,click: (){
-        channel.invokeMethod("actionStart_SingerEntryActivity",e.conId);
-      }));
-    });
-    Row(
-      children: _list,
-    );*/
-
-    return Expanded(
+  Widget createMVRow(Modules m) {
+    var width=(MediaQuery.of(context).size.width-20)/2;
+    return Container(
+      height: 150,
       child: ListView.builder(
+        itemCount: m.result.length,
         scrollDirection: Axis.horizontal,
-        itemCount:1 ,
+        physics: AlwaysScrollableScrollPhysics(),
         controller: ScrollController(),
-        padding: EdgeInsets.only(top: 10,right: 10,bottom: 10),
-        itemBuilder: (ctx,index){
-          return createHotSinger(m.result[index],width: 120,height: 40,click: (){
-
+        itemBuilder: (ctx, index) {
+          return createHotSinger(
+              m.result[index], width: width, height: 120, click: () {
+            channel.invokeMethod("actionStart_Video", m.result[index].conId);
           });
         },
       ),
     );
+  }
+  Widget createHotMusic(Result r){
+    return createSheetWidget(r,click: (res){
+      channel.invokeMethod("actionStart_MusicDetailActivity",res.conId);
+    });
+
   }
 
   createR(RecommendBean r) {
@@ -229,28 +231,28 @@ class RecommendViewState extends State<RecommendView> {
               netMusicIntent(r.modules[i].reason, r.modules[i].result[0].conId));
         }));
       }else if(r.modules[i].moduleId == "147"){
-        var width=(MediaQuery.of(context).size.width-20)/2;
+
         listView=Container(
           padding: EdgeInsets.only(top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              MText(r.modules[i].reason),
-              Container(
-                height: 150,
-                child: ListView.builder(
-                  itemCount: r.modules[i].result.length,
-                  scrollDirection: Axis.horizontal,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  controller: ScrollController(),
-                  itemBuilder: (ctx,index){
-                    return createHotSinger(r.modules[i].result[index],width: width,height: 120,click: (){
-                      channel.invokeMethod("actionStart_Video",r.modules[i].result[index].conId);
-                    });
-                  },
-                ),
-              )
+              MText(r.modules[i].title),
+              createMVRow(r.modules[i])
             ],
+          ),
+        );
+      }
+      else if(r.modules[i].moduleId=="133"){
+        var list=List<Widget>();
+        list.add(MText(r.modules[i].title));
+        r.modules[i].result.forEach((result){
+          list.add(createHotMusic(result));
+        });
+        hotMusic=Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: list,
           ),
         );
       }

@@ -119,33 +119,29 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void currentTime(int group, int child, int time) {
-            runOnUiThread(() -> bar.setProgress(time / 1000));
+            bar.setProgress(time / 1000);
         }
 
         @Override
         public void musicListChange(int group, List<MusicList<Music>> list) {
-            runOnUiThread(() -> {
-
-                if (list == null || list.size() == 0 || list.get(0).size() == 0) {
-                    if (!SP.INSTANCE.getBoolean(Constant.spName, Constant.SpKey.noNeedScan,false)) {
-                        new AlertDialog.Builder(MusicActivity.this)
-                                .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
-                                .setNegativeButton(ResUtil.getString(R.string.no), null)
-                                .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> connect.scanLocalMusic()).create().show();
-                    } else if (list != null) {
-                        musicListLPage.setData(group, list.get(group));
-                        groupList = list;
-                        groupIndex = group;
-
-                        getCurrentPage().setTitle(tv_title);
-                    }
-                } else {
+            if (list == null || list.size() == 0 || list.get(0).size() == 0) {
+                if (!SP.INSTANCE.getBoolean(Constant.spName, Constant.SpKey.noNeedScan,false)) {
+                    new AlertDialog.Builder(MusicActivity.this)
+                            .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
+                            .setNegativeButton(ResUtil.getString(R.string.no), null)
+                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> connect.scanLocalMusic()).create().show();
+                } else if (list != null) {
                     musicListLPage.setData(group, list.get(group));
                     groupList = list;
                     groupIndex = group;
                     getCurrentPage().setTitle(tv_title);
                 }
-            });
+            } else {
+                musicListLPage.setData(group, list.get(group));
+                groupList = list;
+                groupIndex = group;
+                getCurrentPage().setTitle(tv_title);
+            }
         }
 
         @Override

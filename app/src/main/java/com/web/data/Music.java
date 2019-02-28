@@ -17,6 +17,7 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     private int song_id;
     private int album_id;
     private String album;
+    @Deprecated
     public Music(){}
     public Music(String musicName,String singer,String path){
         this.musicName=musicName;

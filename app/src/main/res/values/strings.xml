@@ -18,6 +18,7 @@
 	<string name="reload">错误,是否重新加载？</string>
 	<string name="uncaughtException">未捕获的异常</string>
 	<string name="cannotPlay">无法播放</string>
+	<string name="fileNotFound">文件不存在</string>
 	<string name="icon">头像</string>
 	<string name="editText_day">day</string>
 	<string name="timeout">设置时间小于当前时间</string>
