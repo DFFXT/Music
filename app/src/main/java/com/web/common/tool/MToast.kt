@@ -6,6 +6,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.StringRes
+import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.web.R
 
@@ -27,6 +29,10 @@ object MToast {
         mToast?.setGravity(Gravity.TOP,0,ViewUtil.dpToPx(60f))
         mToast?.duration=Toast.LENGTH_SHORT
         mToast?.show()
+    }
+    @JvmStatic
+    fun showToast(context:Context,@StringRes stringId:Int){
+        MToast.showToast(context,ResUtil.getString(stringId))
     }
 
 }

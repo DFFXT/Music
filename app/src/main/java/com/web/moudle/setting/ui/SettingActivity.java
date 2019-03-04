@@ -4,57 +4,96 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 
 import com.web.common.base.BaseActivity;
+import com.web.common.bean.Version;
+import com.web.common.constant.Constant;
+import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
+import com.web.misc.ConfirmDialog;
 import com.web.misc.TextWithDrawable;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.service.UpdateService;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
+import com.web.moudle.setting.model.SettingViewModel;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.web.R;
 
 @SuppressLint("InlinedApi")
 public class SettingActivity extends BaseActivity {
-	private TextWithDrawable twd_lockScreen;
-	private TextWithDrawable twd_musicScan;
-	public int getLayoutId(){
-		return (R.layout.activity_setting);
+    private View rootView;
 
-	}
-	@Override
-	public void initView() {
-		ViewUtil.transparentStatusBar(getWindow());
-		twd_lockScreen=findViewById(R.id.twd_lockScreen);
-		twd_musicScan=findViewById(R.id.twd_musicScan);
-		twd_lockScreen.setOnClickListener(v->LockScreenSettingActivity.Companion.actionStart(this));
-		twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
-		Bitmap rightBitmap=ResUtil.getDrawableHorizontalMirror(R.drawable.icon_back_black);
-		Drawable drawable=new BitmapDrawable(getResources(),rightBitmap);
-		twd_musicScan.setDrawable(drawable);
-		twd_lockScreen.setDrawable(drawable);
+    public int getLayoutId() {
+        return R.layout.activity_setting;
+    }
 
-		findViewById(R.id.twd_clearAllMusic).setOnClickListener(v->{
-			new AlertDialog.Builder(this)
-					.setMessage(ResUtil.getString(R.string.setting_clearAllMusicAlert))
-					.setNegativeButton(ResUtil.getString(R.string.no), null)
-					.setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> {
-						Intent intent=new Intent(this,MusicPlay.class);
-						intent.setAction(MusicPlay.ACTION_ClEAR_ALL_MUSIC);
-						startService(intent);
-						dialog.cancel();
-					}).create().show();
+    @Override
+    public void initView() {
+        rootView = findViewById(R.id.rootView);
+        ViewUtil.transparentStatusBar(getWindow());
+        TextWithDrawable twd_lockScreen = findViewById(R.id.twd_lockScreen);
+        TextWithDrawable twd_musicScan = findViewById(R.id.twd_musicScan);
+        TextWithDrawable twd_checkUpdate = findViewById(R.id.twd_checkUpdate);
+        twd_lockScreen.setOnClickListener(v -> LockScreenSettingActivity.Companion.actionStart(this));
+        twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
 
-		});
+        twd_checkUpdate.setText(ResUtil.getString(R.string.setting_checkUpdate, Constant.getVersionName()));
+        twd_checkUpdate.setOnClickListener(v ->
+                SettingViewModel.INSTANCE.requestVersion((res) -> {
+                    considerUpdate(res);
+                    return null;
+                }, null));
+
+        findViewById(R.id.twd_clearAllMusic).setOnClickListener(v -> {
+            new ConfirmDialog(this)
+                    .setLeftText(ResUtil.getString(R.string.no))
+                    .setRightText(ResUtil.getString(R.string.yes))
+                    .setMsg(ResUtil.getString(R.string.setting_clearAllMusicAlert))
+                    .setRightListener((dialog) -> {
+                        Intent intent = new Intent(this, MusicPlay.class);
+                        intent.setAction(MusicPlay.ACTION_ClEAR_ALL_MUSIC);
+                        startService(intent);
+                        dialog.dismiss();
+                        return null;
+                    })
+                    .setLeftListener((dialog) -> {
+                        dialog.dismiss();
+                        return null;
+                    })
+                    .showCenter(rootView);
+        });
 
 
+    }
 
-	}
 
-	public static void actionStart(Context context){
-		context.startActivity(new Intent(context,SettingActivity.class));
-	}
+    private void considerUpdate(Version version) {
+        if (version.getVersionCode() >= Constant.getVersionCode()) {
+            ConfirmDialog dialog = new ConfirmDialog(this);
+            dialog.setMsg(version.getDesc());
+            dialog.setLeftText(ResUtil.getString(R.string.no));
+            dialog.setRightText(ResUtil.getString(R.string.yes));
+            dialog.setRightListener((d)->{
+                UpdateService.downloadUpdateApk(this,version.getApkLink());
+                d.dismiss();
+                return null;
+            });
+            dialog.setLeftListener((d)->{
+                d.dismiss();
+                return null;
+            });
+            dialog.showCenter(rootView);
+        } else {
+            MToast.showToast(this, R.string.setting_lastVersion);
+        }
+    }
+
+
+    public static void actionStart(Context context) {
+        context.startActivity(new Intent(context, SettingActivity.class));
+    }
 }

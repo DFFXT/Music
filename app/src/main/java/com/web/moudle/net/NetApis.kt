@@ -1,5 +1,6 @@
 package com.web.moudle.net
 
+import com.web.common.bean.Version
 import com.web.data.InternetMusicDetailList
 import com.web.data.SearchResultBd
 import com.web.moudle.albumEntry.bean.AlbumResponse
@@ -127,6 +128,11 @@ class NetApis {
 
         @GET
         fun getMvUrl(@Url fakeUrl: String): Call<Any>
+    }
+
+    interface Global{
+        @GET("https://raw.githubusercontent.com/DFFXT/App/master/version.json")
+        fun requestVersionInfo():Call<Version>
     }
 
 }

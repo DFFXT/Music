@@ -152,7 +152,7 @@ object MediaQuery {
     fun deleteMusic(ctx: Context,music: Music,group:Int,deleteFile:Boolean){
         if (deleteFile) {//******删除源文件并更新媒体库
             Music.deleteMusic(music)
-            ctx.contentResolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "_data=?", arrayOf<String>(music.getPath()))
+            ctx.contentResolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "_data=?", arrayOf<String>(music.path))
         }
 
 

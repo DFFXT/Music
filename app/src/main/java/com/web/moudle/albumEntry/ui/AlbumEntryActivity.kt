@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.WindowUtil
@@ -34,14 +35,14 @@ class AlbumEntryActivity : BaseActivity() {
             if (data != null) {
                 if (data.code == LiveDataWrapper.CODE_OK) {
                     val res = data.value
-                    findViewById<TextView>(R.id.tv_musicName).text = res.albumInfo.albumName
-                    findViewById<TextView>(R.id.tv_mainSinger).text = res.albumInfo.artistName
+                    tv_musicName.text = res.albumInfo.albumName
+                    tv_mainSinger.text = res.albumInfo.artistName
                     tv_styles.text=res.albumInfo.styles
-                    findViewById<TextView>(R.id.tv_publishTime).text = res.albumInfo.publishTime
-                    findViewById<TextView>(R.id.tv_publishCompany).text = res.albumInfo.publishCompany
-                    findViewById<TextView>(R.id.tv_listenTimes).text =res.albumInfo.listenNum
-                    findViewById<ExpandableTextView>(R.id.ex_introduction).text=res.albumInfo.info
-                    bitmapColorSet(res.albumInfo.pic500,findViewById(R.id.iv_bigImage_detailMusicActivity),findViewById(R.id.collapseToolbarLayout))
+                    tv_publishTime.text = res.albumInfo.publishTime
+                    tv_publishCompany.text = res.albumInfo.publishCompany
+                    tv_listenTimes.text =res.albumInfo.listenNum
+                    ex_introduction.text=res.albumInfo.info
+                    bitmapColorSet(res.albumInfo.pic500,iv_bigImage_detailMusicActivity,collapseToolbarLayout)
                     rv_albumList.adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
                     rootView.showContent()
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
@@ -70,11 +71,10 @@ class AlbumEntryActivity : BaseActivity() {
     }
 
     override fun initView() {
-        rootView=findViewById(R.id.rootView)
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
 
-        val manager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        val manager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_albumList.layoutManager=manager
         rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
         loadData()

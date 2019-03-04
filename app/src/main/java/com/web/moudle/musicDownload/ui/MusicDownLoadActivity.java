@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.web.common.base.BaseActivity;
 import com.web.common.tool.Ticker;
@@ -21,9 +20,8 @@ import com.web.misc.ToolsBar;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
-import com.web.common.tool.ThreadLooper;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
-import com.web.moudle.musicDownload.service.FileDownloadService;
+import com.web.moudle.service.FileDownloadService;
 import com.web.moudle.musicEntry.ui.MusicDetailActivity;
 import com.web.moudle.net.NetApis;
 import com.web.web.R;

@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.*
 import com.web.common.util.ViewUtil
@@ -48,8 +49,8 @@ class SongSheetActivity:BaseActivity() {
                 srl_sheetSong.setEnableLoadMore(false)
             }
             page++
-            bitmapColorSet(it.result.info.list_pic_middle,findViewById(R.id.iv_sheetIcon),collapseToolbarLayout)
-            findViewById<TextView>(R.id.tv_sheetName).text=it.result.info.list_title
+            bitmapColorSet(it.result.info.list_pic_middle,iv_sheetIcon,collapseToolbarLayout)
+            tv_sheetName.text=it.result.info.list_title
             tv_sheetCreateTime.text=SimpleDateFormat("YYYY-MM-dd", Locale.CHINA).format(Date(it.result.info.createtime*1000))
             if(Shortcut.isStrictEmpty(it.result.info.list_desc)){
                 tv_introductionLabel.visibility= View.GONE
@@ -76,7 +77,7 @@ class SongSheetActivity:BaseActivity() {
     }
 
     private fun initTag(tags:List<String>){
-        rv_tag.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        rv_tag.layoutManager= LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv_tag.addItemDecoration(GapItemDecoration(left = 18,top = 5,remainEndPadding = true))
         rv_tag.adapter=SheetTagAdapter(this,tags)
     }

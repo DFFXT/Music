@@ -56,28 +56,6 @@ import androidx.annotation.WorkerThread;
 		File file=new File(fString);
 		if(!file.exists()) file.mkdirs();
 	}
-	public void getfiles(File[] files,List<String> suffix,List<Integer> len){//---读取文件信息 [文件树，后缀，读取长度[负数无限制]]
-		if(files!=null){
-			for(File file_D:files){
-				if(file_D.isFile()){
-					for(int i=0;i<suffix.size();i++){//---判断后缀
-						if(file_D.getName().endsWith(suffix.get(i))&&file_D.length()>=len.get(i)){
-							name.add(file_D.getName());
-							path.add(file_D.getAbsolutePath());
-							size.add(file_D.length()+"");//--获取文件的大小MB
-							break;
-						}
-					}
-				}
-				else{//---递归
-					getfiles(file_D.listFiles(),suffix,len);
-				}
-			}
-		}
-	}
-	public void getfiles(List<String> suffix, List<Integer> len){
-		getfiles(files,suffix, len);
-	}
 	public void clearEmptyFolder(File[] files,File file){//--清除空文件夹和空文件
 		if(files!=null){
 			for(File file_T:files){//--无循环及为空//---不能删除 【空->空】 文件夹

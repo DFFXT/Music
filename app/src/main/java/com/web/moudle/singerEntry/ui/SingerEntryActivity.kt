@@ -70,10 +70,10 @@ class SingerEntryActivity : BaseActivity() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                             androidx.palette.graphics.Palette.from(resource).generate {
                                 it?.vibrantSwatch?.let { sw ->
-                                    findViewById<View>(R.id.collapseToolbarLayout).setBackgroundColor(sw.rgb)
+                                    collapseToolbarLayout.setBackgroundColor(sw.rgb)
                                 }
                             }
-                            findViewById<ImageView>(R.id.iv_bigImage_detailMusicActivity).setImageBitmap(resource)
+                            iv_bigImage_detailMusicActivity.setImageBitmap(resource)
                         }
                     })
                     rv_singerEntry.showLoading()
@@ -151,12 +151,11 @@ class SingerEntryActivity : BaseActivity() {
     }
 
     override fun initView() {
-        rootView = findViewById(R.id.rootView)
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
         loadData()
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        findViewById<AppBarLayout>(R.id.appBarLayout).addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
+        val toolbar = toolbar
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             val offset = -dy
             when (offset) {
                 appBar.totalScrollRange -> {//**完全折叠

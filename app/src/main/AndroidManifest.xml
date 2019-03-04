@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission-sdk-23 android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission-sdk-23 android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     
 
     <application
@@ -94,13 +95,14 @@
         </receiver>
 
         <service android:name="com.web.moudle.music.player.MusicPlay" />
-        <service android:name="com.web.moudle.musicDownload.service.FileDownloadService" />
+        <service android:name="com.web.moudle.service.FileDownloadService" />
+        <service android:name="com.web.moudle.service.UpdateService" />
 
         <activity android:name="com.web.moudle.setting.ui.SettingActivity" />
         <activity android:name="com.web.moudle.musicDownload.ui.MusicDownLoadActivity"/>
         <activity
             android:name="com.web.subWeb.File_download_sure"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ActivityTransparent" />
         <activity android:name="com.web.subWeb.ProhibitWebSite" />
         <activity android:name=".Computer" />
         <activity android:name="com.web.subWeb.VideoPlay" />
@@ -129,7 +131,9 @@
             />
         <activity android:name="com.web.moudle.billboard.BillBoardActivity" />
         <activity android:name="com.web.moudle.billboradDetail.NetMusicListActivity" />
-        <activity android:name="com.web.moudle.lyrics.LyricsActivity" />
+        <activity
+            android:theme="@style/ActivityTransparent"
+            android:name="com.web.moudle.lyrics.LyricsActivity" />
 
     </application>
 

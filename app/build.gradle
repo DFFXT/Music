@@ -67,6 +67,8 @@ dependencies {
     implementation 'com.danikula:videocache:2.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
+
+    implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
 }
 
 repositories {

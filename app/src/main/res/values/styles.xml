@@ -15,8 +15,10 @@
         <item name="actionMenuTextColor">@color/white</item>
     </style>
     <!-- Application theme. -->
-    <style name="AppTheme" parent="android:Theme.Translucent.NoTitleBar">
+    <style name="ActivityTransparent" parent="AppStyle">
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 
     <style name="DialogTransparentAround" parent="android:style/Theme.Dialog">

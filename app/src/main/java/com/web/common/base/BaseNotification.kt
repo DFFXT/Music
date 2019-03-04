@@ -12,7 +12,7 @@ import com.web.web.R
  * 原生通知
  */
 abstract class BaseNotification(private val context: Context,id: String, name: String) {
-    private var builder: Notification.Builder
+    var builder: Notification.Builder
     private var notificationId=0
 
     init {
@@ -25,7 +25,7 @@ abstract class BaseNotification(private val context: Context,id: String, name: S
         builder.setSmallIcon(R.drawable.ic_launcher)
     }
 
-    protected fun createChannel(id: String, name: String) {
+    private fun createChannel(id: String, name: String) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT)
             channel.setSound(null,null)

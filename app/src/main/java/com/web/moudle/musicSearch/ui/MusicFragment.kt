@@ -1,12 +1,9 @@
 package com.web.moudle.musicSearch.ui
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
@@ -19,13 +16,7 @@ import com.web.common.base.showError
 import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.ResUtil
-import com.web.config.Shortcut
-import com.web.data.InternetMusicDetail
-import com.web.data.InternetMusicDetailList
-import com.web.data.InternetMusicForPlay
 import com.web.misc.DrawableItemDecoration
-import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.musicDownload.service.FileDownloadService
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.adapter.InternetMusicAdapter
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
@@ -70,10 +61,6 @@ class MusicFragment:BaseSearchFragment() {
     }
 
     private fun init() {
-        vm.observerMusicDetail().observe(this, Observer<InternetMusicDetailList>{ detailList ->
-            if (detailList == null) return@Observer
-            downloadConsider(detailList.songList[0])
-        })
         vm.status.observe(this, Observer<LiveDataWrapper<Int>>{ wrapper ->
             if (wrapper == null) return@Observer
             when (wrapper.code) {
@@ -109,45 +96,5 @@ class MusicFragment:BaseSearchFragment() {
             adapter.submitList(pl)
             rootView?.showContent()
         })
-    }
-
-    /**
-     * 网络音乐点击
-     *
-     * @param music p
-     */
-    @SuppressLint("SetTextI18n")
-    private fun downloadConsider(music: InternetMusicDetail) {
-        val builder = AlertDialog.Builder(context)
-        builder.create()
-        builder.setPositiveButton("取消") { _, _ ->
-
-        }
-        builder.setNeutralButton("在线试听") { _, _ ->
-            Thread {
-                val info = InternetMusicForPlay(
-                        Shortcut.validatePath(music.songName),
-                        Shortcut.validatePath(music.artistName),
-                        music.songLink
-                )
-                info.imgAddress = music.singerIconSmall
-                info.lrcLink = music.lrcLink
-                MusicPlay.play(context, info)
-
-            }.start()
-        }
-        builder.setNegativeButton("下载(" + ResUtil.getFileSize(music.size) + ")") { _, _ ->
-            //**网络获取的时间以秒为单位、后面需要毫秒(媒体库里面的单位为毫秒)
-            music.duration = music.duration * 1000
-            FileDownloadService.addTask(context, music)
-        }
-
-        builder.setTitle(music.songName)
-        val tv_songName = TextView(context)
-        tv_songName.setTextColor(this.resources.getColor(R.color.white, context!!.theme))
-        builder.setMessage("歌手：" + music.artistName +
-                "\n时长：" + ResUtil.timeFormat("mm:ss", (music.duration * 1000).toLong()) +
-                "\n大小：" + ResUtil.getFileSize(music.size))
-        builder.show()
     }
 }

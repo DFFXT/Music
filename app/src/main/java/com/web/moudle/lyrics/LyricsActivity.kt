@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.view.View
 import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
 import com.web.config.GetFiles
@@ -22,11 +23,12 @@ class LyricsActivity : BaseActivity() {
     private val list = ArrayList<LyricsLine>()
     private var connection: ServiceConnection? = null
     private var actionStart = true
+    private var canScroll=true
     private var observer: PlayerObserver = object : PlayerObserver() {
 
         override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
             actionStart = true
-            loadLyrics()
+            loadLyrics(music)
         }
 
         override fun currentTime(group: Int, child: Int, time: Int) {
@@ -39,24 +41,24 @@ class LyricsActivity : BaseActivity() {
         }
     }
 
+    override fun enableSwipeToBack(): Boolean =true
+
     override fun getLayoutId(): Int = R.layout.music_lyrics_view
 
     override fun initView() {
-        //lv_lyrics.setShowLineAccount(16)
+
         lv_lyrics!!.textColor = ResUtil.getColor(R.color.themeColor)
         lv_lyrics!!.lyrics = list
-        iv_lock.tag = false
-        iv_lock.setImageResource(R.drawable.unlock)
-        iv_lock.setOnClickListener {
-            if (iv_lock.tag as Boolean) {
-                iv_lock.tag = false
-                iv_lock.setImageResource(R.drawable.unlock)
-            } else {
-                iv_lock.tag = true
-                iv_lock.setImageResource(R.drawable.locked)
-            }
-            lv_lyrics!!.setCanScroll(!(iv_lock.tag as Boolean))
-        }
+       topBar.setEndImageListener(View.OnClickListener {
+           if (canScroll) {
+               canScroll= false
+               topBar.setEndImage(R.drawable.locked)
+           } else {
+               canScroll=true
+               topBar.setEndImage(R.drawable.unlock)
+           }
+           lv_lyrics!!.setCanScroll(canScroll)
+        })
         lv_lyrics!!.setSeekListener { seekTo ->
             connect?.seekTo(seekTo)
             true
@@ -77,16 +79,13 @@ class LyricsActivity : BaseActivity() {
         intent.action = MusicPlay.BIND
         bindService(intent, connection!!, Context.BIND_AUTO_CREATE)
 
-        iv_back.setOnClickListener {
-            finish()
-        }
 
     }
 
 
-    private fun loadLyrics() {//--设置歌词内容
-        if (connect == null) return
-        val music = connect!!.playingMusic ?: return
+    private fun loadLyrics(music: Music?) {//--设置歌词内容
+        if (music == null) return
+        topBar.setMainTitle(music.musicName)
         list.clear()
         if (Shortcut.fileExsist(music.lyricsPath)) {//---存在歌词
             val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(music.lyricsPath))

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.DrawableItemDecoration
@@ -37,7 +38,7 @@ class SingleTextListAlert {
 
     fun build() {
         view = LayoutInflater.from(context).inflate(R.layout.view_recycler, null) as androidx.recyclerview.widget.RecyclerView
-        view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         view.addItemDecoration(DrawableItemDecoration(orientation = LinearLayout.VERTICAL,bottom = 4,drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         adapter = SingleTextAdapter(context, list)
         adapter!!.itemClickListener=itemClickListener

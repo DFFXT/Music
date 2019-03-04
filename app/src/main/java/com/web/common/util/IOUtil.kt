@@ -15,7 +15,7 @@ object IOUtil{
      */
     @JvmStatic
     @WorkerThread
-    fun streamCopy(inputStream:InputStream,outputStream:OutputStream,progressCallBack:((Int)->Unit)?=null,stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null):Int{
+    fun streamCopy(inputStream:InputStream,outputStream:OutputStream,max:Int?=-1,progressCallBack:((progress:Int,length:Int?)->Unit)?=null,stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null):Int{
         var offset=0
         inputStream.use {input->
             BufferedInputStream(input).use {bis->
@@ -36,7 +36,7 @@ object IOUtil{
                             offset+=length
                             bos.write(byte,0,length)
                             bos.flush()
-                            progressCallBack?.invoke(offset)
+                            progressCallBack?.invoke(offset,max)
                         }
                     }
                 }
@@ -78,15 +78,26 @@ object IOUtil{
     @JvmStatic
     @WorkerThread
     fun onlineDataToLocal(url:String?,savePath:String){
+        IOUtil.onlineDataToLocal(url,savePath,null,null,null)
+    }
+    fun onlineDataToLocal(url:String?,savePath:String,progressCallBack:((progress:Int,length:Int?)->Unit)?=null,stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null){
         try {
             if(TextUtils.isEmpty(url))return
             val mUrl=URL(url)
             val outputStream=FileOutputStream(savePath)
-            streamCopy(mUrl.openStream(),outputStream)
+            val con=mUrl.openConnection()
+            val length=con.getHeaderField("Content-Length")
+            var max=-1
+            try {
+                max=length.toInt()
+            }catch (e:java.lang.Exception){
+                e.printStackTrace()
+            }
+
+            streamCopy(mUrl.openStream(),outputStream,max,progressCallBack,stopCallback,stop)
         }catch (e:Exception){
             e.printStackTrace()
         }
-
     }
 
     @JvmStatic

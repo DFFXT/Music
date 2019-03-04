@@ -55,6 +55,10 @@
 	<string name="settings_titleBar">音乐播放器设置</string>
 	<string name="setting_clearAllMusic">清空当前音乐</string>
 	<string name="setting_clearAllMusicAlert">是否清空所以音乐，该操作不会删除源文件！</string>
+	<string name="setting_checkUpdate">检查更新(V %1$s)</string>
+	<string name="setting_lastVersion">已经是最新版本</string>
+	<string name="setting_update">更新</string>
+	<string name="setting_updateTitle">%1$s  正在更新</string>
 	<string name="setting_suffix_select">音乐类型</string>
 	<string name="settings_ignoreFileSize">忽略小文件</string>
 	<string name="settings_suffixMinSize">最小值[MB]</string>

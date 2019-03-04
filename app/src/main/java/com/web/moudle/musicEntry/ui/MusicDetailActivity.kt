@@ -7,9 +7,7 @@ import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.IBinder
-import android.util.Log
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.request.transition.Transition
@@ -24,7 +22,7 @@ import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
 import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.musicDownload.service.FileDownloadService
+import com.web.moudle.service.FileDownloadService
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
 import com.web.web.R
@@ -157,7 +155,7 @@ class MusicDetailActivity : BaseActivity() {
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
         loadData()
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = toolbar
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             val offset = -dy
             when (offset) {

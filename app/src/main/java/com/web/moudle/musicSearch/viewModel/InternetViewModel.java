@@ -21,12 +21,10 @@ public class InternetViewModel extends ViewModel {
     private InternetDataSource dataSource;
     private PagedList.Config config;
     private LiveData<PagedList<SimpleMusicInfo>> pagedListLiveData;
-    private MutableLiveData<InternetMusicDetailList> musicDetail;
     private MutableLiveData<LiveDataWrapper<Integer>> status;
 
     public InternetViewModel() {
         status = new MutableLiveData<>();
-        musicDetail = new MutableLiveData<>();
         dataSource = new InternetDataSource(status);
         config = new PagedList.Config.Builder()
                 .setInitialLoadSizeHint(10)
@@ -36,9 +34,6 @@ public class InternetViewModel extends ViewModel {
                 .build();
     }
 
-    public MutableLiveData<InternetMusicDetailList> observerMusicDetail() {
-        return musicDetail;
-    }
 
     public LiveData<LiveDataWrapper<Integer>> getStatus() {
         return status;
