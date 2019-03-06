@@ -1,6 +1,7 @@
 package com.web.moudle.music.player
 
 import com.web.common.base.MyApplication
+import com.web.common.util.IOUtil
 import com.web.moudle.music.player.bean.DiskObject
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.music.player.bean.SongSheetList
@@ -49,10 +50,6 @@ object SongSheetManager {
         return any
     }
     fun saveObject(diskObject: DiskObject){
-        FileOutputStream(diskObject.path).use {fos->
-            ObjectOutputStream(fos).use {oos->
-                oos.writeObject(diskObject)
-            }
-        }
+        IOUtil.saveObject(diskObject)
     }
 }

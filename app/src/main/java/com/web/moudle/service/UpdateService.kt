@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.content.FileProvider
 import com.web.common.base.BaseActivity
+import com.web.common.bean.Version
 import com.web.common.constant.Constant
 import com.web.common.util.IOUtil
 import com.web.common.util.ResUtil
@@ -22,9 +23,9 @@ import java.io.File
 class UpdateService : Service() {
     companion object {
         @JvmStatic
-        fun downloadUpdateApk(context: Context, path: String) {
+        fun downloadUpdateApk(context: Context, version: Version) {
             val intent = Intent(context, UpdateService::class.java)
-            intent.putExtra(BaseActivity.INTENT_DATA, path)
+            intent.putExtra(BaseActivity.INTENT_DATA, version)
             context.startService(intent)
         }
     }
@@ -42,18 +43,19 @@ class UpdateService : Service() {
         super.onStartCommand(intent, flags, startId)
 
         notification=FileDownloadNotification(this)
-        val path = intent.getStringExtra(BaseActivity.INTENT_DATA)
-        update(path, savePath)
+        val version = intent.getSerializableExtra(BaseActivity.INTENT_DATA) as Version
+        update(version, savePath)
 
         return START_NOT_STICKY
     }
 
-    private fun update(path: String, savePath: String) {
+    private fun update(version: Version, savePath: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            IOUtil.onlineDataToLocal(path, savePath,
+            IOUtil.onlineDataToLocal(version.apkLink, savePath,
                     progressCallBack = {progress,max->
                         notification.notify(ResUtil.getString(R.string.setting_updateTitle,ResUtil.getString(R.string.app_name)),progress*100/(max?:-1).toFloat())
                     },
+                    notifyTimeGap = 1000,
                     stopCallback = {
                         notification.cancel()
                     })
@@ -75,6 +77,11 @@ class UpdateService : Service() {
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive")
         }
         startActivity(intent)
+        stopSelf()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         stopSelf()
     }
 

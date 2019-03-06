@@ -10,14 +10,18 @@ import android.view.View;
 
 import com.web.common.base.BaseActivity;
 import com.web.common.bean.Version;
+import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
+import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.misc.ConfirmDialog;
+import com.web.misc.LoadingWindow;
 import com.web.misc.TextWithDrawable;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.service.UpdateService;
+import com.web.moudle.setting.about.AboutActivity;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.moudle.setting.model.SettingViewModel;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
@@ -41,12 +45,9 @@ public class SettingActivity extends BaseActivity {
         twd_lockScreen.setOnClickListener(v -> LockScreenSettingActivity.Companion.actionStart(this));
         twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
 
-        twd_checkUpdate.setText(ResUtil.getString(R.string.setting_checkUpdate, Constant.getVersionName()));
-        twd_checkUpdate.setOnClickListener(v ->
-                SettingViewModel.INSTANCE.requestVersion((res) -> {
-                    considerUpdate(res);
-                    return null;
-                }, null));
+        twd_checkUpdate.setText(ResUtil.getString(R.string.setting_checkUpdate, Apk.getVersionName()));
+        twd_checkUpdate.setOnClickListener(v ->Apk.checkUpdate(this,v));
+
 
         findViewById(R.id.twd_clearAllMusic).setOnClickListener(v -> {
             new ConfirmDialog(this)
@@ -67,30 +68,10 @@ public class SettingActivity extends BaseActivity {
                     .showCenter(rootView);
         });
 
+        findViewById(R.id.twd_about).setOnClickListener(v-> AboutActivity.actionStart(this));
 
     }
 
-
-    private void considerUpdate(Version version) {
-        if (version.getVersionCode() >= Constant.getVersionCode()) {
-            ConfirmDialog dialog = new ConfirmDialog(this);
-            dialog.setMsg(version.getDesc());
-            dialog.setLeftText(ResUtil.getString(R.string.no));
-            dialog.setRightText(ResUtil.getString(R.string.yes));
-            dialog.setRightListener((d)->{
-                UpdateService.downloadUpdateApk(this,version.getApkLink());
-                d.dismiss();
-                return null;
-            });
-            dialog.setLeftListener((d)->{
-                d.dismiss();
-                return null;
-            });
-            dialog.showCenter(rootView);
-        } else {
-            MToast.showToast(this, R.string.setting_lastVersion);
-        }
-    }
 
 
     public static void actionStart(Context context) {

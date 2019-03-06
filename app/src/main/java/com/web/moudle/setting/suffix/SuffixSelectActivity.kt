@@ -2,15 +2,22 @@ package com.web.moudle.setting.suffix
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseActivity
+import com.web.common.base.log
+import com.web.common.tool.MToast
+import com.web.common.util.ResUtil
+import com.web.common.util.ViewUtil
 import com.web.data.ScanMusicType
+import com.web.misc.GapItemDecoration
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_select_suffix.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.litepal.crud.DataSupport
 import java.util.*
@@ -18,23 +25,26 @@ import java.util.regex.Pattern
 
 class SuffixSelectActivity : BaseActivity() {
     private val types = ArrayList<ScanMusicType>()
-    private val pattern=Pattern.compile("^\\.[0-9a-zA-Z]*?&")
     override fun getLayoutId(): Int {
         return R.layout.activity_select_suffix
     }
 
     override fun initView() {
-        rv_suffixSelect.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        topBar.setEndImageListener(View.OnClickListener {
+            save()
+        })
+        rv_suffixSelect.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        rv_suffixSelect.addItemDecoration(GapItemDecoration(bottom = ViewUtil.dpToPx(10f)))
         tv_addAndSave.setOnClickListener {
             rv_suffixSelect.adapter?.let { adapter ->
-                types.add(ScanMusicType("", 10240, true))
+                types.add(ScanMusicType(".", minFileSize, true))
                 adapter.notifyItemInserted(types.size - 1)
                 adapter.notifyItemRangeChanged(types.size - 1, 1)
             }
         }
-        GlobalScope.launch {
+        GlobalScope.launch (Dispatchers.IO){
             types.addAll(getScanType())
-            GlobalScope.async {
+            runOnUiThread {
                 rv_suffixSelect.adapter = SuffixSelectAdapter(this@SuffixSelectActivity, types)
                 ItemTouchHelper(MyItemTouchHelperCallBack { holder, _ ->
                     (rv_suffixSelect.adapter as SuffixSelectAdapter).remove(holder.adapterPosition)
@@ -43,34 +53,39 @@ class SuffixSelectActivity : BaseActivity() {
         }
     }
 
-    override fun finish() {
+    private fun save() {
         currentFocus?.clearFocus()//**清除焦点保存数据
         var i = 0
-        while (i < types.size) {
-            val m=pattern.matcher(types[i].scanSuffix)
-            if (!m.find()) {
+        while (i < types.size && i >= 0) {
+            val m = pattern.matcher(types[i].scanSuffix)
+            val p=m.find()
+            log(types[i].scanSuffix  +" "+ p)
+            if (!p) {
                 types.removeAt(i)
                 i -= 1
             }
             i += 1
         }
         DataSupport.saveAllAsync(types).listen {
-            super.finish()
+            MToast.showToast(this,R.string.setting_suffix_saveSuccess)
         }
 
     }
 
     companion object {
         @JvmStatic
-        val pattern= Pattern.compile("^\\.[0-9a-zA-Z]*?$")!!
+        val pattern = Pattern.compile("^\\.[0-9a-zA-Z]{1,10}[0-9a-zA-Z]*?$")!!
+
+        @JvmStatic
+        val minFileSize=10240
 
         @JvmStatic
         fun getScanType(): List<ScanMusicType> {
             val list = DataSupport.findAll(ScanMusicType::class.java)
             if (list.isEmpty()) {
-                val suffixList = arrayListOf(".mp3", ".acc", ".wma", ".wav", ".mid")
+                val suffixList = ResUtil.getStringArray(R.array.initialSuffix)
                 suffixList.forEach {
-                    val type = ScanMusicType(it, 10240, true)
+                    val type = ScanMusicType(it, minFileSize, true)
                     list.add(type)
                 }
                 DataSupport.saveAllAsync(list)

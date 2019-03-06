@@ -1,10 +1,19 @@
 package com.web.common.constant;
 
-import android.content.pm.PackageInfo;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.view.View;
 
 import com.web.common.base.MyApplication;
+import com.web.common.bean.Version;
+import com.web.common.tool.MToast;
+import com.web.common.util.ResUtil;
+import com.web.misc.ConfirmDialog;
+import com.web.misc.LoadingWindow;
+import com.web.moudle.service.UpdateService;
+import com.web.moudle.setting.model.SettingViewModel;
+import com.web.web.R;
 
 public final class Constant {
     public final static String spName="appConfig";
@@ -15,6 +24,9 @@ public final class Constant {
         public final static String lockScreenBgImagePath="lockScreenBgImagePath";
         public final static String lockScreenBgMode="lockScreenBgMode";
         public final static String noLockScreen="noLockScreen";
+
+        public final static String currentVersion="currentVersion";
+        public final static String latestVersion="latestVersion";
     }
     public static class LocalConfig{
         public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
@@ -24,22 +36,5 @@ public final class Constant {
         public static String krcPath=cachePath+"lyrics/";
     }
 
-    public static String getVersionName(){
-        String versionName="";
-        try {
-            versionName=MyApplication.context.getPackageManager().getPackageInfo(MyApplication.context.getPackageName(), PackageManager.GET_GIDS).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionName;
-    }
-    public static int getVersionCode(){
-        int versionCode=0;
-        try {
-            versionCode=MyApplication.context.getPackageManager().getPackageInfo(MyApplication.context.getPackageName(), PackageManager.GET_GIDS).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionCode;
-    }
+
 }

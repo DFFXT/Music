@@ -61,7 +61,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Index"
+            android:theme="@style/FullscreenTheme"
+            android:name=".HelloActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -134,6 +135,7 @@
         <activity
             android:theme="@style/ActivityTransparent"
             android:name="com.web.moudle.lyrics.LyricsActivity" />
+        <activity android:name="com.web.moudle.setting.about.AboutActivity" />
 
     </application>
 

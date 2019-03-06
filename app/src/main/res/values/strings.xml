@@ -5,7 +5,8 @@
 	<string name="outerMusicLabel">播放</string>
 
 	<string name="webview_choose">View</string>
-    <string name="app_name">M盒子</string>
+    <string name="app_name">音乐盒</string>
+	<string name="hello_desc">开始音乐的旅行</string>
     <string name="action_settings">刷新</string>
 	<string name="getlist">扫描本地歌曲</string>
 	<string name="musicIsScanning">正在扫描音乐</string>
@@ -57,17 +58,16 @@
 	<string name="setting_clearAllMusicAlert">是否清空所以音乐，该操作不会删除源文件！</string>
 	<string name="setting_checkUpdate">检查更新(V %1$s)</string>
 	<string name="setting_lastVersion">已经是最新版本</string>
+	<string name="setting_about">关于</string>
 	<string name="setting_update">更新</string>
 	<string name="setting_updateTitle">%1$s  正在更新</string>
+	<string name="setting_about_version">版本 %1$s</string>
 	<string name="setting_suffix_select">音乐类型</string>
+	<string name="setting_suffix_save">保存</string>
+	<string name="setting_suffix_saveSuccess">保存成功</string>
 	<string name="settings_ignoreFileSize">忽略小文件</string>
 	<string name="settings_suffixMinSize">最小值[MB]</string>
-	<string name="setting_suffix_mp3">.mp3</string>
-	<string name="setting_suffix_ogg">.ogg</string>
-	<string name="setting_suffix_mid">.mid</string>
-	<string name="setting_suffix_wav">.wav</string>
-	<string name="setting_suffix_wma">.wma</string>
-	<string name="setting_suffix_acc">.acc</string>
+
 	<string name="setting_suffix_add">添加</string>
 
 	<!-- computer.xml -->

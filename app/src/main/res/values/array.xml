@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="initialSuffix">
+        <item>.mp3</item>
+        <item>.m4a</item>
+        <item>.ogg</item>
+        <item>.wma</item>
+        <item>.wav</item>
+        <item>.mid</item>
+    </string-array>
+</resources>

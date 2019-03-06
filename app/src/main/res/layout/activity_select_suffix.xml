@@ -11,6 +11,7 @@
         android:fitsSystemWindows="true"
         android:background="@color/themeColor"
         app:topBar_mainTitleText="@string/setting_suffix_select"
+        app:topBar_endText="@string/setting_suffix_save"
         app:topBar_tint="@color/white"
         app:topBar_mainTitleColor="@color/white"
         app:topBar_startImage="@drawable/icon_back_black"/>
@@ -22,6 +23,7 @@
         android:overScrollMode="never"
         android:id="@+id/rv_suffixSelect"
         android:layout_below="@id/topBar"
+        android:layout_above="@+id/tv_addAndSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <TextView

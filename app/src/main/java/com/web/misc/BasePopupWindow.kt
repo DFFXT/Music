@@ -6,16 +6,13 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.PopupWindow
 
 open class BasePopupWindow(private val ctx: Context, val rootView: View) {
 
     private val popupWindow: PopupWindow = PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
+    var dismissCallback:(()->Unit)?=null
     init {
         popupWindow.contentView = rootView
         setBackground(ColorDrawable(Color.TRANSPARENT))
@@ -24,11 +21,12 @@ open class BasePopupWindow(private val ctx: Context, val rootView: View) {
 
         popupWindow.setOnDismissListener {
             applyWindowDarkAlpha(0.5f, 1f, 300)
+            dismissCallback?.invoke()
         }
     }
 
 
-    fun enableTouchDismis(touchDismiss: Boolean) {
+    fun enableTouchDismiss(touchDismiss: Boolean) {
         if (!touchDismiss) {
             popupWindow.isFocusable = true
             popupWindow.isOutsideTouchable = false
@@ -42,6 +40,16 @@ open class BasePopupWindow(private val ctx: Context, val rootView: View) {
                 }
                 return@setOnKeyListener false
             }
+            popupWindow.setTouchInterceptor(View.OnTouchListener { _, event ->
+                val x = event.x.toInt()
+                val y = event.y.toInt()
+                if (event.action == MotionEvent.ACTION_DOWN && (x < 0 || x >= rootView.width || y < 0 || y >= rootView.height)) {
+                    return@OnTouchListener true
+                } else if (event.action == MotionEvent.ACTION_OUTSIDE) {
+                    return@OnTouchListener true
+                }
+                false
+            })
         }
     }
 

@@ -1,21 +1,23 @@
 package com.web.moudle.setting.model
 
-import com.web.common.base.log
 import com.web.common.bean.Version
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 object SettingViewModel {
-
+    private var job: Job?=null
     fun requestVersion(success:(Version?)->Unit,error:(()->Unit)?=null){
-        GlobalScope.launch {
+        job=GlobalScope.launch {
             try {
-                val res=BaseRetrofit().obtainClass(NetApis.Global::class.java)
+                if (!isActive){
+                    return@launch
+                }
+                val res= BaseRetrofit().obtainClass(NetApis.Global::class.java)
                         .requestVersionInfo().execute()
-                log(res)
+                if (!isActive){
+                    return@launch
+                }
                 launch (Dispatchers.Main) {
                     success(res.body())
                 }
@@ -25,6 +27,8 @@ object SettingViewModel {
                 }
             }
         }
-
+    }
+    fun cancelRequest(){
+        job?.cancel()
     }
 }

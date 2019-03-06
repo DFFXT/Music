@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import androidx.annotation.ArrayRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -16,11 +17,16 @@ import java.util.*
 object ResUtil {
     @JvmStatic
     fun getString(@StringRes id: Int): String {
-        return LitePalApplication.getContext().resources.getString(id)
+        return MyApplication.context.resources.getString(id)
     }
     @JvmStatic
     fun getString(@StringRes id:Int, vararg params:Any):String{
         return String.format(ResUtil.getString(id),*params)
+    }
+
+    @JvmStatic
+    fun getStringArray(@ArrayRes arrayId:Int):Array<String>{
+        return MyApplication.context.resources.getStringArray(arrayId)
     }
 
     /**

@@ -10,6 +10,9 @@ import java.util.*
 
 class PlayInterfaceManager:PlayInterface {
     private var observerList=LinkedList<PlayInterface>()
+    fun removeObserver(observer: PlayInterface){
+        observerList.remove(observer)
+    }
     fun addObserver(owner:LifecycleOwner,observer:PlayInterface){
         if(!this.observerList.contains(observer)){
             this.observerList.add(observer)

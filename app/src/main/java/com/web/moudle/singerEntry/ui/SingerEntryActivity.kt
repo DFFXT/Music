@@ -34,7 +34,6 @@ class SingerEntryActivity : BaseActivity() {
 
     private val limit = 9
 
-    private lateinit var rootView: ViewGroup
     override fun getLayoutId(): Int {
         return R.layout.activity_singer_entry
     }

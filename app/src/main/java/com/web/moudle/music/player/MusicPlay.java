@@ -324,6 +324,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         public void addObserver(LifecycleOwner owner, PlayInterface play) {
             MusicPlay.this.play.addObserver(owner, play);
         }
+        public void removeObserver(PlayInterface play){
+            MusicPlay.this.play.removeObserver(play);
+        }
 
         public void getList(int group) {
             groupIndex = group;

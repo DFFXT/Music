@@ -1,8 +1,6 @@
 package com.web.moudle.music.player.bean
 
-import java.io.Serializable
-
-class SongSheet(var name: String):Serializable,DiskObject {
+class SongSheet(var name: String):DiskObject {
     override var path=""
     private var musicIdList=ArrayList<Int>()
     fun size():Int{

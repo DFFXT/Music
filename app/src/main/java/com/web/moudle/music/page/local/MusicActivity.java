@@ -1,6 +1,8 @@
 package com.web.moudle.music.page.local;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.web.common.base.BaseActivity;
+import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
@@ -28,6 +31,7 @@ import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
+import com.web.moudle.billboard.bean.Content;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
@@ -56,6 +60,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import kotlinx.coroutines.scheduling.Task;
 
 public class MusicActivity extends BaseActivity implements OnClickListener {
 
@@ -186,6 +191,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void initView() {
+
         findID();
         setToolbar();
         musicListLPage = new MusicListLPage();
@@ -334,7 +340,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         v.findViewById(R.id.item_setting1).setOnClickListener(this);
         tv_musicOrigin.setOnClickListener(this);
 
-
+        Apk.init(this,drawer);
     }
 
     private ServiceConnection serviceConnection;
@@ -560,15 +566,18 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
 
-
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 
     public void onDestroy() {
+
         if (serviceConnection != null) {
             unbindService(serviceConnection);
         }
         super.onDestroy();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -577,6 +586,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         if (requestCode == RESULT_CODE_SEARCH) {
             InternetMusicActivity.actionStart(this, data.getStringExtra(SearchActivity.INPUT_DATA));
         }
+    }
+
+
+    public static void actionStart(Activity context){
+        context.startActivityForResult(new Intent(context,MusicActivity.class),0);
     }
 
 }

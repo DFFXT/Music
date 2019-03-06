@@ -1,16 +1,17 @@
 package com.web.misc
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewOutlineProvider
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import com.web.web.R
 
 class RoundImageView @JvmOverloads constructor(
         context: Context, private val attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
     var radius=0f
         set(value) {
@@ -33,20 +34,25 @@ class RoundImageView @JvmOverloads constructor(
         }
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+
+    private val path=Path()
+    private val rect=RectF()
+    override fun onDraw(canvas: Canvas) {
+        setPath()
+        canvas.clipPath(path)
+        super.onDraw(canvas)
+    }
+
+    private fun setPath(){
         path.reset()
-        rect.set(paddingStart.toFloat(),paddingTop.toFloat(),width-paddingEnd.toFloat(),height-paddingBottom.toFloat())
+
+        rect.set(paddingStart.toFloat(),paddingTop.toFloat(),width-paddingStart-paddingEnd.toFloat(),height-paddingTop-paddingBottom.toFloat())
         if(type==0){
             path.addRoundRect(rect,radius,radius,Path.Direction.CW)
         }else if (type==1){
             path.addRoundRect(rect,(width-paddingStart-paddingEnd)/2f,(height-paddingTop-paddingBottom)/2f,Path.Direction.CW)
         }
-        super.onLayout(changed, left, top, right, bottom)
+
     }
-    private val path=Path()
-    private val rect=RectF()
-    override fun onDraw(canvas: Canvas) {
-        canvas.clipPath(path)
-        super.onDraw(canvas)
-    }
+
 }

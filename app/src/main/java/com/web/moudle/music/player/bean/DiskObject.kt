@@ -1,5 +1,7 @@
 package com.web.moudle.music.player.bean
 
-interface DiskObject {
+import java.io.Serializable
+
+interface DiskObject:Serializable {
     open var path:String
 }

@@ -3,7 +3,6 @@ package com.web.moudle.notification
 import android.content.Context
 import android.widget.RemoteViews
 import com.web.common.base.BaseCustomNotification
-import com.web.common.base.log
 import com.web.common.util.ResUtil
 import com.web.web.R
 
@@ -15,7 +14,6 @@ class FileDownloadNotification(ctx:Context):BaseCustomNotification(ctx,"download
         this.percent=percent
         this.title=title
         notifyChange()
-        log(percent)
     }
     override fun update(view: RemoteViews) {
         view.setTextViewText(R.id.tv_title,title)

@@ -22,7 +22,12 @@ class TopBarLayout : FrameLayout {
     private var endImageView: ImageView
     private var mainTitle: TextView
     private var subtitle: TextView
+    private var endText: TextView
     private var mainTitleColor:Int=Color.WHITE
+        set(value) {
+            field=value
+            endText.setTextColor(value)
+        }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -32,6 +37,7 @@ class TopBarLayout : FrameLayout {
         mainTitle.setTextColor(ta.getColor(R.styleable.TopBarLayout_topBar_mainTitleColor, Color.BLACK))
         subtitle.setTextColor(ta.getColor(R.styleable.TopBarLayout_topBar_subtitleColor, Color.BLACK))
         mainTitle.text = ta.getString(R.styleable.TopBarLayout_topBar_mainTitleText)
+        endText.text = ta.getString(R.styleable.TopBarLayout_topBar_endText)
         subtitle.text = ta.getString(R.styleable.TopBarLayout_topBar_subtitleText)
 
         mainTitleColor=ta.getColor(R.styleable.TopBarLayout_topBar_mainTitleColor,mainTitleColor)
@@ -52,6 +58,7 @@ class TopBarLayout : FrameLayout {
         endImageView = view.findViewById(R.id.img_topBarEndImage)
         mainTitle = view.findViewById(R.id.tv_topBarTitle)
         subtitle = view.findViewById(R.id.tv_topBarSubtitle)
+        endText = view.findViewById(R.id.tv_endText)
         addView(view)
 
         //**默认点击事件

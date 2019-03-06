@@ -3,9 +3,8 @@ package com.web.moudle.music.player.bean
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.SongSheetManager.basePath
 import java.io.File
-import java.io.Serializable
 
-class SongSheetList:Serializable,DiskObject {
+class SongSheetList:DiskObject {
 
     override var path:String=basePath+File.separator+"songSheetList"
     var songList=ArrayList<SongSheet>()

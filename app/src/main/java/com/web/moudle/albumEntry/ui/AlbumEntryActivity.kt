@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.activity_album_entry.*
 class AlbumEntryActivity : BaseActivity() {
     private lateinit var id: String
     private lateinit var model: AlbumEntryViewModel
-    private lateinit var rootView:ViewGroup
     override fun getLayoutId(): Int {
         return R.layout.activity_album_entry
     }

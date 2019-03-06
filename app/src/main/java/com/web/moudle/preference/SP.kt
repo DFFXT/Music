@@ -2,6 +2,8 @@ package com.web.moudle.preference
 
 import android.app.Activity
 import com.web.common.base.MyApplication
+import com.web.common.util.IOUtil
+import com.web.moudle.music.player.bean.DiskObject
 
 object SP {
     fun putValue(name:String,key:String,value:Any){
@@ -13,6 +15,9 @@ object SP {
             is Boolean ->editor.putBoolean(key,value)
             is Long ->editor.putLong(key,value)
             is Float ->editor.putFloat(key,value)
+            is DiskObject->{
+                editor.putString(key, String(IOUtil.objToBase64(value)))
+            }
         }
         editor.apply()
     }
@@ -47,5 +52,9 @@ object SP {
     fun getLong(name: String,key: String,defValue: Long=0):Long{
         val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
         return sp.getLong(key,defValue)
+    }
+    fun <T:DiskObject> getDiskObject(name: String,key: String):T?{
+        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        return IOUtil.base64ToObj(sp.getString(key,""))
     }
 }
