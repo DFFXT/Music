@@ -1,6 +1,6 @@
 package com.web.moudle.billboradDetail.adapter
 
-import android.util.Log
+
 import androidx.annotation.IntDef
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
@@ -104,7 +104,6 @@ class NetMusicListDataSource() : PageKeyedDataSource<String, SimpleMusicInfo>() 
                                     else if(it.haveMore!=1){
                                         w.code=LiveDataWrapper.CODE_NO_DATA
                                     }
-                                    Log.i("log","-->$page")
                                     page++
                                     val b = BillBoardInfo()
                                     b.billboard_songnum=it.total.toString()
@@ -134,7 +133,6 @@ class NetMusicListDataSource() : PageKeyedDataSource<String, SimpleMusicInfo>() 
                                     else if(it.haveMore!=1){
                                         w.code=LiveDataWrapper.CODE_NO_DATA
                                     }
-                                    Log.i("log","-->$page")
                                     page++
                                     val b = BillBoardInfo()
                                     b.billboard_songnum=it.num.toString()

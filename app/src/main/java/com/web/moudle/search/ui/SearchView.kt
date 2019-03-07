@@ -1,21 +1,17 @@
 package com.web.moudle.search.ui
 
 import android.content.Context
-import android.content.res.TypedArray
-import android.inputmethodservice.InputMethodService
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
-import com.web.config.Shortcut
 import com.web.web.R
+import kotlinx.android.synthetic.main.layout_search.view.*
 
 /**
  * 搜索框
@@ -63,6 +59,10 @@ class SearchView @JvmOverloads constructor(
             }
             return@setOnKeyListener false
         }
+        iv_delete.setOnClickListener {
+            editText.text = null
+        }
+
         attrs?.let {
             val ta = ctx.obtainStyledAttributes(attrs, R.styleable.SearchView)
             hint = ta.getString(R.styleable.SearchView_searchView_hint)

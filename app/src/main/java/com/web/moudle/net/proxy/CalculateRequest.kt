@@ -1,6 +1,6 @@
 package com.web.moudle.net.proxy
 
-import android.util.Log
+
 import java.io.InputStream
 import java.net.URLConnection
 import java.util.regex.Pattern
@@ -22,7 +22,6 @@ class CalculateRequest {
         val len = inputStream.read(by)
         val head = String(by, 0, len)
         requestLines = head.split("\n")
-        Log.i("log", head)
         getRange()
         getRealPath()
     }

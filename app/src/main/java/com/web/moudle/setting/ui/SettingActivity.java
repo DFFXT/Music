@@ -1,29 +1,19 @@
 package com.web.moudle.setting.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 
 import com.web.common.base.BaseActivity;
-import com.web.common.bean.Version;
 import com.web.common.constant.Apk;
-import com.web.common.constant.Constant;
-import com.web.common.tool.MToast;
-import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.misc.ConfirmDialog;
-import com.web.misc.LoadingWindow;
 import com.web.misc.TextWithDrawable;
 import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.service.UpdateService;
 import com.web.moudle.setting.about.AboutActivity;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
-import com.web.moudle.setting.model.SettingViewModel;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.web.R;
 

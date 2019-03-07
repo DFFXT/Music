@@ -2,16 +2,13 @@ package com.web.moudle.music.page.local;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Outline;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,11 +24,11 @@ import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
+import com.web.common.util.WindowUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
-import com.web.moudle.billboard.bean.Content;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
@@ -45,6 +42,8 @@ import com.web.moudle.preference.SP;
 import com.web.moudle.search.SearchActivity;
 import com.web.moudle.setting.ui.SettingActivity;
 import com.web.web.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import kotlinx.coroutines.scheduling.Task;
 
 public class MusicActivity extends BaseActivity implements OnClickListener {
 
@@ -192,6 +190,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     @Override
     public void initView() {
 
+        WindowUtil.setImmersedStatusBar(getWindow());
         findID();
         setToolbar();
         musicListLPage = new MusicListLPage();
@@ -271,13 +270,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         return true;
     }
 
-    private boolean noSuchPage(String pageName) {
-        for (BaseMusicPage page : pageList) {
-            if (pageName.equals(page.getPageName())) return false;
-        }
-        return true;
-    }
-
     /**
      * 获取传输的数据
      */
@@ -296,11 +288,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             }
         }
 
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
     }
 
     private void findID() {
@@ -340,6 +327,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         v.findViewById(R.id.item_setting1).setOnClickListener(this);
         tv_musicOrigin.setOnClickListener(this);
 
+        TextView tv=drawer.findViewById(R.id.tv_version);
+        tv.setText(ResUtil.getString(R.string.about_app,Apk.getVersionName()));
         Apk.init(this,drawer);
     }
 
@@ -375,6 +364,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private void setAdapter() {//--设置本地适配器
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @NotNull
             @Override
             public Fragment getItem(int position) {
                 return pageList.get(position);

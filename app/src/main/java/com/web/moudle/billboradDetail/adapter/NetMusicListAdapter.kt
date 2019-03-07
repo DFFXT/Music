@@ -1,26 +1,24 @@
 package com.web.moudle.billboradDetail.adapter
 
 
-import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
-import com.web.common.util.ResUtil
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.web.R
 
+@Deprecated("use PagedListAdapter")
 class NetMusicListAdapter(data:List<SimpleMusicInfo>?): BaseAdapter<SimpleMusicInfo>(data) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SimpleMusicInfo?) {
         ImageLoad.load(item?.picSmall).into(holder.findViewById(R.id.iv_musicIcon))

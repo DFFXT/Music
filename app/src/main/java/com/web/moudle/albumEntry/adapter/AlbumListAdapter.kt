@@ -1,9 +1,7 @@
 package com.web.moudle.albumEntry.adapter
 
 import android.content.Context
-import android.graphics.Color
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import com.web.common.util.ResUtil
 import com.web.moudle.albumEntry.bean.OtherSong
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
-
 import com.web.web.R
 
 class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherSong>?):BaseAdapter<OtherSong>(list) {

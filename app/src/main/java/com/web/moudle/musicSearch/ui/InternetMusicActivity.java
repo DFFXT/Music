@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 public class InternetMusicActivity extends BaseActivity {
@@ -58,7 +59,7 @@ public class InternetMusicActivity extends BaseActivity {
         TopBarLayout topBarLayout = findViewById(R.id.topBar);
         topBarLayout.setEndImageListener(v -> SearchActivity.actionStart(this, RESULT_CODE_SEARCH));
         LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
 
 
         pageList.add(new MusicFragment());

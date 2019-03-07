@@ -11,7 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
@@ -352,7 +351,6 @@ public class LyricsView extends RelativeLayout {
         if (index < 0) index = 0;
         startIndex = Math.max(0, index - showLineAccount / 2 - 2);
         endIndex = Math.min(index + showLineAccount / 2 + 2, lyrics.size());
-        Log.i("log","--->show:"+showLineAccount);
     }
 
     private void recover(int from, int to, int indexAdd) {

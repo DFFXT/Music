@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.SeekBar
@@ -217,7 +216,6 @@ class VideoEntryActivity : BaseActivity() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        Log.i("log","--->${newConfig.orientation}")
         super.onConfigurationChanged(newConfig)
 
 

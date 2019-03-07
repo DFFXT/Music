@@ -16,9 +16,19 @@ import com.web.web.R;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+/**
+ * 一些和apk有关的信息和操作
+ */
 public class Apk {
 
+    public final static String publishTime="2019-3-7";
+
     /**
+     * 如果没有Version就去网络请求
+     * 如果有就将存储的信息和apk进行比较，apk版本高则进行替换
+     * 如果last的信息和apk信息相同则存储last信息
+     *
+     *
      * 进入时进行检测，如果是新安装，就会检测当前版本，如果不是最新版，会提示更新
      * 如果是不新安装，但是是老版本，不会提示更新
      * @param activity activity
@@ -36,9 +46,13 @@ public class Apk {
                     return null;
                 },null);
             }else{
+                Version realV=new Version(Apk.getVersionCode(),Apk.getVersionName(),publishTime,"","");
+                if(currentV.getVersionCode()<realV.getVersionCode()){
+                    realV.saveAsCurrent();
+                }
                 Version lastV=Version.readLatestVersion();
                 if(lastV!=null){
-                    if(lastV.getVersionCode()>Apk.getVersionCode()){
+                    if(lastV.getVersionCode()==Apk.getVersionCode()){
                         lastV.saveAsCurrent();
                     }
                 }
@@ -83,7 +97,7 @@ public class Apk {
     }
     private static void considerUpdate(Activity activity, View v, Version version) {
         version.saveAsLast();
-        if (version.getVersionCode() >= Apk.getVersionCode()) {
+        if (version.getVersionCode() > Apk.getVersionCode()) {
             ConfirmDialog dialog = new ConfirmDialog(activity);
             dialog.setMsg(version.getDesc());
             dialog.setLeftText(ResUtil.getString(R.string.no));

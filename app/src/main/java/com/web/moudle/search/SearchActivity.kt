@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
@@ -54,7 +55,7 @@ class SearchActivity : BaseActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         loadData()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         manager.stackFromEnd = false
         rv_searchSug.layoutManager = manager
         rv_searchSug.addItemDecoration(GapItemDecoration(bottom = 20))

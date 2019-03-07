@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.web.web"
     android:installLocation="auto"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="11"
+    android:versionName="1.1">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -88,12 +88,6 @@
         </activity>
         <activity android:name=".Alarm_Activity" />
         <activity android:name=".Ring" />
-
-        <receiver android:name="com.web.moudle.music.page.local.control.receiver.EarPlugReceiver">
-            <intent-filter android:priority="999999999">
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
 
         <service android:name="com.web.moudle.music.player.MusicPlay" />
         <service android:name="com.web.moudle.service.FileDownloadService" />
