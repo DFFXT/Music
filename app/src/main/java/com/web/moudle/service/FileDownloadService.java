@@ -159,7 +159,7 @@ public class FileDownloadService extends Service {
                             downloadList.clear();
                             for (InternetMusicDetail m : res) {
                                 if (m.getHasDownload() == m.getSize()) {
-                                    completeList.add(new DownloadMusic(m, DownloadMusic.DOWNLOAD_COMPLETE));
+                                    completeList.add(0,new DownloadMusic(m, DownloadMusic.DOWNLOAD_COMPLETE));
                                 } else {
                                     downloadList.add(new DownloadMusic(m, DownloadMusic.DOWNLOAD_PAUSE));
                                 }
@@ -335,12 +335,14 @@ public class FileDownloadService extends Service {
                     }
                 }
                 return null;
-            },1000, complete -> {
+            },1000, (complete,length) -> {
                 if (complete) {//**下载完成 --- 广播
                     Music record = new Music(music.getSongName(), music.getArtistName(), music.getPath());
                     record.setDuration(music.getDuration());
                     record.saveOrUpdate();
+                    music.setHasDownload(music.getSize());
                     downloadMusic.setStatus(DownloadMusic.DOWNLOAD_COMPLETE);
+                    music.save();
                     complete(downloadMusic);
                 }
                 //**stop
@@ -352,9 +354,6 @@ public class FileDownloadService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    private void apkUpdate(String path){
-        IOUtil.onlineDataToLocal(path, Constant.LocalConfig.cachePath+"/app.apk");
     }
 
 
@@ -393,8 +392,7 @@ public class FileDownloadService extends Service {
     private void complete(DownloadMusic dm) {
         notifyNotification();
         downloadList.remove(dm);
-        //dm.getInternetMusicDetail().delete();
-        completeList.add(dm);
+        completeList.add(0,dm);
         listChange();
         Intent intent = new Intent(this, MusicPlay.class);
         intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);

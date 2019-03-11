@@ -1,6 +1,5 @@
 package com.web.moudle.musicDownload.ui;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.web.common.base.BaseActivity;
+import com.web.common.tool.MToast;
 import com.web.common.tool.Ticker;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
@@ -21,9 +21,9 @@ import com.web.misc.TopBarLayout;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
-import com.web.moudle.service.FileDownloadService;
 import com.web.moudle.musicEntry.ui.MusicDetailActivity;
 import com.web.moudle.net.NetApis;
+import com.web.moudle.service.FileDownloadService;
 import com.web.web.R;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import kotlinx.coroutines.Dispatchers;
 
-@SuppressLint("InlinedApi")
+
 public class MusicDownLoadActivity extends BaseActivity implements FileDownloadService.DownloadListener {
     private RecyclerView rv_download;
     private final List<DownloadMusic> dataList = new ArrayList<>();
@@ -61,7 +61,6 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         return R.layout.music_download;
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public void initView() {
         toolsBar = new ToolsBar(this);
@@ -123,7 +122,11 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
                 }break;
                 case R.id.iv_play:{
                     Music music=new Music(detail.getSongName(),detail.getArtistName(),detail.getPath());
-                    MusicPlay.play(this,music);
+                    if(Music.exist(music)){
+                        MusicPlay.play(this,music);
+                    }else{
+                        MToast.showToast(this,R.string.fileNotFound);
+                    }
                 }break;
                 case R.id.item_parent:{
                     MusicDetailActivity.actionStart(this,detail.getSongId());

@@ -70,7 +70,7 @@ object IOUtil{
 
     @JvmStatic
     @WorkerThread
-    fun streamAccess(inputStream: InputStream,randomAccess: RandomAccessFile,seekTo:Long=0,@WorkerThread progressCallBack:((Int)->Unit)?=null,notifyTimeGap: Long=-1,@WorkerThread stopCallback:((Boolean)->Unit)?=null,stop: StreamStop?=null){
+    fun streamAccess(inputStream: InputStream,randomAccess: RandomAccessFile,seekTo:Long=0,@WorkerThread progressCallBack:((Int)->Unit)?=null,notifyTimeGap: Long=-1,@WorkerThread stopCallback:((isComplete:Boolean,length:Long)->Unit)?=null,stop: StreamStop?=null){
         var update=false
         var job:Job?=null
         if(notifyTimeGap>0){
@@ -93,13 +93,13 @@ object IOUtil{
                     loop@while (true){
                         if(stop!=null&&stop.stop){//**判断是否暂停
                             job?.cancel()
-                            stopCallback?.invoke(false)
+                            stopCallback?.invoke(false,seekTo+offset)
                             break@loop
                         }
                         length=bis.read(byte)
                         if(length<0){//**传输完成
                             job?.cancel()
-                            stopCallback?.invoke(true)
+                            stopCallback?.invoke(true,seekTo+offset)
                             break
                         }
                         offset+=length

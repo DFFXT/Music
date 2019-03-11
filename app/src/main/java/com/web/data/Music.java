@@ -80,6 +80,10 @@ public class Music extends DataSupport implements Cloneable,Serializable {
         }
         return null;
     }
+    public static boolean exist(Music music){
+        File file=new File(music.path);
+        return file.isFile()&&file.exists();
+    }
 
     /**
      * 删除音乐,歌词
