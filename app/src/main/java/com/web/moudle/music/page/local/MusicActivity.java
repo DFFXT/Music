@@ -128,12 +128,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         @Override
         public void musicListChange(int group, List<MusicList<Music>> list) {
             if (list == null || list.size() == 0 || list.get(0).size() == 0) {
-                if (!SP.INSTANCE.getBoolean(Constant.spName, Constant.SpKey.noNeedScan,false)) {
-                    new AlertDialog.Builder(MusicActivity.this)
-                            .setMessage(ResUtil.getString(R.string.musicMain_noMusicAlert))
-                            .setNegativeButton(ResUtil.getString(R.string.no), null)
-                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, which) -> connect.scanLocalMusic()).create().show();
-                } else if (list != null) {
+                if (list != null) {
                     musicListLPage.setData(group, list.get(group));
                     groupList = list;
                     groupIndex = group;
@@ -228,7 +223,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             switch (pageList.get(viewPager.getCurrentItem()).getPageName()) {
                 case MusicListLPage.pageName: {
                     SelectorListAlert listAlert = new SelectorListAlert(MusicActivity.this, ResUtil.getString(R.string.songSheet));
-                    List<String> list = new ArrayList<>();
+                    ArrayList<String> list = new ArrayList<>();
                     for (MusicList ml : groupList) {
                         list.add(ml.getTitle());
                     }
@@ -239,15 +234,14 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                         @Override
                         public void select(View v, int position) {
                             connect.getList(position);
-                            listAlert.cancel();
+                            listAlert.dismiss();
                         }
 
                         @Override
                         public void remove(View v, int position) {
                         }
                     });
-                    listAlert.build();
-                    listAlert.show();
+                    listAlert.show(v);
                 }
                 break;
             }
@@ -482,21 +476,20 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                     public void remove(View v, int position) {
                         connect.removeWait(position);
                         if (connect.getWaitMusic().size() == 0) {
-                            listAlert.cancel();
+                            listAlert.dismiss();
                             return;
                         }
                         listAlert.setIndex(connect.getWaitIndex());
                     }
                 });
-                List<String> list = new ArrayList<>();
+                ArrayList<String> list = new ArrayList<>();
                 for (Music m : connect.getWaitMusic()) {
                     list.add(m.getMusicName());
                 }
                 listAlert.setCanTouchRemove(true);
                 listAlert.setList(list);
                 listAlert.setIndex(connect.getWaitIndex());
-                listAlert.build();
-                listAlert.show();
+                listAlert.show(v);
 
             }
             break;

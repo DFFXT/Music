@@ -16,6 +16,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
@@ -328,6 +329,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             MusicPlay.this.play.removeObserver(play);
         }
 
+        /**
+         * 在已经初始化或调用
+         * @param group
+         */
         public void getList(int group) {
             groupIndex = group;
             if (musicList.size() == 0)
@@ -802,8 +807,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         MediaQuery.getLocalList((res) -> {
             musicList.clear();
             musicList.addAll(res);
-            musicListChange();
-            gettingMusicLock.unlock();
+            if(musicList.get(0).size()==0){//**没有扫描媒体库
+                scanMusicMedia();
+            }else{
+                musicListChange();
+                gettingMusicLock.unlock();
+            }
             return null;
         });
 

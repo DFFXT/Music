@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.web.common.base.BaseViewHolder;
 import com.web.common.util.ResUtil;
+import com.web.common.util.ViewUtil;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
 import com.web.moudle.music.page.local.control.interf.RemoveItemListener;
 import com.web.web.R;
@@ -24,6 +25,9 @@ public class SimpleSelectListAdapter extends RecyclerView.Adapter<BaseViewHolder
     private List<String> list;
     private int index=-1;
     private ListSelectListener listener;
+    private int paddingStart= ViewUtil.dpToPx(16f);
+    private int paddingOther= ViewUtil.dpToPx(8f);
+    private int arrowSize=ViewUtil.dpToPx(16f);
     public SimpleSelectListAdapter(Context context, List<String> list){
         this.context=context;
         this.list=list;
@@ -46,10 +50,10 @@ public class SimpleSelectListAdapter extends RecyclerView.Adapter<BaseViewHolder
             }
         });
         if(index==position){
-            tv.setPadding(20,20,20,20);
+            tv.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
             Drawable drawable=context.getDrawable(R.drawable.icon_pause_black);
             if(drawable!=null){
-                drawable.setBounds(0,0,25,25);
+                drawable.setBounds(0,0,arrowSize,arrowSize);
                 tv.setCompoundDrawables(drawable,null,null,null);
             }
             tv.setTextColor(ResUtil.getColor(R.color.themeColor));
@@ -57,7 +61,7 @@ public class SimpleSelectListAdapter extends RecyclerView.Adapter<BaseViewHolder
         }else {
             tv.setBackgroundColor(Color.TRANSPARENT);
             tv.setCompoundDrawables(null,null,null,null);
-            tv.setPadding(45,20,20,20);
+            tv.setPadding(arrowSize+paddingStart,paddingOther,paddingOther,paddingOther);
             tv.setTextColor(ResUtil.getColor(R.color.textColorGray));
         }
     }

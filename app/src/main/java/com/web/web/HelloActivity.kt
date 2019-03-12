@@ -45,7 +45,6 @@ class HelloActivity : BaseActivity() {
                 connect = (service as MusicPlay.Connect)
                 connect?.addObserver(this@HelloActivity, observer)
                 if (PermissionManager.requestIOPermission(this@HelloActivity)) {
-                    Thread.sleep(3000)
                     connect?.getList(0)
                 }
             }

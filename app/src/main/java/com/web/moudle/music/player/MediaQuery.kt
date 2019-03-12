@@ -2,6 +2,7 @@ package com.web.moudle.music.player
 
 import android.content.Context
 import android.provider.MediaStore
+import com.web.common.base.log
 import com.web.common.constant.Constant
 import com.web.config.Shortcut
 import com.web.data.Music
@@ -89,7 +90,6 @@ object MediaQuery {
     fun getLocalList(callback: (ArrayList<MusicList<Music>>) -> Unit) {
         GlobalScope.launch (Dispatchers.IO){
             val musicList: ArrayList<MusicList<Music>> = arrayListOf()
-            musicList.clear()
             //**获取默认列表的歌曲
             val defList = DataSupport.findAll(Music::class.java)
 
@@ -140,6 +140,7 @@ object MediaQuery {
             }
             launch(Dispatchers.Main) {
                 callback(musicList)
+                log("--->callback")
             }
         }
     }

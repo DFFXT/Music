@@ -9,9 +9,12 @@ import android.graphics.drawable.Drawable
 import android.view.*
 import android.widget.PopupWindow
 
-open class BasePopupWindow(private val ctx: Context, val rootView: View) {
+open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
+                           val rootView: View,
+                           width:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
+                           height:Int=ViewGroup.LayoutParams.WRAP_CONTENT) {
 
-    private val popupWindow: PopupWindow = PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    private val popupWindow: PopupWindow = PopupWindow(width, height)
     var dismissCallback:(()->Unit)?=null
     init {
         popupWindow.contentView = rootView
@@ -69,7 +72,8 @@ open class BasePopupWindow(private val ctx: Context, val rootView: View) {
         popupWindow.setBackgroundDrawable(drawable)
     }
 
-    fun show(parent: View, gravity: Int, x: Int, y: Int) {
+    @JvmOverloads
+    fun show(parent: View, gravity: Int=Gravity.CENTER, x: Int=0, y: Int=0) {
         popupWindow.update()
         popupWindow.showAtLocation(parent, gravity, x, y)
         applyWindowDarkAlpha(1f, 0.5f, 300)

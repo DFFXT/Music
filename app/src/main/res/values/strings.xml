@@ -6,6 +6,7 @@
 
 	<string name="webview_choose">View</string>
     <string name="app_name">音乐盒</string>
+    <string name="app_name_dev">音乐盒dev</string>
     <string name="about_app">音乐盒 %1$s</string>
 	<string name="hello_desc">开始音乐的旅行</string>
     <string name="action_settings">刷新</string>

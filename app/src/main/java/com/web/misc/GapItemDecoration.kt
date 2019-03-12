@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
  */
 open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,private val top:Int=0,
                                                        private val right:Int=0,private val bottom:Int=0,
+                                                       private val remainTopPadding:Boolean=false,
                                                        private val remainEndPadding:Boolean=false,
                                                        private val remainBottomPadding:Boolean=false): androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         parent.adapter?.let {
             val lm=parent.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
             if(lm.orientation== androidx.recyclerview.widget.LinearLayoutManager.VERTICAL){
-                if(parent.getChildAdapterPosition(view)!=0){
+                if(remainTopPadding||parent.getChildAdapterPosition(view)!=0){
                     outRect.top=top
                 }
                 outRect.left=left

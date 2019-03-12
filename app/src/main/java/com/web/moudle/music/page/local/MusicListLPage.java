@@ -88,7 +88,7 @@ public class MusicListLPage extends BaseMusicPage {
                 }break;
                 case R.id.setAsLiske:{
                     List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
-                    List<String> sheetNameList=new ArrayList<>();
+                    ArrayList<String> sheetNameList=new ArrayList<>();
                     for(SongSheet sheet:list){
                         sheetNameList.add(sheet.getName());
                     }
@@ -100,18 +100,18 @@ public class MusicListLPage extends BaseMusicPage {
                             list.get(index).add(data.get(position).getId());
                             connect.groupChange();
                             SongSheetManager.INSTANCE.getSongSheetList().save();
-                            alert.cancel();
+                            alert.dismiss();
                         }else {
                             String name="sheet-"+SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
                             SongSheetManager.INSTANCE.createNewSongSheet(name);
                             sheetNameList.add(index,name);
+                            alert.setList(sheetNameList);
                             alert.getAdapter().notifyItemRangeInserted(index,1);
                             connect.groupChange();
                         }
                         return null;
                     });
-                    alert.build();
-                    alert.show();
+                    alert.show(view);
                 }break;
                 case R.id.detailInfo:{//**详细信息
                     showDetail(data.get(position));

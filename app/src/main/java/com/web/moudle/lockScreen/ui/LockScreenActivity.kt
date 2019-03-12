@@ -1,6 +1,7 @@
 package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.app.KeyguardManager
 import android.content.ComponentName
 import android.content.Context
@@ -76,7 +77,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         loadData()
         val mode=LockScreenSettingActivity.getMode()
         when(mode){
-            BG_MODE_IMAGE-> {
+            LockScreenSettingActivity.BG_MODE_IMAGE-> {
 
                 ImageLoad.loadAsBitmap(LockScreenSettingActivity.getBgImagePath()).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -334,12 +335,12 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         return super.onKeyDown(keyCode, event)
     }
     companion object {
-        const val BG_MODE_COLOR="color"
-        const val BG_MODE_IMAGE="image"
-        fun actionStart(ctx:Context){
+
+        fun actionStart(ctx:Activity){
             val intent=Intent(ctx,LockScreenActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ctx.startActivity(intent)
+            ctx.overridePendingTransition(0,0)
         }
     }
 }

@@ -29,6 +29,13 @@ android {
             applicationIdSuffix ".release"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.release
+            //**manifest占位符
+            manifestPlaceholders = [APP_NAME:"@string/app_name"]
+        }
+        debug{
+            minifyEnabled false//不进行混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            manifestPlaceholders = [APP_NAME:"@string/app_name_dev"]
         }
     }
 
