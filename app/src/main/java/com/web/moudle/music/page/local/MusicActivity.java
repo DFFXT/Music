@@ -561,6 +561,13 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         moveTaskToBack(true);
     }
 
+
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
+    }
+
     public void onDestroy() {
 
         if (serviceConnection != null) {
@@ -579,8 +586,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
 
-    public static void actionStart(Activity context){
-        context.startActivityForResult(new Intent(context,MusicActivity.class),0);
+    public static void actionStartForResult(Activity context,int code){
+        context.startActivityForResult(new Intent(context,MusicActivity.class),code);
     }
 
 }

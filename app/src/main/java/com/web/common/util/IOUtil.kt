@@ -4,6 +4,7 @@ import android.text.TextUtils
 import android.util.Base64
 
 import androidx.annotation.WorkerThread
+import com.web.common.constant.Constant
 import com.web.moudle.music.player.bean.DiskObject
 import kotlinx.coroutines.*
 import java.io.*
@@ -188,5 +189,12 @@ object IOUtil{
             e.printStackTrace()
         }
         return null
+    }
+    @JvmStatic
+    fun log(str:String){
+        val file=File(Constant.LocalConfig.rootPath+"/log.txt")
+        FileOutputStream(file,true).use {
+            it.write("$str\n\n".toByteArray(Charsets.UTF_8))
+        }
     }
 }
