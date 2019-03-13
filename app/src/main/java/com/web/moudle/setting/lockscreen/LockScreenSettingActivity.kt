@@ -146,6 +146,7 @@ class LockScreenSettingActivity : BaseActivity() {
             if (it != null) {
                 setBgColor(it)
                 setMode(BG_MODE_COLOR)
+                switchLockScreenMode(BG_MODE_COLOR)
                 view_s_lock_colorSelected.setImageDrawable(ColorDrawable(it))
             }
         }
@@ -193,6 +194,7 @@ class LockScreenSettingActivity : BaseActivity() {
                 }
                 setBgImagePath(path)
                 setMode(BG_MODE_IMAGE)
+                switchLockScreenMode(BG_MODE_IMAGE)
                 setBackgroundImage(path)
                 tmpFile.delete()
             } catch (e: Exception) {

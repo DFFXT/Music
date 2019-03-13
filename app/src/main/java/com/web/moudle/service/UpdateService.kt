@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.content.FileProvider
 import com.web.common.base.BaseActivity
+import com.web.common.base.log
 import com.web.common.bean.Version
 import com.web.common.constant.Constant
 import com.web.common.util.IOUtil
@@ -16,6 +17,7 @@ import com.web.moudle.notification.FileDownloadNotification
 import com.web.web.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -55,7 +57,7 @@ class UpdateService : Service() {
                     progressCallBack = {progress,max->
                         notification.notify(ResUtil.getString(R.string.setting_updateTitle,ResUtil.getString(R.string.app_name)),progress*100/(max?:-1).toFloat())
                     },
-                    notifyTimeGap = 1000,
+                    notifyTimeGap = 200,
                     stopCallback = {
                         notification.cancel()
                     })

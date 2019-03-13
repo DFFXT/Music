@@ -32,9 +32,13 @@ import com.web.data.PlayerConfig;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
+import com.web.moudle.music.page.local.control.interf.LocalSheetListener;
+import com.web.moudle.music.page.local.control.ui.LocalSheetListAlert;
 import com.web.moudle.music.page.local.control.ui.SelectorListAlert;
 import com.web.moudle.music.page.recommend.RecommendPage;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.music.player.SongSheetManager;
+import com.web.moudle.music.player.bean.SongSheetList;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.musicEntry.ui.PlayerObserver;
 import com.web.moudle.musicSearch.ui.InternetMusicActivity;
@@ -185,7 +189,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     @Override
     public void initView() {
 
-        WindowUtil.setImmersedStatusBar(getWindow());
+        //WindowUtil.setImmersedStatusBar(getWindow());
         findID();
         setToolbar();
         musicListLPage = new MusicListLPage();
@@ -222,7 +226,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         tv_title.setOnClickListener(v -> {
             switch (pageList.get(viewPager.getCurrentItem()).getPageName()) {
                 case MusicListLPage.pageName: {
-                    SelectorListAlert listAlert = new SelectorListAlert(MusicActivity.this, ResUtil.getString(R.string.songSheet));
+                    LocalSheetListAlert listAlert = new LocalSheetListAlert(MusicActivity.this, ResUtil.getString(R.string.songSheet));
                     ArrayList<String> list = new ArrayList<>();
                     for (MusicList ml : groupList) {
                         list.add(ml.getTitle());
@@ -230,7 +234,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                     listAlert.setList(list);
                     listAlert.setIndex(groupIndex);
                     listAlert.setCanTouchRemove(false);
-                    listAlert.setListSelectListener(new ListSelectListener() {
+                    listAlert.setListSelectListener(new LocalSheetListener() {
                         @Override
                         public void select(View v, int position) {
                             connect.getList(position);
@@ -239,6 +243,15 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
                         @Override
                         public void remove(View v, int position) {
+                        }
+
+                        @Override
+                        public void saveEdit(String name,int index) {
+                            if(groupList.get(index).getTitle().equals(name))return;
+                            SongSheetList list=SongSheetManager.INSTANCE.getSongSheetList();
+                            list.getSongList().get(index-1).setName(name);
+                            list.save();
+                            groupList.get(index).setTitle(name);
                         }
                     });
                     listAlert.show(v);

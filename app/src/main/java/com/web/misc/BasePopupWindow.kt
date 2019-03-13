@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.IBinder
 import android.view.*
 import android.widget.PopupWindow
 
@@ -16,6 +17,7 @@ open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
 
     private val popupWindow: PopupWindow = PopupWindow(width, height)
     var dismissCallback:(()->Unit)?=null
+    var wt:IBinder?=null
     init {
         popupWindow.contentView = rootView
         setBackground(ColorDrawable(Color.TRANSPARENT))
@@ -64,6 +66,7 @@ open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
         animator.addUpdateListener { animation ->
             lp.alpha = animation.animatedValue as Float
             window.attributes = lp
+            wt=rootView.windowToken
         }
         animator.start()
     }
@@ -71,6 +74,7 @@ open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
     fun setBackground(drawable: Drawable) {
         popupWindow.setBackgroundDrawable(drawable)
     }
+
 
     @JvmOverloads
     fun show(parent: View, gravity: Int=Gravity.CENTER, x: Int=0, y: Int=0) {
@@ -82,7 +86,8 @@ open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
         show(parent,Gravity.CENTER,0,0)
     }
 
-    fun dismiss() {
+    open fun dismiss() {
         popupWindow.dismiss()
     }
+
 }

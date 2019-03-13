@@ -1,8 +1,11 @@
 package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.app.KeyguardManager
+import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -23,6 +26,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
 import com.web.common.base.BaseGlideTarget
@@ -91,7 +96,6 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                         blur.forEach(allOut)
                         allOut.copyTo(to)
                         rs.destroy()
-                        Intent.ACTION_PICK
                         rootView_lockScreenActivity.background=BitmapDrawable(resources,to)
                     }
                 })
@@ -126,6 +130,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
             private var animatorRun=false
             private var preDis=0f
             private var marginAdd=true
+            @SuppressLint("ClickableViewAccessibility")
             override fun onTouch(v: View?, e: MotionEvent?): Boolean {
                 when(e?.action){
                     MotionEvent.ACTION_DOWN->{
@@ -253,7 +258,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         lyricView_lockScreen.lyrics=lyrics
     }
 
-    fun loadData() {
+    private fun loadData() {
         val d=ResUtil.getDrawable(R.drawable.icon_lockscreen_slide_arrow)
         arrowBitmap[0]=ResUtil.getBitmapFromDrawable(d)
         val matrix=Matrix()
@@ -336,11 +341,11 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     }
     companion object {
 
-        fun actionStart(ctx:Activity){
+        fun actionStart(ctx:Context){
             val intent=Intent(ctx,LockScreenActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            ctx.startActivity(intent)
-            ctx.overridePendingTransition(0,0)
+            val compat=ActivityOptions.makeCustomAnimation(ctx,0,0)
+            ctx.startActivity(intent,compat.toBundle())
         }
     }
 }

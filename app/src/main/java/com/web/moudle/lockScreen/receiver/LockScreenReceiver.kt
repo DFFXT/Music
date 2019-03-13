@@ -9,6 +9,6 @@ import com.web.moudle.lockScreen.ui.LockScreenActivity
 class LockScreenReceiver:BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if(context==null||intent==null||intent.action==null||intent.action!=Intent.ACTION_SCREEN_OFF) return
-        LockScreenActivity.actionStart(context as Activity)
+        LockScreenActivity.actionStart(context)
     }
 }
