@@ -35,7 +35,7 @@ abstract class BaseListPopWindow<T> @JvmOverloads constructor(
             field.addAll(value)
         }
     private var rv:RecyclerView
-    private var listSelectListener:ListSelectListener?=null
+    var listSelectListener:ListSelectListener?=null
     val adapter:BaseAdapter<T>
 
     init {
@@ -44,13 +44,14 @@ abstract class BaseListPopWindow<T> @JvmOverloads constructor(
         rv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         this.adapter=this.adapter()
         rv.adapter= adapter
-        listSelectListener= this.listener()
     }
 
     fun setCanTouchRemove(canTouchRemove:Boolean){
         if (canTouchRemove) {
             val callback = MyItemTouchHelperCallBack(RemoveItemListener { holder, _ ->
                 listSelectListener?.remove(holder.itemView,holder.adapterPosition)
+                list.removeAt(holder.adapterPosition)
+                adapter.notifyItemRemoved(holder.adapterPosition)
             })
             val helper = ItemTouchHelper(callback)
             helper.attachToRecyclerView(rv)
@@ -63,8 +64,6 @@ abstract class BaseListPopWindow<T> @JvmOverloads constructor(
     abstract fun adapter():BaseAdapter<T>
     @IdRes
     abstract fun recyclerView(): Int
-
-    open fun listener():ListSelectListener?=null
 
 
 

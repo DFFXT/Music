@@ -5,20 +5,18 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.web.common.base.BaseActivity;
 import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.misc.DrawableItemDecoration;
 import com.web.misc.IndexBar;
+import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.adapter.LocalMusicAdapter;
 import com.web.moudle.music.page.local.control.ui.SingleTextListAlert;
@@ -43,7 +41,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import kotlin.jvm.functions.Function1;
 
 public class MusicListLPage extends BaseMusicPage {
     public final static String pageName="MusicList";
@@ -54,6 +51,7 @@ public class MusicListLPage extends BaseMusicPage {
     private MusicPlay.Connect connect;
     private int groupIndex=0;
     private Drawable arrowDown;
+    private ToolsBar toolsBar;
 
 
 
@@ -87,31 +85,7 @@ public class MusicListLPage extends BaseMusicPage {
                     }
                 }break;
                 case R.id.setAsLiske:{
-                    List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
-                    ArrayList<String> sheetNameList=new ArrayList<>();
-                    for(SongSheet sheet:list){
-                        sheetNameList.add(sheet.getName());
-                    }
-                    sheetNameList.add("新建");
-                    SingleTextListAlert alert=new SingleTextListAlert(getContext(),"歌单");
-                    alert.setList(sheetNameList);
-                    alert.setItemClickListener(index->{
-                        if(index!=sheetNameList.size()-1){
-                            list.get(index).add(data.get(position).getId());
-                            connect.groupChange();
-                            SongSheetManager.INSTANCE.getSongSheetList().save();
-                            alert.dismiss();
-                        }else {
-                            String name="sheet-"+SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
-                            SongSheetManager.INSTANCE.createNewSongSheet(name);
-                            sheetNameList.add(index,name);
-                            alert.setList(sheetNameList);
-                            alert.getAdapter().notifyItemRangeInserted(index,1);
-                            connect.groupChange();
-                        }
-                        return null;
-                    });
-                    alert.show(view);
+                    setAsLike(data.get(position).getId());
                 }break;
                 case R.id.detailInfo:{//**详细信息
                     showDetail(data.get(position));
@@ -123,6 +97,38 @@ public class MusicListLPage extends BaseMusicPage {
             }
             return false;
         });
+    }
+
+
+    private void setAsLike(int...musicIds){
+        List<SongSheet> list=SongSheetManager.INSTANCE.getSongSheetList().getSongList();
+        ArrayList<String> sheetNameList=new ArrayList<>();
+        for(SongSheet sheet:list){
+            sheetNameList.add(sheet.getName());
+        }
+        sheetNameList.add("");
+        SingleTextListAlert alert=new SingleTextListAlert(getContext(),ResUtil.getString(R.string.songSheet));
+        alert.setList(sheetNameList);
+        alert.setItemClickListener(index->{
+            if(index!=sheetNameList.size()-1){
+                for(int id:musicIds){
+                    list.get(index).add(id);
+                }
+                connect.groupChange();
+                SongSheetManager.INSTANCE.getSongSheetList().save();
+                alert.dismiss();
+            }else {
+                String name="sheet-"+SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
+                sheetNameList.add(sheetNameList.size()-1,name);
+                SongSheetManager.INSTANCE.createNewSongSheet(name);
+                alert.setList(sheetNameList);
+                alert.getAdapter().notifyItemRangeInserted(index,1);
+                alert.getAdapter().notifyItemRangeChanged(index,2);
+                connect.groupChange();
+            }
+            return null;
+        });
+        alert.show(rv_musicList);
     }
 
     /**
@@ -145,40 +151,45 @@ public class MusicListLPage extends BaseMusicPage {
      */
     private void showMultiSelect(View v){
         adapter.setSelect(true);
-        v.startActionMode(new ActionMode.Callback2() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.like_child_long_click,menu);
-                return true;
-            }
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.remove:{
+        createToolsBar();
+        toolsBar.show();
+    }
+    private void createToolsBar(){
+        if(toolsBar==null){
+            toolsBar=new ToolsBar((BaseActivity) getActivity());
+            toolsBar.addItem(0,R.string.remove)
+                    .addItem(1,R.string.deleteOrigin)
+                    .addItem(2,R.string.addToGroup)
+                    .addItem(3,R.string.selectAll)
+                    .setBackClick(()->{
+                        adapter.setSelect(false);
+                        return null;
+                    });
+            toolsBar.setItemClick((id)->{
+                switch (id){
+                    case 0:{
                         connect.delete(false,groupIndex, adapter.getSelectList((music,index) -> index));
                         adapter.getSelectSet().clear();
                     }break;
-                    case R.id.deleteOrigin:{
+                    case 1:{
                         connect.delete(true,groupIndex, adapter.getSelectList((music,index) -> index));
                         adapter.getSelectSet().clear();
                     }break;
-                    case R.id.selectAll:{
+                    case 2:{
+                        List<Integer> list=adapter.getSelectList((music,index)-> music.getId());
+                        int arr[]=new int[list.size()];
+                        for(int i=0;i<list.size();i++){
+                            arr[i]=list.get(i);
+                        }
+                        setAsLike(arr);
+                    }break;
+                    case 3:{
                         adapter.setSelectAll(!adapter.isSelectAll());
                     }break;
                 }
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                adapter.setSelect(false);
-            }
-        },ActionMode.TYPE_PRIMARY);
+                return null;
+            });
+        }
     }
 
 

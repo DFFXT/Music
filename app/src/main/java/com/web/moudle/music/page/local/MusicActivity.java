@@ -9,8 +9,6 @@ import android.graphics.Outline;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewOutlineProvider;
@@ -24,11 +22,11 @@ import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
-import com.web.common.util.WindowUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
+import com.web.misc.TopBarLayout;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
@@ -55,8 +53,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -73,11 +69,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private ImageView iv_singerIcon;
     private ImageView pre, pause, next, musicplay_type;//--各种图标
 
-    private Toolbar toolbar;
+    private TopBarLayout toolbar;
 
     private DrawerLayout drawer;
     private ViewPager viewPager;
-    private PagerAdapter adapter;
+
     private MusicListLPage musicListLPage;
     private MusicPlay.Connect connect;
     private List<MusicList<Music>> groupList;
@@ -213,16 +209,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     @SuppressLint("RestrictedApi")
     private void setToolbar() {
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(ResUtil.getString(R.string.page_local));
-        tv_title = (TextView) toolbar.getChildAt(0);
+        toolbar.setStartImageListener(v-> drawer.openDrawer(GravityCompat.START));
+        toolbar.getStartImageView().setPadding(10,12,10,12);
+        toolbar.getEndImageView().setPadding(10,10,10,10);
+        toolbar.setEndImageListener(v->SearchActivity.actionStart(MusicActivity.this, RESULT_CODE_SEARCH));
+        tv_title = toolbar.setMainTitle(ResUtil.getString(R.string.page_local));
         tv_title.setCompoundDrawableTintMode(PorterDuff.Mode.ADD);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.three_h_line);
-        }
-        toolbar.setNavigationOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
         tv_title.setOnClickListener(v -> {
             switch (pageList.get(viewPager.getCurrentItem()).getPageName()) {
                 case MusicListLPage.pageName: {
@@ -234,7 +226,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                     listAlert.setList(list);
                     listAlert.setIndex(groupIndex);
                     listAlert.setCanTouchRemove(false);
-                    listAlert.setListSelectListener(new LocalSheetListener() {
+                    listAlert.setListener(new LocalSheetListener() {
                         @Override
                         public void select(View v, int position) {
                             connect.getList(position);
@@ -243,6 +235,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
                         @Override
                         public void remove(View v, int position) {
+                            if(position==0){//**默认歌单无法删除
+                                listAlert.dismiss();
+                                return;
+                            }
+                            SongSheetManager.INSTANCE.getSongSheetList().removeSongSheet(position-1);
+                            connect.groupChange();
                         }
 
                         @Override
@@ -264,18 +262,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private TextView tv_title;
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.search) {
-            SearchActivity.actionStart(MusicActivity.this, RESULT_CODE_SEARCH);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
-    public boolean onCreateOptionsMenu(Menu m) {
-        getMenuInflater().inflate(R.menu.music_toolbar_item, m);
-        return true;
-    }
 
     /**
      * 获取传输的数据
@@ -284,9 +271,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent.getData() != null) {
             String path = intent.getData().getPath();
-            File file;
             if (path != null) {
-                file = new File(path);
+                File file = new File(path);
                 String name = file.getName();
                 String out[] = new String[2];
                 Shortcut.getName(out, name);
@@ -370,7 +356,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     private void setAdapter() {//--设置本地适配器
         viewPager.setOffscreenPageLimit(2);
-        viewPager.setAdapter(adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @NotNull
             @Override
             public Fragment getItem(int position) {
@@ -479,7 +465,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                 if (listAlert == null) {
                     listAlert = new SelectorListAlert(this, ResUtil.getString(R.string.playList));
                 }
-                listAlert.setListSelectListener(new ListSelectListener() {
+                listAlert.setListener(new ListSelectListener() {
                     @Override
                     public void select(View v, int position) {
                         connect.playWait(position);

@@ -12,16 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.web.misc.TopBarLayout
             android:fitsSystemWindows="true"
             android:id="@+id/toolbar"
-            android:background="@color/colorPrimaryDark"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:background="@color/themeColor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:topBar_startImage="@drawable/three_h_line"
+            app:topBar_mainTitleText="@string/page_local"
+            app:topBar_mainTitleColor="@color/white"
+            app:topBar_endImage="@drawable/ic_search_black_24dp"/>
+
 
 
 

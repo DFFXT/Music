@@ -1,13 +1,11 @@
 package com.web.moudle.music.page.local.control.ui
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseAdapter
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.web.R
-
 
 
 class SelectorListAlert(context: Context, title: String) : BaseListPopWindow<String>(
@@ -20,8 +18,9 @@ class SelectorListAlert(context: Context, title: String) : BaseListPopWindow<Str
     fun setIndex(index: Int) {
         (adapter as SimpleSelectListAdapter).setIndex(index)
     }
-    fun setListSelectListener(listener:ListSelectListener){
+    fun setListener(listener: ListSelectListener){
         (adapter as SimpleSelectListAdapter).setListener(listener)
+        listSelectListener=listener
     }
 
     override fun adapter(): BaseAdapter<String> {

@@ -5,8 +5,10 @@ import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.ViewStubCompat
 import com.web.common.base.BaseActivity
+import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.web.R
 import kotlinx.android.synthetic.main.layout_action_tools.view.*
@@ -54,12 +56,16 @@ class ToolsBar(private val ctx:BaseActivity) {
         }
     }
 
-    fun removeAllItem(){
+    fun removeAllItem():ToolsBar{
         rootView?.layout_itemBox?.removeAllViews()
         itemIds.clear()
         itemNames.clear()
+        return this
     }
-    fun addItem(id:Int,itemName:String){
+    fun addItem(id:Int,@StringRes itemName:Int):ToolsBar{
+        return addItem(id,ResUtil.getString(itemName))
+    }
+    fun addItem(id:Int,itemName:String):ToolsBar{
         if(!itemIds.contains(id)){
             itemNames.add(itemName)
             itemIds.add(id)
@@ -69,6 +75,7 @@ class ToolsBar(private val ctx:BaseActivity) {
             val tv=createItem(id,itemName)
             rootView?.layout_itemBox?.addView(tv)
         }
+        return this
     }
     private var addPadding=false
     private fun addPadding(add:Boolean):Boolean{//**添加删除padding 返回是否真正添加

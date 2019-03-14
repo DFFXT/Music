@@ -1,6 +1,5 @@
 package com.web.moudle.music.page.local.control.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -14,10 +13,10 @@ open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
     private val padding=ViewUtil.dpToPx(10f)
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String?) {
         if(position!=itemCount-1){
-            (holder.rootView as TextView).text = item
+            (holder.itemView as TextView).text = item
         }
-        holder.rootView.setPadding(padding,padding,padding,padding)
-        holder.rootView.setOnClickListener {
+        holder.itemView.setPadding(padding,padding,padding,padding)
+        holder.itemView.setOnClickListener {
             itemClickListener?.invoke(position)
         }
     }

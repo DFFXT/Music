@@ -17,12 +17,12 @@ import androidx.annotation.DrawableRes
 import com.web.web.R
 
 class TopBarLayout : FrameLayout {
-    private var view: View = LayoutInflater.from(context).inflate(R.layout.layout_topar, this, false)
-    private var startImageView: ImageView
-    private var endImageView: ImageView
-    private var mainTitle: TextView
-    private var subtitle: TextView
-    private var endText: TextView
+    private val view: View = LayoutInflater.from(context).inflate(R.layout.layout_topar, this, false)
+    val startImageView: ImageView
+    val endImageView: ImageView
+    private val mainTitle: TextView
+    private val subtitle: TextView
+    private val endText: TextView
     private var mainTitleColor:Int=Color.WHITE
         set(value) {
             field=value

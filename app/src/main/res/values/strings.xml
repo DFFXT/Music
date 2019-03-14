@@ -91,10 +91,12 @@
 
 
 	<string name="musicPlay">播放</string>
-	<string name="deleteOrigin">删除源文件</string>
+	<string name="deleteOriginFile">删除源文件</string>
+	<string name="deleteOrigin">删除源</string>
 	<string name="detailInfo">详细信息</string>
 	<string name="multiSelect">多选</string>
 	<string name="setAsLike">添加到分组</string>
+	<string name="addToGroup">分组</string>
 	<string name="remove">移除</string>
 	<string name="selectAll">全选</string>
 
