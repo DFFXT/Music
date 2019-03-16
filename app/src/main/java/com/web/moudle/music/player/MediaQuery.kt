@@ -26,6 +26,7 @@ object MediaQuery {
     fun scanMedia(ctx: Context, callback: (isOk: Boolean) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             SP.putValue(Constant.spName, Constant.SpKey.noNeedScan, true)
+            var hasMusic=false
             ctx.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null).use { cursor ->
                 if (cursor == null) {
                     launch(Dispatchers.Main) {
@@ -44,6 +45,7 @@ object MediaQuery {
                     for (type in types) {
                         if (!type.isScanable) continue
                         if (path != null && path.toLowerCase().endsWith(type.scanSuffix.toLowerCase()) && size >= type.minFileSize) {
+                            hasMusic=true
                             val lastSeparatorChar = path.lastIndexOf(File.separatorChar)
                             //**文件名包含后缀
                             var fileName: String = path
@@ -77,7 +79,7 @@ object MediaQuery {
                 }
             }
             launch (Dispatchers.Main){
-                callback(true)
+                callback(hasMusic)
             }
         }
 

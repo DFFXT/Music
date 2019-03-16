@@ -3,6 +3,7 @@ package com.web.common.base
 import android.annotation.SuppressLint
 import android.content.Context
 import com.web.common.constant.Apk
+import com.web.common.constant.Constant
 import com.web.common.util.UncaughtException
 import com.web.moudle.net.proxy.InternetProxy
 import io.flutter.view.FlutterMain
@@ -14,10 +15,11 @@ class MyApplication : LitePalApplication(){
         super.onCreate()
         Thread.setDefaultUncaughtExceptionHandler(UncaughtException)
         context= applicationContext
+
         InternetProxy.startProxy()
         FlutterMain.startInitialization(this)
         //proxy= HttpProxyCacheServer(this)
-
+        Constant.LocalConfig.initPath()
     }
     companion object {
         @SuppressLint("StaticFieldLeak")
