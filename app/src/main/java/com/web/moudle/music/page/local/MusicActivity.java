@@ -22,6 +22,7 @@ import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
+import com.web.common.util.ViewUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
@@ -202,15 +203,16 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth() / 10f);
             }
         });
-        //iv_singerIcon.setOnClickListener(v-> LyricsActivity.actionStart(this));
     }
 
     @SuppressLint("RestrictedApi")
     private void setToolbar() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setStartImageListener(v-> drawer.openDrawer(GravityCompat.START));
-        toolbar.getStartImageView().setPadding(10,12,10,12);
-        toolbar.getEndImageView().setPadding(10,10,10,10);
+        int paddingTop= ViewUtil.dpToPx(8);
+        int paddingStart=ViewUtil.dpToPx(6);
+        toolbar.getStartImageView().setPadding(paddingStart,paddingTop,paddingStart,paddingTop);
+        toolbar.getEndImageView().setPadding(paddingStart,paddingStart,paddingStart,paddingStart);
         toolbar.setEndImageListener(v->SearchActivity.actionStart(MusicActivity.this, RESULT_CODE_SEARCH));
         tv_title = toolbar.setMainTitle(ResUtil.getString(R.string.page_local));
         tv_title.setCompoundDrawableTintMode(PorterDuff.Mode.ADD);

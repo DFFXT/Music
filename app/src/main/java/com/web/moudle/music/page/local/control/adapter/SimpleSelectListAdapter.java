@@ -1,6 +1,5 @@
 package com.web.moudle.music.page.local.control.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -51,8 +50,9 @@ public class SimpleSelectListAdapter extends BaseAdapter<String> implements Remo
         });
         if(index==position){
             tv.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
-            Drawable drawable=tv.getContext().getDrawable(R.drawable.icon_pause_black);
+            Drawable drawable=tv.getContext().getDrawable(R.drawable.icon_pause_fill);
             if(drawable!=null){
+                drawable.setTint(ResUtil.getColor(R.color.themeColor));
                 drawable.setBounds(0,0,arrowSize,arrowSize);
                 tv.setCompoundDrawables(drawable,null,null,null);
             }

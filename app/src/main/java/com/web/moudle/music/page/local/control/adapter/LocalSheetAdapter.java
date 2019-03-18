@@ -21,6 +21,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * 歌单选择adapter
+ */
 public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItemListener {
     private List<String> list;
     private int index=-1;
@@ -53,8 +56,9 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
         });
         if(index==position){
             tv.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
-            Drawable drawable=tv.getContext().getDrawable(R.drawable.icon_pause_black);
+            Drawable drawable=tv.getContext().getDrawable(R.drawable.icon_pause_fill);
             if(drawable!=null){
+                drawable.setTint(ResUtil.getColor(R.color.themeColor));
                 drawable.setBounds(0,0,arrowSize,arrowSize);
                 tv.setCompoundDrawables(drawable,null,null,null);
             }

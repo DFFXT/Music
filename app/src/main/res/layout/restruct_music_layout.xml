@@ -21,7 +21,7 @@
             app:topBar_startImage="@drawable/three_h_line"
             app:topBar_mainTitleText="@string/page_local"
             app:topBar_mainTitleColor="@color/white"
-            app:topBar_endImage="@drawable/ic_search_black_24dp"/>
+            app:topBar_endImage="@drawable/icon_search"/>
 
 
 
