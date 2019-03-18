@@ -826,6 +826,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             if (isOk) {
                 getMusicList();
                 MToast.showToast(MyApplication.context, ResUtil.getString(R.string.scanOver));
+            }else{
+                MToast.showToast(MyApplication.context, ResUtil.getString(R.string.scanOver_noMusic));
+                play.musicListChange(0,null);
             }
             scanningMusicLock.unlock();
             return null;

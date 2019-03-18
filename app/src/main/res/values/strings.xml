@@ -13,6 +13,7 @@
 	<string name="getlist">扫描本地歌曲</string>
 	<string name="musicIsScanning">正在扫描音乐</string>
 	<string name="scanOver">扫描完成</string>
+	<string name="scanOver_noMusic">没有扫描到音乐</string>
 	<string name="aim">web</string>
 	<string name="yes">确认</string>
 	<string name="no">取消</string>
