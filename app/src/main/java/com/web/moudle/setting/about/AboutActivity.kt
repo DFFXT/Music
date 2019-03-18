@@ -7,6 +7,7 @@ import com.web.common.bean.Version
 import com.web.common.constant.Apk
 import com.web.common.constant.Constant
 import com.web.common.util.ResUtil
+import com.web.misc.imageDraw.DynamicImageDraw
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ class AboutActivity:BaseActivity() {
                 tv_updateTime.text=v?.publishTime
             }
         }
+        iv_icon.afterDraw=DynamicImageDraw()
     }
 
     companion object {

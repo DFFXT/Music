@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.ViewStubCompat
 import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
+import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
 import com.web.web.R
 import kotlinx.android.synthetic.main.layout_action_tools.view.*
@@ -92,7 +93,7 @@ class ToolsBar(private val ctx:BaseActivity) {
         val tv=TextView(ctx)
         tv.text=itemName
         tv.setTextColor(Color.WHITE)
-        tv.setPadding(0,0,20,0)
+        tv.setPadding(0,0,ViewUtil.dpToPx(16f),0)
         tv.setOnClickListener{
             itemClick?.invoke(id)
         }

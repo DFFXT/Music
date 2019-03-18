@@ -73,7 +73,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         topBarLayout.setMainTitle(ResUtil.getString(R.string.downloadManager));
         ViewUtil.transparentStatusBar(getWindow());
 
-        looper=new Ticker(500, Dispatchers.getMain(),()->{
+        looper=new Ticker(500,0, Dispatchers.getMain(),()->{
             runnable.run();
             return null;
         });

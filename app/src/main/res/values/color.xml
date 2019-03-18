@@ -16,6 +16,8 @@
     <color name="dark_transparent">#aa000000</color>
     <color name="lightBlue">#93bff1</color>
     <color name="textColor_9">#999999</color>
+    <color name="textColor_3">#333333</color>
+    <color name="textColor_6">#666666</color>
     <color name="gray">#eeeeeeff</color>
     <color name="dim_transparent">#aaaaaaee</color>
     <color name="deepDark">#555555ff</color>

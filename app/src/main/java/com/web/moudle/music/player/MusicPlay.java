@@ -76,7 +76,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     public final static int COMMAND_RESULT_CODE_STATUS = 2;//**result code 标识为播放状态
 
     private MediaPlayer player = new MediaPlayer();
-    private MyNotification notification = new MyNotification(this);
+    private MyNotification notification;
 
 
     private List<MusicList<Music>> musicList = new ArrayList<>();//**音乐列表
@@ -145,7 +145,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     @Override
     public void onCreate() {
         super.onCreate();
-        ticker = new Ticker(500, Dispatchers.getMain(), () -> {
+        notification = new MyNotification(this);
+        ticker = new Ticker(500,0, Dispatchers.getMain(), () -> {
             play.currentTime(groupIndex, childIndex, player.getCurrentPosition());
             sendDuring(player.getCurrentPosition());
             return null;
@@ -621,11 +622,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         if (music == null) return;
         play.play();
         player.start();
-        notification.setName(music.getMusicName());
-        notification.setSinger(music.getSinger());
-        notification.setPlayStatus(true);
-        notification.setBitMap(config.getBitmap());
-        notification.show();
+        notification.setName(music.getMusicName())
+                .setSinger(music.getSinger())
+                .setPlayStatus(true)
+                .setBitMap(config.getBitmap())
+                .notifyChange();
         ticker.start();
         try {
             sendState(PlaybackStateCompat.STATE_PLAYING);
@@ -649,8 +650,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         ticker.stop();
         player.pause();
         play.pause();
-        notification.setPlayStatus(false);
-        notification.show();
+        notification.setPlayStatus(false)
+                .notifyChange();
         sendState(PlaybackStateCompat.STATE_PAUSED);
     }
 

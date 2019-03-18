@@ -36,7 +36,7 @@ class ArtistFragment:BaseSearchFragment() {
 
         vm.artistId.observe(this, Observer<String> {
             if(it!=null){
-                SingerEntryActivity.actionStart(context!!,it!!)
+                SingerEntryActivity.actionStart(context!!,it)
             }else{
                 MToast.showToast(context!!,getString(R.string.dataAnalyzeError))
             }

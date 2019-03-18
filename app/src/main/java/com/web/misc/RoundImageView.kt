@@ -1,17 +1,20 @@
 package com.web.misc
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Path
+import android.graphics.RectF
 import android.util.AttributeSet
-import android.view.View
-import android.view.ViewOutlineProvider
 import android.widget.ImageView
-import androidx.appcompat.widget.AppCompatImageView
+import com.web.misc.imageDraw.ImageDraw
 import com.web.web.R
 
 class RoundImageView @JvmOverloads constructor(
-        context: Context, private val attrs: AttributeSet? = null, defStyleAttr: Int = 0
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ImageView(context, attrs, defStyleAttr) {
+
+    var beforeDraw:ImageDraw?=null
+    var afterDraw:ImageDraw?=null
 
     var radius=0f
         set(value) {
@@ -32,15 +35,30 @@ class RoundImageView @JvmOverloads constructor(
             type=at.getInt(R.styleable.RoundImageView_iv_type,type)
             at.recycle()
         }
+
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        beforeDraw?.destroy()
+        afterDraw?.destroy()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        beforeDraw?.onCreate()
+        afterDraw?.onCreate()
     }
 
 
     private val path=Path()
     private val rect=RectF()
     override fun onDraw(canvas: Canvas) {
+        beforeDraw?.draw(this,canvas)
         setPath()
         canvas.clipPath(path)
         super.onDraw(canvas)
+        afterDraw?.draw(this,canvas)
     }
 
     private fun setPath(){

@@ -57,7 +57,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 public class MusicActivity extends BaseActivity implements OnClickListener {
@@ -288,7 +287,10 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         viewPager = findViewById(R.id.viewPager);
 
         View v = findViewById(R.id.musicControlBox);
-        v.setOnClickListener(view->LyricsActivity.actionStart(this));
+        v.setOnClickListener(view->{
+            if(connect.getConfig().getMusic()!=null)
+                LyricsActivity.actionStart(this);
+        });
         bar = v.findViewById(R.id.bar);
         Drawable d = getDrawable(R.drawable.icon_seekbar_dot_pressed);
         if (d != null) {

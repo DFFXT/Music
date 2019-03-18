@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.ResUtil
@@ -69,7 +70,7 @@ class NetMusicListActivity:BaseActivity() {
             topBar.setMainTitleColor(textColor)
             rootView.showContent()
         })
-        rv_netMusicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        rv_netMusicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_netMusicList.addItemDecoration(DrawableItemDecoration(left = 10,top = 10,right = 10,bottom = 10,
                 orientation =  LinearLayout.VERTICAL,drawable = getDrawable(R.drawable.recycler_divider)))
 

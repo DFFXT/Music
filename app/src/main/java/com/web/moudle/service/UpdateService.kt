@@ -14,6 +14,7 @@ import com.web.common.constant.Constant
 import com.web.common.util.IOUtil
 import com.web.common.util.ResUtil
 import com.web.moudle.notification.FileDownloadNotification
+import com.web.web.BuildConfig
 import com.web.web.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -58,10 +59,12 @@ class UpdateService : Service() {
                         notification.notify(ResUtil.getString(R.string.setting_updateTitle,ResUtil.getString(R.string.app_name)),progress*100/(max?:-1).toFloat())
                     },
                     notifyTimeGap = 200,
-                    stopCallback = {
+                    stopCallback = {complete->
+                        if(complete){
+                            install(savePath)
+                        }
                         notification.cancel()
                     })
-            install(savePath)
         }
 
     }
@@ -73,7 +76,7 @@ class UpdateService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             val contentUri = FileProvider.getUriForFile(
-                    this, "com.music.m", apkFile)
+                    this, BuildConfig.APPLICATION_ID, apkFile)
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive")
         } else {
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive")

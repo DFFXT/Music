@@ -1,123 +1,92 @@
 package com.web.moudle.notification;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.RemoteViews;
 
+import com.web.common.base.BaseCustomNotification;
+import com.web.common.util.ResUtil;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.web.R;
+
+import org.jetbrains.annotations.NotNull;
 
 /*
  * 音乐通知栏管理
  */
 
-public class MyNotification{
+public class MyNotification extends BaseCustomNotification {
 	public Context context;
 	private Bitmap bitmap=null;
 	private String name=null;
 	private String singer=null;
 	private boolean isPlay=false;
-	private RemoteViews remoteViews=null;
+	private static String N_ID=MyNotification.class.getName();
 	public MyNotification(Context context) {
+		super(context, N_ID, ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
 		this.context=context;
+		init();
 	}
-	public MyNotification(Context context,Bitmap bitmap,String name,String singer,boolean isPlay) {
-		this.context=context;
-		this.bitmap=bitmap;
-		this.name=name;
-		this.singer=singer;
-		this.isPlay=isPlay;
-	}
-	private String id="def";
-	private NotificationManager manager;
-	private void createChannel(){
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-			NotificationChannel channel=new NotificationChannel(id,"name",NotificationManager.IMPORTANCE_MIN);
-			getManager().createNotificationChannel(channel);
-		}
-	}
-	private NotificationManager getManager(){
-		if (manager==null){
-			manager=context.getSystemService(NotificationManager.class);
-		}
-		return manager;
-	}
-	
-	public void show(){//--通知栏
-		createChannel();
-
-		if(context==null) return;
-		Notification.Builder mBuilder;
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-			mBuilder = new Notification.Builder(context,id);
-		}else {
-			mBuilder = new Notification.Builder(context);
-		}
-		remoteViews=new RemoteViews(context.getPackageName(),R.layout.music_navigator_control);
-		mBuilder.setContent(remoteViews);
-		mBuilder.setPriority(Notification.PRIORITY_MAX);
-		mBuilder.setSmallIcon(R.drawable.defaultfile,1);//--必须
-		remoteViews.setTextViewText(R.id.song, name);
-		remoteViews.setTextViewText(R.id.singer, singer);
-		if(bitmap!=null){//--添加图片
-			remoteViews.setImageViewBitmap(R.id.music_icon, bitmap);
-		}else{//--没有图片，添加默认图片
-			remoteViews.setImageViewResource(R.id.music_icon, R.drawable.ic_launcher);
-		}
-		if(isPlay){
-			remoteViews.setImageViewResource(R.id.pause, R.drawable.icon_play_black);
-		}else{
-			remoteViews.setImageViewResource(R.id.pause, R.drawable.icon_pause_black);
-		}
+	private void init() {
 		//--设置点击事件
 		//--PendingIntent 的flag必须不一样
 		PendingIntent pNext=PendingIntent.getService(context, 1, makeIntent(MusicPlay.ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.next, pNext);
-		
+		getView().setOnClickPendingIntent(R.id.next, pNext);
+
 		PendingIntent pPre=PendingIntent.getService(context, 2, makeIntent(MusicPlay.ACTION_PRE), PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.pre, pPre);
-		
+		getView().setOnClickPendingIntent(R.id.pre, pPre);
+
 		PendingIntent pPause=PendingIntent.getService(context, 3,makeIntent(MusicPlay.ACTION_STATUS_CHANGE), PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.pause, pPause);
-		
+		getView().setOnClickPendingIntent(R.id.pause, pPause);
+
 		//--进入歌词界面
 		Intent enterIntent=new Intent(context, LyricsActivity.class).
 				addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.op, enter);
-		
-		mBuilder.setAutoCancel(false);
-		Notification notification=mBuilder.build();
-		notification.flags=Notification.FLAG_NO_CLEAR;//---不会被清理
-		//--服务启动notification，防止服务被关闭
-		((Service) context).startForeground(11, notification);
+		getView().setOnClickPendingIntent(R.id.op, enter);
 	}
-	public void setName(String name){
+
+	public MyNotification setName(String name){
 		this.name=name;
-		//remoteViews.setTextViewText(R.id.song, name);
+		return this;
 	}
-	public void setSinger(String singer){
+	public MyNotification setSinger(String singer){
 		this.singer=singer;
-		//remoteViews.setTextViewText(R.id.singer, singer);
+		return this;
 	}
-	public void setBitMap(Bitmap bitmap){
+	public MyNotification setBitMap(Bitmap bitmap){
 		this.bitmap=bitmap;
-		//remoteViews.setImageViewBitmap(R.id.music_icon, bitmap);
+		return this;
 	}
-	public void setPlayStatus(boolean isPlay){
+	public MyNotification setPlayStatus(boolean isPlay){
 		this.isPlay=isPlay;
+		return this;
 	}
 
 	private Intent makeIntent(String action){
 		Intent intent=new Intent(context,MusicPlay.class);
 		intent.setAction(action);
 		return intent;
+	}
+
+	@Override
+	public void update(@NotNull RemoteViews view) {
+		if(context==null) return;
+		view.setTextViewText(R.id.song, name);
+		view.setTextViewText(R.id.singer, singer);
+		if(bitmap!=null){//--添加图片
+			view.setImageViewBitmap(R.id.music_icon, bitmap);
+		}else{//--没有图片，添加默认图片
+			view.setImageViewResource(R.id.music_icon, R.drawable.ic_launcher);
+		}
+		if(isPlay){
+			view.setImageViewResource(R.id.pause, R.drawable.icon_play_white);
+		}else{
+			view.setImageViewResource(R.id.pause, R.drawable.icon_pause_white);
+		}
+
 	}
 }

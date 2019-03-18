@@ -36,6 +36,7 @@
 	<string name="delete">删除</string>
 	<string name="deleteLocalFile">删除本地文件</string>
 	<string name="music">音乐</string>
+	<string name="musicControl">音乐控制</string>
 
 	<string name="updata">web有更新</string>
 	<string name="downloadYes">下载成功</string>

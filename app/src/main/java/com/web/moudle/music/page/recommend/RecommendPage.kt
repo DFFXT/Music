@@ -40,10 +40,8 @@ class RecommendPage : BaseMusicPage() {
     }
 
     override fun initView(rootView: View) {
-        //rootView.layout_box.showLoading()
-        //rootView.post {
         flutterView = Flutter.createView(activity!!, lifecycle, "RecommendView")
-        MethodChannel(flutterView, "recommend/io").setMethodCallHandler { methodCall, result ->
+        MethodChannel(flutterView, "recommend/io").setMethodCallHandler { methodCall, _ ->
             when (methodCall.method) {
                 "todayRecommend" -> {
                     NetMusicListActivity.actionStartRecommend(context!!, getString(R.string.todayRecommend))
