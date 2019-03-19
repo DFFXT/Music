@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tv_musicNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/musicName"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_alignTop="@id/layout_musicName"
+        android:layout_alignBottom="@id/layout_musicName"/>
+
+    
+    <com.web.misc.InputItem
+        android:id="@+id/layout_musicName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/tv_musicNameLabel"/>
+
+    <TextView
+        android:id="@+id/tv_artistNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/singer_tab"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_alignTop="@id/layout_artistName"
+        android:layout_alignBottom="@id/layout_artistName" />
+
+
+    <com.web.misc.InputItem
+        android:id="@+id/layout_artistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/tv_artistNameLabel"
+        android:layout_below="@id/layout_musicName"
+        android:layout_alignStart="@id/layout_musicName"/>
+    
+    <TextView
+        android:id="@+id/tv_abPathLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_artistNameLabel"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:text="@string/path"/>
+    <TextView
+        android:id="@+id/tv_abPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/tv_abPathLabel"
+        android:layout_alignStart="@id/layout_musicName"
+        tools:text="File:///0/sd/xx.mp3"/>
+    <TextView
+        android:id="@+id/tv_durationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/duration"
+        android:textStyle="bold"
+        android:layout_below="@id/tv_abPath"
+        android:layout_marginTop="16dp"/>
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/layout_musicName"
+        android:layout_alignBottom="@id/tv_durationLabel"
+        tools:text="2:00"/>
+    <TextView
+        android:id="@+id/tv_sizeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/size"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/tv_duration"
+        android:layout_alignBottom="@id/tv_duration" />
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="23M"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/tv_sizeLabel"
+        android:layout_alignBottom="@id/tv_duration" />
+</RelativeLayout>

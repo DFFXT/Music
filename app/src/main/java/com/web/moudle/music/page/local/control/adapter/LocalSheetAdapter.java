@@ -2,16 +2,16 @@ package com.web.moudle.music.page.local.control.adapter;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.web.common.base.BaseAdapter;
 import com.web.common.base.BaseViewHolder;
-import com.web.common.util.KeyboardManager;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
+import com.web.misc.InputItem;
 import com.web.moudle.music.page.local.control.interf.LocalSheetListener;
 import com.web.moudle.music.page.local.control.interf.RemoveItemListener;
 import com.web.web.R;
@@ -38,65 +38,49 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_edit,parent,false);
-        return new BaseViewHolder(v);
+        return new BaseViewHolder(new InputItem(parent.getContext()));
     }
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position,String item) {
-        EditText tv = holder.itemView.findViewById(R.id.et_name);
-        tv.setFocusableInTouchMode(false);
+        InputItem inputItem = (InputItem) holder.itemView;
+        inputItem.setText(list.get(position));
+        EditText et=inputItem.getInputBox();
+        ImageView button=inputItem.getClickButton();
+        if(index==position){
+            et.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
+            Drawable drawable=inputItem.getContext().getDrawable(R.drawable.icon_pause_fill);
+            if(drawable!=null){
+                drawable.setTint(ResUtil.getColor(R.color.themeColor));
+                drawable.setBounds(0,0,arrowSize,arrowSize);
+                et.setCompoundDrawables(drawable,null,null,null);
+            }
+            et.setTextColor(ResUtil.getColor(R.color.themeColor));
 
-        tv.setText(list.get(position));
-        tv.setOnClickListener((v1)->{
+        }else {
+            et.setBackgroundColor(Color.TRANSPARENT);
+            et.setCompoundDrawables(null,null,null,null);
+            et.setPadding(arrowSize+paddingStart,paddingOther,paddingOther,paddingOther);
+            et.setTextColor(ResUtil.getColor(R.color.textColorGray));
+        }
+
+        et.setOnClickListener((v1)->{
             if(listener!=null){
                 listener.select(v1,position);
                 setIndex(position);
             }
         });
-        if(index==position){
-            tv.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
-            Drawable drawable=tv.getContext().getDrawable(R.drawable.icon_pause_fill);
-            if(drawable!=null){
-                drawable.setTint(ResUtil.getColor(R.color.themeColor));
-                drawable.setBounds(0,0,arrowSize,arrowSize);
-                tv.setCompoundDrawables(drawable,null,null,null);
-            }
-            tv.setTextColor(ResUtil.getColor(R.color.themeColor));
-
-        }else {
-            tv.setBackgroundColor(Color.TRANSPARENT);
-            tv.setCompoundDrawables(null,null,null,null);
-            tv.setPadding(arrowSize+paddingStart,paddingOther,paddingOther,paddingOther);
-            tv.setTextColor(ResUtil.getColor(R.color.textColorGray));
-        }
         if(position==0){
-            holder.itemView.findViewById(R.id.iv_changeStatus).setVisibility(View.INVISIBLE);
+            button.setVisibility(View.INVISIBLE);
         }else {
-            holder.itemView.findViewById(R.id.iv_changeStatus).setVisibility(View.VISIBLE);
-            holder.itemView.findViewById(R.id.iv_changeStatus).setOnClickListener(v->{
-                v.setSelected(!v.isSelected());
-                tv.setFocusableInTouchMode(v.isSelected());
-                if(v.isSelected()){
-                    tv.setSelection(item.length());
-                    KeyboardManager.requestKeyboard(tv);
-                    tv.setOnClickListener(null);
-                }else{
-                    KeyboardManager.hideKeyboard(tv.getContext(),tv.getWindowToken());
-                    tv.setOnClickListener((v1)->{
-                        if(listener!=null){
-                            listener.select(v1,position);
-                            setIndex(position);
-                        }
-                    });
-                    if(listener!=null){
-                        listener.saveEdit(tv.getText().toString(),position);
-                    }
-                }
-
-            });
+            button.setVisibility(View.VISIBLE);
+            if(listener!=null){
+                inputItem.setListener(text->{
+                    listener.saveEdit(text,position);
+                    return null;
+                });
+            }
         }
-
 
     }
 

@@ -102,6 +102,11 @@
 	<string name="remove">移除</string>
 	<string name="selectAll">全选</string>
 
+	<string name="musicName">曲名</string>
+	<string name="path">路径</string>
+	<string name="duration">时长</string>
+	<string name="size">大小</string>
+
 	<string name="deleteGroupOrigin">完全删除</string>
 	<string name="clearGroup">清空</string>
 	<string name="addMusic">添加音乐</string>

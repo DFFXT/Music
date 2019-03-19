@@ -5,7 +5,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,8 +16,10 @@ import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
 import com.web.data.Music;
 import com.web.data.MusicList;
+import com.web.misc.BasePopupWindow;
 import com.web.misc.DrawableItemDecoration;
 import com.web.misc.IndexBar;
+import com.web.misc.InputItem;
 import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.adapter.LocalMusicAdapter;
@@ -136,13 +140,21 @@ public class MusicListLPage extends BaseMusicPage {
      * @param music music
      */
     private void showDetail(Music music){
-        DecimalFormat format=new DecimalFormat("0.00");
-        AlertDialog.Builder builder=new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        builder.setTitle("曲名："+music.getMusicName());
-        File file=new File(music.getPath());
-        builder.setMessage("路径："+music.getPath()
-                +"\r\n大小："+format.format(file.length()/1024.0/1024)+"MB");
-        builder.create().show();
+        View v= LayoutInflater.from(getContext()).inflate(R.layout.layout_music_detail,null);
+        BasePopupWindow popupWindow=new BasePopupWindow(rv_musicList.getContext(),v);
+        InputItem ii_name=v.findViewById(R.id.layout_musicName);
+        ii_name.setText(music.getMusicName());
+
+        InputItem ii_artist=v.findViewById(R.id.layout_artistName);
+        ii_artist.setText(music.getSinger());
+
+        TextView tv_abPath=v.findViewById(R.id.tv_abPath);
+        tv_abPath.setText(music.getPath());
+
+        ((TextView)v.findViewById(R.id.tv_duration)).setText(ResUtil.timeFormat("mm:ss",music.getDuration()));
+        ((TextView)v.findViewById(R.id.tv_size)).setText(ResUtil.getFileSize(music.getDuration()));
+        popupWindow.show(rv_musicList);
+
     }
 
     /**

@@ -1,29 +1,44 @@
 package com.web.moudle.preference
 
-import android.app.Activity
+import com.tencent.mmkv.MMKV
 import com.web.common.base.MyApplication
 import com.web.common.util.IOUtil
 import com.web.moudle.music.player.bean.DiskObject
 
+/**
+ * key-value 数据存储
+ * 采用mmkv
+ */
 object SP {
+
+    private val kvMap=HashMap<String,MMKV>()
+    init {
+        MMKV.initialize(MyApplication.context)
+    }
+    fun getKV(name: String):MMKV{
+        if(kvMap[name]==null) {
+            kvMap[name]=MMKV.mmkvWithID(name)
+        }
+        return kvMap[name]!!
+    }
     fun putValue(name:String,key:String,value:Any){
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
-        val editor=sp.edit()
+        val kv= getKV(name)
+        kv.lock()
         when(value){
-            is String->editor.putString(key,value)
-            is Int ->editor.putInt(key,value)
-            is Boolean ->editor.putBoolean(key,value)
-            is Long ->editor.putLong(key,value)
-            is Float ->editor.putFloat(key,value)
+            is String-> kv.putString(key,value)
+            is Int ->kv.putInt(key,value)
+            is Boolean ->kv.putBoolean(key,value)
+            is Long ->kv.putLong(key,value)
+            is Float ->kv.putFloat(key,value)
             is DiskObject->{
-                editor.putString(key, String(IOUtil.objToBase64(value)))
+                kv.putString(key, String(IOUtil.objToBase64(value)))
             }
         }
-        editor.apply()
+        kv.unlock()
     }
     @Suppress("UNCHECKED_CAST")
     inline fun <reified T:Any> getValue(name: String, key: String, type:Class<Any>):T{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp= getKV(name)
         return when(T::class.java.name){
             String::class.java.name->sp.getString(key,"") as T
             Int::class.java.name ->sp.getInt(key,0) as T
@@ -34,27 +49,27 @@ object SP {
         }
     }
     fun getInt(name: String,key: String,defValue:Int=0):Int{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp=getKV(name)
         return sp.getInt(key,defValue)
     }
     fun getString(name: String,key: String,defValue: String=""):String{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp=getKV(name)
         return sp.getString(key,defValue)!!
     }
     fun getBoolean(name: String,key: String,defValue: Boolean=false):Boolean{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp=getKV(name)
         return sp.getBoolean(key,defValue)
     }
     fun getFloat(name: String,key: String,defValue: Float=0f):Float{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp=getKV(name)
         return sp.getFloat(key,defValue)
     }
     fun getLong(name: String,key: String,defValue: Long=0):Long{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp=getKV(name)
         return sp.getLong(key,defValue)
     }
     fun <T:DiskObject> getDiskObject(name: String,key: String):T?{
-        val sp=MyApplication.context.getSharedPreferences(name,Activity.MODE_PRIVATE)
+        val sp=getKV(name)
         return IOUtil.base64ToObj(sp.getString(key,""))
     }
 }
