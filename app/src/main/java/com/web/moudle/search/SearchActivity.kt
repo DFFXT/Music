@@ -30,13 +30,11 @@ class SearchActivity : BaseActivity() {
     private fun loadData() {
         viewModel = ViewModelProviders.of(this)[SearchViewModel::class.java]
         viewModel.searchSug.observe(this, Observer { res ->
-            tv_type.visibility= View.VISIBLE
             tv_type.text=ResUtil.getString(R.string.searchView_searchRes)
             setSearchData(res!!)
         })
         viewModel.defSearchRes.observe(this,Observer<DefSearchRes>{res->
             if(res==null)return@Observer
-            tv_type.visibility= View.VISIBLE
             tv_type.text=ResUtil.getString(R.string.searchView_desc)
             res.recommendSug.recommendSongs.addAll(res.hotSearchSug.songList)
             val sug=SearchSug()

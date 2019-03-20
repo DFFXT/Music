@@ -31,11 +31,18 @@ android {
             signingConfig signingConfigs.release
             //**manifest占位符
             manifestPlaceholders = [APP_NAME:"@string/app_name"]
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
         }
         debug{
             minifyEnabled false//不进行混淆
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             manifestPlaceholders = [APP_NAME:"@string/app_name_dev"]
+            ndk {
+                // "armeabi-v7a"：实体机   x86：模拟器
+                abiFilters "armeabi-v7a","x86"
+            }
         }
     }
 

@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginStart="20dp"
-        android:visibility="invisible"
+        android:textColor="@color/textColor_9"
+        android:textSize="@dimen/textSize_small"
         android:text="@string/searchView_desc"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_searchSug"
