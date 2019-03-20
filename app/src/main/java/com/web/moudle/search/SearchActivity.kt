@@ -58,7 +58,6 @@ class SearchActivity : BaseActivity() {
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         manager.stackFromEnd = false
         rv_searchSug.layoutManager = manager
-        rv_searchSug.addItemDecoration(GapItemDecoration(bottom = 20))
 
         searchView_searchActivity.searchCallback = {
             val inputManager=getSystemService(InputMethodManager::class.java)

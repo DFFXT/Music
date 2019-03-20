@@ -43,4 +43,9 @@ object PinYin {
         }
         return chr.elementAt(0)
     }
+
+    @JvmStatic
+    fun isChinese(word:Char):Boolean{
+        return word.toInt() in 0x4E00..0x9FA5
+    }
 }

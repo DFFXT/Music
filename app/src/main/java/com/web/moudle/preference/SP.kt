@@ -36,8 +36,14 @@ object SP {
         }
         kv.unlock()
     }
-    @Suppress("UNCHECKED_CAST")
-    inline fun <reified T:Any> getValue(name: String, key: String, type:Class<Any>):T{
+
+    /**
+     * reified 具体化
+     * 必须inline修饰，修饰泛型T，
+     * 在java中 不能用T判定T的类型
+     * 在kt中可以判定T的类型
+     */
+    inline fun <reified T:Any> getValue(name: String, key: String):T{
         val sp= getKV(name)
         return when(T::class.java.name){
             String::class.java.name->sp.getString(key,"") as T

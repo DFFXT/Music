@@ -5,6 +5,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -28,6 +30,8 @@ import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.web.R;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -306,7 +310,7 @@ public class MusicListLPage extends BaseMusicPage {
         if(connect!=null){
             connect.getList(groupIndex);
         }
-        String str="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
+        String str="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z *";
         List<String> indexList=Arrays.asList(str.split(" "));
         indexBar.setVerticalGap(10);
         indexBar.setIndexList(indexList);
@@ -321,16 +325,24 @@ public class MusicListLPage extends BaseMusicPage {
                 super.onScrolled(recyclerView, dx, dy);
                 int p=layoutManager.findFirstVisibleItemPosition();
                 if(p<0)return;
-                try {
-                    char code=PinYin.getFirstChar(data.get(p).getMusicName().charAt(0)+"");
-                    for(int i=0;i<indexList.size();i++){
-                        if(code==indexList.get(i).charAt(0)){
-                            indexBar.setSelectedIndex(i);
-                        }
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                char firstLetter=data.get(p).getMusicName().charAt(0);
+                char code;
+                if(PinYin.isChinese(firstLetter)){//**判断是否是中文，只有中文才会有返回值否则返回null
+                    String res[]=PinyinHelper.toHanyuPinyinStringArray(data.get(p).getMusicName().charAt(0));
+                    if(res!=null){
+                        code= res[0].toCharArray()[0];
+                    }else code='*';
+                }else{
+                    code=firstLetter;
                 }
+
+                for(int i=0;i<indexList.size();i++){
+                    if((code+"").equalsIgnoreCase(indexList.get(i).charAt(0)+"")){
+                        indexBar.setSelectedIndex(i);
+                        return;
+                    }
+                }
+                indexBar.setSelectedIndex(str.length()-1);
             }
         });
         rv_musicList.setFocusable(true);
