@@ -1,7 +1,9 @@
 package com.web.moudle.music.player
 
+import android.content.ContentValues
 import android.content.Context
 import android.provider.MediaStore
+import com.web.common.base.MyApplication
 import com.web.common.base.log
 import com.web.common.constant.Constant
 import com.web.config.Shortcut
@@ -56,6 +58,7 @@ object MediaQuery {
                             //**去后缀
                             val lastIndex = out[0]!!.lastIndexOf('.')
                             val music = Music(out[0]!!.substring(0, lastIndex), out[1], path)
+                            music.suffix=out[0]!!.substring(lastIndex+1)
                             index = cursor.getColumnIndex("duration")
                             music.duration = cursor.getInt(index)
                             index = cursor.getColumnIndex("_id")
@@ -142,7 +145,6 @@ object MediaQuery {
             }
             launch(Dispatchers.Main) {
                 callback(musicList)
-                log("--->callback")
             }
         }
     }
@@ -169,6 +171,16 @@ object MediaQuery {
             SongSheetManager.getSongSheetList().save()
         }
         music.delete()
+    }
+
+    /**
+     * 修改音乐信息 path
+     */
+    @JvmStatic
+    fun updateMusic(oldMusic: Music,newMusic:Music){
+        val values=ContentValues()
+        values.put("_data",newMusic.path)
+        MyApplication.context.contentResolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,values,"_data=?", arrayOf(oldMusic.path))
     }
 
 

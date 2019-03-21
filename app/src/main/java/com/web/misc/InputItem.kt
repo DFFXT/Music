@@ -21,7 +21,10 @@ class InputItem @JvmOverloads constructor(ctx: Context, attrs: AttributeSet?=nul
     private val mRootView: View = LayoutInflater.from(ctx).inflate(R.layout.item_edit,this,true)
     val inputBox:EditText
     val clickButton:ImageView
-    var listener:((text:String)->Unit)?=null
+    /**
+     * 返回值为要显示的值
+     */
+    var listenerSave:((text:String)->String)?=null
     var listenSelect:((isSelect:Boolean)->Unit)?=null
     init {
         inputBox=mRootView.et_name
@@ -38,7 +41,10 @@ class InputItem @JvmOverloads constructor(ctx: Context, attrs: AttributeSet?=nul
             }else{
                 KeyboardManager.hideKeyboard(it.context,it.windowToken)
                 inputBox.clearFocus()
-                listener?.invoke(inputBox.text.toString())
+                listenerSave?.let {input->
+                    inputBox.setText(input.invoke(inputBox.text.toString()))
+                }
+
             }
         }
     }

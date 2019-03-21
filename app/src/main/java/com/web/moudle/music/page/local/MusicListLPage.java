@@ -5,15 +5,14 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.web.common.base.BaseActivity;
+import com.web.common.constant.Constant;
 import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
 import com.web.data.Music;
@@ -36,16 +35,12 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,7 +91,7 @@ public class MusicListLPage extends BaseMusicPage {
                     setAsLike(data.get(position).getId());
                 }break;
                 case R.id.detailInfo:{//**详细信息
-                    showDetail(data.get(position));
+                    showDetail(data.get(position),position);
                 }break;
                 case R.id.multiSelect:{//**多选
                     showMultiSelect(view);
@@ -141,22 +136,38 @@ public class MusicListLPage extends BaseMusicPage {
 
     /**
      * 显示音乐信息
+     * 修改音乐信息
      * @param music music
      */
-    private void showDetail(Music music){
+    private void showDetail(Music music,int index){
         View v= LayoutInflater.from(getContext()).inflate(R.layout.layout_music_detail,null);
         BasePopupWindow popupWindow=new BasePopupWindow(rv_musicList.getContext(),v);
-        InputItem ii_name=v.findViewById(R.id.layout_musicName);
-        ii_name.setText(music.getMusicName());
-
-        InputItem ii_artist=v.findViewById(R.id.layout_artistName);
-        ii_artist.setText(music.getSinger());
 
         TextView tv_abPath=v.findViewById(R.id.tv_abPath);
         tv_abPath.setText(music.getPath());
 
         ((TextView)v.findViewById(R.id.tv_duration)).setText(ResUtil.timeFormat("mm:ss",music.getDuration()));
         ((TextView)v.findViewById(R.id.tv_size)).setText(ResUtil.getFileSize(music.getDuration()));
+
+        InputItem ii_name=v.findViewById(R.id.layout_musicName);
+        ii_name.setText(music.getMusicName());
+        ii_name.setListenerSave(text->{
+            if(!text.equals(music.getMusicName())&&music.rename(text,music.getSinger())){
+                adapter.notifyItemChanged(index);
+                tv_abPath.setText(music.getPath());
+            }
+            return music.getMusicName();
+        });
+
+        InputItem ii_artist=v.findViewById(R.id.layout_artistName);
+        ii_artist.setText(music.getSinger());
+        ii_artist.setListenerSave(text->{
+            if(!text.equals(music.getSinger())&&music.rename(music.getMusicName(),text)){
+                adapter.notifyItemChanged(index);
+                tv_abPath.setText(music.getPath());
+            }
+            return music.getSinger();
+        });
         popupWindow.show(rv_musicList);
 
     }
@@ -239,7 +250,7 @@ public class MusicListLPage extends BaseMusicPage {
      * 设置主音乐页面的数据
      * @param data data
      */
-    public void setData(int groupIndex,MusicList<Music> data) {
+    void setData(int groupIndex, MusicList<Music> data) {
         this.groupIndex=groupIndex;
         this.data=data;
         if(adapter!=null){
@@ -257,7 +268,7 @@ public class MusicListLPage extends BaseMusicPage {
 
     private int musicGroupIndex=0;
     private int childPosition=0;
-    protected void loadMusic(int musicGroupIndex,int position){
+    void loadMusic(int musicGroupIndex, int position){
         this.musicGroupIndex=musicGroupIndex;
         this.childPosition=position;
         if(adapter!=null&&musicGroupIndex==groupIndex) {

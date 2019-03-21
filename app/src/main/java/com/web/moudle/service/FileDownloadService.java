@@ -338,6 +338,7 @@ public class FileDownloadService extends Service {
             },1000, (complete,length) -> {
                 if (complete) {//**下载完成 --- 广播
                     Music record = new Music(music.getSongName(), music.getArtistName(), music.getPath());
+                    record.setSuffix(music.getFormat());
                     record.setDuration(music.getDuration()*1000);//**将时间转换为ms
                     record.setAlbum(music.getAlbumName());
                     record.saveOrUpdate();

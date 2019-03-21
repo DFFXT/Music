@@ -75,7 +75,7 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
         }else {
             button.setVisibility(View.VISIBLE);
             if(listener!=null){
-                inputItem.setListener(text->{
+                inputItem.setListenerSave(text->{
                     listener.saveEdit(text,position);
                     return null;
                 });

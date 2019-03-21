@@ -8,6 +8,7 @@ import com.web.moudle.music.player.bean.DiskObject
 import kotlinx.coroutines.*
 import java.io.*
 import java.net.URL
+import java.nio.ByteBuffer
 
 object IOUtil{
     class StreamStop{

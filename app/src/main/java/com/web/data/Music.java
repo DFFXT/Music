@@ -1,6 +1,13 @@
 package com.web.data;
 
+import com.web.common.base.MyApplication;
+import com.web.common.constant.Constant;
+import com.web.common.tool.MToast;
 import com.web.config.GetFiles;
+import com.web.config.Shortcut;
+import com.web.moudle.music.player.MediaQuery;
+import com.web.moudle.notification.MyNotification;
+import com.web.web.R;
 
 import org.litepal.crud.DataSupport;
 
@@ -17,6 +24,7 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     private int song_id;
     private int album_id;
     private String album;
+    private String suffix;//** ".mp3"
     @Deprecated
     public Music(){}
     public Music(String musicName,String singer,String path){
@@ -67,10 +75,10 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
 
     public String getLyricsPath(){
-        return GetFiles.cachePath+"lyrics"+ File.separator+singer+" - "+musicName+".lrc";
+        return Constant.LocalConfig.krcPath+ File.separator+singer+" - "+musicName+".lrc";
     }
     public String getIconPath(){
-        return GetFiles.cachePath+"singer"+ File.separator+singer+".png";
+        return Constant.LocalConfig.singerIconPath+ File.separator+singer+".png";
     }
     public Music copy(){
         try {
@@ -83,6 +91,39 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     public static boolean exist(Music music){
         File file=new File(music.path);
         return file.isFile()&&file.exists();
+    }
+
+    public boolean rename(String musicName,String singer){
+        if(!Constant.LocalConfig.validFileName(musicName)||!Constant.LocalConfig.validFileName(singer)){
+            MToast.showToast(MyApplication.context, R.string.invalidFilePath);
+            return false;
+        }
+        if(!exist(this)){
+            MToast.showToast(MyApplication.context, R.string.fileNotFound);
+            return false;
+        }
+        File file=new File(path);
+        File newFile=new File(Shortcut.createPath(musicName,singer,suffix));
+        Music newMusic=this.copy();
+        newMusic.setMusicName(musicName);
+        newMusic.setSinger(singer);
+        newMusic.setPath(newFile.getAbsolutePath());
+        if(newFile.exists()){
+            MToast.showToast(MyApplication.context, R.string.fileExist);
+            return false;
+        }
+
+        boolean ok=file.renameTo(newFile);
+        if(ok){
+            MediaQuery.updateMusic(this,newMusic);
+            setMusicName(musicName);
+            setSinger(singer);
+            setPath(newMusic.path);
+            update(id);
+        }else{
+            MToast.showToast(MyApplication.context, R.string.renameFailed);
+        }
+        return ok;
     }
 
     /**
@@ -134,5 +175,13 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public void setAlbum(String album) {
         this.album = album;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }

@@ -6,7 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.web.common.constant.Constant;
 import com.web.data.InternetMusicDetail;
+import com.web.data.Music;
 import com.web.moudle.music.player.MusicPlay;
 
 import java.io.File;
@@ -26,18 +28,13 @@ public class Shortcut {
         File file=new File(path);
         file.delete();
     }
-    public static Message makeMsg(int what, Object obj){
-        Message msg=Message.obtain();
-        msg.what=what;
-        msg.obj=obj;
-        return msg;
-    }
+
 
     public static String createPath(InternetMusicDetail music){
-        return GetFiles.cachePath+music.getArtistName()+" - "+music.getSongName()+"."+music.getFormat();
+        return createPath(music.getSongName(),music.getArtistName(),music.getFormat());
     }
-    public static String getMusicPath(String musicName,String singerName,String suffix){
-        return GetFiles.cachePath+musicName+" - "+singerName+"."+suffix;
+    public static String createPath(String musicName,String singerName,String suffix){
+        return Constant.LocalConfig.cachePath+singerName+" - "+musicName+"."+suffix;
     }
     public static String getLyricsPath(String musicName,String signerName){
         return GetFiles.cachePath+"lyrics"+ File.separator+signerName+" - "+musicName+".lrc";

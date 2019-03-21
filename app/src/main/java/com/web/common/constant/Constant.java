@@ -20,12 +20,15 @@ public final class Constant {
     public static class LocalConfig{
         public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
         public static String cachePath=rootPath+"cache/";
-        public static String singerPath=cachePath+"singer/";
+        public static String singerIconPath =cachePath+"singer/";
         public static String krcPath=cachePath+"lyrics/";
+        private static String[] invalidChar=new String[]{
+                "/","\\","?","|","<",">",":","*","\""
+        };
 
         public static void initPath() {
             LocalConfig.createPathIfNotExist(cachePath);
-            LocalConfig.createPathIfNotExist(singerPath);
+            LocalConfig.createPathIfNotExist(singerIconPath);
             LocalConfig.createPathIfNotExist(krcPath);
 
         }
@@ -34,6 +37,12 @@ public final class Constant {
             if(!dir.isDirectory()||!dir.exists()){
                 dir.mkdirs();
             }
+        }
+        public static boolean validFileName(String name){
+            for (String anInvalidChar : invalidChar) {
+                if (name.contains(anInvalidChar)) return false;
+            }
+            return true;
         }
     }
 
