@@ -24,6 +24,9 @@ public class MusicList<T> {
     public T get(int index){
         return music.get(index);
     }
+    public int indexOf(T o){
+        return music.indexOf(o);
+    }
     public void add(T object){
         music.add(object);
     }

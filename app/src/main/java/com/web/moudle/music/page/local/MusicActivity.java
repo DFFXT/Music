@@ -126,16 +126,16 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         }
 
         @Override
-        public void musicListChange(int group, List<MusicList<Music>> list) {
+        public void musicListChange(int group,int child,List<MusicList<Music>> list) {
             if (list == null || list.size() == 0 || list.get(0).size() == 0) {
                 if (list != null) {
-                    musicListLPage.setData(group, list.get(group));
+                    musicListLPage.setData(group,child,list.get(group));
                     groupList = list;
                     groupIndex = group;
                     getCurrentPage().setTitle(tv_title);
                 }
             } else {
-                musicListLPage.setData(group, list.get(group));
+                musicListLPage.setData(group,child,list.get(group));
                 groupList = list;
                 groupIndex = group;
                 getCurrentPage().setTitle(tv_title);
@@ -231,6 +231,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                         @Override
                         public void select(View v, int position) {
                             connect.getList(position);
+                            connect.changeSheet(position,0);
                             listAlert.dismiss();
                         }
 

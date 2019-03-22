@@ -5,14 +5,12 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.web.common.base.BaseActivity;
-import com.web.common.constant.Constant;
 import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
 import com.web.data.Music;
@@ -84,7 +82,9 @@ public class MusicListLPage extends BaseMusicPage {
                                 .setNegativeButton(ResUtil.getString(R.string.no),null)
                                 .setPositiveButton(ResUtil.getString(R.string.yes),(dialog,witch)->{
                                     connect.delete(true,groupIndex,position);
-                                }).create().show();
+                                })
+                                .create()
+                                .show();
                     }
                 }break;
                 case R.id.setAsLiske:{
@@ -250,27 +250,20 @@ public class MusicListLPage extends BaseMusicPage {
      * 设置主音乐页面的数据
      * @param data data
      */
-    void setData(int groupIndex, MusicList<Music> data) {
+    void setData(int groupIndex,int child,MusicList<Music> data) {
         this.groupIndex=groupIndex;
         this.data=data;
         if(adapter!=null){
-            if(musicGroupIndex!=groupIndex){
-                adapter.setIndex(-1);
-            }else {
-                adapter.setIndex(childPosition);
-            }
-            adapter.notifyItemChanged(childPosition);
+            adapter.setIndex(child);
+            adapter.notifyItemChanged(child);
             adapter.setData(data.getMusicList());
             adapter.notifyDataSetChanged();
         }
 
     }
 
-    private int musicGroupIndex=0;
-    private int childPosition=0;
+
     void loadMusic(int musicGroupIndex, int position){
-        this.musicGroupIndex=musicGroupIndex;
-        this.childPosition=position;
         if(adapter!=null&&musicGroupIndex==groupIndex) {
             adapter.setIndex(position);
         }

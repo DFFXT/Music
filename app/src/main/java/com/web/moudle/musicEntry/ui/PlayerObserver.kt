@@ -22,7 +22,7 @@ open class PlayerObserver:PlayInterface {
 
     }
 
-    override fun musicListChange(group: Int, list: MutableList<MusicList<Music>>?) {
+    override fun musicListChange(group: Int,child: Int,list: MutableList<MusicList<Music>>?) {
 
     }
 

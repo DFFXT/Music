@@ -11,7 +11,7 @@ public interface PlayInterface {
     void load(int groupIndex,int childIndex,Music music,int maxTime);
     void pause();
     void currentTime(int group,int child,int time);
-    void musicListChange(int group,List<MusicList<Music>> list);
+    void musicListChange(int group,int child,List<MusicList<Music>> list);
     void playTypeChanged(PlayerConfig.PlayType playType);
     void musicOriginChanged(PlayerConfig.MusicOrigin origin);
     void bufferingUpdate(int percent);

@@ -29,7 +29,7 @@ class HelloActivity : BaseActivity() {
 
 
     private val observer = object : PlayerObserver() {
-        override fun musicListChange(group: Int, list: MutableList<MusicList<Music>>?) {
+        override fun musicListChange(group: Int,child:Int,list: MutableList<MusicList<Music>>?) {
             connect?.removeObserver(this)
             MusicActivity.actionStartForResult(this@HelloActivity, code)
         }

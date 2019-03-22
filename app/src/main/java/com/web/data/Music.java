@@ -14,6 +14,8 @@ import org.litepal.crud.DataSupport;
 import java.io.File;
 import java.io.Serializable;
 
+import androidx.annotation.Nullable;
+
 public class Music extends DataSupport implements Cloneable,Serializable {
     private int id;
     private String musicName;
@@ -183,5 +185,19 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+
+    /**
+     * 路径相同就是同一个music
+     * @param obj music
+     * @return bool
+     */
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof Music){
+            return path.equals(((Music) obj).path);
+        }
+        return false;
     }
 }

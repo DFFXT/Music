@@ -410,6 +410,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
         }
 
+        public void changeSheet(int group,int child){
+            if(group>0&&group<musicList.size()&&child>0&&child<musicList.get(group).size()){
+                groupIndex=group;
+                childIndex=child;
+            }
+        }
+
         public List<Music> getWaitMusic() {
             return waitMusic;
         }
@@ -766,7 +773,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
 
     private void musicListChange() {
-        play.musicListChange(groupIndex, musicList);
+        childIndex= musicList.get(groupIndex).indexOf(config.getMusic());
+        play.musicListChange(groupIndex,childIndex, musicList);
     }
 
     //**分发信息
@@ -828,7 +836,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 MToast.showToast(MyApplication.context, ResUtil.getString(R.string.scanOver));
             }else{
                 MToast.showToast(MyApplication.context, ResUtil.getString(R.string.scanOver_noMusic));
-                play.musicListChange(0,null);
+                musicListChange();
             }
             scanningMusicLock.unlock();
             return null;
