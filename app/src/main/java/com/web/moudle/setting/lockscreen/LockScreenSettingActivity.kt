@@ -37,7 +37,7 @@ import java.io.FileOutputStream
 class LockScreenSettingActivity : BaseActivity() {
     private val colorList = arrayListOf<Int>()
 
-    private var mColor = SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor,ResUtil.getColor(R.color.themeColor))
+    private var mColor = SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor, ResUtil.getColor(R.color.themeColor))
 
     init {
         colorList.add(ResUtil.getColor(R.color.themeColor))
@@ -60,12 +60,11 @@ class LockScreenSettingActivity : BaseActivity() {
         rv_s_lock_colorList.addItemDecoration(GapItemDecoration(right = 10))
         view_s_lock_colorSelected.setOnClickListener { colorPick() }
         sw_lockScreenMode.setOnClickListener {
-            if (getMode() == BG_MODE_COLOR) {
+            if (getMode() == BG_MODE_COLOR&&switchLockScreenMode(BG_MODE_IMAGE)) {
                 setMode(BG_MODE_IMAGE)
-            } else {
+            } else if(switchLockScreenMode(BG_MODE_COLOR)) {
                 setMode(BG_MODE_COLOR)
             }
-            switchLockScreenMode(getMode())
         }
         switchLockScreenMode(getMode())
         sw_s_lock_switch.setOnCheckedChangeListener { _, res ->
@@ -90,7 +89,6 @@ class LockScreenSettingActivity : BaseActivity() {
                 holder.rootView.setOnClickListener {
                     view_s_lock_colorSelected.setImageDrawable(ColorDrawable(colorList[position]))
                     setBgColor(colorList[position])
-                    //SP.putValue(Constant.spName,Constant.SpKey.lockScreenBgMode,LockScreenActivity.BG_MODE_COLOR)
                 }
             }
         }
@@ -98,6 +96,9 @@ class LockScreenSettingActivity : BaseActivity() {
         setBackgroundImage(getBgImagePath())
 
 
+        iv_s_lock_imageShow.setOnClickListener {
+            tv_s_lock_setImageBackground.performClick()
+        }
         tv_s_lock_setImageBackground.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT, null)
             intent.type = "image/*"
@@ -107,20 +108,29 @@ class LockScreenSettingActivity : BaseActivity() {
         }
 
 
+        val lp = iv_s_lock_imageShow.layoutParams
+        lp.width = ViewUtil.screenWidth() shr 2
+        lp.height = ViewUtil.screenHeight() shr 2
     }
 
-    private fun switchLockScreenMode(mode: String) {
+    private fun switchLockScreenMode(mode: String) :Boolean{
+        var res=true
         sw_lockScreenMode.text =
                 if (mode == BG_MODE_COLOR) getString(R.string.setting_lockScreen_mode_color)
-                else getString(R.string.setting_lockScreen_mode_image)
+                else if (!File(getBgImagePath()).exists()) {
+                    tv_s_lock_setImageBackground.performClick()
+                    res=false
+                    getString(R.string.setting_lockScreen_mode_color)
+                } else {
+                    getString(R.string.setting_lockScreen_mode_image)
+                }
+
+        return res
     }
 
     private fun setBackgroundImage(path: String) {
         ImageLoad.loadAsBitmap(path).into(object : BaseGlideTarget(ViewUtil.screenWidth() shr 2, ViewUtil.screenHeight() shr 2) {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                val lp = iv_s_lock_imageShow.layoutParams
-                lp.width = ViewUtil.screenWidth() shr 2
-                lp.height = ViewUtil.screenHeight() shr 2
                 iv_s_lock_imageShow.setImageBitmap(resource)
             }
         })
@@ -193,8 +203,9 @@ class LockScreenSettingActivity : BaseActivity() {
                     }
                 }
                 setBgImagePath(path)
-                setMode(BG_MODE_IMAGE)
-                switchLockScreenMode(BG_MODE_IMAGE)
+                if(switchLockScreenMode(BG_MODE_IMAGE)){
+                    setMode(BG_MODE_IMAGE)
+                }
                 setBackgroundImage(path)
                 tmpFile.delete()
             } catch (e: Exception) {
@@ -204,8 +215,8 @@ class LockScreenSettingActivity : BaseActivity() {
     }
 
     companion object {
-        const val BG_MODE_COLOR="color"
-        const val BG_MODE_IMAGE="image"
+        const val BG_MODE_COLOR = "color"
+        const val BG_MODE_IMAGE = "image"
         fun actionStart(context: Context) {
             context.startActivity(Intent(context, LockScreenSettingActivity::class.java))
         }
@@ -219,7 +230,7 @@ class LockScreenSettingActivity : BaseActivity() {
         }
 
         fun getMode(): String {
-            return SP.getString(Constant.spName, Constant.SpKey.lockScreenBgMode,BG_MODE_COLOR)
+            return SP.getString(Constant.spName, Constant.SpKey.lockScreenBgMode, BG_MODE_COLOR)
         }
 
         fun setMode(mode: String) {

@@ -2,6 +2,7 @@ package com.web.moudle.music.page.local.control.ui
 
 import android.content.Context
 import com.web.common.base.BaseAdapter
+import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.LocalSheetAdapter
 import com.web.moudle.music.page.local.control.interf.LocalSheetListener
@@ -12,7 +13,9 @@ class LocalSheetListAlert(context: Context, title: String) : BaseListPopWindow<S
         context,
         title,
         R.layout.layout_title_list,
-        (ViewUtil.screenWidth() * 0.75f).toInt()) {
+        width=(ViewUtil.screenWidth() * 0.75f).toInt(),
+        maxHeight = (ViewUtil.screenHeight() * 0.5f).toInt()
+        ) {
 
     init {
         setCanTouchRemove(true)

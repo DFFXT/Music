@@ -31,6 +31,7 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
     private int paddingStart= ViewUtil.dpToPx(16f);
     private int paddingOther= ViewUtil.dpToPx(8f);
     private int arrowSize=ViewUtil.dpToPx(16f);
+    private int editIndex=-1;
     public LocalSheetAdapter(List<String> list){
         super(list);
         this.list=list;
@@ -47,6 +48,8 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
         inputItem.setText(list.get(position));
         EditText et=inputItem.getInputBox();
         ImageView button=inputItem.getClickButton();
+
+
         if(index==position){
             et.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
             Drawable drawable=inputItem.getContext().getDrawable(R.drawable.icon_pause_fill);
@@ -64,12 +67,19 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
             et.setTextColor(ResUtil.getColor(R.color.textColorGray));
         }
 
-        et.setOnClickListener((v1)->{
-            if(listener!=null){
-                listener.select(v1,position);
-                setIndex(position);
-            }
-        });
+        if(position!=editIndex){
+            et.setOnClickListener((v1)->{
+                if(listener!=null){
+                    listener.select(v1,position);
+                    setIndex(position);
+                }
+            });
+            button.setSelected(false);
+        }else{
+            button.setSelected(true);
+            et.setOnClickListener(null);
+        }
+
         if(position==0){
             button.setVisibility(View.INVISIBLE);
         }else {
@@ -77,9 +87,13 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
             if(listener!=null){
                 inputItem.setListenerSave(text->{
                     listener.saveEdit(text,position);
-                    return null;
+                    return text;
                 });
             }
+            inputItem.setListenSelect(isSelected->{
+                editIndex=position;
+                return null;
+            });
         }
 
     }

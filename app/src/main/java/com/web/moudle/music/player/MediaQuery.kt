@@ -47,6 +47,7 @@ object MediaQuery {
                     for (type in types) {
                         if (!type.isScanable) continue
                         if (path != null && path.toLowerCase().endsWith(type.scanSuffix.toLowerCase()) && size >= type.minFileSize) {
+
                             hasMusic=true
                             val lastSeparatorChar = path.lastIndexOf(File.separatorChar)
                             //**文件名包含后缀
@@ -58,6 +59,7 @@ object MediaQuery {
                             //**去后缀
                             val lastIndex = out[0]!!.lastIndexOf('.')
                             val music = Music(out[0]!!.substring(0, lastIndex), out[1], path)
+                            music.size = size.toLong()
                             music.suffix=out[0]!!.substring(lastIndex+1)
                             index = cursor.getColumnIndex("duration")
                             music.duration = cursor.getInt(index)

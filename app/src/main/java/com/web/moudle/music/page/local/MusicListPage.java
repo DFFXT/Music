@@ -43,7 +43,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MusicListLPage extends BaseMusicPage {
+public class MusicListPage extends BaseMusicPage {
     public final static String pageName="MusicList";
     private MusicList<Music> data;
     private RecyclerView rv_musicList;
@@ -147,7 +147,7 @@ public class MusicListLPage extends BaseMusicPage {
         tv_abPath.setText(music.getPath());
 
         ((TextView)v.findViewById(R.id.tv_duration)).setText(ResUtil.timeFormat("mm:ss",music.getDuration()));
-        ((TextView)v.findViewById(R.id.tv_size)).setText(ResUtil.getFileSize(music.getDuration()));
+        ((TextView)v.findViewById(R.id.tv_size)).setText(ResUtil.getFileSize(music.getSize()));
 
         InputItem ii_name=v.findViewById(R.id.layout_musicName);
         ii_name.setText(music.getMusicName());

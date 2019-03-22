@@ -341,6 +341,7 @@ public class FileDownloadService extends Service {
                     record.setSuffix(music.getFormat());
                     record.setDuration(music.getDuration()*1000);//**将时间转换为ms
                     record.setAlbum(music.getAlbumName());
+                    record.setSize(music.getSize());
                     record.saveOrUpdate();
                     music.setHasDownload(music.getSize());
                     downloadMusic.setStatus(DownloadMusic.DOWNLOAD_COMPLETE);

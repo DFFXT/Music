@@ -23,12 +23,17 @@ abstract class BaseListPopWindow<T> @JvmOverloads constructor(
         title: String,
         @LayoutRes layout:Int,
         width:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
-        height:Int=ViewGroup.LayoutParams.WRAP_CONTENT)
+        height:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
+        maxWidth:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
+        maxHeight:Int=ViewGroup.LayoutParams.WRAP_CONTENT)
     : BasePopupWindow(
         context,
         LayoutInflater.from(context).inflate(layout, null),
         width,
-        height) {
+        height,
+        maxWidth,
+        maxHeight
+        ) {
     var list: ArrayList<T> = arrayListOf()
         set(value) {
             field.clear()

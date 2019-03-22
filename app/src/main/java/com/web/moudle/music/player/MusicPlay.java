@@ -16,7 +16,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
@@ -29,7 +28,6 @@ import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusicForPlay;
 import com.web.data.Music;
-import com.web.data.MusicGroup;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
@@ -738,7 +736,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             break;
             case ACTION_ClEAR_ALL_MUSIC: {
                 DataSupport.deleteAll(Music.class);
-                DataSupport.deleteAll(MusicGroup.class);
                 SP.INSTANCE.putValue(Constant.spName, Constant.SpKey.clearAll, true);
                 getMusicList();
                 reset();

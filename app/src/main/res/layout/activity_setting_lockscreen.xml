@@ -33,6 +33,7 @@
                 android:text="@string/setting_lockScreen_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/sw_s_lock_switch"
                 />
@@ -47,6 +48,7 @@
             <TextView
                 android:id="@+id/tv_lockScreenMode"
                 android:text="@string/setting_lockScreen_modeSelect"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sw_s_lock_switch"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
@@ -69,6 +71,7 @@
             <TextView
                 android:id="@+id/tv_s_lock_labelForColorList"
                 android:text="@string/setting_lockScreen_colorListLabel"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_lockScreenMode"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
@@ -78,6 +81,7 @@
                 android:id="@+id/rv_s_lock_colorList"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="@+id/view_s_lock_colorSelected"
                 app:layout_constraintTop_toTopOf="@id/view_s_lock_colorSelected" />
             <ImageView
@@ -95,6 +99,7 @@
                 android:paddingBottom="20dp"
                 android:text="@string/setting_lockScreen_imageBackground"
                 app:layout_constraintTop_toBottomOf="@id/rv_s_lock_colorList"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -103,6 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
+                android:src="@drawable/lock_add_img"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_s_lock_setImageBackground"/>

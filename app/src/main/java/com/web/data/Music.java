@@ -26,7 +26,8 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     private int song_id;
     private int album_id;
     private String album;
-    private String suffix;//** ".mp3"
+    private String suffix;//** "mp3"无.
+    private long size;
     @Deprecated
     public Music(){}
     public Music(String musicName,String singer,String path){
@@ -199,5 +200,13 @@ public class Music extends DataSupport implements Cloneable,Serializable {
             return path.equals(((Music) obj).path);
         }
         return false;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }

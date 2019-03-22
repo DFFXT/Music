@@ -64,32 +64,30 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     private int RESULT_CODE_SEARCH = 1;
 
-    private TextView songname, singer, tv_musicOrigin;//**音乐信息
+    private TextView songName, singer, tv_musicOrigin;//**音乐信息
     private SeekBar bar;//--进度条
     private ImageView iv_singerIcon;
-    private ImageView pre, pause, next, musicplay_type;//--各种图标
-
-    private TopBarLayout toolbar;
+    private ImageView pre, pause, next, musicPlay_type;//--各种图标
 
     private DrawerLayout drawer;
     private ViewPager viewPager;
 
-    private MusicListLPage musicListLPage;
+    private MusicListPage musicListPage;
     private MusicPlay.Connect connect;
     private List<MusicList<Music>> groupList;
     private int groupIndex = -1;
     private List<BaseMusicPage> pageList = new ArrayList<>();
 
     private SelectorListAlert listAlert;
-    private PlayerObserver observer=new PlayerObserver(){
+    private PlayerObserver observer = new PlayerObserver() {
         @Override
         public void load(int groupIndex, int childIndex, Music music, int maxTime) {
             bar.setMax(maxTime / 1000);
             if (music == null) {
-                songname.setText(null);
+                songName.setText(null);
                 singer.setText(null);
             } else {
-                songname.setText(music.getMusicName());
+                songName.setText(music.getMusicName());
                 singer.setText(music.getSinger());
             }
             if (connect.getConfig().getBitmap() == null) {
@@ -99,7 +97,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             }
 
             play();
-            musicListLPage.loadMusic(groupIndex, childIndex);
+            musicListPage.loadMusic(groupIndex, childIndex);
         }
 
         @Override
@@ -122,20 +120,21 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void currentTime(int group, int child, int time) {
-            bar.setProgress(time / 1000);
+            if (!bar.isPressed())
+                bar.setProgress(time / 1000);
         }
 
         @Override
-        public void musicListChange(int group,int child,List<MusicList<Music>> list) {
+        public void musicListChange(int group, int child, List<MusicList<Music>> list) {
             if (list == null || list.size() == 0 || list.get(0).size() == 0) {
                 if (list != null) {
-                    musicListLPage.setData(group,child,list.get(group));
+                    musicListPage.setData(group, child, list.get(group));
                     groupList = list;
                     groupIndex = group;
                     getCurrentPage().setTitle(tv_title);
                 }
             } else {
-                musicListLPage.setData(group,child,list.get(group));
+                musicListPage.setData(group, child, list.get(group));
                 groupList = list;
                 groupIndex = group;
                 getCurrentPage().setTitle(tv_title);
@@ -144,7 +143,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void bufferingUpdate(int percent) {
-            bar.setSecondaryProgress((int) (percent*bar.getMax()/100f));
+            bar.setSecondaryProgress((int) (percent * bar.getMax() / 100f));
         }
 
         /***
@@ -188,10 +187,10 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         //WindowUtil.setImmersedStatusBar(getWindow());
         findID();
         setToolbar();
-        musicListLPage = new MusicListLPage();
+        musicListPage = new MusicListPage();
         pageList.add(new RecommendPage());
-        pageList.add(musicListLPage);
-        musicListLPage.setTitle(tv_title);
+        pageList.add(musicListPage);
+        musicListPage.setTitle(tv_title);
         setAdapter();
         startService(new Intent(this, MusicPlay.class));
         setListener();
@@ -207,18 +206,18 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     @SuppressLint("RestrictedApi")
     private void setToolbar() {
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setStartImageListener(v-> drawer.openDrawer(GravityCompat.START));
-        int paddingTop= ViewUtil.dpToPx(8);
-        int paddingStart=ViewUtil.dpToPx(6);
-        toolbar.getStartImageView().setPadding(paddingStart,paddingTop,paddingStart,paddingTop);
-        toolbar.getEndImageView().setPadding(paddingStart,paddingStart,paddingStart,paddingStart);
-        toolbar.setEndImageListener(v->SearchActivity.actionStart(MusicActivity.this, RESULT_CODE_SEARCH));
+        TopBarLayout toolbar = findViewById(R.id.toolbar);
+        toolbar.setStartImageListener(v -> drawer.openDrawer(GravityCompat.START));
+        int paddingTop = ViewUtil.dpToPx(8);
+        int paddingStart = ViewUtil.dpToPx(6);
+        toolbar.getStartImageView().setPadding(paddingStart, paddingTop, paddingStart, paddingTop);
+        toolbar.getEndImageView().setPadding(paddingStart, paddingStart, paddingStart, paddingStart);
+        toolbar.setEndImageListener(v -> SearchActivity.actionStart(MusicActivity.this, RESULT_CODE_SEARCH));
         tv_title = toolbar.setMainTitle(ResUtil.getString(R.string.page_local));
         tv_title.setCompoundDrawableTintMode(PorterDuff.Mode.ADD);
         tv_title.setOnClickListener(v -> {
             switch (pageList.get(viewPager.getCurrentItem()).getPageName()) {
-                case MusicListLPage.pageName: {
+                case MusicListPage.pageName: {
                     LocalSheetListAlert listAlert = new LocalSheetListAlert(MusicActivity.this, ResUtil.getString(R.string.songSheet));
                     ArrayList<String> list = new ArrayList<>();
                     for (MusicList ml : groupList) {
@@ -231,25 +230,25 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                         @Override
                         public void select(View v, int position) {
                             connect.getList(position);
-                            connect.changeSheet(position,0);
+                            connect.changeSheet(position, 0);
                             listAlert.dismiss();
                         }
 
                         @Override
                         public void remove(View v, int position) {
-                            if(position==0){//**默认歌单无法删除
+                            if (position == 0) {//**默认歌单无法删除
                                 listAlert.dismiss();
                                 return;
                             }
-                            SongSheetManager.INSTANCE.getSongSheetList().removeSongSheet(position-1);
+                            SongSheetManager.INSTANCE.getSongSheetList().removeSongSheet(position - 1);
                             connect.groupChange();
                         }
 
                         @Override
-                        public void saveEdit(String name,int index) {
-                            if(groupList.get(index).getTitle().equals(name))return;
-                            SongSheetList list=SongSheetManager.INSTANCE.getSongSheetList();
-                            list.getSongList().get(index-1).setName(name);
+                        public void saveEdit(String name, int index) {
+                            if (groupList.get(index).getTitle().equals(name)) return;
+                            SongSheetList list = SongSheetManager.INSTANCE.getSongSheetList();
+                            list.getSongList().get(index - 1).setName(name);
                             list.save();
                             groupList.get(index).setTitle(name);
                         }
@@ -262,8 +261,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
     private TextView tv_title;
-
-
 
 
     /**
@@ -290,8 +287,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         viewPager = findViewById(R.id.viewPager);
 
         View v = findViewById(R.id.musicControlBox);
-        v.setOnClickListener(view->{
-            if(connect.getConfig().getMusic()!=null)
+        v.setOnClickListener(view -> {
+            if (connect.getConfig().getMusic() != null)
                 LyricsActivity.actionStart(this);
         });
         bar = v.findViewById(R.id.bar);
@@ -301,22 +298,22 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             bar.setThumb(d);
         }
         iv_singerIcon = v.findViewById(R.id.iv_singerIcon);
-        songname = v.findViewById(R.id.songname);
+        songName = v.findViewById(R.id.songname);
         singer = v.findViewById(R.id.singer);
         pre = v.findViewById(R.id.pre);
         pause = v.findViewById(R.id.pause);
         next = v.findViewById(R.id.next);
-        musicplay_type = v.findViewById(R.id.musicplay_type);
+        musicPlay_type = v.findViewById(R.id.musicplay_type);
 
         //***音乐控制View
         bar = findViewById(R.id.bar);
-        songname = findViewById(R.id.songname);
+        songName = findViewById(R.id.songname);
         singer = findViewById(R.id.singer);
         tv_musicOrigin = findViewById(R.id.musicOrigin);
         pre = findViewById(R.id.pre);
         pause = findViewById(R.id.pause);
         next = findViewById(R.id.next);
-        musicplay_type = findViewById(R.id.musicplay_type);
+        musicPlay_type = findViewById(R.id.musicplay_type);
 
 
         v = findViewById(R.id.leftDrawer);
@@ -325,9 +322,9 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         v.findViewById(R.id.item_setting1).setOnClickListener(this);
         tv_musicOrigin.setOnClickListener(this);
 
-        TextView tv=drawer.findViewById(R.id.tv_version);
-        tv.setText(ResUtil.getString(R.string.about_app,Apk.getVersionName()));
-        Apk.init(this,drawer);
+        TextView tv = drawer.findViewById(R.id.tv_version);
+        tv.setText(ResUtil.getString(R.string.about_app, Apk.getVersionName()));
+        Apk.init(this, drawer);
     }
 
     private ServiceConnection serviceConnection;
@@ -343,7 +340,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 connect = (MusicPlay.Connect) service;
-                connect.addObserver(MusicActivity.this,observer);
+                connect.addObserver(MusicActivity.this, observer);
                 connect.getList(0);
                 getIntentData();//*************8获取输入数据
                 for (BaseMusicPage page : pageList) {
@@ -388,13 +385,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         pre.setOnClickListener(this);
         pause.setOnClickListener(this);
         next.setOnClickListener(this);
-        musicplay_type.setOnClickListener(this);
+        musicPlay_type.setOnClickListener(this);
 
         bar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {//--进度条拖动
             public void onStopTrackingTouch(SeekBar arg0) {
                 int progress = arg0.getProgress();
                 connect.seekTo(progress * 1000);
-                //currentTime(-1,-1,arg0.getProgress()*100);
             }
 
             public void onStartTrackingTouch(SeekBar arg0) {
@@ -534,19 +530,19 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private void showPlayType(PlayerConfig.PlayType playType) {
         switch (playType) {
             case ALL_LOOP: {
-                musicplay_type.setImageResource(R.drawable.music_type_all_loop);
+                musicPlay_type.setImageResource(R.drawable.music_type_all_loop);
             }
             break;
             case ONE_LOOP: {
-                musicplay_type.setImageResource(R.drawable.music_type_one_loop);
+                musicPlay_type.setImageResource(R.drawable.music_type_one_loop);
             }
             break;
             case ALL_ONCE: {
-                musicplay_type.setImageResource(R.drawable.music_type_all_once);
+                musicPlay_type.setImageResource(R.drawable.music_type_all_once);
             }
             break;
             case ONE_ONCE: {
-                musicplay_type.setImageResource(R.drawable.music_type_one_once);
+                musicPlay_type.setImageResource(R.drawable.music_type_one_once);
             }
             break;
         }
@@ -583,8 +579,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
 
-    public static void actionStartForResult(Activity context,int code){
-        context.startActivityForResult(new Intent(context,MusicActivity.class),code);
+    public static void actionStartForResult(Activity context, int code) {
+        context.startActivityForResult(new Intent(context, MusicActivity.class), code);
     }
 
 }

@@ -6,20 +6,25 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.os.IBinder
 import android.view.*
 import android.widget.PopupWindow
+import com.web.misc.imageDraw.MaxSizeOnMeasure
 
-open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
-                           val rootView: View,
-                           width:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
-                           height:Int=ViewGroup.LayoutParams.WRAP_CONTENT) {
+open class BasePopupWindow @JvmOverloads constructor (
+        private val ctx: Context,
+        val rootView: View,
+        width:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
+        height:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
+        maxWidth:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
+        maxHeight:Int=ViewGroup.LayoutParams.WRAP_CONTENT) {
 
     private val popupWindow: PopupWindow = PopupWindow(width, height)
     var dismissCallback:(()->Unit)?=null
-    var wt:IBinder?=null
     init {
-        popupWindow.contentView = rootView
+        val viewGroup=MyViewGroup(ctx)
+        viewGroup.addView(rootView)
+        viewGroup.measureListener=MaxSizeOnMeasure(maxWidth,maxHeight)
+        popupWindow.contentView = viewGroup
         setBackground(ColorDrawable(Color.TRANSPARENT))
         popupWindow.isOutsideTouchable = false
         popupWindow.isFocusable = true
@@ -66,7 +71,6 @@ open class BasePopupWindow @JvmOverloads constructor (private val ctx: Context,
         animator.addUpdateListener { animation ->
             lp.alpha = animation.animatedValue as Float
             window.attributes = lp
-            wt=rootView.windowToken
         }
         animator.start()
     }
