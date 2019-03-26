@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal >
     <dbname value="Music"/>
-    <version value="12"/>
+    <version value="19"/>
     <list>
         <mapping class="com.web.data.Music"/>
         <mapping class="com.web.data.ScanMusicType"/>
         <mapping class="com.web.data.InternetMusic"/>
         <mapping class="com.web.data.InternetMusicDetail"/>
+        <mapping class="com.web.moudle.lyrics.bean.SoundInfo"/>
+        <mapping class="com.web.moudle.lyrics.bean.SoundSettingList"/>
     </list>
 </litepal>

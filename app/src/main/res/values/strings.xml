@@ -128,6 +128,10 @@
 	<string name="download_urlError">获取路径失败</string>
 	<string name="noMoreData">没有更多数据</string>
 	<string name="unkownError">未知错误</string>
+	<string name="soundsSetting">音效调节</string>
+	<string name="musicFrequency">频率</string>
+	<string name="savedSoundSetting">保存的音效</string>
+	<string name="default_">默认</string>
 
     <string name="failedConnectToPlayer">连接播放器失败</string>
 	<string name="text_week">星期</string>

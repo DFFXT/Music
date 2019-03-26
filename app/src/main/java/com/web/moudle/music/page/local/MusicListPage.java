@@ -22,7 +22,7 @@ import com.web.misc.InputItem;
 import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.adapter.LocalMusicAdapter;
-import com.web.moudle.music.page.local.control.ui.SingleTextListAlert;
+import com.web.moudle.music.page.local.control.ui.SheetCreateAlert;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheet;
@@ -109,26 +109,24 @@ public class MusicListPage extends BaseMusicPage {
         for(SongSheet sheet:list){
             sheetNameList.add(sheet.getName());
         }
-        sheetNameList.add("");
-        SingleTextListAlert alert=new SingleTextListAlert(getContext(),ResUtil.getString(R.string.songSheet));
+        SheetCreateAlert alert=new SheetCreateAlert(Objects.requireNonNull(getContext()),ResUtil.getString(R.string.songSheet));
         alert.setList(sheetNameList);
+        alert.setCreateListener(()->{
+            String name="sheet-"+SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
+            sheetNameList.add(sheetNameList.size(),name);
+            SongSheetManager.INSTANCE.createNewSongSheet(name);
+            alert.setList(sheetNameList);
+            alert.getAdapter().notifyItemRangeInserted(sheetNameList.size()-1,1);
+            connect.groupChange();
+            return null;
+        });
         alert.setItemClickListener(index->{
-            if(index!=sheetNameList.size()-1){
-                for(int id:musicIds){
-                    list.get(index).add(id);
-                }
-                connect.groupChange();
-                SongSheetManager.INSTANCE.getSongSheetList().save();
-                alert.dismiss();
-            }else {
-                String name="sheet-"+SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
-                sheetNameList.add(sheetNameList.size()-1,name);
-                SongSheetManager.INSTANCE.createNewSongSheet(name);
-                alert.setList(sheetNameList);
-                alert.getAdapter().notifyItemRangeInserted(index,1);
-                alert.getAdapter().notifyItemRangeChanged(index,2);
-                connect.groupChange();
+            for(int id:musicIds){
+                list.get(index).add(id);
             }
+            connect.groupChange();
+            SongSheetManager.INSTANCE.getSongSheetList().save();
+            alert.dismiss();
             return null;
         });
         alert.show(rv_musicList);

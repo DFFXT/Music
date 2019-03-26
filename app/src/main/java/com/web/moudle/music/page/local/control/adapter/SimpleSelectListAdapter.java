@@ -45,8 +45,8 @@ public class SimpleSelectListAdapter extends BaseAdapter<String> implements Remo
         tv.setOnClickListener((v1)->{
             if(listener!=null){
                 listener.select(v1,position);
-                setIndex(position);
             }
+            setIndex(position);
         });
         if(index==position){
             tv.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);

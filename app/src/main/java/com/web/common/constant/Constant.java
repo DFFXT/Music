@@ -14,6 +14,8 @@ public final class Constant {
         public final static String lockScreenBgMode="lockScreenBgMode";
         public final static String noLockScreen="noLockScreen";
 
+        public final static String currentSoundEffect="currentSoundEffect";
+
         public final static String currentVersion="currentVersion";
         public final static String latestVersion="latestVersion";
     }

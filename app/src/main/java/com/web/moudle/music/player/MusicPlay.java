@@ -315,11 +315,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
         }
 
-
-        /***
-         * 每隔一秒获取当前时间
-         */
-
+        public int getMediaPlayId(){
+            return player.getAudioSessionId();
+        }
 
         public void addObserver(LifecycleOwner owner, PlayInterface play) {
             MusicPlay.this.play.addObserver(owner, play);

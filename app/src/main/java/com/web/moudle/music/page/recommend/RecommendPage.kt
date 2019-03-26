@@ -1,5 +1,8 @@
 package com.web.moudle.music.page.recommend
 
+import android.graphics.Color
+import android.graphics.PixelFormat
+import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -68,6 +71,9 @@ class RecommendPage : BaseMusicPage() {
 
             }
         }
+        //**flutterView extends SurfaceView 所以setAlpha没有用，需要holder设置Transparent或者Translucent
+        //**这样在popupWindow弹出时才会变暗
+        (flutterView as SurfaceView).holder.setFormat(PixelFormat.TRANSPARENT)
         (rootView.layout_box as ViewGroup).addView(flutterView)
     }
 

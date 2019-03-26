@@ -2,10 +2,8 @@ package com.web.moudle.lockScreen.ui
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ActivityOptions
 import android.app.KeyguardManager
-import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -26,8 +24,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
 import com.web.common.base.BaseGlideTarget
@@ -38,7 +34,7 @@ import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
-import com.web.moudle.lyrics.LyricsLine
+import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R

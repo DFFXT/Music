@@ -16,7 +16,9 @@
     <uses-permission-sdk-23 android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission-sdk-23 android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-    
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
 
     <application
         android:name="com.web.common.base.MyApplication"
@@ -132,6 +134,7 @@
             android:theme="@style/ActivityTransparent"
             android:name="com.web.moudle.lyrics.LyricsActivity" />
         <activity android:name="com.web.moudle.setting.about.AboutActivity" />
+        <activity android:name="com.web.moudle.lyrics.EqualizerActivity" />
 
     </application>
 

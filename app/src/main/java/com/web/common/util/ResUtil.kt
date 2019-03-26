@@ -4,10 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
-import androidx.annotation.ArrayRes
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import androidx.annotation.*
 import com.web.common.base.MyApplication
 import org.litepal.LitePalApplication
 import java.text.DecimalFormat
@@ -49,6 +46,13 @@ object ResUtil {
     fun getColor(@ColorRes colorId:Int):Int{
         return MyApplication.context.resources.getColor(colorId,MyApplication.context.theme)
     }
+
+    @JvmStatic
+    @ColorInt
+    fun getColorReverse(@ColorInt color:Int):Int{
+        return color xor 0xffffff
+    }
+
     @JvmStatic
     fun getDrawable(@DrawableRes drawableId: Int):Drawable{
         return MyApplication.context.resources.getDrawable(drawableId,MyApplication.context.theme)

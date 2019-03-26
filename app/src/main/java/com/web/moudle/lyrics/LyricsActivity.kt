@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.media.audiofx.Equalizer
+import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.View
 import com.web.common.base.BaseActivity
@@ -13,17 +15,21 @@ import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.musicEntry.ui.PlayerObserver
+import com.web.common.base.PlayerObserver
+import com.web.misc.imageDraw.WaveDraw
+import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.web.R
 import kotlinx.android.synthetic.main.music_lyrics_view.*
 import java.util.*
 
 class LyricsActivity : BaseActivity() {
     private var connect: MusicPlay.Connect? = null
+    private var visualizer:Visualizer?=null
     private val list = ArrayList<LyricsLine>()
     private var connection: ServiceConnection? = null
     private var actionStart = true
     private var canScroll=true
+    private val waveDraw=WaveDraw()
     private var observer: PlayerObserver = object : PlayerObserver() {
 
         override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
@@ -47,6 +53,7 @@ class LyricsActivity : BaseActivity() {
 
     override fun initView() {
 
+        riv_wave.afterDraw=waveDraw
         lv_lyrics!!.textColor = ResUtil.getColor(R.color.themeColor)
         lv_lyrics!!.lyrics = list
        topBar.setEndImageListener(View.OnClickListener {
@@ -59,6 +66,10 @@ class LyricsActivity : BaseActivity() {
            }
            lv_lyrics!!.setCanScroll(canScroll)
         })
+
+        iv_musicEffect.setOnClickListener {
+            EqualizerActivity.actionStart(this)
+        }
         lv_lyrics!!.setSeekListener { seekTo ->
             connect?.seekTo(seekTo)
             true
@@ -73,11 +84,29 @@ class LyricsActivity : BaseActivity() {
                 connect = service as MusicPlay.Connect
                 connect?.addObserver(this@LyricsActivity, observer)
                 connect?.getPlayerInfo()
+
+                val e=Equalizer(0,connect!!.mediaPlayId)
+                e.enabled=true
+
+                visualizer=Visualizer(connect?.mediaPlayId!!)
+                visualizer!!.captureSize = Visualizer.getCaptureSizeRange()[0]
+                visualizer!!.scalingMode = Visualizer.SCALING_MODE_NORMALIZED
+                visualizer!!.setDataCaptureListener(object :Visualizer.OnDataCaptureListener{
+                    override fun onFftDataCapture(visualizer: Visualizer, fft: ByteArray, samplingRate: Int) {
+                    }
+
+                    override fun onWaveFormDataCapture(visualizer: Visualizer, waveform: ByteArray, samplingRate: Int) {
+                        waveDraw.byteArray=waveform
+                    }
+                },Visualizer.getMaxCaptureRate(),true,true)
+                visualizer!!.enabled=true
             }
         }
         intent = Intent(this, MusicPlay::class.java)
         intent.action = MusicPlay.BIND
         bindService(intent, connection!!, Context.BIND_AUTO_CREATE)
+
+
 
 
     }
@@ -103,6 +132,7 @@ class LyricsActivity : BaseActivity() {
     override fun onDestroy() {
         connection?.let {
             unbindService(it)
+            visualizer?.release()
         }
         super.onDestroy()
     }

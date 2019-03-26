@@ -13,7 +13,7 @@ import com.web.data.Music
 import com.web.data.MusicList
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.musicEntry.ui.PlayerObserver
+import com.web.common.base.PlayerObserver
 
 /**
  * logo界面
@@ -44,9 +44,10 @@ class HelloActivity : BaseActivity() {
             override fun onServiceConnected(name: ComponentName?, service: IBinder) {
                 connect = (service as MusicPlay.Connect)
                 connect?.addObserver(this@HelloActivity, observer)
-                if (PermissionManager.requestIOPermission(this@HelloActivity)) {
+                if (PermissionManager.requestAllPermission(this@HelloActivity)) {
                     connect?.getList(0)
                 }
+                //PermissionManager.requestRecordPermission(this@HelloActivity)
             }
         }
         val intent = Intent(this, MusicPlay::class.java)

@@ -1,6 +1,6 @@
 package com.web.config;
 
-import com.web.moudle.lyrics.LyricsLine;
+import com.web.moudle.lyrics.bean.LyricsLine;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

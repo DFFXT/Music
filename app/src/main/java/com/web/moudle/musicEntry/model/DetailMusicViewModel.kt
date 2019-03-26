@@ -6,7 +6,7 @@ import com.web.common.base.BaseSingleObserver
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
-import com.web.moudle.lyrics.LyricsLine
+import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 
 class DetailMusicViewModel : ViewModel() {

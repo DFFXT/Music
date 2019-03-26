@@ -15,4 +15,28 @@ object PermissionManager {
         }
         return true
     }
+    @JvmStatic
+    fun requestRecordPermission(activity: Activity):Boolean{
+        return requestPermission(activity, arrayOf(Manifest.permission.RECORD_AUDIO))
+    }
+
+    @JvmStatic
+    fun requestAllPermission(activity: Activity):Boolean{
+        return requestPermission(activity,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.MODIFY_AUDIO_SETTINGS))
+    }
+    @JvmStatic
+    private fun requestPermission(activity: Activity,permissions:Array<String>):Boolean{
+        var res=0
+        permissions.forEach {
+            res= res or activity.checkCallingPermission(it)
+        }
+        if(res!=PackageManager.PERMISSION_GRANTED){
+            activity.requestPermissions(permissions, 0x666)
+            return false
+        }
+        return true
+    }
 }

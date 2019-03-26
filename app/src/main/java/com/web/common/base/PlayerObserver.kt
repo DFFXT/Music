@@ -1,4 +1,4 @@
-package com.web.moudle.musicEntry.ui
+package com.web.common.base
 
 import com.web.data.Music
 import com.web.data.MusicList

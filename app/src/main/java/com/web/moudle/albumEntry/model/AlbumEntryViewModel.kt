@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.moudle.albumEntry.bean.AlbumResponse
-import com.web.moudle.lyrics.LyricsLine
+import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 
 class AlbumEntryViewModel : ViewModel() {

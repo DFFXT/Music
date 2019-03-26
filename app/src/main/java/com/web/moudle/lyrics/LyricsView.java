@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
 import com.web.common.util.ViewUtil;
+import com.web.moudle.lyrics.bean.LyricsLine;
 
 import java.util.ArrayList;
 import java.util.List;

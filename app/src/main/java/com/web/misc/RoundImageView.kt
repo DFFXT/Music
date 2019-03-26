@@ -6,6 +6,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.ImageView
+import com.web.common.base.log
 import com.web.misc.imageDraw.ImageDraw
 import com.web.web.R
 

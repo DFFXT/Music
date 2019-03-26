@@ -3,7 +3,7 @@ package com.web.moudle.musicEntry.model
 import com.web.common.base.SingleSchedulerTransform
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
-import com.web.moudle.lyrics.LyricsLine
+import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit

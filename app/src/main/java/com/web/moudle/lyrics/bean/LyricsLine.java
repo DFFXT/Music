@@ -1,4 +1,4 @@
-package com.web.moudle.lyrics;
+package com.web.moudle.lyrics.bean;
 
 public class LyricsLine{
 	//**当前歌词

@@ -6,11 +6,13 @@ import android.provider.MediaStore
 import com.web.common.base.MyApplication
 import com.web.common.base.log
 import com.web.common.constant.Constant
+import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.data.MusicList
 import com.web.moudle.preference.SP
 import com.web.moudle.setting.suffix.SuffixSelectActivity
+import com.web.web.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -100,7 +102,7 @@ object MediaQuery {
             //**获取默认列表的歌曲
             val defList = DataSupport.findAll(Music::class.java)
 
-            val defGroup = MusicList<Music>("默认")
+            val defGroup = MusicList<Music>(ResUtil.getString(R.string.default_))
             defGroup.addAll(defList)
             musicList.add(defGroup)
             //**获取自定义列表的歌曲

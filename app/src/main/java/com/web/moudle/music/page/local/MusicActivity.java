@@ -28,6 +28,7 @@ import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
 import com.web.misc.TopBarLayout;
+import com.web.moudle.lyrics.EqualizerActivity;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
@@ -39,7 +40,7 @@ import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheetList;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
-import com.web.moudle.musicEntry.ui.PlayerObserver;
+import com.web.common.base.PlayerObserver;
 import com.web.moudle.musicSearch.ui.InternetMusicActivity;
 import com.web.moudle.preference.SP;
 import com.web.moudle.search.SearchActivity;
@@ -288,8 +289,10 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
         View v = findViewById(R.id.musicControlBox);
         v.setOnClickListener(view -> {
-            if (connect.getConfig().getMusic() != null)
+            if (connect.getConfig().getMusic() != null){
                 LyricsActivity.actionStart(this);
+            }
+
         });
         bar = v.findViewById(R.id.bar);
         Drawable d = getDrawable(R.drawable.icon_seekbar_dot_pressed);
