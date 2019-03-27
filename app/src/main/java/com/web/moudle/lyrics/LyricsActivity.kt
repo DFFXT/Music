@@ -85,8 +85,6 @@ class LyricsActivity : BaseActivity() {
                 connect?.addObserver(this@LyricsActivity, observer)
                 connect?.getPlayerInfo()
 
-                val e=Equalizer(0,connect!!.mediaPlayId)
-                e.enabled=true
 
                 visualizer=Visualizer(connect?.mediaPlayId!!)
                 visualizer!!.captureSize = Visualizer.getCaptureSizeRange()[0]

@@ -48,18 +48,17 @@ class EqualizerActivity : BaseActivity() {
 
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
                 connect = service as MusicPlay.Connect
-                equalizer = Equalizer(0, connect!!.mediaPlayId)
-                equalizer?.enabled = true
+                equalizer = connect!!.equalizer
                 min = equalizer!!.bandLevelRange[0]
                 max = equalizer!!.bandLevelRange[1]
 
                 init()
 
                 rv_soundsSetting.layoutManager = LinearLayoutManager(this@EqualizerActivity)
-                equalizerAdapter = if(currentSelect==0){
+                equalizerAdapter = if (currentSelect == 0) {
                     EqualizerAdapter(createDefaultSoundSetList("").soundInfoList)
-                }else{
-                    EqualizerAdapter(savedData!![currentSelect-1].soundInfoList)
+                } else {
+                    EqualizerAdapter(savedData!![currentSelect - 1].soundInfoList)
                 }
                 rv_soundsSetting.adapter = equalizerAdapter
                 equalizerAdapter!!.seekToListener = { index, to ->
@@ -70,17 +69,17 @@ class EqualizerActivity : BaseActivity() {
         }
         bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
         topBar.setEndImageListener(View.OnClickListener {
-            if(currentSelect==0)return@OnClickListener
-            savedData!![currentSelect-1].soundInfoList.forEach {
-                log("$it ${it.save()}")
+            if (currentSelect == 0) return@OnClickListener
+            savedData!![currentSelect - 1].soundInfoList.forEach {
+                it.save()
             }
-            //val res=DataSupport.saveAll(savedData!![currentSelect-1].soundInfoList)
-            MToast.showToast(this,"$currentSelect-1")
+            MToast.showToast(this, R.string.setting_suffix_saveSuccess)
         })
     }
-    private fun init(){
+
+    private fun init() {
         //**获取存储的音效数据
-        savedData = DataSupport.findAll(SoundSettingList::class.java,true)
+        savedData = DataSupport.findAll(SoundSettingList::class.java, true)
         val titleList = ArrayList<String>()
         titleList.add(ResUtil.getString(R.string.default_))//**添加默认
         savedData?.forEach {
@@ -91,38 +90,41 @@ class EqualizerActivity : BaseActivity() {
         adapter.setIndex(currentSelect)
         adapter.setListener(object : ListSelectListener {
             override fun select(v: View?, position: Int) {
+                val sound:SoundSettingList
                 if (position == 0) {
-                    val sound = createDefaultSoundSetList("")
+                    sound = createDefaultSoundSetList("")
                     equalizerAdapter?.update(sound.soundInfoList)
                 } else {
-                    equalizerAdapter?.update(savedData!![position - 1].soundInfoList)
+                    sound=savedData!![position - 1]
+                    equalizerAdapter?.update(sound.soundInfoList)
                 }
-                currentSelect=position
+                currentSelect = position
+                connect?.setSoundEffect(sound.soundInfoList)
                 setCurrentSoundEffectIndex(position)
             }
 
             override fun remove(v: View?, position: Int) {
-                if(position==0){
-                    titleList.add(0,ResUtil.getString(R.string.default_))
+                if (position == 0) {
+                    titleList.add(0, ResUtil.getString(R.string.default_))
                     adapter.update(titleList)
-                }else{
-                    val obj=savedData?.removeAt(position-1)
+                } else {
+                    val obj = savedData?.removeAt(position - 1)
                     obj?.delete()
-                    if(titleList.size>=position){
-                        select(null,position-1)
-                        adapter.setIndex(position-1)
-                    }else{
-                        select(null,position)
+                    if (titleList.size >= position) {
+                        select(null, position - 1)
+                        adapter.setIndex(position - 1)
+                    } else {
+                        select(null, position)
                         adapter.setIndex(position)
                     }
                 }
             }
         })
-        val helper=ItemTouchHelper(MyItemTouchHelperCallBack(adapter))
+        val helper = ItemTouchHelper(MyItemTouchHelperCallBack(adapter))
         helper.attachToRecyclerView(rv_savedSoundSetting)
         rv_savedSoundSetting.layoutManager = LinearLayoutManager(this)
-        rv_savedSoundSetting.addItemDecoration(DrawableItemDecoration(0,0,0,4,
-                RecyclerView.VERTICAL,ResUtil.getDrawable(R.drawable.recycler_divider)))
+        rv_savedSoundSetting.addItemDecoration(DrawableItemDecoration(0, 0, 0, 4,
+                RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider)))
         rv_savedSoundSetting.adapter = adapter
 
 
@@ -159,7 +161,6 @@ class EqualizerActivity : BaseActivity() {
         serviceConnection?.let {
             unbindService(it)
         }
-        equalizer?.release()
     }
 
     companion object {
@@ -175,7 +176,15 @@ class EqualizerActivity : BaseActivity() {
 
         @JvmStatic
         fun setCurrentSoundEffectIndex(index: Int) {
-            SP.putValue(Constant.spName,Constant.SpKey.currentSoundEffect,index)
+            SP.putValue(Constant.spName, Constant.SpKey.currentSoundEffect, index)
+        }
+
+        @JvmStatic
+        fun getCurrentSoundEffect(): List<SoundInfo> {
+            val savedData = DataSupport.findAll(SoundSettingList::class.java, true)
+            val index = getCurrentSoundEffectIndex()
+            if (index == 0) return ArrayList()
+            return savedData[index - 1].soundInfoList
         }
     }
 }

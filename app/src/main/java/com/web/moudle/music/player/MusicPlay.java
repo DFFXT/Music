@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -31,6 +32,8 @@ import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.data.PlayerConfig;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
+import com.web.moudle.lyrics.EqualizerActivity;
+import com.web.moudle.lyrics.bean.SoundInfo;
 import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
@@ -87,6 +90,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     private Connect connect;
     private LockScreenReceiver lockScreenReceiver;
     private MediaSessionCompat sessionCompat;
+    private Equalizer equalizer;
 
     private PlayerConfig config = new PlayerConfig();
     private Ticker ticker;
@@ -123,7 +127,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     @Override
     public IBinder onBind(Intent arg0) {
         if (BIND.equals(arg0.getAction())) {
-            if (connect == null) connect = new Connect();
+            if (connect == null){
+                connect = new Connect();
+                connect.setSoundEffect(EqualizerActivity.getCurrentSoundEffect());
+            }
             return connect;
         }
         return super.onBind(arg0);
@@ -149,6 +156,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             sendDuring(player.getCurrentPosition());
             return null;
         });
+        //**设置均衡器
+        equalizer=new Equalizer(0,player.getAudioSessionId());
+        equalizer.setEnabled(true);
+
         sessionCompat = new MediaSessionCompat(this, "2");
         sessionCompat.setCallback(new MediaSessionCompat.Callback() {
             @Override
@@ -317,6 +328,16 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
         public int getMediaPlayId(){
             return player.getAudioSessionId();
+        }
+
+        public Equalizer getEqualizer(){
+            return equalizer;
+        }
+
+        public void setSoundEffect(List<SoundInfo> soundEffect){
+            for(int i=0;i<soundEffect.size();i++){
+                equalizer.setBandLevel((short) i,(short) (soundEffect.get(i).getValue()+soundEffect.get(i).getMin()));
+            }
         }
 
         public void addObserver(LifecycleOwner owner, PlayInterface play) {

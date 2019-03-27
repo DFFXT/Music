@@ -55,6 +55,7 @@ class WaveDraw:ImageDraw {
 
     override fun onCreate() {
         paint.color=ResUtil.getColor(R.color.lightBlue)
+        paint.alpha=50
     }
 
 }

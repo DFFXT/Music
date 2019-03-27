@@ -22,6 +22,7 @@ object SettingViewModel {
                     success(res.body())
                 }
             }catch (e:Throwable){
+                e.printStackTrace()
                 launch (Dispatchers.Main) {
                     error?.invoke()
                 }
