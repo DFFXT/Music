@@ -49,17 +49,18 @@ fun bitmapColorSet(path:String?,bitmapImageView:ImageView,bitmapColorView:View){
 
 
 //<editor-fold desc="给seekBar添加seek触发">
-fun SeekBar.onSeekTo(onSeekTo:((Int)->Unit)){
+fun SeekBar.onSeekTo(onSeekTo:((Int)->Unit)?=null,onChange:(((Int)->Unit))?=null){
     setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
+            if(fromUser)
+                onChange?.invoke(progress)
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
-            onSeekTo.invoke(seekBar.progress)
+            onSeekTo?.invoke(seekBar.progress)
         }
     })
 }

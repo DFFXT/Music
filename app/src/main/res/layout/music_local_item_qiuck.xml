@@ -26,28 +26,18 @@
 		android:id="@+id/singerName"
 		android:layout_width="wrap_content"
 		android:layout_below="@id/musicName"
-		android:layout_height="14dp"
+		android:layout_height="wrap_content"
 		android:textSize="@dimen/textSize_small"
 		android:layout_toStartOf="@id/size"
 		android:layout_alignParentStart="true"
 		/>
 
-	<TextView
-		tools:text="4.41MB"
-		android:id="@+id/size"
-		android:layout_width="wrap_content"
-		android:layout_height="14dp"
-		android:layout_toStartOf="@id/tv_musicDuration"
-		android:layout_alignBaseline="@id/singerName"
-		android:paddingStart="10dp"
-		android:paddingEnd="0dp"
-		android:textSize="12sp" />
 
 	<ImageView
 		android:id="@+id/add"
 		android:adjustViewBounds="true"
 		android:src="@drawable/list_add"
-		android:padding="5dp"
+		android:padding="6dp"
 		android:contentDescription="@null"
 		android:layout_alignParentEnd="true"
 		android:layout_width="30dp"

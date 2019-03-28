@@ -41,12 +41,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FileDownloadService extends Service {
     public final static String ACTION_DOWNLOAD = "com.web.web.File.download";
+    public final static String ACTION_DELETE_ALL = "com.web.web.File.delete_all";
     public final static String INTENT_SINGLE_DATA = "com.web.web.File.data";
     private Connect connect;
     private ArrayList<DownloadListener> listeners = new ArrayList<>();
     private List<DownloadMusic> downloadList = new ArrayList<>();//**下载列表
-    private List<DownloadMusic> downloadingList = new ArrayList<>();
-    private List<DownloadMusic> completeList = new ArrayList<>();
+    private List<DownloadMusic> downloadingList = new ArrayList<>();//**正在下载列表
+    private List<DownloadMusic> completeList = new ArrayList<>();//**完成历史记录
     private int maxDownloadingCount = 3;
 
 
@@ -159,7 +160,7 @@ public class FileDownloadService extends Service {
                             downloadList.clear();
                             for (InternetMusicDetail m : res) {
                                 if (m.getHasDownload() == m.getSize()) {
-                                    completeList.add(0,new DownloadMusic(m, DownloadMusic.DOWNLOAD_COMPLETE));
+                                    completeList.add(0, new DownloadMusic(m, DownloadMusic.DOWNLOAD_COMPLETE));
                                 } else {
                                     downloadList.add(new DownloadMusic(m, DownloadMusic.DOWNLOAD_PAUSE));
                                 }
@@ -203,6 +204,23 @@ public class FileDownloadService extends Service {
                         connect.getDownloadList(() -> addMusic(music));
                     } else {
                         addMusic(music);
+                    }
+                }
+                break;
+                case ACTION_DELETE_ALL: {//**删除下载历史记录
+                    Runnable runnable=()->{
+                        for(int i=0;i<completeList.size();i++){
+                            InternetMusicDetail detail=completeList.get(i).getInternetMusicDetail();
+                            detail.delete();
+                        }
+                        completeList.clear();
+                        listChange();
+                    };
+                    if (connect == null) {
+                        connect = new Connect();
+                        connect.getDownloadList(runnable);
+                    } else {
+                        runnable.run();
                     }
                 }
                 break;
@@ -335,11 +353,11 @@ public class FileDownloadService extends Service {
                     }
                 }
                 return null;
-            },1000, (complete,length) -> {
+            }, 1000, (complete, length) -> {
                 if (complete) {//**下载完成 --- 广播
                     Music record = new Music(music.getSongName(), music.getArtistName(), music.getPath());
                     record.setSuffix(music.getFormat());
-                    record.setDuration(music.getDuration()*1000);//**将时间转换为ms
+                    record.setDuration(music.getDuration() * 1000);//**将时间转换为ms
                     record.setAlbum(music.getAlbumName());
                     record.setSize(music.getSize());
                     record.saveOrUpdate();
@@ -395,7 +413,7 @@ public class FileDownloadService extends Service {
     private void complete(DownloadMusic dm) {
         notifyNotification();
         downloadList.remove(dm);
-        completeList.add(0,dm);
+        completeList.add(0, dm);
         listChange();
         Intent intent = new Intent(this, MusicPlay.class);
         intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);
@@ -454,6 +472,12 @@ public class FileDownloadService extends Service {
         Intent intent = new Intent(context, FileDownloadService.class);
         intent.setAction(FileDownloadService.ACTION_DOWNLOAD);
         intent.putExtra(INTENT_SINGLE_DATA, music);
+        context.startService(intent);
+    }
+
+    public static void clearAllRecord(Context context) {
+        Intent intent = new Intent(context, FileDownloadService.class);
+        intent.setAction(FileDownloadService.ACTION_DELETE_ALL);
         context.startService(intent);
     }
 }

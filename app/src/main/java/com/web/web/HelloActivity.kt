@@ -44,12 +44,17 @@ class HelloActivity : BaseActivity() {
             override fun onServiceConnected(name: ComponentName?, service: IBinder) {
                 connect = (service as MusicPlay.Connect)
                 connect?.addObserver(this@HelloActivity, observer)
-                if (PermissionManager.requestAllPermission(this@HelloActivity)) {
-                    connect?.getList(0)
-                }
-                //PermissionManager.requestRecordPermission(this@HelloActivity)
+                connect?.getList(0)
             }
         }
+
+
+
+        if(PermissionManager.requestAllPermission(this@HelloActivity)){
+            bind()
+        }
+    }
+    private fun bind(){
         val intent = Intent(this, MusicPlay::class.java)
         intent.action = MusicPlay.BIND
         bindService(intent, connection!!, Context.BIND_AUTO_CREATE)
@@ -70,7 +75,7 @@ class HelloActivity : BaseActivity() {
                 finish()
             }
         }
-        connect?.getList(0)
+        bind()
     }
 
     override fun onDestroy() {

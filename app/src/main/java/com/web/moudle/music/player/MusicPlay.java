@@ -17,6 +17,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
@@ -129,6 +130,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         if (BIND.equals(arg0.getAction())) {
             if (connect == null){
                 connect = new Connect();
+                EqualizerActivity.saveDefaultSoundEffect(equalizer);
                 connect.setSoundEffect(EqualizerActivity.getCurrentSoundEffect());
             }
             return connect;
@@ -335,9 +337,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         }
 
         public void setSoundEffect(List<SoundInfo> soundEffect){
+            String tag="";
             for(int i=0;i<soundEffect.size();i++){
+                tag+=" "+((short) (soundEffect.get(i).getValue()+soundEffect.get(i).getMin()));
                 equalizer.setBandLevel((short) i,(short) (soundEffect.get(i).getValue()+soundEffect.get(i).getMin()));
             }
+            Log.i("log","-->"+tag);
         }
 
         public void addObserver(LifecycleOwner owner, PlayInterface play) {

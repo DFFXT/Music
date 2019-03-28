@@ -15,6 +15,7 @@ import com.web.common.util.ViewUtil;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
+import com.web.misc.ConfirmDialog;
 import com.web.misc.GapItemDecoration;
 import com.web.misc.ToolsBar;
 import com.web.misc.TopBarLayout;
@@ -67,10 +68,24 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         rv_download = findViewById(R.id.list);
         rv_download.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rv_download.addItemDecoration(new GapItemDecoration(10, 0, 10, 0));
-
+        TopBarLayout topBarLayout=findViewById(R.id.topBar);
+        topBarLayout.setEndImageListener(v->{
+            new ConfirmDialog(this)
+                    .setMsg(ResUtil.getString(R.string.clearAllRecord))
+                    .setLeftText(ResUtil.getString(R.string.no))
+                    .setRightText(ResUtil.getString(R.string.yes))
+                    .setRightListener((dialog) -> {
+                        FileDownloadService.clearAllRecord(this);
+                        dialog.dismiss();
+                        return null;
+                    })
+                    .setLeftListener((dialog) -> {
+                        dialog.dismiss();
+                        return null;
+                    })
+                    .showCenter(v);
+        });
         connect();
-        TopBarLayout topBarLayout = findViewById(R.id.topBar_musicDownload);
-        topBarLayout.setMainTitle(ResUtil.getString(R.string.downloadManager));
         ViewUtil.transparentStatusBar(getWindow());
 
         looper=new Ticker(500,0, Dispatchers.getMain(),()->{
@@ -83,7 +98,6 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
 
     private void connect() {
         Intent intent = new Intent(this, FileDownloadService.class);
-        startService(intent);
         bindService(intent, serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {

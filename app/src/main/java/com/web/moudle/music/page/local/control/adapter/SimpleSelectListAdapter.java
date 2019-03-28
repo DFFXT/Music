@@ -79,6 +79,7 @@ public class SimpleSelectListAdapter extends BaseAdapter<String> implements Remo
         }
         list.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeRemoved(position,1);
     }
 
     public void setListener(ListSelectListener listener) {

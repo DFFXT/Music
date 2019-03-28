@@ -4,20 +4,19 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.media.audiofx.Equalizer
 import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.View
 import com.web.common.base.BaseActivity
+import com.web.common.base.PlayerObserver
 import com.web.common.util.ResUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
 import com.web.data.Music
-import com.web.moudle.music.player.MusicPlay
-import com.web.common.base.PlayerObserver
 import com.web.misc.imageDraw.WaveDraw
 import com.web.moudle.lyrics.bean.LyricsLine
+import com.web.moudle.music.player.MusicPlay
 import com.web.web.R
 import kotlinx.android.synthetic.main.music_lyrics_view.*
 import java.util.*
@@ -37,6 +36,14 @@ class LyricsActivity : BaseActivity() {
             loadLyrics(music)
         }
 
+        override fun play() {
+            iv_play.setImageResource(R.drawable.icon_play_white)
+        }
+
+        override fun pause() {
+            iv_play.setImageResource(R.drawable.icon_pause_white)
+        }
+
         override fun currentTime(group: Int, child: Int, time: Int) {
             if (actionStart) {
                 lv_lyrics.setCurrentTimeImmediately(time)
@@ -54,6 +61,7 @@ class LyricsActivity : BaseActivity() {
     override fun initView() {
 
         riv_wave.afterDraw=waveDraw
+
         lv_lyrics!!.textColor = ResUtil.getColor(R.color.themeColor)
         lv_lyrics!!.lyrics = list
        topBar.setEndImageListener(View.OnClickListener {
@@ -67,6 +75,12 @@ class LyricsActivity : BaseActivity() {
            lv_lyrics!!.setCanScroll(canScroll)
         })
 
+        iv_next.setOnClickListener {
+            connect?.next()
+        }
+        iv_play.setOnClickListener {
+            connect?.changePlayerPlayingStatus()
+        }
         iv_musicEffect.setOnClickListener {
             EqualizerActivity.actionStart(this)
         }

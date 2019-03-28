@@ -5,19 +5,21 @@
 	android:layout_height="match_parent"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 	<com.web.misc.TopBarLayout
-		android:id="@+id/topBar_musicDownload"
+		android:id="@+id/topBar"
 		android:fitsSystemWindows="true"
 		android:background="@color/themeColor"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		app:topBar_tint="@color/white"
+		app:topBar_mainTitleText="@string/downloadManager"
 		app:topBar_mainTitleColor="@color/white"
-		app:topBar_startImage="@drawable/icon_back_black"/>
+		app:topBar_startImage="@drawable/icon_back_black"
+		app:topBar_endText="@string/clearGroup" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	android:layout_below="@id/topBar_musicDownload"
+    	android:layout_below="@id/topBar"
 		android:overScrollMode="never"
 		android:layerType="software"
         />
