@@ -14,7 +14,7 @@ import com.web.web.R
 
 
 class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSelectAdapter<Music>(ctx,list) {
-    var addListener:((Int)->Unit)?=null
+    var addListener:((View,Int)->Unit)?=null
     var itemClickListener:((View, Int)->Unit)?=null
     var itemLongClickListener:((View,Int)->Boolean)?=null
     var index=-1
@@ -45,7 +45,7 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
                 toggleSelect(position)
                 return@setOnClickListener
             }
-            addListener?.invoke(position)
+            addListener?.invoke(it,position)
         }
         holder.rootView.setOnClickListener{
             if(isSelect){

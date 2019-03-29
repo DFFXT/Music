@@ -33,6 +33,15 @@
             android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+
+        <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/music_note"
+            android:visibility="gone"/>
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,12 +51,7 @@
             />
 
 
-
-
-
-
     </RelativeLayout>
-
 
     <include
         android:id="@+id/leftDrawer"

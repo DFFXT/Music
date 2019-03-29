@@ -17,7 +17,6 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
@@ -337,12 +336,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         }
 
         public void setSoundEffect(List<SoundInfo> soundEffect){
-            String tag="";
             for(int i=0;i<soundEffect.size();i++){
-                tag+=" "+((short) (soundEffect.get(i).getValue()+soundEffect.get(i).getMin()));
                 equalizer.setBandLevel((short) i,(short) (soundEffect.get(i).getValue()+soundEffect.get(i).getMin()));
             }
-            Log.i("log","-->"+tag);
         }
 
         public void addObserver(LifecycleOwner owner, PlayInterface play) {
@@ -443,7 +439,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             return waitMusic;
         }
 
-        public void addToWait(Music music) {
+        public void addToWait(int group,int child) {
+            groupIndex=group;
+            childIndex=child;
+            Music music=musicList.get(group).get(child);
             for (Music m : waitMusic) {
                 if (m.getPath().equals(music.getPath())) return;
             }
@@ -544,7 +543,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         public void playWait(int index) {
             if (index >= 0 && index < waitMusic.size()) {
                 waitIndex = index;
-                loadMusic(waitMusic.get(index));
+                checkMusicIndexAndLoad(waitMusic.get(index));
             }
         }
 
@@ -600,8 +599,22 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     private void loadNextWait() {
         waitIndex++;
         if (waitMusic.size() <= waitIndex) waitIndex = 0;
-        loadMusic(waitMusic.get(waitIndex));
+        checkMusicIndexAndLoad(waitMusic.get(waitIndex));
+    }
 
+    /**
+     * 找到当前waitMusic在group里面的index
+     * @param waitMusic wait
+     */
+    private void checkMusicIndexAndLoad(Music waitMusic){
+        childIndex=-1;
+        for(int i=0;i<musicList.get(groupIndex).size();i++){
+            if(waitMusic.getPath().equals(musicList.get(groupIndex).get(i).getPath())){
+                childIndex=i;
+                break;
+            }
+        }
+        loadMusic(waitMusic);
     }
 
 
@@ -630,7 +643,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 deleteMusic(false, groupIndex, childIndex);
                 connect.next();
             } else if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {
-                connect.next();
+                loadNextWait();
             } else if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.STORAGE) {
                 MToast.showToast(this, ResUtil.getString(R.string.cannotPlay));
             }
