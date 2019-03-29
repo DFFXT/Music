@@ -24,12 +24,12 @@ public class ViewUtil {
     }
     public static int screenWidth(){
         if(width<0)
-            width=LitePalApplication.getContext().getResources().getDisplayMetrics().widthPixels;
+            width=MyApplication.getContext().getResources().getDisplayMetrics().widthPixels;
         return width;
     }
     public static int screenHeight(){
         if(height<0){
-            height=LitePalApplication.getContext().getResources().getDisplayMetrics().heightPixels;
+            height=MyApplication.getContext().getResources().getDisplayMetrics().heightPixels;
         }
         return height;
     }

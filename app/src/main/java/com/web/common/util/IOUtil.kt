@@ -196,4 +196,8 @@ object IOUtil{
             it.write("$str\n\n".toByteArray(Charsets.UTF_8))
         }
     }
+    fun log():PrintStream{
+        val file=File(Constant.LocalConfig.rootPath+"/log.txt")
+        return PrintStream(FileOutputStream(file,true))
+    }
 }

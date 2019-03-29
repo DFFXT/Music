@@ -12,10 +12,11 @@ import android.widget.SeekBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.web.common.base.BaseActivity
+import com.web.common.base.MyApplication
 import com.web.common.base.errorClickLinsten
 import com.web.common.base.showError
 import com.web.common.util.ResUtil
-import com.web.common.util.ViewUtil
+import com.web.common.util.WindowUtil
 import com.web.config.Shortcut
 import com.web.moudle.videoEntry.bean.VideoInfoBox
 import com.web.moudle.videoEntry.model.VideoViewModel
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.layout_video_control.view.*
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+
 
 class VideoEntryActivity : BaseActivity() {
     private lateinit var videoId: String
@@ -38,6 +40,11 @@ class VideoEntryActivity : BaseActivity() {
     private var seekBarTouch=false
 
     override fun initView() {
+        WindowUtil.setImmersedStatusBar(window)
+        WindowUtil.setStatusBarTextDark(window,false)
+        topBar.setStartImageListener(View.OnClickListener {
+            onBackPressed()
+        })
         videoId = intent.getStringExtra(INTENT_DATA)
         songId = intent.getStringExtra(SONG_ID)
         model = ViewModelProviders.of(this)[VideoViewModel::class.java]
@@ -70,7 +77,6 @@ class VideoEntryActivity : BaseActivity() {
     }
 
     private fun initVideoController() {
-        ViewUtil.setHeight(vv_video, (ViewUtil.screenWidth() * 9 / 16f).toInt())
         vv_video.holder.addCallback(SurfaceViewCallback())
         frame_videoStatus.setOnClickListener { toggleShow() }
         vv_video.setOnClickListener { toggleShow() }
@@ -118,9 +124,10 @@ class VideoEntryActivity : BaseActivity() {
             mc_videoController.bar.max = it.duration
             val r = ResUtil.timeFormat("mm:ss", it.duration.toLong())
             mc_videoController.tv_videoMaxTime.text = r
+            sizeChanged()
         }
         player.setOnCompletionListener {
-
+            videoPause()
         }
         player.setOnBufferingUpdateListener { _, percent ->
             mc_videoController.bar.secondaryProgress=percent*mc_videoController.bar.max/100
@@ -135,6 +142,30 @@ class VideoEntryActivity : BaseActivity() {
             }
             true
         }
+        player.setOnVideoSizeChangedListener { _, _, _ ->
+            sizeChanged()
+        }
+    }
+
+    /**
+     * 视频大小切换
+     */
+    private fun sizeChanged(){
+        val width=MyApplication.context.resources.displayMetrics.widthPixels
+        val height=MyApplication.context.resources.displayMetrics.heightPixels
+        val vvW: Int
+        val vvH: Int
+        if(width<height){//**横屏
+            vvW=width
+            vvH=player.videoHeight*width/player.videoWidth
+        }else{
+            vvH=height
+            vvW=player.videoWidth*height/player.videoHeight
+        }
+        val lp=vv_video.layoutParams
+        lp.width=vvW
+        lp.height=vvH
+        vv_video.layoutParams=lp
     }
 
 
@@ -217,9 +248,22 @@ class VideoEntryActivity : BaseActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-
-
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            WindowUtil.setFullScreen(window,true)
+        }else{
+            WindowUtil.setFullScreen(window,false)
+        }
+        sizeChanged()
     }
+
+    override fun onBackPressed() {
+        if(resources.configuration.orientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+            finish()
+        }else{
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
 
 
 

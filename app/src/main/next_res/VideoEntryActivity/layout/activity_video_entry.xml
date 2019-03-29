@@ -2,15 +2,27 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
+    android:background="@color/black"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/mc_videoController"/>
 
     <SurfaceView
         android:id="@+id/vv_video"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -19,7 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/videoControllerBg"
-        app:layout_constraintBottom_toBottomOf="@id/vv_video"
+        app:layout_constraintStart_toStartOf="@id/vv_video"
+        app:layout_constraintEnd_toEndOf="@id/vv_video"
+        app:layout_constraintBottom_toTopOf="@id/mc_videoController"
         app:layout_constraintTop_toTopOf="@id/vv_video">
 
         <ImageView
@@ -37,6 +51,8 @@
         layout="@layout/layout_video_control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/vv_video"
+        app:layout_constraintEnd_toEndOf="@id/vv_video"
         app:layout_constraintBottom_toBottomOf="@id/vv_video" />
 
     <com.web.misc.TopBarLayout

@@ -9,6 +9,7 @@ object UncaughtException:Thread.UncaughtExceptionHandler {
     override fun uncaughtException(t: Thread?, e: Throwable?) {
         e?.printStackTrace()
         Log.e("uncaughtException",ResUtil.getString(R.string.uncaughtException)+"-> Thread:${t?.name}")
-        IOUtil.log("${e?.message} \n ${e?.cause}")
+
+        e?.printStackTrace(IOUtil.log())
     }
 }

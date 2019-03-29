@@ -32,13 +32,8 @@ class VideoModel:BaseRetrofit() {
                             callback.invoke(it)
                             flg=true
                         }
-                       /* response.raw().request().url()?.let { url ->
-                            val it = url.toString()
-
-                            flg = true
-                        }*/
                         if (!flg) {
-                            callback.invoke(null)
+                            callback.invoke(fakeUrl)
                         }
                     }
 
