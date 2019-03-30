@@ -850,7 +850,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         MediaQuery.getLocalList((res) -> {
             musicList.clear();
             musicList.addAll(res);
-            if(musicList.get(0).size()==0){//**没有扫描媒体库
+            if(musicList.get(0).size()==0&&MediaQuery.needScan()){//**没有扫描媒体库
                 scanMusicMedia();
             }else{
                 musicListChange();

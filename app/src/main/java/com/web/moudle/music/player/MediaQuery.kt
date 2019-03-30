@@ -153,6 +153,11 @@ object MediaQuery {
         }
     }
 
+    @JvmStatic
+    fun needScan():Boolean{
+        return !SP.getBoolean(Constant.spName,Constant.SpKey.noNeedScan,false)
+    }
+
 
     /**
      * 删除音乐
