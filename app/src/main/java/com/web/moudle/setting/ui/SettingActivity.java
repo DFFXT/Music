@@ -13,13 +13,13 @@ import com.web.misc.ConfirmDialog;
 import com.web.misc.TextWithDrawable;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.setting.about.AboutActivity;
+import com.web.moudle.setting.cache.CacheActivity;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.web.R;
 
 @SuppressLint("InlinedApi")
 public class SettingActivity extends BaseActivity {
-    private View rootView;
 
     public int getLayoutId() {
         return R.layout.activity_setting;
@@ -27,7 +27,6 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        rootView = findViewById(R.id.rootView);
         ViewUtil.transparentStatusBar(getWindow());
         TextWithDrawable twd_lockScreen = findViewById(R.id.twd_lockScreen);
         TextWithDrawable twd_musicScan = findViewById(R.id.twd_musicScan);
@@ -38,25 +37,9 @@ public class SettingActivity extends BaseActivity {
         twd_checkUpdate.setText(ResUtil.getString(R.string.setting_checkUpdate, Apk.getVersionName()));
         twd_checkUpdate.setOnClickListener(v ->Apk.checkUpdate(this,v));
 
+        findViewById(R.id.twd_cacheSetting).setOnClickListener(v-> CacheActivity.actionStart(this));
 
-        findViewById(R.id.twd_clearAllMusic).setOnClickListener(v -> {
-            new ConfirmDialog(this)
-                    .setLeftText(ResUtil.getString(R.string.no))
-                    .setRightText(ResUtil.getString(R.string.yes))
-                    .setMsg(ResUtil.getString(R.string.setting_clearAllMusicAlert))
-                    .setRightListener((dialog) -> {
-                        Intent intent = new Intent(this, MusicPlay.class);
-                        intent.setAction(MusicPlay.ACTION_ClEAR_ALL_MUSIC);
-                        startService(intent);
-                        dialog.dismiss();
-                        return null;
-                    })
-                    .setLeftListener((dialog) -> {
-                        dialog.dismiss();
-                        return null;
-                    })
-                    .showCenter(rootView);
-        });
+
 
         findViewById(R.id.twd_about).setOnClickListener(v-> AboutActivity.actionStart(this));
 

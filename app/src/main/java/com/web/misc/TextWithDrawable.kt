@@ -28,7 +28,7 @@ class TextWithDrawable @JvmOverloads constructor(context: Context, attrs: Attrib
             invalidate()
         }
     @ColorInt
-    var bottomColor= ResUtil.getColor(R.color.textColor_9)
+    var bottomColor= resources.getColor(R.color.textColor_9,context.theme)
         set(value) {
             field=value
             paint.color=value

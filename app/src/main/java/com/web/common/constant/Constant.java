@@ -18,10 +18,13 @@ public final class Constant {
 
         public final static String currentVersion="currentVersion";
         public final static String latestVersion="latestVersion";
+
+        public final static String cacheEnable="cacheEnable";
     }
     public static class LocalConfig{
         public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
         public static String cachePath=rootPath+"cache/";
+        public static String musicCachePath=cachePath+"cache/";
         public static String singerIconPath =cachePath+"singer/";
         public static String krcPath=cachePath+"lyrics/";
         private static String[] invalidChar=new String[]{
@@ -30,6 +33,7 @@ public final class Constant {
 
         public static void initPath() {
             LocalConfig.createPathIfNotExist(cachePath);
+            LocalConfig.createPathIfNotExist(musicCachePath);
             LocalConfig.createPathIfNotExist(singerIconPath);
             LocalConfig.createPathIfNotExist(krcPath);
 

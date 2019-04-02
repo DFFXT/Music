@@ -62,8 +62,8 @@
 
 	<!-- activity_setting_setting.xml -->
 	<string name="settings_titleBar">音乐播放器设置</string>
-	<string name="setting_clearAllMusic">清空当前音乐</string>
-	<string name="setting_clearAllMusicAlert">是否清空所有音乐，该操作不会删除源文件！</string>
+	<string name="setting_clearAllMusic">清空音乐列表</string>
+	<string name="setting_clearAllMusicAlert">是否清空列表所有音乐，该操作不会删除源文件！</string>
 	<string name="setting_checkUpdate">检查更新(V %1$s)</string>
 	<string name="setting_lastVersion">已经是最新版本</string>
 	<string name="setting_about">关于</string>
@@ -75,6 +75,13 @@
 	<string name="setting_suffix_saveSuccess">保存成功</string>
 	<string name="settings_ignoreFileSize">忽略小文件</string>
 	<string name="settings_suffixMinSize">最小值[MB]</string>
+	<string name="setting_cache_title">缓存设置</string>
+	<string name="setting_cacheOpen">缓存已开启</string>
+	<string name="setting_cacheClosed">缓存已关闭</string>
+	<string name="setting_clearCache">清空缓存</string>
+	<string name="setting_cacheSelectPath">缓存路径</string>
+	<string name="setting_clearCacheTip">是否清空缓存，该操作会删除所有缓存音乐！</string>
+	<string name="setting_cacheHasCleared">共清空%1$s条记录</string>
 
 	<string name="setting_suffix_add">添加</string>
 

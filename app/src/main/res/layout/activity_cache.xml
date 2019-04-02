@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.web.misc.TopBarLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/themeColor"
+        app:topBar_startImage="@drawable/icon_back_black"
+        app:topBar_tint="@color/white"
+        app:topBar_mainTitleText="@string/setting_cache_title"
+        app:topBar_mainTitleColor="@color/white"
+        />
+    <com.web.misc.TextWithDrawable
+        android:id="@+id/twd_clearAllMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:textWithDrawable_text="@string/setting_clearAllMusic"/>
+    <com.web.misc.TextWithDrawable
+        android:id="@+id/twd_clearCache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:textWithDrawable_text="@string/setting_clearCache"/>
+    <FrameLayout
+        android:id="@+id/layout_cacheEnable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.web.misc.TextWithDrawable
+            android:id="@+id/twd_cacheEnable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:textWithDrawable_text="@string/setting_cacheClosed"/>
+        <Switch
+            android:id="@+id/sw_cacheEnable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_gravity="end|center_vertical" />
+    </FrameLayout>
+    <com.web.misc.TextWithDrawable
+        android:id="@+id/twd_selectCachePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:textWithDrawable_text="@string/setting_cacheSelectPath"/>
+</LinearLayout>

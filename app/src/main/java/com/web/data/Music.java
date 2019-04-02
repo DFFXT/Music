@@ -3,10 +3,8 @@ package com.web.data;
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
-import com.web.config.GetFiles;
 import com.web.config.Shortcut;
 import com.web.moudle.music.player.MediaQuery;
-import com.web.moudle.notification.MyNotification;
 import com.web.web.R;
 
 import org.litepal.crud.DataSupport;
