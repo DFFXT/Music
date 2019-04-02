@@ -43,5 +43,6 @@
             <enum name="round" value="0"/>
             <enum name="circle" value="1"/>
         </attr>
+        <attr name="measure" format="string"/>
     </declare-styleable>
 </resources>

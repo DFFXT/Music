@@ -10,6 +10,7 @@
 
     <!--<color name="themeColor">#FFFF7963</color>-->
     <color name="themeColor">#E17C20</color>
+    <color name="themeColorDark">#FF7055</color>
     <color name="pink">#ffee00ee</color>
     <color name="white">#ffffffff</color>
     <color name="transparent">#00000000</color>
@@ -18,7 +19,7 @@
     <color name="textColor_9">#999999</color>
     <color name="textColor_3">#333333</color>
     <color name="textColor_6">#666666</color>
-    <color name="gray">#eeeeeeff</color>
+    <color name="gray">#aaeeeeee</color>
     <color name="dim_transparent">#aaaaaaee</color>
     <color name="deepDark">#555555ff</color>
     <color name="lightDark">#22111111</color>

@@ -7,6 +7,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.ImageView
 import com.web.common.base.log
+import com.web.misc.imageDraw.IOnMeasure
 import com.web.misc.imageDraw.ImageDraw
 import com.web.web.R
 
@@ -16,6 +17,7 @@ class RoundImageView @JvmOverloads constructor(
 
     var beforeDraw:ImageDraw?=null
     var afterDraw:ImageDraw?=null
+    var measureListener: IOnMeasure?=null
 
     var radius=0f
         set(value) {
@@ -34,6 +36,11 @@ class RoundImageView @JvmOverloads constructor(
             val at=context.obtainStyledAttributes(attrs, R.styleable.RoundImageView)
             radius=at.getDimension(R.styleable.RoundImageView_iv_radius,radius)
             type=at.getInt(R.styleable.RoundImageView_iv_type,type)
+            val measure=at.getString(R.styleable.RoundImageView_measure)
+            if(measure!=null){
+                measureListener=Class.forName(measure).newInstance() as IOnMeasure
+
+            }
             at.recycle()
         }
 
@@ -72,6 +79,15 @@ class RoundImageView @JvmOverloads constructor(
             path.addRoundRect(rect,(width-paddingStart-paddingEnd)/2f,(height-paddingTop-paddingBottom)/2f,Path.Direction.CW)
         }
 
+    }
+
+
+    private val measure= IntArray(2)
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        measure[0]=widthMeasureSpec
+        measure[1]=heightMeasureSpec
+        measureListener?.onMeasure(measure)
+        super.onMeasure(measure[0], measure[1])
     }
 
 }

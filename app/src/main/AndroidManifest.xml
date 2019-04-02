@@ -136,6 +136,7 @@
         <activity android:name="com.web.moudle.setting.about.AboutActivity" />
         <activity android:name="com.web.moudle.lyrics.EqualizerActivity" />
         <activity android:name="com.web.moudle.setting.cache.CacheActivity" />
+        <activity android:name="com.web.moudle.setting.chooser.LocalChooserActivity" />
 
     </application>
 

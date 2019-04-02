@@ -3,6 +3,7 @@ package com.web.moudle.music.player
 import android.content.ContentValues
 import android.content.Context
 import android.provider.MediaStore
+import com.web.common.base.ChineseComparator
 import com.web.common.base.MyApplication
 import com.web.common.base.log
 import com.web.common.constant.Constant
@@ -119,32 +120,9 @@ object MediaQuery {
                 }
                 musicList.add(group)
             }
-            val chinese = "[\\u4e00-\\u9fa5+]"
-            val code = "[a-zA-Z]"
             for (ml in musicList) {
                 ml.musicList.sortWith(Comparator { m1, m2 ->
-                    val n1 = m1.musicName.substring(0, 1)
-                    val n2 = m2.musicName.substring(0, 1)
-                    val valid1 = n1.matches("$chinese|$code".toRegex())//**是否是中英文
-                    val valid2 = n2.matches("$chinese|$code".toRegex())
-                    if (valid1 && valid2) {//***中英文
-                        var c1 = n1
-                        var c2 = n2
-                        if (n1.matches(chinese.toRegex())) {//**中文
-                            c1 = PinyinHelper.toHanyuPinyinStringArray(n1[0])[0]
-                        }
-                        if (n2.matches(chinese.toRegex())) {
-                            c2 = PinyinHelper.toHanyuPinyinStringArray(n2[0])[0]
-                        }
-                        return@Comparator Collator.getInstance(Locale.CHINA).compare(c1, c2)
-                    } else if (valid1) {
-                        return@Comparator -1
-                    } else if (valid2) {
-                        return@Comparator 1
-                    } else {
-                        return@Comparator n1[0] - n2[0]
-                    }
-
+                    return@Comparator ChineseComparator.compare(m1.musicName,m2.musicName)
                 })
             }
             launch(Dispatchers.Main) {

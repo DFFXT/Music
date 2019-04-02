@@ -271,8 +271,7 @@ public class MusicListPage extends BaseMusicPage {
         if (adapter != null) {
             adapter.setIndex(child);
             adapter.notifyItemChanged(child);
-            adapter.setData(data.getMusicList());
-            adapter.notifyDataSetChanged();
+            adapter.update(data.getMusicList());
         }
 
     }

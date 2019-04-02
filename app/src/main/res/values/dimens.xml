@@ -24,6 +24,7 @@
 
 	<dimen name="re_searchBoxWidth">200dp</dimen>
 
+	<dimen name="textSize_min">12sp</dimen>
 	<dimen name="textSize_small">14sp</dimen>
 	<dimen name="textSize_normal">16sp</dimen>
 	<dimen name="textSize_big">18sp</dimen>

@@ -1,6 +1,6 @@
 package com.web.common.base
 
-abstract class BaseAdapter<T>(var data: List<T>?) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
+abstract class BaseAdapter<T>(var data: List<T>?=null) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
     override fun getItemCount(): Int{
         data?.let {
             return it.size

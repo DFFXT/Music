@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        android:background="@drawable/selector_transparent_gray"
         app:textWithDrawable_text="@string/setting_clearAllMusic"/>
     <com.web.misc.TextWithDrawable
         android:id="@+id/twd_clearCache"
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        android:background="@drawable/selector_transparent_gray"
         app:textWithDrawable_text="@string/setting_clearCache"/>
     <FrameLayout
         android:id="@+id/layout_cacheEnable"
@@ -37,6 +39,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:background="@drawable/selector_transparent_gray"
             app:textWithDrawable_text="@string/setting_cacheClosed"/>
         <Switch
             android:id="@+id/sw_cacheEnable"
@@ -51,5 +54,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        android:background="@drawable/selector_transparent_gray"
         app:textWithDrawable_text="@string/setting_cacheSelectPath"/>
 </LinearLayout>

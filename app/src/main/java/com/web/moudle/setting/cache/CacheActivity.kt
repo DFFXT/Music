@@ -1,5 +1,6 @@
 package com.web.moudle.setting.cache
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.View
@@ -13,6 +14,7 @@ import com.web.misc.ConfirmDialog
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.net.proxy.InternetProxy
 import com.web.moudle.preference.SP
+import com.web.moudle.setting.chooser.LocalChooserActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_cache.*
 import org.litepal.crud.DataSupport
@@ -53,6 +55,9 @@ class CacheActivity:BaseActivity() {
                 startService(intent)
             }
         }
+        twd_selectCachePath.setOnClickListener {
+            LocalChooserActivity.actionStartFileSelect(this,1)
+        }
     }
 
     /**
@@ -83,6 +88,11 @@ class CacheActivity:BaseActivity() {
         if(enable!= getCacheEnable()){
             setCacheEnable(enable)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode!= Activity.RESULT_OK)return
+        MToast.showToast(this,data!!.getStringExtra(INTENT_DATA))
     }
 
     companion object {
