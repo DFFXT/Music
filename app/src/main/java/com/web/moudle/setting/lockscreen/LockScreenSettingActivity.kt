@@ -221,34 +221,35 @@ class LockScreenSettingActivity : BaseActivity() {
             context.startActivity(Intent(context, LockScreenSettingActivity::class.java))
         }
 
+        @JvmStatic
         fun getNoLockScreen(): Boolean {
             return SP.getBoolean(Constant.spName, Constant.SpKey.noLockScreen)
         }
-
+        @JvmStatic
         fun setNoLockScreen(noLock: Boolean) {
             SP.putValue(Constant.spName, Constant.SpKey.noLockScreen, noLock)
         }
-
+        @JvmStatic
         fun getMode(): String {
             return SP.getString(Constant.spName, Constant.SpKey.lockScreenBgMode, BG_MODE_COLOR)
         }
-
+        @JvmStatic
         fun setMode(mode: String) {
             SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgMode, mode)
         }
-
+        @JvmStatic
         fun setBgColor(color: Int) {
             SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgColor, color)
         }
-
+        @JvmStatic
         fun getBgColor(): Int {
             return SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor, ResUtil.getColor(R.color.themeColor))
         }
-
+        @JvmStatic
         fun setBgImagePath(path: String) {
             SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgImagePath, path)
         }
-
+        @JvmStatic
         fun getBgImagePath(): String {
             return SP.getString(Constant.spName, Constant.SpKey.lockScreenBgImagePath)
         }

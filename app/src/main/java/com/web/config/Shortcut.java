@@ -23,6 +23,10 @@ public class Shortcut {
         File file=new File(path);
         return (file.exists()&&file.isFile());
     }
+    public static boolean dirExist(String dir){
+        File file=new File(dir);
+        return file.isDirectory();
+    }
 
     public static void fileDelete(String path){
         File file=new File(path);

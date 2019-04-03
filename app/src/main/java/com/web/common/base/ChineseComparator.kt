@@ -3,16 +3,26 @@ package com.web.common.base
 import net.sourceforge.pinyin4j.PinyinHelper
 import java.text.Collator
 import java.util.*
+import kotlin.math.min
 
 /**
  * 字符串比较器
  */
 object ChineseComparator:Comparator<String> {
-    private const val chinese = "[\\u4e00-\\u9fa5+]"
-    private const val code = "[a-zA-Z]"
+    const val chinese = "[\\u4e00-\\u9fa5+]"
+    const val code = "[a-zA-Z]"
     override fun compare(o1: String?, o2: String?): Int {
-        val n1 = o1?:" "
-        val n2 = o2?:" "
+        if(o1==null&&o2==null)return 0
+        if(o1==null)return -1
+        if(o2==null)return 1
+        var res:Int
+        for(i in 0 until min(o1.length,o2.length)){
+            res=mCompare(o1.substring(i,i+1),o2.substring(i,i+1))
+            if(res!=0)return res
+        }
+        return o1.length-o2.length
+    }
+    private fun mCompare(n1:String,n2:String):Int{
         val valid1 = n1.matches("$chinese|$code".toRegex())//**是否是中英文
         val valid2 = n2.matches("$chinese|$code".toRegex())
         if (valid1 && valid2) {//***中英文

@@ -1,10 +1,8 @@
 package com.web.data
 
-import com.web.common.base.log
 import com.web.moudle.net.proxy.bean.CacheFromTo
 import org.litepal.crud.DataSupport
 import java.util.regex.Pattern
-import kotlin.math.log
 import kotlin.math.max
 import kotlin.math.min
 

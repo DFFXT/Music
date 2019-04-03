@@ -11,13 +11,12 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import com.web.common.util.ResUtil
 import com.web.web.R
 
 class TextWithDrawable @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private var text:String?=null
+    private var text:CharSequence?=null
     private var drawable:Drawable?=null
     private var tvTitle:TextView
     private var ivDrawable:ImageView
@@ -50,7 +49,7 @@ class TextWithDrawable @JvmOverloads constructor(context: Context, attrs: Attrib
         addView(view)
         setOnClickListener {}
     }
-    fun setText(text:String?){
+    fun setText(text:CharSequence?){
         this.text=text
         tvTitle.text=text
     }

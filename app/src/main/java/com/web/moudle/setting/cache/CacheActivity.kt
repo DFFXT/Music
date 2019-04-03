@@ -17,6 +17,8 @@ import com.web.moudle.preference.SP
 import com.web.moudle.setting.chooser.LocalChooserActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_cache.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.litepal.crud.DataSupport
 
 class CacheActivity:BaseActivity() {
@@ -33,6 +35,14 @@ class CacheActivity:BaseActivity() {
         sw_cacheEnable.setOnCheckedChangeListener { _, isChecked ->
             cacheEnable(isChecked)
         }
+
+        getCacheSize {
+            val render=ResUtil.getFileSize(it)
+            val str=ResUtil.getString(R.string.setting_clearCache)+"  $render"
+            twd_clearCache.setText(ResUtil.getSpannable(str,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min)))
+        }
+
+        cachePathChange()
 
         //**清空缓存
         twd_clearCache.setOnClickListener {
@@ -56,7 +66,7 @@ class CacheActivity:BaseActivity() {
             }
         }
         twd_selectCachePath.setOnClickListener {
-            LocalChooserActivity.actionStartFileSelect(this,1)
+            LocalChooserActivity.actionStartDirSelect(this,1)
         }
     }
 
@@ -89,10 +99,19 @@ class CacheActivity:BaseActivity() {
             setCacheEnable(enable)
         }
     }
+    private fun cachePathChange(){
+        val origin=ResUtil.getString(R.string.setting_cacheSelectPath)+"  "+ getCustomerCachePath()
+        val render=getCustomerCachePath()
+        twd_selectCachePath.setText(
+                ResUtil.getSpannable(origin,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min))
+        )
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode!= Activity.RESULT_OK)return
-        MToast.showToast(this,data!!.getStringExtra(INTENT_DATA))
+        setCustomerCachePath(data!!.getStringExtra(INTENT_DATA))
+        cachePathChange()
+
     }
 
     companion object {
@@ -109,6 +128,30 @@ class CacheActivity:BaseActivity() {
         fun setCacheEnable(enable:Boolean){
             InternetProxy.cacheEnable=enable
             SP.putValue(Constant.spName,Constant.SpKey.cacheEnable,enable)
+        }
+
+        @JvmStatic
+        fun getCustomerCachePath():String{
+            return SP.getString(Constant.spName,Constant.SpKey.customerCachePath,Constant.LocalConfig.musicCachePath)
+        }
+        @JvmStatic
+        fun setCustomerCachePath(path:String){
+            SP.putValue(Constant.spName,Constant.SpKey.customerCachePath,path)
+        }
+
+        @JvmStatic
+        fun getCacheSize(callback:((size:Long)->Unit)){
+            GlobalScope.launch {
+                var size=0L
+                val cacheList=DataSupport.findAll(MusicCache::class.java)
+                cacheList.forEach {cache->
+                    val sizeList=MusicCache.calculateCacheRange(cache)
+                    sizeList.forEach {
+                        size+=it.to-it.from
+                    }
+                }
+                callback(size)
+            }
         }
     }
 }

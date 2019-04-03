@@ -51,7 +51,7 @@ public class LocalChooserViewModel extends ViewModel {
         list.addAll(dirList);
         list.addAll(fileList);
         localItemList.setValue(list);
-        currentPath.setValue(rootFile.getAbsolutePath());
+        currentPath.setValue(rootFile.getAbsolutePath()+File.separator);
     }
     private void buildList(File[] files){
         for(File file:files){

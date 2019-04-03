@@ -1,11 +1,17 @@
 package com.web.common.util
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.TextAppearanceSpan
 import androidx.annotation.*
 import com.web.common.base.MyApplication
+import com.web.web.R
 import org.litepal.LitePalApplication
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -24,6 +30,25 @@ object ResUtil {
     @JvmStatic
     fun getStringArray(@ArrayRes arrayId:Int):Array<String>{
         return MyApplication.context.resources.getStringArray(arrayId)
+    }
+
+    @JvmStatic
+    fun getSize(@DimenRes id:Int):Int{
+        return MyApplication.context.resources.getDimensionPixelSize(id)
+    }
+
+    @JvmStatic
+    fun getSpannable(origin:String, render:String,@ColorInt color:Int,size:Int=-1):Spannable{
+        var mSize=size
+        if(size==-1) mSize=ResUtil.getSize(R.dimen.textSize_normal)
+        val start=origin.indexOf(render,0,false)
+        val end=start+render.length
+        val spannable= SpannableStringBuilder(origin)
+        spannable.setSpan(TextAppearanceSpan("",0,mSize, ColorStateList.valueOf(color),null),
+                start,
+                end,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        return spannable
     }
 
     /**

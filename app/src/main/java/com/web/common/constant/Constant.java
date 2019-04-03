@@ -2,6 +2,9 @@ package com.web.common.constant;
 
 import android.os.Environment;
 
+import com.web.config.Shortcut;
+import com.web.moudle.setting.cache.CacheActivity;
+
 import java.io.File;
 
 public final class Constant {
@@ -20,6 +23,7 @@ public final class Constant {
         public final static String latestVersion="latestVersion";
 
         public final static String cacheEnable="cacheEnable";
+        public final static String customerCachePath="customerCachePath";
     }
     public static class LocalConfig{
         public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
@@ -33,6 +37,9 @@ public final class Constant {
 
         public static void initPath() {
             LocalConfig.createPathIfNotExist(cachePath);
+            if(Shortcut.dirExist(CacheActivity.getCustomerCachePath())){
+                musicCachePath=CacheActivity.getCustomerCachePath();
+            }
             LocalConfig.createPathIfNotExist(musicCachePath);
             LocalConfig.createPathIfNotExist(singerIconPath);
             LocalConfig.createPathIfNotExist(krcPath);

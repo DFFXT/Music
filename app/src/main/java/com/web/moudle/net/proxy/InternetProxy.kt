@@ -52,7 +52,7 @@ object InternetProxy {
             val musicCache=DataSupport.where("musicPath=?",request.pathWithNoParams)
                     .findFirst(MusicCache::class.java)?: MusicCache(
                     request.pathWithNoParams!!,
-                    Constant.LocalConfig.musicCachePath+request.getUniqueValidFileName()!!+"_",
+                    CacheActivity.getCustomerCachePath()+request.getUniqueValidFileName()!!+"_",
                     ""
             )
             val cacheData= MusicCache.calculateCacheRange(musicCache)
