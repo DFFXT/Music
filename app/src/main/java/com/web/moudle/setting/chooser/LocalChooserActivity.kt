@@ -31,7 +31,8 @@ class LocalChooserActivity:BaseActivity() {
 
     override fun initView() {
         model=ViewModelProviders.of(this)[LocalChooserViewModel::class.java]
-        action=intent.getStringExtra(INTENT_DATA)
+        action=intent.getStringExtra(ACTION)
+        val initDir=intent.getStringExtra(INTENT_DATA)
         when(action){
             ACTION_FILE_SELECT->{
                 topBar.setMainTitle(ResUtil.getString(R.string.chooser_fileSelect))
@@ -89,7 +90,7 @@ class LocalChooserActivity:BaseActivity() {
             tv_select.setTextColor(ResUtil.getColor(R.color.white))
             selected=true
         }
-        model?.requestEntry(File(Constant.LocalConfig.cachePath))
+        model?.requestEntry(initDir)
 
         tv_select.setOnClickListener {
             if(!selected)return@setOnClickListener
@@ -107,19 +108,22 @@ class LocalChooserActivity:BaseActivity() {
 
 
     companion object {
+        private const val ACTION="ac"
         @JvmStatic
         val ACTION_FILE_SELECT="fileSelect"
         val ACTION_DIR_SELECT="dirSelect"
         @JvmStatic
-        fun actionStartFileSelect(ctx:Activity,requestCode:Int){
+        fun actionStartFileSelect(ctx:Activity,initDir:String?,requestCode:Int){
             val intent=Intent(ctx,LocalChooserActivity::class.java)
-            intent.putExtra(BaseActivity.INTENT_DATA, ACTION_FILE_SELECT)
+            intent.putExtra(ACTION, ACTION_FILE_SELECT)
+            intent.putExtra(BaseActivity.INTENT_DATA, initDir)
             ctx.startActivityForResult(intent,requestCode)
         }
         @JvmStatic
-        fun actionStartDirSelect(ctx:Activity,requestCode:Int){
+        fun actionStartDirSelect(ctx:Activity,initDir:String?,requestCode:Int){
             val intent=Intent(ctx,LocalChooserActivity::class.java)
-            intent.putExtra(BaseActivity.INTENT_DATA, ACTION_DIR_SELECT)
+            intent.putExtra(ACTION, ACTION_DIR_SELECT)
+            intent.putExtra(BaseActivity.INTENT_DATA, initDir)
             ctx.startActivityForResult(intent,requestCode)
         }
     }

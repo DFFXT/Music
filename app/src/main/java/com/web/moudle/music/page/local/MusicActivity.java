@@ -21,6 +21,7 @@ import com.web.common.base.BaseActivity;
 import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
+import com.web.common.util.KeyboardManager;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.config.Shortcut;
@@ -409,7 +410,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
             @Override
             public void onPageSelected(int position) {
-                Shortcut.closeKeyBord(MusicActivity.this, viewPager);
+                KeyboardManager.hideKeyboard(MusicActivity.this,viewPager.getWindowToken());
                 pageList.get(position).setTitle(tv_title);
 
             }

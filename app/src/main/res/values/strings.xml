@@ -80,6 +80,7 @@
 	<string name="setting_cacheClosed">缓存已关闭</string>
 	<string name="setting_clearCache">清空缓存</string>
 	<string name="setting_cacheSelectPath">缓存路径</string>
+	<string name="setting_downloadSelectPath">下载路径</string>
 	<string name="setting_clearCacheTip">是否清空缓存，该操作会删除所有缓存音乐！</string>
 	<string name="setting_cacheHasCleared">共清空%1$s条记录</string>
 

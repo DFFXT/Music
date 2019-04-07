@@ -28,7 +28,10 @@ public class LocalChooserViewModel extends ViewModel {
 
 
     public void requestEntry(String path){
-        requestEntry(new File(path));
+        if(path==null)
+            requestEntry(Environment.getExternalStorageDirectory());
+        else
+            requestEntry(new File(path));
     }
     public void requestEntry(File rootFile){
         if(rootFile.isFile()){//**错误，不是文件夹

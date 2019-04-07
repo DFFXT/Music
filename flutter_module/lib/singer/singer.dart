@@ -1,14 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 import 'dart:core';
-import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:sky_engine/_http/http.dart';
-import 'package:flutter_module/singer/SingerWidget.dart';
-import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_module/singer/DataRequest.dart';
+import 'package:flutter_module/singer/SingerWidget.dart';
 
 
 class SingerView extends StatelessWidget {

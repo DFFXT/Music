@@ -43,6 +43,7 @@ class CacheActivity:BaseActivity() {
         }
 
         cachePathChange()
+        downloadPathChange()
 
         //**清空缓存
         twd_clearCache.setOnClickListener {
@@ -66,7 +67,10 @@ class CacheActivity:BaseActivity() {
             }
         }
         twd_selectCachePath.setOnClickListener {
-            LocalChooserActivity.actionStartDirSelect(this,1)
+            LocalChooserActivity.actionStartDirSelect(this, getCustomerCachePath(), SELECT_CACHE)
+        }
+        twd_selectDownloadPath.setOnClickListener {
+            LocalChooserActivity.actionStartDirSelect(this, getCustomerDownloadPath(), SELECT_DOWNLOAD)
         }
     }
 
@@ -106,15 +110,34 @@ class CacheActivity:BaseActivity() {
                 ResUtil.getSpannable(origin,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min))
         )
     }
+    private fun downloadPathChange(){
+        val origin=ResUtil.getString(R.string.setting_downloadSelectPath)+"  "+ getCustomerDownloadPath()
+        val render=getCustomerDownloadPath()
+        twd_selectDownloadPath.setText(
+                ResUtil.getSpannable(origin,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min))
+        )
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode!= Activity.RESULT_OK)return
-        setCustomerCachePath(data!!.getStringExtra(INTENT_DATA))
-        cachePathChange()
+        when (requestCode){
+            SELECT_CACHE->{
+                setCustomerCachePath(data!!.getStringExtra(INTENT_DATA))
+                cachePathChange()
+            }
+            SELECT_DOWNLOAD->{
+                setCustomerDownloadPath(data!!.getStringExtra(INTENT_DATA))
+                downloadPathChange()
+            }
+        }
+
 
     }
 
     companion object {
+        private const val SELECT_CACHE=1
+        private const val SELECT_DOWNLOAD=2
+
         @JvmStatic
         fun actionStart(ctx:Context){
             ctx.startActivity(Intent(ctx,CacheActivity::class.java))
@@ -137,6 +160,16 @@ class CacheActivity:BaseActivity() {
         @JvmStatic
         fun setCustomerCachePath(path:String){
             SP.putValue(Constant.spName,Constant.SpKey.customerCachePath,path)
+        }
+
+        @JvmStatic
+        fun getCustomerDownloadPath():String{
+            return SP.getString(Constant.spName,Constant.SpKey.customerDownloadPath,Constant.LocalConfig.musicDownloadPath)
+        }
+
+        @JvmStatic
+        fun setCustomerDownloadPath(path:String){
+            SP.putValue(Constant.spName,Constant.SpKey.customerDownloadPath,path)
         }
 
         @JvmStatic

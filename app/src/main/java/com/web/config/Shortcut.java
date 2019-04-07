@@ -10,6 +10,7 @@ import com.web.common.constant.Constant;
 import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.setting.cache.CacheActivity;
 
 import java.io.File;
 
@@ -38,13 +39,13 @@ public class Shortcut {
         return createPath(music.getSongName(),music.getArtistName(),music.getFormat());
     }
     public static String createPath(String musicName,String singerName,String suffix){
-        return Constant.LocalConfig.cachePath+singerName+" - "+musicName+"."+suffix;
+        return CacheActivity.getCustomerDownloadPath() +singerName+" - "+musicName+"."+suffix;
     }
     public static String getLyricsPath(String musicName,String signerName){
-        return GetFiles.cachePath+"lyrics"+ File.separator+signerName+" - "+musicName+".lrc";
+        return Constant.LocalConfig.krcPath+signerName+" - "+musicName+".lrc";
     }
     public static String getIconPath(String singerName){
-        return GetFiles.cachePath+"singer"+ File.separator+singerName+".png";
+        return Constant.LocalConfig.singerIconPath+singerName+".png";
     }
 
     public static void sleep(int millis){
@@ -52,13 +53,6 @@ public class Shortcut {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void closeKeyBord(Context context,View v){//--close键盘
-        InputMethodManager imm=(InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
 
@@ -71,26 +65,6 @@ public class Shortcut {
             out[1]="未知";
             out[0]=nameAndSinger;
         }
-    }
-    /**
-     * //---从文件名称获取歌手和歌名
-     * @param nameAndSinger name
-     * @return name , singer
-     * @deprecated use getName(@Size(min = 2) String[] out,@NonNull String nameAndSinger)
-     */
-    @Deprecated
-    public static String[] getName(String nameAndSinger){
-        int index=nameAndSinger.indexOf(" - ");
-        String out[]=new String[2];
-
-        if(index>0) {
-            out[1]=nameAndSinger.substring(0,index).trim();
-            out[0]=nameAndSinger.substring(index+3).trim();
-        }else {
-            out[1]="未知";
-            out[0]=nameAndSinger;
-        }
-        return out;
     }
 
     public static String validatePath(String name){

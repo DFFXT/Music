@@ -20,8 +20,4 @@ class RecommendRequest{
         callback(obj);
     });
   }
-
-
-  
-  
 }

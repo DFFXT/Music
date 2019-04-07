@@ -95,7 +95,7 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     }
 
     public boolean rename(String musicName,String singer){
-        if(!Constant.LocalConfig.validFileName(musicName)||!Constant.LocalConfig.validFileName(singer)){
+        if(Constant.LocalConfig.isValidFileName(musicName) || Constant.LocalConfig.isValidFileName(singer)){
             MToast.showToast(MyApplication.context, R.string.invalidFilePath);
             return false;
         }
@@ -183,7 +183,12 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     }
 
     public void setSuffix(String suffix) {
-        this.suffix = suffix;
+        if(suffix!=null){
+            this.suffix = suffix;
+        }else{
+            this.suffix="mp3";
+        }
+
     }
 
 

@@ -24,10 +24,12 @@ public final class Constant {
 
         public final static String cacheEnable="cacheEnable";
         public final static String customerCachePath="customerCachePath";
+        public final static String customerDownloadPath="customerDownloadPath";
     }
     public static class LocalConfig{
         public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
         public static String cachePath=rootPath+"cache/";
+        public static String musicDownloadPath=cachePath+"download/";
         public static String musicCachePath=cachePath+"cache/";
         public static String singerIconPath =cachePath+"singer/";
         public static String krcPath=cachePath+"lyrics/";
@@ -40,6 +42,10 @@ public final class Constant {
             if(Shortcut.dirExist(CacheActivity.getCustomerCachePath())){
                 musicCachePath=CacheActivity.getCustomerCachePath();
             }
+            if(Shortcut.dirExist(CacheActivity.getCustomerDownloadPath())){
+                musicDownloadPath=CacheActivity.getCustomerDownloadPath();
+            }
+            LocalConfig.createPathIfNotExist(musicDownloadPath);
             LocalConfig.createPathIfNotExist(musicCachePath);
             LocalConfig.createPathIfNotExist(singerIconPath);
             LocalConfig.createPathIfNotExist(krcPath);
@@ -51,11 +57,11 @@ public final class Constant {
                 dir.mkdirs();
             }
         }
-        public static boolean validFileName(String name){
+        public static boolean isValidFileName(String name){
             for (String anInvalidChar : invalidChar) {
-                if (name.contains(anInvalidChar)) return false;
+                if (name.contains(anInvalidChar)) return true;
             }
-            return true;
+            return false;
         }
     }
 
