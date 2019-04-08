@@ -146,6 +146,8 @@ class EqualizerActivity : BaseActivity() {
         }
     }
 
+    override fun enableSwipeToBack(): Boolean = true
+
     companion object {
         @JvmStatic
         fun actionStart(ctx: Context) {

@@ -9,11 +9,9 @@ import kotlinx.coroutines.channels.ticker
  */
 class Ticker(private val delay: Long,private val initialDelay:Long=0, private val dispatcher: CoroutineDispatcher = Dispatchers.Default, private val callBack: (() -> Unit))  {
     private var ticker: ReceiveChannel<Unit>? = null
-    private var run = false
     @ObsoleteCoroutinesApi
     fun start() {
-        if (run) return
-        run = true
+        if (ticker!=null) return
         GlobalScope.launch(Dispatchers.Default) {
             ticker = ticker(delay, initialDelay)
             launch(dispatcher) {
@@ -27,6 +25,6 @@ class Ticker(private val delay: Long,private val initialDelay:Long=0, private va
     fun stop() {
         //job.cancel()
         ticker?.cancel()
-        run = false
+        ticker=null
     }
 }

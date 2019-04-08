@@ -299,7 +299,7 @@ public class MusicListPage extends BaseMusicPage {
 
     @Override
     public void initView(@NotNull View rootView) {
-        iv_add = Objects.requireNonNull(getActivity()).getWindow().getDecorView().findViewById(R.id.iv_add);
+        iv_add = rootView.findViewById(R.id.iv_add);
         rv_musicList = rootView.findViewById(R.id.musicExpandableList);
         indexBar = rootView.findViewById(R.id.indexBar_musicList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), RecyclerView.VERTICAL, false);
@@ -330,8 +330,7 @@ public class MusicListPage extends BaseMusicPage {
         if (connect != null) {
             connect.getList(groupIndex);
         }
-        String str = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z *";
-        List<String> indexList = Arrays.asList(str.split(" "));
+        List<String> indexList = Arrays.asList(ResUtil.getStringArray(R.array.indexBar));
         indexBar.setVerticalGap(10);
         indexBar.setIndexList(indexList);
         rv_musicList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -362,7 +361,7 @@ public class MusicListPage extends BaseMusicPage {
                         return;
                     }
                 }
-                indexBar.setSelectedIndex(str.length() - 1);
+                indexBar.setSelectedIndex(indexList.size() - 1);
             }
         });
         rv_musicList.setFocusable(true);

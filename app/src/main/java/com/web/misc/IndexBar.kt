@@ -36,12 +36,12 @@ class IndexBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             lineHeight=-paint.fontMetrics.ascent
             requestLayout()
         }
-    var textColor:Int=Color.parseColor("#55000000")
+    var textColor:Int=0x55000000
         set(value) {
             field=value
             invalidate()
         }
-    var textSelectedColor:Int=ResUtil.getColor(R.color.themeColor)
+    var textSelectedColor:Int=this.resources.getColor(R.color.themeColor,context.theme)
         set(value) {
             field=value
             invalidate()

@@ -70,6 +70,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         rv_download.addItemDecoration(new GapItemDecoration(10, 0, 10, 0));
         TopBarLayout topBarLayout=findViewById(R.id.topBar);
         topBarLayout.setEndImageListener(v->{
+            if(dataList.size()==0)return;
             new ConfirmDialog(this)
                     .setMsg(ResUtil.getString(R.string.clearAllRecord))
                     .setLeftText(ResUtil.getString(R.string.no))

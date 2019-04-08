@@ -8,6 +8,16 @@
     android:layout_height="match_parent"
     >
 
+    <ImageView
+        android:id="@+id/iv_add"
+        android:layout_width="18dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/music_note"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/musicExpandableList"
         android:paddingStart="20dp"

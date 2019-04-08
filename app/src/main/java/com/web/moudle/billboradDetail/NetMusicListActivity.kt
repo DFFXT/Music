@@ -60,7 +60,6 @@ class NetMusicListActivity:BaseActivity() {
                 it.billboard_songnum="100"
             }
             tv_musicCount.text="共${it.billboard_songnum}首"
-            //rv_netMusicList.adapter=NetMusicListAdapter(it)
             collapseToolbarLayout.setBackgroundColor(Color.parseColor(it.bg_color.replace("0x","#")))
             val textColor=Color.parseColor(it.color.replace("0x","#"))
             tv_title.setTextColor(textColor)
