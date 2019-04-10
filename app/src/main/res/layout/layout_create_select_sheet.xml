@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/list_add"
+            android:background="@drawable/border_top_1dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             />

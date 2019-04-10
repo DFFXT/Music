@@ -80,7 +80,7 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
             et.setOnClickListener(null);
         }
 
-        if(position==0){
+        if(position==0||position==1){
             button.setVisibility(View.INVISIBLE);
         }else {
             button.setVisibility(View.VISIBLE);

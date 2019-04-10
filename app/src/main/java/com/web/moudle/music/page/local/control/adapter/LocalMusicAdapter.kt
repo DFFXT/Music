@@ -17,6 +17,7 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
     var addListener:((View,Int)->Unit)?=null
     var itemClickListener:((View, Int)->Unit)?=null
     var itemLongClickListener:((View,Int)->Boolean)?=null
+    var toggleLike:((Music,Int)->Boolean)?=null
     var index=-1
         set(v){
             if(v in 0..(itemCount - 1)){
@@ -39,7 +40,17 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
     override fun onBindItemView(holder: BaseViewHolder, position: Int, item: Music?) {
         val tvMusicName=holder.bindText(R.id.musicName, item?.musicName)
         val tvSingerName=holder.bindText(R.id.singerName, item?.singer+if(item!!.album!=null) " - "+item.album else "")
+        val ivLike=holder.findViewById<ImageView>(R.id.iv_love)
+        ivLike.isSelected=item.isLike
         holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration.toLong()))
+        ivLike.setOnClickListener {
+            if(isSelect){
+                toggleSelect(position)
+                return@setOnClickListener
+            }
+            toggleLike?.invoke(item,position)
+
+        }
         holder.findViewById<ImageView>(R.id.add).setOnClickListener {
             if(isSelect){
                 toggleSelect(position)

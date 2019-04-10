@@ -2,6 +2,7 @@ package com.web.moudle.music.player
 
 import com.web.common.base.MyApplication
 import com.web.common.util.IOUtil
+import com.web.data.Music
 import com.web.moudle.music.player.bean.DiskObject
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.music.player.bean.SongSheetList
@@ -38,6 +39,20 @@ object SongSheetManager {
     fun createNewSongSheet(sheetName:String){
         val songSheet= SongSheet(sheetName)
         getSongSheetList().addSongSheet(songSheet)
+    }
+
+    fun setAsLike(music: Music){
+        music.isLike=true
+        getSongSheetList().songList[0].add(music.id)
+        music.saveOrUpdate()
+        SongSheetManager.getSongSheetList().save()
+    }
+
+    fun removeLike(music: Music){
+        music.isLike=false
+        getSongSheetList().songList[0].remove(music.id)
+        music.saveOrUpdate()
+        SongSheetManager.getSongSheetList().save()
     }
 
     fun getSerializableObject(path:String):Any?{

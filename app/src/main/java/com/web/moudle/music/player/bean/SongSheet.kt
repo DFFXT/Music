@@ -7,25 +7,16 @@ class SongSheet(var name: String):DiskObject {
         return musicIdList.size
     }
     fun add(musicId:Int){
-        var has=false
-        musicIdList.forEach{
-            if(musicId==it){
-                has=true
-                return@forEach
-            }
-        }
-        if(!has){
-            musicIdList.add(musicId)
-        }
+        if(musicIdList.contains(musicId)) return
+        musicIdList.add(musicId)
         save()
     }
+    fun contains(musicId: Int):Boolean{
+        return musicIdList.contains(musicId)
+    }
+
     fun remove(musicId: Int){
-        for(i in musicIdList.indices){
-            if(musicId==musicIdList[i]){
-                musicIdList.removeAt(i)
-                break
-            }
-        }
+        musicIdList.remove(musicId)
         save()
     }
     fun each(block:((Int)->Unit)){

@@ -11,6 +11,7 @@ import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.data.MusicList
+import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.preference.SP
 import com.web.moudle.setting.suffix.SuffixSelectActivity
 import com.web.web.R
@@ -108,7 +109,11 @@ object MediaQuery {
             musicList.add(defGroup)
             //**获取自定义列表的歌曲
 
-            val sheetList = SongSheetManager.getSongSheetList().songList
+            val sheet=SongSheetManager.getSongSheetList();
+            val sheetList = sheet.songList
+            if(sheetList.size==0){
+                sheet.addSongSheet(SongSheet(ResUtil.getString(R.string.sheet_like)))
+            }
             for (songSheet in sheetList) {
                 val group = MusicList<Music>(songSheet.name)
                 songSheet.each { id ->

@@ -146,6 +146,7 @@
 	<string name="musicFrequency">频率</string>
 	<string name="savedSoundSetting">保存的音效</string>
 	<string name="default_">默认</string>
+	<string name="sheet_like">喜爱</string>
 	<string name="soundEffect">音效</string>
 	<string name="only4Enable">最多创建3个音效</string>
 

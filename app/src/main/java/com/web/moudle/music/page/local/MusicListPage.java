@@ -326,6 +326,17 @@ public class MusicListPage extends BaseMusicPage {
             defaultGroupChildLongClick(v, position);
             return true;
         });
+
+        adapter.setToggleLike((music,index)->{
+            if(music.isLike()){
+                SongSheetManager.INSTANCE.removeLike(music);
+            }else{
+                SongSheetManager.INSTANCE.setAsLike(music);
+            }
+            connect.groupChange();
+            adapter.notifyItemChanged(index);
+            return null;
+        });
         rv_musicList.setAdapter(adapter);
         if (connect != null) {
             connect.getList(groupIndex);

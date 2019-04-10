@@ -238,7 +238,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
                         @Override
                         public void remove(View v, int position) {
-                            if (position == 0) {//**默认歌单无法删除
+                            if (position == 0||position==1) {//**默认，喜好歌单无法删除
                                 listAlert.dismiss();
                                 return;
                             }
