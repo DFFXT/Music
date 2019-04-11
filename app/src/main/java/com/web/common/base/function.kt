@@ -174,7 +174,7 @@ fun View.showError(tip:String?=null,drawable:Drawable?=null):ViewGroup {
     var mErrorView = errorView
     if (mErrorView == null) {
         mErrorView = LayoutInflater.from(context).inflate(R.layout.layout_error, null, false)
-        //GlideApp.with(this).asGif().load(R.drawable.loading_gif).into((mErrorView as ViewGroup).findViewById(R.id.iv_refresh))
+        //GlideApp.with(this).asGif().load(R.drawable.loading_gif).into((mErrorView as ViewGroup).findViewById(R.itemId.iv_refresh))
         errorView = mErrorView
         mErrorView as ViewGroup
     }

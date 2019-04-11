@@ -1,62 +1,97 @@
 package com.web.moudle.search.adapter
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
+import com.web.common.util.ResUtil
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.web.moudle.search.bean.SearchSug
+import com.web.moudle.search.bean.SearchResItem
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.web.R
 
-class SearchSugAdapter(var searchSug: SearchSug) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, p: Int): BaseViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.search_sug_item, parent, false)
+class SearchSugAdapter(searchSug: List<SearchResItem>) : BaseAdapter<SearchResItem>(searchSug) {
+    var search:((keyword:String)->Unit)?=null
+    var clearAllHistory:(()->Unit)?=null
+    var itemClick:((item:SearchResItem,position:Int)->Unit)?=null
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val v:View = if(viewType!=SearchResItem.SearchItemType_Head){
+            LayoutInflater.from(parent.context).inflate(R.layout.search_sug_item, parent, false)
+        }else{
+            LayoutInflater.from(parent.context).inflate(R.layout.item_search_head,parent,false)
+        }
         return BaseViewHolder(v)
     }
 
-    override fun getItemCount(): Int {
-        return searchSug.albumList.size + searchSug.artistList.size + searchSug.musicSugList.size
+    override fun getItemViewType(position: Int): Int {
+        return data!![position].type
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, p: Int) {
-        when (p) {
-            in 0 until searchSug.musicSugList.size -> {//**歌曲
-                val item=searchSug.musicSugList[p]
-                holder.bindText(R.id.tv_name, item.songName + " -- " + item.artistName)
+
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:SearchResItem?) {
+        if(item==null)return
+        when (item.type) {
+            SearchResItem.SearchItemType_Music -> {//**歌曲
+                holder.bindText(R.id.tv_name, item.name + " -- " + item.subName)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.music_sug_icon)
                 holder.itemView.setOnClickListener {
-                    MusicDetailActivity.actionStart(it.context,item.songId)
+                    item.saveOrUpdateAsync()
+                    MusicDetailActivity.actionStart(it.context,item.itemId)
+                    itemClick?.invoke(item,position)
                 }
             }
-            in searchSug.musicSugList.size until searchSug.musicSugList.size + searchSug.albumList.size -> {//**专辑
-                val relativeP = p - searchSug.musicSugList.size
-                val albumSug=searchSug.albumList[relativeP]
-                holder.bindText(R.id.tv_name, albumSug.albumName + " --  " + albumSug.artistName)
+            SearchResItem.SearchItemType_Album -> {//**专辑
+                holder.bindText(R.id.tv_name, item.name + " --  " + item.subName)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.album_sug_icon)
                 holder.itemView.setOnClickListener {
-                    AlbumEntryActivity.actionStart(it.context,albumSug.albumId)
+                    item.saveOrUpdateAsync()
+                    AlbumEntryActivity.actionStart(it.context,item.itemId)
+                    itemClick?.invoke(item,position)
                 }
             }
-            in itemCount - searchSug.artistList.size -searchSug.songSheetList.size until itemCount-searchSug.songSheetList.size -> {//**歌手
-                val relativeP = p - (itemCount - searchSug.artistList.size-searchSug.songSheetList.size)
-                val artist=searchSug.artistList[relativeP]
-                holder.bindText(R.id.tv_name, artist.artistName)
+            SearchResItem.SearchItemType_Artist -> {//**歌手
+                holder.bindText(R.id.tv_name, item.name)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.singer_sug_icon)
                 holder.itemView.setOnClickListener {
-                    SingerEntryActivity.actionStart(it.context,artist.uid)
+                    item.saveOrUpdateAsync()
+                    SingerEntryActivity.actionStart(it.context,item.itemId)
+                    itemClick?.invoke(item,position)
                 }
             }
-            in itemCount-searchSug.songSheetList.size until itemCount->{
-                val relativeP = p - (itemCount -searchSug.songSheetList.size)
-                val sheet=searchSug.songSheetList[relativeP]
-                holder.bindText(R.id.tv_name, sheet.songSheetName)
+            SearchResItem.SearchItemType_Sheet ->{
+                holder.bindText(R.id.tv_name, item.name)
                 holder.findViewById<View>(R.id.searchSug_type).setBackgroundResource(R.drawable.def_song_sheet_icon)
                 holder.itemView.setOnClickListener {
-                    SongSheetActivity.actionStart(it.context,sheet.songSheetId)
+                    item.saveOrUpdateAsync()
+                    SongSheetActivity.actionStart(it.context,item.itemId)
+                    itemClick?.invoke(item,position)
                 }
+            }
+            SearchResItem.SearchItemType_Head ->{
+                holder.bindText(R.id.tv_name,item.name)
+                val iv=holder.findViewById<ImageView>(R.id.searchSug_op)
+                iv.setImageResource(R.drawable.clear)
+                iv.imageTintList= ColorStateList.valueOf(ResUtil.getColor(R.color.textColor_9))
+                iv.setOnClickListener {
+                    clearAllHistory?.invoke()
+                }
+            }
+            SearchResItem.SearchItemType_Search->{
+                val v=holder.findViewById<View>(R.id.searchSug_type)
+                v.setBackgroundResource(R.drawable.icon_search)
+                v.backgroundTintList= ColorStateList.valueOf(ResUtil.getColor(R.color.textColor_9))
+                holder.bindText(R.id.tv_name,item.name)
+                holder.itemView.setOnClickListener {
+                    search?.invoke(item.name)
+                    itemClick?.invoke(item,position)
+                }
+
+
             }
         }
     }

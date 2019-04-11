@@ -2,7 +2,6 @@ package com.web.moudle.search
 
 import android.app.Activity
 import android.content.Intent
-import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
@@ -12,16 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
-import com.web.misc.GapItemDecoration
+import com.web.misc.ConfirmDialog
 import com.web.moudle.search.adapter.SearchSugAdapter
-import com.web.moudle.search.bean.DefSearchRes
-import com.web.moudle.search.bean.SearchSug
+import com.web.moudle.search.bean.SearchResItem
 import com.web.moudle.search.model.SearchViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_search.*
+import org.litepal.crud.DataSupport
 
 class SearchActivity : BaseActivity() {
     private lateinit var viewModel: SearchViewModel
+
 
     override fun getLayoutId(): Int {
         return R.layout.activity_search
@@ -31,21 +31,16 @@ class SearchActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this)[SearchViewModel::class.java]
         viewModel.searchSug.observe(this, Observer { res ->
             tv_type.text=ResUtil.getString(R.string.searchView_searchRes)
-            setSearchData(res!!)
+            setSearchData(res)
         })
-        viewModel.defSearchRes.observe(this,Observer<DefSearchRes>{res->
+        viewModel.defSearchRes.observe(this,Observer<List<SearchResItem>>{res->
             if(res==null)return@Observer
             tv_type.text=ResUtil.getString(R.string.searchView_desc)
-            res.recommendSug.recommendSongs.addAll(res.hotSearchSug.songList)
-            val sug=SearchSug()
-            sug.musicSugList=res.recommendSug.recommendSongs
-            sug.albumList=ArrayList()
-            sug.artistList=res.hotSearchSug.artistSugList
-            sug.songSheetList=res.hotSearchSug.playList
-            setSearchData(sug)
+            setSearchData(res)
+
         })
 
-        viewModel.defSearch(System.currentTimeMillis())
+        viewModel.defSearch()
     }
 
     override fun initView() {
@@ -60,14 +55,11 @@ class SearchActivity : BaseActivity() {
         searchView_searchActivity.searchCallback = {
             val inputManager=getSystemService(InputMethodManager::class.java)
             inputManager.hideSoftInputFromWindow(searchView_searchActivity.windowToken,0)
-            val intent=Intent()
-            intent.putExtra(INPUT_DATA,it)
-            setResult(Activity.RESULT_OK,intent)
-            finish()
+            finish(it)
         }
         searchView_searchActivity.textChangeCallback = {
             if(it==""){
-                viewModel.defSearch(System.currentTimeMillis())
+                viewModel.defSearch()
             }else{
                 viewModel.getSearchSug(it)
             }
@@ -76,16 +68,47 @@ class SearchActivity : BaseActivity() {
         searchView_searchActivity.cancelCallback={
             finish()
         }
-
     }
-    private fun setSearchData(res:SearchSug){
+
+    private fun finish(keyword:String){
+        val intent=Intent()
+        intent.putExtra(INPUT_DATA,keyword)
+        setResult(Activity.RESULT_OK,intent)
+        val item=SearchResItem(keyword,"","",SearchResItem.SearchItemType_Search)
+        item.saveOrUpdateAsync()
+        finish()
+    }
+
+    private fun setSearchData(res:List<SearchResItem>){
         var adapter = rv_searchSug.adapter
         if (adapter == null) {
             adapter = SearchSugAdapter(res)
             rv_searchSug.adapter = adapter
+            adapter.search={
+                finish(it)
+            }
+            adapter.clearAllHistory={
+                ConfirmDialog(this)
+                        .setMsg(ResUtil.getString(R.string.searchView_clearAllHistory))
+                        .setLeftText(ResUtil.getString(R.string.no))
+                        .setRightText(ResUtil.getString(R.string.yes))
+                        .setLeftListener {
+                            it.dismiss()
+                        }
+                        .setRightListener {
+                            DataSupport.deleteAll(SearchResItem::class.java)
+                            viewModel.refreshHistory()
+                            it.dismiss()
+                        }
+                        .showCenter(searchView_searchActivity)
+            }
+            adapter.itemClick={_,_->
+                searchView_searchActivity.postDelayed({
+                    viewModel.refreshHistory()
+                },1000)
+            }
         } else {
-            (adapter as SearchSugAdapter).searchSug = res
-            adapter.notifyDataSetChanged()
+            (adapter as SearchSugAdapter).update(res)
         }
     }
 

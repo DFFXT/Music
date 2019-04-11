@@ -82,7 +82,7 @@ class AlbumEntryActivity : BaseActivity() {
 
 
     companion object {
-        private const val ID = "id"
+        private const val ID = "itemId"
         @JvmStatic
         fun actionStart(ctx: Context, id: String) {
             val intent = Intent(ctx, AlbumEntryActivity::class.java)

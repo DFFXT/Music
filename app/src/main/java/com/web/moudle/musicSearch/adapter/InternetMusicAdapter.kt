@@ -54,8 +54,8 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
             AlbumEntryActivity.actionStart(it.context,item.albumId)
         }
         ImageLoad.load(item.picSmall).into(holder.findViewById(R.id.iv_musicIcon))
-        //holder.bindText(R.id.size,ResUtil.getFileSize(item.size))
-        //holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))
+        //holder.bindText(R.itemId.size,ResUtil.getFileSize(item.size))
+        //holder.bindText(R.itemId.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))
         holder.rootView.setOnClickListener {
             listener?.itemClick(item)
         }

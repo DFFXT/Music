@@ -113,7 +113,7 @@ class NetApis {
         fun getAlbumList(@Query("tinguid") uid: String, @Query("offset") offset: Int, @Query("limits") limit: Int): Observable<AlbumEntryBox>
 
         @GET("http://music.taihe.com/data/artist/redirect")
-        fun getArtistId(@Query("id") fakeId: String): Call<Any>
+        fun getArtistId(@Query("itemId") fakeId: String): Call<Any>
     }
 
     interface SongSheetEntry {

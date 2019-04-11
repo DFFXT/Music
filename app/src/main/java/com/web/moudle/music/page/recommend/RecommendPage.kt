@@ -60,7 +60,7 @@ class RecommendPage : BaseMusicPage() {
                 }
                 "actionStart_NetMusicListActivity" -> {
                     val json = JSON.parseObject(methodCall.arguments.toString())
-                    NetMusicListActivity.actionStartSingerMusic(context!!, json.getString("title"), json.getString("id"))
+                    NetMusicListActivity.actionStartSingerMusic(context!!, json.getString("title"), json.getString("itemId"))
                 }
                 "actionStart_Video" -> {
                     VideoEntryActivity.actionStart(context!!, videoId = methodCall.arguments.toString())

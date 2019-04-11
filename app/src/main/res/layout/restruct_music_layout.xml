@@ -18,6 +18,7 @@
             android:background="@color/themeColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="3dp"
             app:topBar_startImage="@drawable/three_h_line"
             app:topBar_mainTitleText="@string/page_local"
             app:topBar_mainTitleColor="@color/white"

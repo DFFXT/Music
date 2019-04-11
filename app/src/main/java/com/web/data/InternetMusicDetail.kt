@@ -26,7 +26,7 @@ data class InternetMusicDetail(
         var singerIconSmall:String?=null,
         var format:String
         //***自己设置
-        //var id:Int?=-1,
+        //var itemId:Int?=-1,
         //var path:String?,
         //var hasDownload:Long?=0
 

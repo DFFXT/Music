@@ -4,4 +4,6 @@
     <string name="searchView_hint">曲名 歌手 专辑</string>
     <string name="searchView_desc">推荐</string>
     <string name="searchView_searchRes">搜索结果</string>
+    <string name="searchView_history">搜索历史</string>
+    <string name="searchView_clearAllHistory">是否删除所有搜索历史？</string>
 </resources>

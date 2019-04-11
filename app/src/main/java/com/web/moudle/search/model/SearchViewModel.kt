@@ -7,6 +7,7 @@ import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
 import com.web.moudle.search.bean.DefSearchRes
+import com.web.moudle.search.bean.SearchResItem
 import com.web.moudle.search.bean.SearchSug
 import io.reactivex.disposables.Disposable
 
@@ -17,11 +18,11 @@ class SearchViewModel : ViewModel() {
         val CODE_INTERNET_ERROR = 0
     }
 
-    val searchSug = MutableLiveData<SearchSug>()
+    val searchSug = MutableLiveData<List<SearchResItem>>()
     val status = MutableLiveData<LiveDataWrapper<Any>>()
     private var wrapper = LiveDataWrapper<Any>()
 
-    val defSearchRes = MutableLiveData<DefSearchRes>()
+    val defSearchRes = MutableLiveData<List<SearchResItem>>()
 
     private val model = SearchModel()
 
@@ -32,12 +33,12 @@ class SearchViewModel : ViewModel() {
             disposable?.dispose()
         }
         model.getSearchSug(word)
-                .subscribe(object : BaseObserver<SearchSug>() {
+                .subscribe(object : BaseObserver<List<SearchResItem>>() {
                     override fun onSubscribe(d: Disposable) {
                         disposable = d
                     }
 
-                    override fun onNext(res: SearchSug) {
+                    override fun onNext(res: List<SearchResItem>) {
                         searchSug.value = res
                     }
 
@@ -49,12 +50,19 @@ class SearchViewModel : ViewModel() {
                 })
     }
 
-    fun defSearch(time:Long){
-        model.defSearch(time)
+    fun defSearch(){
+        model.defSearch(System.currentTimeMillis())
                 .get(onNext = {
                     defSearchRes.value=it
                 },onError = {
                     it.printStackTrace()
+                })
+    }
+
+    fun refreshHistory(){
+        model.refreshHistory()
+                .get(onNext = {
+                    defSearchRes.value=it
                 })
     }
 }

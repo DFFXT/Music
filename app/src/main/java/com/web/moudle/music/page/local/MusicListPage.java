@@ -53,7 +53,6 @@ public class MusicListPage extends BaseMusicPage {
     private LocalMusicAdapter adapter;
     private MusicPlay.Connect connect;
     private int groupIndex = 0;
-    private Drawable arrowDown;
     private ToolsBar toolsBar;
     private View iv_add;
 
@@ -116,6 +115,9 @@ public class MusicListPage extends BaseMusicPage {
         ArrayList<String> sheetNameList = new ArrayList<>();
         for (SongSheet sheet : list) {
             sheetNameList.add(sheet.getName());
+        }
+        if(sheetNameList.size()!=0){
+            sheetNameList.remove(0);
         }
         SheetCreateAlert alert = new SheetCreateAlert(Objects.requireNonNull(getContext()), ResUtil.getString(R.string.songSheet));
         alert.setList(sheetNameList);
@@ -255,9 +257,17 @@ public class MusicListPage extends BaseMusicPage {
 
     @Override
     public void setTitle(@NotNull TextView textView) {
-        textView.setText(ResUtil.getString(R.string.page_local));
-        textView.setCompoundDrawables(null, null, arrowDown, null);
-        textView.setCompoundDrawableTintMode(PorterDuff.Mode.SRC_ATOP);
+        String sheetName=" - ";
+        if(groupIndex==0){
+            sheetName+=ResUtil.getString(R.string.default_);
+        }else{
+            sheetName+=SongSheetManager.INSTANCE.getSongSheetList().getSongList().get(groupIndex-1).getName();
+        }
+        sheetName+=" ···";
+        String title=ResUtil.getString(R.string.page_local)+sheetName;
+
+        CharSequence realTitle=ResUtil.getSpannable(title,sheetName,ResUtil.getColor(R.color.gray),ResUtil.getSize(R.dimen.textSize_min));
+        textView.setText(realTitle);
     }
 
     /**
@@ -290,12 +300,6 @@ public class MusicListPage extends BaseMusicPage {
     }
 
 
-    @Override
-    public void viewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
-        arrowDown = new BitmapDrawable(getResources(), ResUtil.getBitmapRotate(R.drawable.icon_back_black, -90));
-        arrowDown.setBounds(0, 0, 50, 50);
-        arrowDown.setTint(Color.WHITE);
-    }
 
     @Override
     public void initView(@NotNull View rootView) {
