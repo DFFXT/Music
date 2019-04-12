@@ -13,18 +13,23 @@ class MyApplication : LitePalApplication(){
 
     override fun onCreate() {
         super.onCreate()
+        val configuration = resources.configuration
+        configuration.fontScale = .85f
+        context=applicationContext.createConfigurationContext(configuration)
+
         Thread.setDefaultUncaughtExceptionHandler(UncaughtException)
-        context= applicationContext
+
 
         InternetProxy.startProxy()
         FlutterMain.startInitialization(this)
-        //proxy= HttpProxyCacheServer(this)
         Constant.LocalConfig.initPath()
+
+
+
+
     }
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context:Context
-        //@JvmStatic
-        //var proxy:HttpProxyCacheServer?=null
     }
 }

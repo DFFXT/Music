@@ -171,7 +171,7 @@ object InternetProxy {
      */
     @JvmStatic
     @WorkerThread
-    fun accessStreamCopyNoClose(inputStream: RandomAccessFile,from:Long,to:Long, outputStream:OutputStream){
+    private fun accessStreamCopyNoClose(inputStream: RandomAccessFile,from:Long,to:Long, outputStream:OutputStream){
 
         inputStream.use {
             it.seek(from)
@@ -204,7 +204,7 @@ object InternetProxy {
      */
     @JvmStatic
     @WorkerThread
-    fun streamCopyNoClose(inputStream: InputStream, outputStream:OutputStream){
+    private fun streamCopyNoClose(inputStream: InputStream, outputStream:OutputStream){
 
         BufferedInputStream(inputStream).use {
             val byte=ByteArray(1024*20)
@@ -225,7 +225,7 @@ object InternetProxy {
      */
     @JvmStatic
     @WorkerThread
-    fun streamCopyNoCloseWidthCache(inputStream: InputStream, outputStream:OutputStream,from: Long,to: Long,musicCache: MusicCache){
+    private fun streamCopyNoCloseWidthCache(inputStream: InputStream, outputStream:OutputStream,from: Long,to: Long,musicCache: MusicCache){
 
         BufferedInputStream(inputStream).use {
             val file= File(musicCache.cachePath)

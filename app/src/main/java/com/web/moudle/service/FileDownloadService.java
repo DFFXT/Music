@@ -19,6 +19,7 @@ import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
+import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.DownloadNotification;
 import com.web.web.R;
 
@@ -330,7 +331,7 @@ public class FileDownloadService extends Service {
                 return;
             }
             notifyNotification();
-            URL Url = new URL(music.getSongLink());
+            URL Url = new URL(InternetProxy.proxyUrl(music.getSongLink()));
             HttpURLConnection connection = (HttpURLConnection) Url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Range", "bytes=" + hasDownload + "-" + music.getSize());
