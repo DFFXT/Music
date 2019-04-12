@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/themeColor"
+        android:elevation="3dp"
         app:topBar_startImage="@drawable/icon_back_black"
         app:topBar_tint="@color/white"
         app:topBar_mainTitleText="@string/billboard"

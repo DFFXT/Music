@@ -14,7 +14,7 @@
 		android:layout_height="wrap_content"
 		android:fitsSystemWindows="true"
 		android:background="@color/themeColor"
-		android:elevation="1dp"
+		android:elevation="3dp"
 		app:topBar_mainTitleColor="@color/white"
 		app:topBar_startImage="@drawable/icon_back_black"
 		app:topBar_tint="@color/white"

@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:background="@color/themeColor"
+        android:elevation="3dp"
         app:topBar_mainTitleText="@string/setting_suffix_select"
         app:topBar_endText="@string/setting_suffix_save"
         app:topBar_tint="@color/white"

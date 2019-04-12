@@ -14,7 +14,7 @@ class MyApplication : LitePalApplication(){
     override fun onCreate() {
         super.onCreate()
         val configuration = resources.configuration
-        configuration.fontScale = .85f
+        configuration.fontScale = Constant.LocalConfig.fontScale
         context=applicationContext.createConfigurationContext(configuration)
 
         Thread.setDefaultUncaughtExceptionHandler(UncaughtException)

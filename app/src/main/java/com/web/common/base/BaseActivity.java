@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.web.common.constant.Constant;
 import com.web.misc.SwipeFrameLayout;
 import com.web.web.R;
 
@@ -23,11 +24,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        //Thread.setDefaultUncaughtExceptionHandler(UncaughtException.INSTANCE);
 
         //**设置字体大小
         Configuration configuration = getResources().getConfiguration();
-        configuration.fontScale = .85f;
+        configuration.fontScale = Constant.LocalConfig.fontScale;
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
         setContentView(getLayoutId());
         initView();

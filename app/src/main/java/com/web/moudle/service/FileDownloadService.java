@@ -17,6 +17,7 @@ import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
+import com.web.moudle.music.player.MediaQuery;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.net.proxy.InternetProxy;
@@ -189,7 +190,7 @@ public class FileDownloadService extends Service {
      * @param internetMusic music
      */
     private void delete(InternetMusicDetail internetMusic) {
-        Music.deleteMusic(new Music(internetMusic.getSongName(),
+        MediaQuery.deleteCacheMusic(new Music(internetMusic.getSongName(),
                 internetMusic.getArtistName(), internetMusic.getPath()));
     }
 

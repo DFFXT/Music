@@ -128,20 +128,6 @@ public class Music extends DataSupport implements Cloneable,Serializable {
         return ok;
     }
 
-    /**
-     * 删除音乐,歌词
-     * @param music music
-     * @return Music
-     */
-    public static Music deleteMusic(Music music){
-        File file=new File(music.getPath());
-        file.delete();
-        file=new File(music.getLyricsPath());
-        file.delete();
-        music.delete();
-        return music;
-    }
-
     public boolean saveOrUpdate(){
         return super.saveOrUpdate("path=?",path);
     }

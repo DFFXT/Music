@@ -27,6 +27,10 @@ public final class Constant {
         public final static String customerDownloadPath="customerDownloadPath";
     }
     public static class LocalConfig{
+
+        //**全局字体缩放比例
+        public static float fontScale=0.85f;
+
         public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
         public static String cachePath=rootPath+"cache/";
         public static String musicDownloadPath=cachePath+"download/";

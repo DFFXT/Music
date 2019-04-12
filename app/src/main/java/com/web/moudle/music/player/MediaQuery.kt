@@ -143,26 +143,31 @@ object MediaQuery {
 
 
     /**
-     * 删除音乐
+     * 删除音乐，并更新歌单
      */
     @JvmStatic
     fun deleteMusic(ctx: Context,music: Music,group:Int,deleteFile:Boolean){
         if (deleteFile) {//******删除源文件并更新媒体库
-            Music.deleteMusic(music)
+            deleteCacheMusic(music)
             ctx.contentResolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "_data=?", arrayOf<String>(music.path))
         }
 
 
-        if (group == 0 || deleteFile) {//**影响group 0
+        if (group == 0 || deleteFile) {//**影响group 0,在默认歌单里面删除或者删除源文件
             val list = SongSheetManager.getSongSheetList().songList
             for (songSheet in list) {
                 songSheet.remove(music.id)
             }
-        } else {
-            SongSheetManager.getSongSheetList().songList[group].remove(music.id)
+            music.delete()
+        }
+        else {
+            SongSheetManager.getSongSheetList().songList[group-1].remove(music.id)
+            if(group==1){//**喜爱歌单删除
+                music.isLike=false
+                music.saveOrUpdate()
+            }
             SongSheetManager.getSongSheetList().save()
         }
-        music.delete()
     }
 
     /**
@@ -173,6 +178,18 @@ object MediaQuery {
         val values=ContentValues()
         values.put("_data",newMusic.path)
         MyApplication.context.contentResolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,values,"_data=?", arrayOf(oldMusic.path))
+    }
+
+    /**
+     * 删除音乐相关文件
+     */
+    @JvmStatic
+    fun deleteCacheMusic(music: Music){
+        var file = File(music.path)
+        file.delete()
+        file = File(music.lyricsPath)
+        file.delete()
+        music.delete()
     }
 
 
