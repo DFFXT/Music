@@ -34,6 +34,13 @@
 	<string name="setting">设置</string>
 	<string name="setting_lockScreen">锁屏</string>
 	<string name="setting_suffixFilter">音乐扫描</string>
+	<string name="setting_lyricsSetting">歌词设置</string>
+	<string name="lyrics_overlayWindow">歌词浮窗</string>
+	<string name="lyrics_color">歌词颜色</string>
+	<string name="lyrics_focusColor">歌词聚焦颜色</string>
+	<string name="lyrics_size">歌词大小</string>
+	<string name="lyrics_large">巨大</string>
+	<string name="lyrics_min">极小</string>
 
     <string name="musicMain_noMusicAlert">没有音乐！是否加载？</string>
 

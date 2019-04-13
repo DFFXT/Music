@@ -23,9 +23,7 @@ import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
-import com.web.misc.DrawableItemDecoration
 import com.web.misc.GapItemDecoration
-import com.web.moudle.lockScreen.ui.LockScreenActivity
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.preference.SP
 import com.web.web.R
@@ -56,7 +54,7 @@ class LockScreenSettingActivity : BaseActivity() {
 
     override fun initView() {
         view_s_lock_colorSelected.setImageDrawable(ColorDrawable(mColor))
-        rv_s_lock_colorList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        rv_s_lock_colorList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rv_s_lock_colorList.addItemDecoration(GapItemDecoration(right = 10))
         view_s_lock_colorSelected.setOnClickListener { colorPick() }
         sw_lockScreenMode.setOnClickListener {
@@ -78,6 +76,7 @@ class LockScreenSettingActivity : BaseActivity() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val v = ImageView(this@LockScreenSettingActivity)
                 v.background = getDrawable(R.drawable.border_1dp)
+                v.elevation=ViewUtil.dpToPx(3f).toFloat()
                 val lp = ViewGroup.LayoutParams(ViewUtil.dpToPx(40f), ViewUtil.dpToPx(40f))
                 v.layoutParams = lp
                 v.setPadding(10, 10, 10, 10)
@@ -149,16 +148,13 @@ class LockScreenSettingActivity : BaseActivity() {
         array[4] = Color.YELLOW
         colorPickerDialog.setColorArray(array)
         colorPickerDialog.negativeButtonListener = View.OnClickListener {
-            colorPickerDialog.cancel()
+            colorPickerDialog.dismiss()
         }
         colorPickerDialog.positiveButtonListener = {
-            colorPickerDialog.cancel()
-            if (it != null) {
-                setBgColor(it)
-                setMode(BG_MODE_COLOR)
-                switchLockScreenMode(BG_MODE_COLOR)
-                view_s_lock_colorSelected.setImageDrawable(ColorDrawable(it))
-            }
+            setBgColor(it)
+            setMode(BG_MODE_COLOR)
+            switchLockScreenMode(BG_MODE_COLOR)
+            view_s_lock_colorSelected.setImageDrawable(ColorDrawable(it))
         }
         colorPickerDialog.show()
     }

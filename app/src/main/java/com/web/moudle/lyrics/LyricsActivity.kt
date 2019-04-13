@@ -17,6 +17,7 @@ import com.web.data.Music
 import com.web.misc.imageDraw.WaveDraw
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.setting.lyrics.LyricsSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.music_lyrics_view.*
 import java.util.*
@@ -62,17 +63,19 @@ class LyricsActivity : BaseActivity() {
 
         riv_wave.afterDraw=waveDraw
 
-        lv_lyrics!!.textColor = ResUtil.getColor(R.color.themeColor)
-        lv_lyrics!!.lyrics = list
-       topBar.setEndImageListener(View.OnClickListener {
-           if (canScroll) {
-               canScroll= false
-               topBar.setEndImage(R.drawable.locked)
-           } else {
-               canScroll=true
-               topBar.setEndImage(R.drawable.unlock)
-           }
-           lv_lyrics!!.setCanScroll(canScroll)
+        lv_lyrics.textColor = LyricsSettingActivity.getLyricsColor()
+        lv_lyrics.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
+        lv_lyrics.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
+        lv_lyrics.lyrics = list
+        topBar.setEndImageListener(View.OnClickListener {
+            if (canScroll) {
+                canScroll= false
+                topBar.setEndImage(R.drawable.locked)
+            } else {
+                canScroll=true
+                topBar.setEndImage(R.drawable.unlock)
+            }
+            lv_lyrics.setCanScroll(canScroll)
         })
 
         iv_next.setOnClickListener {
@@ -84,10 +87,11 @@ class LyricsActivity : BaseActivity() {
         iv_musicEffect.setOnClickListener {
             EqualizerActivity.actionStart(this)
         }
-        lv_lyrics!!.setSeekListener { seekTo ->
+        lv_lyrics.setSeekListener { seekTo ->
             connect?.seekTo(seekTo)
             true
         }
+
 
         connection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {

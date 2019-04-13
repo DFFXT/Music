@@ -23,7 +23,7 @@ class Ticker(private val delay: Long,private val initialDelay:Long=0, private va
     }
 
     fun stop() {
-        //job.cancel()
+        //job.dismiss()
         ticker?.cancel()
         ticker=null
     }

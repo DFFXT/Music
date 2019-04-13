@@ -25,7 +25,7 @@ class ColorPickerDialog(context:Context,currentColor:Int) {
     //**外部的监听器
     var colorChange:((Int?)->Unit)?=null
     var negativeButtonListener:View.OnClickListener?=null
-    var positiveButtonListener:((Int?)->Unit)?=null
+    var positiveButtonListener:((Int)->Unit)?=null
     private var color:Int=currentColor
     private var alpha:Int=Color.alpha(currentColor)
     init {
@@ -37,9 +37,11 @@ class ColorPickerDialog(context:Context,currentColor:Int) {
         colorShowView=rootView.findViewById(R.id.view_colorShow)
         negativeButton.setOnClickListener{
             negativeButtonListener?.onClick(it)
+            dismiss()
         }
         positiveButton.setOnClickListener {
             positiveButtonListener?.invoke(color)
+            dismiss()
         }
         colorPicker.listener= {mColor->
             mColor?.let {
@@ -79,8 +81,8 @@ class ColorPickerDialog(context:Context,currentColor:Int) {
     fun setPositionArray(array:FloatArray){
         colorPicker.positionArray=array
     }
-    fun cancel(){
-        dialog?.cancel()
+    fun dismiss(){
+        dialog?.dismiss()
     }
     fun show(){
         dialog=builder.create()

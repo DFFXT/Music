@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.web.misc.TopBarLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/themeColor"
+        android:elevation="3dp"
+        app:topBar_startImage="@drawable/icon_back_black"
+        app:topBar_tint="@color/white"
+        app:topBar_mainTitleText="@string/setting_lyricsSetting"
+        app:topBar_mainTitleColor="@color/white"
+        />
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            >
+            <TextView
+                android:id="@+id/tv_swLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_overlayWindow"
+                android:textSize="@dimen/textSize_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <Switch
+                android:id="@+id/sw_lyricsOverlayWindow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_colorLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_color"
+                android:textSize="@dimen/textSize_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/v_lyricsColor"
+                app:layout_constraintBottom_toBottomOf="@id/v_lyricsColor"/>
+
+            <ImageView
+                android:id="@+id/v_lyricsColor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="3dp"
+                android:background="@drawable/border_1dp"
+                android:src="@color/themeColor"
+                android:layout_marginTop="12dp"
+                android:elevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sw_lyricsOverlayWindow"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_lyricsColor"/>
+
+
+
+            <TextView
+                android:id="@+id/tv_lyricsFocusColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_focusColor"
+                app:layout_constraintTop_toTopOf="@id/v_lyricsFocusColor"
+                app:layout_constraintBottom_toBottomOf="@id/v_lyricsFocusColor"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+
+            <ImageView
+                android:id="@+id/v_lyricsFocusColor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="3dp"
+                android:background="@drawable/border_1dp"
+                android:src="@color/themeColor"
+                android:layout_marginTop="12dp"
+                android:elevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_color"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_focusColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_lyricsFocusColor"/>
+
+
+            <TextView
+                android:id="@+id/tv_lyricsSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_size"
+                android:layout_marginTop="12dp"
+                android:textSize="@dimen/textSize_normal"
+                app:layout_constraintTop_toBottomOf="@id/rv_focusColor"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_sizeLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_min"
+                android:layout_marginTop="16dp"
+                android:textSize="@dimen/textSize_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_lyricsSize"/>
+            <TextView
+                android:id="@+id/tv_sizeMin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_large"
+                android:textSize="@dimen/textSize_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_sizeLarge"/>
+
+            <SeekBar
+                android:id="@+id/sb_lyricsSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintStart_toEndOf="@id/tv_sizeLarge"
+                app:layout_constraintEnd_toStartOf="@id/tv_sizeMin"
+                app:layout_constraintBottom_toBottomOf="@id/tv_sizeLarge"
+                app:layout_constraintTop_toTopOf="@id/tv_sizeLarge"/>
+
+
+            <com.web.moudle.lyrics.LyricsView
+                android:id="@+id/lv_lyrics"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/gray"
+                android:elevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_sizeLarge"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

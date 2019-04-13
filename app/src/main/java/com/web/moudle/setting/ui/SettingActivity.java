@@ -3,18 +3,16 @@ package com.web.moudle.setting.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 
 import com.web.common.base.BaseActivity;
 import com.web.common.constant.Apk;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
-import com.web.misc.ConfirmDialog;
 import com.web.misc.TextWithDrawable;
-import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.setting.about.AboutActivity;
 import com.web.moudle.setting.cache.CacheActivity;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
+import com.web.moudle.setting.lyrics.LyricsSettingActivity;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.web.R;
 
@@ -30,10 +28,11 @@ public class SettingActivity extends BaseActivity {
         ViewUtil.transparentStatusBar(getWindow());
         TextWithDrawable twd_lockScreen = findViewById(R.id.twd_lockScreen);
         TextWithDrawable twd_musicScan = findViewById(R.id.twd_musicScan);
+        TextWithDrawable twd_lyrics = findViewById(R.id.twd_lyrics);
         TextWithDrawable twd_checkUpdate = findViewById(R.id.twd_checkUpdate);
         twd_lockScreen.setOnClickListener(v -> LockScreenSettingActivity.Companion.actionStart(this));
         twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
-
+        twd_lyrics.setOnClickListener(v-> LyricsSettingActivity.actionStart(this));
         twd_checkUpdate.setText(ResUtil.getString(R.string.setting_checkUpdate, Apk.getVersionName()));
         twd_checkUpdate.setOnClickListener(v ->Apk.checkUpdate(this,v));
 

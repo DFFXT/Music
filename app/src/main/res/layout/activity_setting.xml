@@ -40,6 +40,16 @@
 		app:textWithDrawable_drawable="@drawable/icon_more"
 		/>
 	<com.web.misc.TextWithDrawable
+		android:id="@+id/twd_lyrics"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/selector_transparent_gray"
+		app:textWithDrawable_text="@string/setting_lyricsSetting"
+		android:paddingTop="10dp"
+		android:paddingBottom="10dp"
+		app:textWithDrawable_drawable="@drawable/icon_more"
+		/>
+	<com.web.misc.TextWithDrawable
 		android:id="@+id/twd_cacheSetting"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

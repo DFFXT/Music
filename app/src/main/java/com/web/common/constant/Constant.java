@@ -25,6 +25,11 @@ public final class Constant {
         public final static String cacheEnable="cacheEnable";
         public final static String customerCachePath="customerCachePath";
         public final static String customerDownloadPath="customerDownloadPath";
+
+        public final static String lyricsColor="lyricsColor";
+        public final static String lyricsFocusColor="lyricsFocusColor";
+        public final static String lyricsSize="lyricsSize";
+        public final static String lyricsOverlapOpen="lyricsOverlapOpen";
     }
     public static class LocalConfig{
 

@@ -7,7 +7,6 @@ public class LyricsLine{
 	private int time;
 	//**一行歌词的长度
 	private int width,height;
-	private int top;
 
 	public String getLine() {
 		return line;

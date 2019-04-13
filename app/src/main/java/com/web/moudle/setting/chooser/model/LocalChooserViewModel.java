@@ -72,7 +72,7 @@ public class LocalChooserViewModel extends ViewModel {
                     file.getName(),
                     file.getAbsolutePath(),
                     startTag,
-                    ResUtil.timeFormat("YYY-MM-DD",file.lastModified())
+                    ResUtil.timeFormat("YYY-MM-dd",file.lastModified())
             );
             if(file.isFile()){
                 fileList.add(item);

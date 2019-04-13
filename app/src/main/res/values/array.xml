@@ -37,4 +37,16 @@
         <item>Z</item>
         <item>*</item>
     </string-array>
+
+    <string-array name="lyricsSample">
+        <item>我怎么舍得看不见</item>
+        <item>那一张清秀完美的脸</item>
+        <item>雨点掉落下来 打湿整个屋檐</item>
+        <item>你淋湿站在我左边</item>
+        <item>你美的像幅泼墨画中的仙</item>
+        <item>我靠近递你一张手绢</item>
+        <item>你突然地笑了</item>
+        <item>道谢说得腼腆</item>
+        <item>骤雨停了你就这样越走越远</item>
+    </string-array>
 </resources>

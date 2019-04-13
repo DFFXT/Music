@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
@@ -299,6 +300,7 @@ public class LyricsView extends RelativeLayout {
                 if (!startScroll && Math.abs(originY - e.getRawY()) > Math.max(height / 32, lineHeight / 2)) {
                     startScroll = true;
                 }
+                Log.i("log","-->start  1 "+startScroll+index+" "+Math.abs(originY - e.getRawY()));
                 if (startScroll) {
                     run = false;
                     //**到顶和到底
@@ -315,6 +317,7 @@ public class LyricsView extends RelativeLayout {
                     }
                     invalidate();
                 }
+                Log.i("log","-->start  2 "+startScroll+index);
                 preY = e.getRawY();
 
             }
@@ -376,17 +379,7 @@ public class LyricsView extends RelativeLayout {
 
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        if (heightMode == MeasureSpec.AT_MOST) {
-            height = lyrics.size() * (lineGap + lineHeight);
-        }
-        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-    }
+
 
 
     public void setCanScroll(boolean canScroll) {
@@ -434,6 +427,7 @@ public class LyricsView extends RelativeLayout {
         }
         halfShowHeight = (int) (showLineAccount / 2f * lineHeight + ((showLineAccount + 1) / 2 * lineGap)) - 10;
         initBitmap();
+        invalidate();
     }
 
     public int getTextColor() {
@@ -442,6 +436,7 @@ public class LyricsView extends RelativeLayout {
 
     public void setTextColor(int textColor) {
         this.textColor = textColor;
+        invalidate();
     }
 
     public int getMaxLineAccount() {
@@ -450,6 +445,7 @@ public class LyricsView extends RelativeLayout {
 
     public void setTextFocusColor(int textFocusColor) {
         this.textFocusColor = textFocusColor;
+        invalidate();
     }
 
     public void setEnableFontScale(boolean enableFontScale) {
