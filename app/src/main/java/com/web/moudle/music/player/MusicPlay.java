@@ -18,6 +18,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.base.MyApplication;
@@ -38,6 +39,7 @@ import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
+import com.web.moudle.setting.lyrics.LyricsSettingActivity;
 import com.web.web.R;
 
 import org.litepal.crud.DataSupport;
@@ -69,6 +71,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     public final static String ACTION_DOWNLOAD_COMPLETE = "com.web.web.MusicPlay.downloadComplete";
     public final static String ACTION_ClEAR_ALL_MUSIC = "clearAllMusic";
     public final static String ACTION_LOCKSCREEN = "ACTION_OpenLockScreen";
+    public final static String ACTION_FLOAT_WINDOW_CHANGE = "ACTION_FLOAT_WINDOW_CHANGE";
 
     public final static String COMMAND_GET_CURRENT_POSITION = "getCurrentPosition";
     public final static String COMMAND_GET_STATUS = "getStatus";
@@ -78,6 +81,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
     private MediaPlayer player = new MediaPlayer();
     private MyNotification notification;
+    private FloatLyricsManager floatLyricsManager;
 
 
     private List<MusicList<Music>> musicList = new ArrayList<>();//**音乐列表
@@ -129,6 +133,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         if (BIND.equals(arg0.getAction())) {
             if (connect == null){
                 connect = new Connect();
+                lyricsFloatWindowChange();
                 EqualizerActivity.saveDefaultSoundEffect(equalizer);
                 connect.setSoundEffect(EqualizerActivity.getCurrentSoundEffect());
             }
@@ -280,8 +285,25 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         }
     }
 
+    /**
+     * 开启歌词浮窗
+     */
+    private void lyricsFloatWindowChange(){
+        if(LyricsSettingActivity.lyricsOverlap()){
+            if(floatLyricsManager==null){
+                floatLyricsManager=new FloatLyricsManager(getApplicationContext(),connect);
+            }
+            floatLyricsManager.open();
+        }else{
+            if(floatLyricsManager!=null){
+                floatLyricsManager.close();
+            }
+        }
+    }
+
     public class Connect extends Binder {
         Connect() {
+
             player.setLooping(false);
             player.setOnBufferingUpdateListener((p, percent) -> play.bufferingUpdate(percent));
             player.setOnPreparedListener(mp -> {
@@ -324,7 +346,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 }
 
             });
-
         }
 
         public int getMediaPlayId(){
@@ -495,10 +516,31 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             return config;
         }
 
-        @Nullable
-        public Music getPlayingMusic() {
-            return config.getMusic();
+        public void changePlayType(){
+            switch (config.getPlayType()) {
+                case ALL_LOOP: {
+                    config.setPlayType(PlayerConfig.PlayType.ONE_LOOP);
+                }
+                break;
+                case ONE_LOOP: {
+                    config.setPlayType(PlayerConfig.PlayType.ALL_ONCE);
+                }
+                break;
+                case ALL_ONCE: {
+                    config.setPlayType(PlayerConfig.PlayType.ONE_ONCE);
+                }
+                break;
+                case ONE_ONCE: {
+                    config.setPlayType(PlayerConfig.PlayType.ALL_LOOP);
+                }
+                break;
+            }
+            play.playTypeChanged(config.getPlayType());
         }
+        public void refreshList(){
+            musicListChange();
+        }
+
 
         /**
          * 播放在线音乐
@@ -796,6 +838,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 loadMusic((Music) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
             }
             break;
+            case ACTION_FLOAT_WINDOW_CHANGE:{
+                lyricsFloatWindowChange();
+            }
         }
         return START_NOT_STICKY;
 		/*
@@ -813,8 +858,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
     //**分发信息
     private void disPatchMusicInfo() {
-        Music music = config.getMusic();
-        play.load(groupIndex, childIndex, music, getDuration());
+        play.load(groupIndex, childIndex, config.getMusic(), getDuration());
         if (!player.isPlaying()) {
             play.pause();
         }
@@ -896,6 +940,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         Intent intent = new Intent(ctx, MusicPlay.class);
         intent.putExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA, music);
         intent.setAction(MusicPlay.ACTION_PLAY_LOCAL_MUSIC);
+        ctx.startService(intent);
+    }
+
+    public static void floatWindowChange(Context ctx){
+        Intent intent = new Intent(ctx, MusicPlay.class);
+        intent.setAction(MusicPlay.ACTION_FLOAT_WINDOW_CHANGE);
         ctx.startService(intent);
     }
 }

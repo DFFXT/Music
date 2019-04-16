@@ -176,6 +176,7 @@
 
 
 	<string name="billboard">榜单</string>
+    <string name="musicTime">00:00</string>
 
 
 </resources>

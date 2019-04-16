@@ -77,6 +77,10 @@ class MusicDetailActivity : BaseActivity() {
                     val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
                     music.imgAddress = res.songInfo.picSmall
                     music.lrcLink = res.songInfo.lrcLink
+                    music.suffix = res.bitRate.format
+                    music.duration = res.songInfo.duration.toInt()
+                    music.album = res.songInfo.albumName
+                    music.size = res.bitRate.fileSize
 
 
                     var theSameMusic = false

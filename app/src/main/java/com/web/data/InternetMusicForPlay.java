@@ -14,7 +14,7 @@ public class InternetMusicForPlay extends Music implements Serializable {
 
     @Nullable
     public String getImgAddress() {
-        return imgAddress.replace("{size}","80");
+        return imgAddress.replace("{size}","240");
     }
 
     public void setImgAddress(String imgAddress) {

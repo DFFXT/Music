@@ -66,7 +66,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     private int RESULT_CODE_SEARCH = 1;
 
-    private TextView songName, singer, tv_musicOrigin;//**音乐信息
+    private TextView songName, singer, tv_musicOrigin,tv_duration;//**音乐信息
     private SeekBar bar;//--进度条
     private ImageView iv_singerIcon;
     private ImageView pre, pause, next, musicPlay_type;//--各种图标
@@ -88,7 +88,9 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             if (music == null) {
                 songName.setText(null);
                 singer.setText(null);
+                tv_duration.setText(ResUtil.getString(R.string.musicTime));
             } else {
+                tv_duration.setText(ResUtil.timeFormat("mm:ss",music.getDuration()));
                 songName.setText(music.getMusicName());
                 singer.setText(music.getSinger());
             }
@@ -314,6 +316,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         songName = findViewById(R.id.songname);
         singer = findViewById(R.id.singer);
         tv_musicOrigin = findViewById(R.id.musicOrigin);
+        tv_duration = findViewById(R.id.tv_duration);
         pre = findViewById(R.id.pre);
         pause = findViewById(R.id.pause);
         next = findViewById(R.id.next);
@@ -448,7 +451,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             }
             break;
             case R.id.musicplay_type: {
-                changePlayType();
+                connect.changePlayType();
             }
             break;
             case R.id.subSettingBox:
@@ -504,31 +507,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         return pageList.get(viewPager.getCurrentItem());
     }
 
-    /**
-     * 设置相应playType【循环】
-     */
-    private void changePlayType() {
-        PlayerConfig config = connect.getConfig();
-        switch (config.getPlayType()) {
-            case ALL_LOOP: {
-                config.setPlayType(PlayerConfig.PlayType.ONE_LOOP);
-            }
-            break;
-            case ONE_LOOP: {
-                config.setPlayType(PlayerConfig.PlayType.ALL_ONCE);
-            }
-            break;
-            case ALL_ONCE: {
-                config.setPlayType(PlayerConfig.PlayType.ONE_ONCE);
-            }
-            break;
-            case ONE_ONCE: {
-                config.setPlayType(PlayerConfig.PlayType.ALL_LOOP);
-            }
-            break;
-        }
-        showPlayType(config.getPlayType());
-    }
 
     //**根据playType显示图标
     private void showPlayType(PlayerConfig.PlayType playType) {

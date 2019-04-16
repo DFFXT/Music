@@ -20,13 +20,13 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
     var toggleLike:((Music,Int)->Boolean)?=null
     var index=-1
         set(v){
-            if(v in 0..(itemCount - 1)){
+            if(v in 0 until itemCount){
                 if(index>=0){
                     notifyItemChanged(index)
                 }
                 field=v
                 notifyItemChanged(v)
-            }else if(field in 0..(itemCount - 1)){
+            }else if(field in 0 until itemCount){
                 val tmpIndex=field
                 field=-1
                 notifyItemChanged(tmpIndex)

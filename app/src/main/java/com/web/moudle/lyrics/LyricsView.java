@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
+import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.moudle.lyrics.bean.LyricsLine;
 
@@ -54,6 +55,7 @@ public class LyricsView extends RelativeLayout {
     private @ColorInt
     int textFocusColor = 0xffff00ee;
 
+    private int clipPaddingTop,clipPaddingBottom;
 
     private int startIndex, endIndex;
     //**状态
@@ -95,16 +97,15 @@ public class LyricsView extends RelativeLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         width = w;
         height = h;
-        setMaxLineAccount((height) / (lineHeight + lineGap)-4);
+        setMaxLineAccount((height) / (lineHeight + lineGap));
         setTextSize(textSize);
-        initBitmap();
     }
 
     private void initBitmap() {
         if (width <= 0 || height <= 0) return;
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
         mCanvas = new Canvas(mBitmap);
-        mCanvas.clipRect(0, height / 2 - halfShowHeight, width, height / 2 + halfShowHeight);
+        mCanvas.clipRect(0, height / 2f - halfShowHeight+clipPaddingTop, width, height / 2f + halfShowHeight-clipPaddingBottom);
     }
 
     private void initData() {
@@ -166,7 +167,7 @@ public class LyricsView extends RelativeLayout {
         paint.setColor(textFocusColor);
         paint.setXfermode(mode_cover);
         if (mCanvas != null)
-            mCanvas.drawRect(0, centerH - lineHeight / 2 + 10, width, centerH + lineHeight / 2 + 10, paint);
+            mCanvas.drawRect(0, centerH - lineHeight / 2f + 10, width, centerH + lineHeight / 2 + 10, paint);
         paint.setXfermode(mode_font);
         if (mBitmap != null)
             canvas.drawBitmap(mBitmap, 0, 0, paint);
@@ -286,6 +287,7 @@ public class LyricsView extends RelativeLayout {
     private float preY;
     private boolean startScroll;
     private float originY;
+    public boolean ableToTouch=true;
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -300,7 +302,6 @@ public class LyricsView extends RelativeLayout {
                 if (!startScroll && Math.abs(originY - e.getRawY()) > Math.max(height / 32, lineHeight / 2)) {
                     startScroll = true;
                 }
-                Log.i("log","-->start  1 "+startScroll+index+" "+Math.abs(originY - e.getRawY()));
                 if (startScroll) {
                     run = false;
                     //**到顶和到底
@@ -317,7 +318,6 @@ public class LyricsView extends RelativeLayout {
                     }
                     invalidate();
                 }
-                Log.i("log","-->start  2 "+startScroll+index);
                 preY = e.getRawY();
 
             }
@@ -346,7 +346,7 @@ public class LyricsView extends RelativeLayout {
             }
             break;
         }
-        return true;
+        return ableToTouch||super.onTouchEvent(e);
     }
 
 
@@ -387,7 +387,14 @@ public class LyricsView extends RelativeLayout {
     }
 
     public void setShowLineAccount(int showLineAccount) {
-        this.showLineAccount = Math.min(showLineAccount, maxLineAccount);
+        if(showLineAccount<maxLineAccount){
+            this.showLineAccount=showLineAccount;
+        }else {
+            this.showLineAccount=maxLineAccount;
+        }
+        if(this.showLineAccount<=0){
+            this.showLineAccount=1;
+        }
     }
 
 
@@ -424,6 +431,7 @@ public class LyricsView extends RelativeLayout {
             line.setWidth(rect.width());
             line.setHeight(rect.height());
             lineHeight = Math.max(rect.height(), lineHeight);
+            setLineGap((int) (lineHeight*0.7f));
         }
         halfShowHeight = (int) (showLineAccount / 2f * lineHeight + ((showLineAccount + 1) / 2 * lineGap)) - 10;
         initBitmap();
@@ -456,6 +464,14 @@ public class LyricsView extends RelativeLayout {
         this.seekListener = seekListener;
     }
 
+
+    public void setClipPaddingTop(int clipPaddingTop) {
+        this.clipPaddingTop = clipPaddingTop;
+    }
+
+    public void setClipPaddingBottom(int clipPaddingBottom) {
+        this.clipPaddingBottom = clipPaddingBottom;
+    }
 
     public interface SeekListener {
         boolean seekTo(int seekTo);

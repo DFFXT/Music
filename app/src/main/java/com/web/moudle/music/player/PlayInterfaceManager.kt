@@ -13,13 +13,14 @@ class PlayInterfaceManager:PlayInterface {
     fun removeObserver(observer: PlayInterface){
         observerList.remove(observer)
     }
-    fun addObserver(owner:LifecycleOwner,observer:PlayInterface){
+    fun addObserver(owner:LifecycleOwner?,observer:PlayInterface){
         if(!this.observerList.contains(observer)){
             this.observerList.add(observer)
         }
-        //**观测者变动
 
-        owner.lifecycle.addObserver(object : LifecycleEventObserver {
+
+        //**观测者变动,在activity中可以不进行手动释放，如果没有传入lifecycle就需要手动释放
+        owner?.lifecycle?.addObserver(object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 if(event==Lifecycle.Event.ON_DESTROY){
                     observerList.remove(observer)

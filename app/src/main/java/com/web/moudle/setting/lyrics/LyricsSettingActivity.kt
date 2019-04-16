@@ -20,6 +20,7 @@ import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.lyrics.bean.LyricsLine
+import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.preference.SP
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lyrics_setting.*
@@ -49,7 +50,7 @@ class LyricsSettingActivity : BaseActivity() {
         sw_lyricsOverlayWindow.isChecked= lyricsOverlap()
 
         sw_lyricsOverlayWindow.setOnCheckedChangeListener { _, isChecked ->
-            enableLyricsOverlap(isChecked)
+            enableLyricsOverlap(this,isChecked)
         }
 
 
@@ -190,8 +191,9 @@ class LyricsSettingActivity : BaseActivity() {
         }
 
         @JvmStatic
-        fun enableLyricsOverlap(enable:Boolean){
+        fun enableLyricsOverlap(ctx:Context,enable:Boolean){
             SP.putValue(Constant.spName,Constant.SpKey.lyricsOverlapOpen,enable)
+            MusicPlay.floatWindowChange(ctx)
         }
 
 
