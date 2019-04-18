@@ -1,5 +1,6 @@
 package com.web.common.util;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -74,6 +75,11 @@ public class ViewUtil {
         Bitmap bitmap=view.getDrawingCache();
         view.setDrawingCacheEnabled(false);
         return bitmap;
+    }
+    public static void objectAnimator(View v,String property,int from,int to,int duration){
+        ObjectAnimator.ofInt(v,property,from,to)
+                .setDuration(duration)
+                .start();
     }
 
 

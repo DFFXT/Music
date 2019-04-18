@@ -92,6 +92,10 @@ object ResUtil {
         return bitmap
     }
     @JvmStatic
+    fun getBitmapFromResoucs(@DrawableRes drawableId: Int):Bitmap{
+        return getBitmapFromDrawable(getDrawable(drawableId))
+    }
+    @JvmStatic
     fun bitmapOp(bitmap:Bitmap,matrix:Matrix):Bitmap{
         return Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,false)
     }

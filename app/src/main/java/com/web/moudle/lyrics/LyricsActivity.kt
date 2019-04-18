@@ -4,15 +4,18 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.drawable.BitmapDrawable
 import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.View
 import com.web.common.base.BaseActivity
 import com.web.common.base.PlayerObserver
 import com.web.common.base.log
+import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.Ticker
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
+import com.web.common.util.WindowUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
@@ -54,11 +57,10 @@ class LyricsActivity : BaseActivity() {
 
         override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
             actionStart = true
-            if(connect?.config?.bitmap==null){
-                iv_artistIcon.setImageResource(R.drawable.singer_default_icon)
-            }else{
-                iv_artistIcon.setImageBitmap(connect?.config?.bitmap)
-            }
+            val bitmap=connect?.config?.bitmap?:ResUtil.getBitmapFromResoucs(R.drawable.singer_default_icon)
+            val mBitmap=bitmap.copy(bitmap.config,false)
+            iv_artistIcon.setImageBitmap(bitmap)
+            rootView.background=BitmapDrawable(resources,ImageLoad.buildBlurBitmap(mBitmap,14f))
 
             layout_musicControl.iv_love.isSelected=music?.isLike?:false
             if(music is InternetMusicForPlay){
@@ -116,7 +118,7 @@ class LyricsActivity : BaseActivity() {
     override fun getLayoutId(): Int = R.layout.music_lyrics_view
 
     override fun initView() {
-
+        WindowUtil.setImmersedStatusBar(window)
         riv_wave.afterDraw=waveDraw
 
         lv_lyrics.setClipPaddingTop(ViewUtil.dpToPx(30f))
