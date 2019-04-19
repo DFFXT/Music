@@ -6,11 +6,15 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.drawable.BitmapDrawable
 import android.media.audiofx.Visualizer
+import android.net.Uri
 import android.os.IBinder
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import com.web.common.base.BaseActivity
 import com.web.common.base.PlayerObserver
-import com.web.common.base.log
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.Ticker
 import com.web.common.util.ResUtil
@@ -23,29 +27,61 @@ import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
 import com.web.data.PlayerConfig
+import com.web.misc.BasePopupWindow
 import com.web.misc.imageDraw.WaveDraw
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.service.FileDownloadService
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
+import com.web.web.BuildConfig
 import com.web.web.R
 import kotlinx.android.synthetic.main.music_control_big.view.*
 import kotlinx.android.synthetic.main.music_lyrics_view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ObsoleteCoroutinesApi
+import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.min
 
 @ObsoleteCoroutinesApi
 class LyricsActivity : BaseActivity() {
     private var connect: MusicPlay.Connect? = null
     private var visualizer:Visualizer?=null
     private val list = ArrayList<LyricsLine>()
-    private var connection: ServiceConnection? = null
+    private var connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            connect = service as MusicPlay.Connect
+            connect?.addObserver(this@LyricsActivity, observer)
+            connect?.getPlayerInfo()
+
+
+            visualizer=Visualizer(connect?.mediaPlayId!!)
+            visualizer!!.captureSize = Visualizer.getCaptureSizeRange()[0]
+            visualizer!!.scalingMode = Visualizer.SCALING_MODE_NORMALIZED
+            visualizer!!.setDataCaptureListener(object :Visualizer.OnDataCaptureListener{
+                override fun onFftDataCapture(visualizer: Visualizer, fft: ByteArray, samplingRate: Int) {
+                }
+
+                override fun onWaveFormDataCapture(visualizer: Visualizer, waveform: ByteArray, samplingRate: Int) {
+                    waveDraw.byteArray=waveform
+                }
+            },Visualizer.getMaxCaptureRate(),true,true)
+            visualizer!!.enabled=true
+        }
+    }
     private var actionStart = true
     private var canScroll=true
     private var rotation=0f
     private val waveDraw=WaveDraw()
-    private val tick=Ticker(20,0){
+    private var colorList:IntArray?=null
+    //**dispatchers一定要是main不能是default，不然会导致过一段时间整个应用无法点击，类似于卡死
+    private val tick=Ticker(30,0,Dispatchers.Main){
         rotation+=1f
         if(rotation>360){
             rotation -= 360f
@@ -120,8 +156,6 @@ class LyricsActivity : BaseActivity() {
     override fun initView() {
         WindowUtil.setImmersedStatusBar(window)
         riv_wave.afterDraw=waveDraw
-
-        lv_lyrics.setClipPaddingTop(ViewUtil.dpToPx(30f))
         lv_lyrics.textColor = LyricsSettingActivity.getLyricsColor()
         lv_lyrics.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
         lv_lyrics.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
@@ -136,6 +170,9 @@ class LyricsActivity : BaseActivity() {
             }
             lv_lyrics.setCanScroll(canScroll)
         })
+
+
+
 
 
         card_download.setOnClickListener {
@@ -155,6 +192,7 @@ class LyricsActivity : BaseActivity() {
                     m.suffix
             )
             FileDownloadService.addTask(this,im)
+
         }
 
 
@@ -190,40 +228,97 @@ class LyricsActivity : BaseActivity() {
             true
         }
 
-
-
-        connection = object : ServiceConnection {
-            override fun onServiceDisconnected(name: ComponentName?) {
-
-            }
-
-            override fun onServiceConnected(name: ComponentName, service: IBinder) {
-                connect = service as MusicPlay.Connect
-                connect?.addObserver(this@LyricsActivity, observer)
-                connect?.getPlayerInfo()
-
-
-                visualizer=Visualizer(connect?.mediaPlayId!!)
-                visualizer!!.captureSize = Visualizer.getCaptureSizeRange()[0]
-                visualizer!!.scalingMode = Visualizer.SCALING_MODE_NORMALIZED
-                visualizer!!.setDataCaptureListener(object :Visualizer.OnDataCaptureListener{
-                    override fun onFftDataCapture(visualizer: Visualizer, fft: ByteArray, samplingRate: Int) {
-                    }
-
-                    override fun onWaveFormDataCapture(visualizer: Visualizer, waveform: ByteArray, samplingRate: Int) {
-                        waveDraw.byteArray=waveform
-                    }
-                },Visualizer.getMaxCaptureRate(),true,true)
-                visualizer!!.enabled=true
-            }
+        iv_setting.setOnClickListener {
+            toggleSettingBox()
         }
+
+        iv_sizeIncrease.setOnClickListener {
+            setLyricsSize(LyricsSettingActivity.getLyricsSize()+2)
+        }
+        iv_sizeDecrease.setOnClickListener {
+            setLyricsSize(LyricsSettingActivity.getLyricsSize()-2)
+        }
+        iv_lyricsBg.setOnClickListener {
+            val color=LyricsSettingActivity.getLyricsColor()
+            val nextColor=getNextLyricsColor(color)
+            LyricsSettingActivity.setLyricsColor(nextColor)
+            lv_lyrics.textColor=nextColor
+        }
+        iv_lyricsFore.setOnClickListener {
+            val color=LyricsSettingActivity.getLyricsFocusColor()
+            val nextColor=getNextLyricsColor(color)
+            LyricsSettingActivity.setLyricsFocusColor(nextColor)
+            lv_lyrics.setTextFocusColor(nextColor)
+        }
+        iv_share.setOnClickListener {
+            if(connect==null)return@setOnClickListener
+            val intent=Intent(Intent.ACTION_SEND)
+
+            val music=connect!!.config.music
+            if(connect!!.config.musicOrigin==PlayerConfig.MusicOrigin.INTERNET){
+                intent.type="text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT,music.path)
+            }else{
+                intent.putExtra(Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID,File(connect!!.config.music.path)))
+                intent.type="video/*"
+            }
+            startActivity(Intent.createChooser(intent,"title"))
+
+        }
+
+
+
+
         intent = Intent(this, MusicPlay::class.java)
         intent.action = MusicPlay.BIND
-        bindService(intent, connection!!, Context.BIND_AUTO_CREATE)
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
 
 
 
+    }
+    private fun getNextLyricsColor(currentColor:Int):Int{
+        var index=0
+        if(colorList==null) colorList=ResUtil.getIntArray(R.array.lyricsColorArray)
+        colorList!!.forEachIndexed { mIndex, c ->
+            if(c==currentColor){
+                index= mIndex+1
+                if(index>=colorList!!.size){
+                    index=0
+                }
+                return@forEachIndexed
+            }
+        }
+        return colorList!![index]
+    }
+    private fun setLyricsSize(size:Int){
+        val max=ResUtil.getSize(R.dimen.textSize_large)
+        val min=ResUtil.getSize(R.dimen.textSize_min)
+        val mSize = when {
+            size<min -> min
+            size>max -> max
+            else -> size
+        }
+        LyricsSettingActivity.setLyricsSize(mSize)
+        lv_lyrics.setTextSize(mSize.toFloat())
+    }
+    private fun toggleSettingBox(){
+        val duration=300
+        val lp=layout_setting.layoutParams
+        if(layout_setting.height==0){
+            //**加号不能放在第二行
+            val height= layout_setting.childCount*ViewUtil.dpToFloatPx(26f)+ (layout_setting.childCount+1)*ViewUtil.dpToFloatPx(6f)+layout_setting.childCount
+            ViewUtil.animator(layout_setting,0,height.toInt(),duration, {
+                lp.height=it.animatedValue as Int
+                layout_setting.layoutParams=lp
+            },null)
+        }else{
+            ViewUtil.animator(layout_setting,layout_setting.height,0,duration,{
+                lp.height=it.animatedValue as Int
+                layout_setting.layoutParams=lp
+            },null)
+        }
     }
 
 
@@ -244,13 +339,12 @@ class LyricsActivity : BaseActivity() {
     }
 
 
+
     override fun onDestroy() {
         tick.stop()
         connect?.removeObserver(observer)
-        connection?.let {
-            unbindService(it)
-            visualizer?.release()
-        }
+        unbindService(connection)
+        visualizer?.release()
         super.onDestroy()
     }
 

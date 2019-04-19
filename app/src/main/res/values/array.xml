@@ -8,6 +8,15 @@
         <item>.wav</item>
         <item>.mid</item>
     </string-array>
+    <integer-array name="lyricsColorArray">
+        <item>0xffE17C20</item>
+        <item>0xFFFF0000</item>
+        <item>0xFF00FF00</item>
+        <item>0xFF000000</item>
+        <item>0xFF0000FF</item>
+        <item>0xFF00FFFF</item>
+        <item>0xFF444444</item>
+    </integer-array>
     <string-array name="indexBar">
         <item>A</item>
         <item>B</item>

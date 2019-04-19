@@ -13,6 +13,7 @@
     <color name="themeColorDark">#FF7055</color>
     <color name="pink">#ffee00ee</color>
     <color name="white">#ffffffff</color>
+    <color name="transparentWhite">#55ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="dark_transparent">#aa000000</color>
     <color name="lightBlue">#93bff1</color>

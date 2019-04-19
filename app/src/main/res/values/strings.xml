@@ -42,6 +42,9 @@
 	<string name="lyrics_large">巨大</string>
 	<string name="lyrics_min">极小</string>
 
+	<string name="op_info">信息</string>
+	<string name="op_share">分享</string>
+
     <string name="musicMain_noMusicAlert">没有音乐！是否加载？</string>
 
 	<string name="delete">删除</string>

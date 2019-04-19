@@ -1,15 +1,20 @@
 package com.web.common.util;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 
 import com.web.common.base.MyApplication;
 
@@ -22,6 +27,10 @@ public class ViewUtil {
     public static int dpToPx(float dp){
         return (int)(MyApplication.getContext().
                 getResources().getDisplayMetrics().density*dp+0.5);
+    }
+    public static float dpToFloatPx(float dp){
+        return MyApplication.getContext().
+                getResources().getDisplayMetrics().density*dp;
     }
     public static int screenWidth(){
         if(width<0)
@@ -76,10 +85,14 @@ public class ViewUtil {
         view.setDrawingCacheEnabled(false);
         return bitmap;
     }
-    public static void objectAnimator(View v,String property,int from,int to,int duration){
-        ObjectAnimator.ofInt(v,property,from,to)
-                .setDuration(duration)
-                .start();
+    public static void animator(View v, int from, int to, int duration, ValueAnimator.AnimatorUpdateListener updateListener, Animator.AnimatorListener animatorListener){
+        ValueAnimator valueAnimator=ValueAnimator.ofInt(from,to)
+                .setDuration(duration);
+        valueAnimator.addUpdateListener(updateListener);
+        if(animatorListener!=null){
+            valueAnimator.addListener(animatorListener);
+        }
+        valueAnimator.start();
     }
 
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import com.web.common.base.log
 import com.web.common.tool.Ticker
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlin.random.Random
 
@@ -18,7 +19,7 @@ class DynamicImageDraw:ImageDraw {
     private val random= Random(System.currentTimeMillis())
     private val boom= arrayOfNulls<Boom>(6)
     private val maxDx=3
-    private val ticker=Ticker(50L,100L){
+    private val ticker=Ticker(50L,100L,Dispatchers.Main){
         if(iv!=null){
             for(i in boom.indices){
                 if(boom[i]==null){

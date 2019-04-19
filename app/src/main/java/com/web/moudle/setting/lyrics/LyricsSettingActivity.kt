@@ -2,9 +2,7 @@ package com.web.moudle.setting.lyrics
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.ColorInt
@@ -28,16 +26,9 @@ import kotlinx.android.synthetic.main.activity_lyrics_setting.*
 class LyricsSettingActivity : BaseActivity() {
     override fun getLayoutId(): Int = R.layout.activity_lyrics_setting
 
-    private val colorList= arrayListOf<Int>()
+    private val colorList=ResUtil.getIntArray(R.array.lyricsColorArray).asList()
     private val lyricsSample= arrayListOf<LyricsLine>()
     init {
-        colorList.add(ResUtil.getColor(R.color.themeColor))
-        colorList.add(Color.RED)
-        colorList.add(Color.GREEN)
-        colorList.add(Color.BLACK)
-        colorList.add(Color.BLUE)
-        colorList.add(Color.CYAN)
-        colorList.add(Color.DKGRAY)
         ResUtil.getStringArray(R.array.lyricsSample).forEachIndexed {index,string->
             val line=LyricsLine()
             line.line=string

@@ -36,7 +36,7 @@ open class BasePopupWindow @JvmOverloads constructor (
     }
 
 
-    fun enableTouchDismiss(touchDismiss: Boolean) {
+    fun enableTouchDismiss(touchDismiss: Boolean):BasePopupWindow{
         if (!touchDismiss) {
             popupWindow.isFocusable = true
             popupWindow.isOutsideTouchable = false
@@ -61,6 +61,7 @@ open class BasePopupWindow @JvmOverloads constructor (
                 false
             })
         }
+        return this
     }
 
     private fun applyWindowDarkAlpha(from: Float, to: Float, duration: Int) {

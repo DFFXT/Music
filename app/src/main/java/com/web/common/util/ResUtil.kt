@@ -31,6 +31,10 @@ object ResUtil {
     fun getStringArray(@ArrayRes arrayId:Int):Array<String>{
         return MyApplication.context.resources.getStringArray(arrayId)
     }
+    @JvmStatic
+    fun getIntArray(@ArrayRes arrayId: Int):IntArray{
+        return MyApplication.context.resources.getIntArray(arrayId)
+    }
 
     @JvmStatic
     fun getSize(@DimenRes id:Int):Int{

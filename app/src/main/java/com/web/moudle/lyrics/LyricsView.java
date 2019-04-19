@@ -155,6 +155,7 @@ public class LyricsView extends RelativeLayout {
             int dec = this.index - i;
             int bottom = (int) (centerH - lineHeight * (-0.5 + dec) - lineGap * dec) + animationOffset;
             float linear = 1 - Math.abs(bottom - lineHeight / 2f - centerH) / centerH;
+            linear=Math.max(linear,0);
             if (enableFontScale)
                 paint.setTextSize(textSize * linear);
             paint.getTextBounds(line.getLine(), 0, line.getLine().length(), rect);
@@ -410,6 +411,9 @@ public class LyricsView extends RelativeLayout {
 
     }
 
+    public int getLineHeight() {
+        return lineHeight;
+    }
 
     public void setLineGap(int lineGap) {
         this.lineGap = lineGap;

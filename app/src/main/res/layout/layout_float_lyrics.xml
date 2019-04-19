@@ -1,12 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:foregroundTint="@color/themeColor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_op"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparentWhite"
+        android:foreground="@drawable/bottom_line">
+        <ImageView
+            android:id="@+id/iv_sizeIncrease"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/add_icon"
+            android:tint="@color/themeColor"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:padding="5dp"
+            android:background="@color/transparentWhite"
+            android:elevation="2dp"
+            android:foreground="?android:selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <ImageView
+            android:id="@+id/iv_sizeDecrease"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/minu_icon"
+            android:tint="@color/themeColor"
+            android:layout_marginStart="10dp"
+            android:padding="5dp"
+            android:background="@color/transparentWhite"
+            android:elevation="2dp"
+            android:foreground="?android:selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/iv_sizeIncrease"
+            app:layout_constraintStart_toEndOf="@id/iv_sizeIncrease"/>
+        <ImageView
+            android:id="@+id/iv_pre"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_pre_white_fill"
+            android:tint="@color/themeColor"
+            android:layout_marginStart="10dp"
+            android:background="@color/transparentWhite"
+            android:elevation="2dp"
+            android:foreground="?android:selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/iv_sizeIncrease"
+            app:layout_constraintStart_toEndOf="@id/iv_sizeDecrease"/>
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_pause_white_fill"
+            android:tint="@color/themeColor"
+            android:layout_marginStart="10dp"
+            android:background="@color/transparentWhite"
+            android:elevation="2dp"
+            android:foreground="?android:selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/iv_sizeIncrease"
+            app:layout_constraintStart_toEndOf="@id/iv_pre"/>
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_next_white_fill"
+            android:tint="@color/themeColor"
+            android:layout_marginStart="10dp"
+            android:background="@color/transparentWhite"
+            android:elevation="2dp"
+            android:foreground="?android:selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/iv_sizeIncrease"
+            app:layout_constraintStart_toEndOf="@id/iv_play"/>
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/setting"
+            android:tint="@color/themeColor"
+            android:layout_marginEnd="10dp"
+            android:background="@color/transparentWhite"
+            android:elevation="2dp"
+            android:foreground="?android:selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/iv_sizeIncrease"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.web.moudle.lyrics.LyricsView
         android:id="@+id/lv_lyrics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="38dp"
         tools:text="歌词显示"/>
-</LinearLayout>
+</FrameLayout>
