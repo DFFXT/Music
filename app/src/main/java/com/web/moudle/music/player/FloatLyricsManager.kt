@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import com.web.common.base.BaseDragHelper
 import com.web.common.base.PlayerObserver
-import com.web.common.base.log
+import com.web.common.constant.Constant
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.data.Music
+import com.web.moudle.preference.SP
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.layout_float_lyrics.view.*
@@ -83,6 +84,8 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
             }
 
             override fun longClickUpMoved(x: Float, y: Float) {
+                setFloatWindowX(lp!!.x)
+                setFloatWindowY(lp!!.y)
                 rootView?.foreground=null
             }
 
@@ -148,6 +151,8 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         lp?.flags=WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         lp?.width= (ViewUtil.screenWidth()*0.8).toInt()
         lp?.height=ViewUtil.dpToPx(40f+38)
+        lp?.x= getFloatWindowX()
+        lp?.y= getFloatWindowY()
         lp?.verticalWeight=0f
         wm.addView(rootView,lp)
 
@@ -169,5 +174,26 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         rootView?.lv_lyrics?.textColor=LyricsSettingActivity.getLyricsColor()
         rootView?.lv_lyrics?.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
         rootView?.lv_lyrics?.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
+    }
+
+    companion object{
+        @JvmStatic
+        fun getFloatWindowX():Int{
+            return SP.getInt(Constant.spName,Constant.SpKey.floatWindowX,0)
+        }
+        @JvmStatic
+        fun getFloatWindowY():Int{
+            val def=ViewUtil.screenHeight()/2-ViewUtil.dpToPx(36f)
+            return SP.getInt(Constant.spName,Constant.SpKey.floatWindowY,-def)
+        }
+        @JvmStatic
+        fun setFloatWindowX(x:Int){
+            SP.putValue(Constant.spName,Constant.SpKey.floatWindowX,x)
+        }
+        @JvmStatic
+        fun setFloatWindowY(y:Int){
+            SP.putValue(Constant.spName,Constant.SpKey.floatWindowY,y)
+        }
+
     }
 }
