@@ -2,10 +2,14 @@ package com.web.moudle.music.player
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.PixelFormat
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.annotation.ColorInt
 import com.web.common.base.BaseDragHelper
 import com.web.common.base.PlayerObserver
 import com.web.common.constant.Constant
@@ -31,9 +35,46 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
 
     private var lp:WindowManager.LayoutParams?=null
     private var enableMove=false
+    private val dragHelper=object :BaseDragHelper(){
+        override fun longOnClick(x: Float, y: Float): Boolean {
+            rootView?.foreground=ResUtil.getDrawable(R.drawable.arrow_focus)
+            return false
+        }
+        override fun longClickMove(dx: Float, dy: Float) {
+            if(!enableMove)return
+            lp?.x = lp?.x?.plus(dx.toInt())
+            lp?.y = lp?.y?.plus(dy.toInt())
+            updatePosition(lp!!)
+        }
+
+        override fun longClickUpNoMove(x: Float, y: Float) {
+            rootView?.foreground=null
+        }
+
+        override fun longClickUpMoved(x: Float, y: Float) {
+            setFloatWindowX(lp!!.x)
+            setFloatWindowY(lp!!.y)
+            rootView?.foreground=null
+        }
+
+        override fun onClick(x: Float, y: Float) {
+            enableMove=!enableMove
+            if(enableMove){
+                rootView?.addView(layoutOp,0)
+                rootView?.setBackgroundColor(0x66666666)
+
+            }else{
+                rootView?.setBackgroundColor(0)
+                rootView?.removeViewAt(0)
+                rootView?.foreground=null
+            }
+
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun init(){
+        enableMove=false
         rootView=LayoutInflater.from(appContext).inflate(R.layout.layout_float_lyrics,null,false) as ViewGroup
         layoutOp=rootView!!.layout_op
         rootView?.removeViewAt(0)
@@ -67,42 +108,10 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         connect.getPlayerInfo()
 
 
-        rootView?.setOnTouchListener(object :BaseDragHelper(){
-            override fun longOnClick(x: Float, y: Float): Boolean {
-                rootView?.foreground=ResUtil.getDrawable(R.drawable.arrow_focus)
-                return false
-            }
-            override fun longClickMove(dx: Float, dy: Float) {
-                if(!enableMove)return
-                lp?.x = lp?.x?.plus(dx.toInt())
-                lp?.y = lp?.y?.plus(dy.toInt())
-                updatePosition(lp!!)
-            }
+        if(!LyricsSettingActivity.isFloatWindowLocked()){
+            rootView?.setOnTouchListener(dragHelper)
+        }
 
-            override fun longClickUpNoMove(x: Float, y: Float) {
-                rootView?.foreground=null
-            }
-
-            override fun longClickUpMoved(x: Float, y: Float) {
-                setFloatWindowX(lp!!.x)
-                setFloatWindowY(lp!!.y)
-                rootView?.foreground=null
-            }
-
-            override fun onClick(x: Float, y: Float) {
-                enableMove=!enableMove
-                if(enableMove){
-                    rootView?.addView(layoutOp,0)
-                    rootView?.setBackgroundColor(0x44666666)
-
-                }else{
-                    rootView?.setBackgroundColor(0)
-                    rootView?.removeViewAt(0)
-                    rootView?.foreground=null
-                }
-
-            }
-        })
 
         layoutOp?.iv_sizeIncrease?.setOnClickListener {
             setLyricsSize(LyricsSettingActivity.getLyricsSize()+2)
@@ -147,8 +156,14 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         }else{
             lp?.type=WindowManager.LayoutParams.TYPE_PHONE
         }
-        lp?.alpha=0.9f
-        lp?.flags=WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        //**必须，不然在切换桌面是会出现黑色区域
+        lp?.format=PixelFormat.TRANSPARENT
+
+        if (LyricsSettingActivity.isFloatWindowLocked()){
+            lp?.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        }else{
+            lp?.flags=WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        }
         lp?.width= (ViewUtil.screenWidth()*0.8).toInt()
         lp?.height=ViewUtil.dpToPx(40f+38)
         lp?.x= getFloatWindowX()
@@ -158,11 +173,15 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
 
 
         rootView?.lv_lyrics?.ableToTouch=false
-        refreshConfig()
+        refreshLyrics()
     }
     private fun updatePosition(lp:WindowManager.LayoutParams){
         val wm=appContext.getSystemService(WindowManager::class.java)
         wm.updateViewLayout(rootView,lp)
+    }
+    fun refresh(){
+        close()
+        open()
     }
     fun close(){
         if(rootView==null)return
@@ -170,7 +189,7 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         wm.removeView(rootView)
         rootView=null
     }
-    fun refreshConfig(){
+    private fun refreshLyrics(){
         rootView?.lv_lyrics?.textColor=LyricsSettingActivity.getLyricsColor()
         rootView?.lv_lyrics?.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
         rootView?.lv_lyrics?.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())

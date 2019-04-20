@@ -10,6 +10,7 @@ import com.web.common.base.BaseCustomNotification;
 import com.web.common.util.ResUtil;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.setting.lyrics.LyricsSettingActivity;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +25,8 @@ public class MyNotification extends BaseCustomNotification {
 	private String name=null;
 	private String singer=null;
 	private boolean isPlay=false;
-	private static String N_ID=MyNotification.class.getName();
 	public MyNotification(Context context) {
-		super(context, N_ID, ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
+		super(context, MyNotification.class.getName(), ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
 		this.context=context;
 		init();
 	}
@@ -47,6 +47,12 @@ public class MyNotification extends BaseCustomNotification {
 				addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		getView().setOnClickPendingIntent(R.id.op, enter);
+
+
+		Intent settingIntent=new Intent(context, LyricsSettingActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent pendingIntent=PendingIntent.getActivity(context,0,settingIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+		getView().setOnClickPendingIntent(R.id.tv_lyricsSetting,pendingIntent);
 	}
 
 	public MyNotification setName(String name){

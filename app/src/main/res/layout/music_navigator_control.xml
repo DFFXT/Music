@@ -6,76 +6,90 @@
     android:id="@+id/op"
     android:paddingTop="10dp"
     >
-	 <ImageView 
-	     android:id="@+id/music_icon"
-	     android:layout_width="43dp"
-	     android:layout_height="43dp"
-	     android:layout_marginEnd="@dimen/padding_15"
-	     android:layout_marginStart="16dp"
-	     />
+	<ImageView
+		android:id="@+id/music_icon"
+		android:layout_width="43dp"
+		android:layout_height="43dp"
+		android:layout_marginEnd="@dimen/padding_15"
+		android:layout_marginStart="16dp"
+		/>
 
 
-   <ImageView 
-       android:id="@+id/next"
-       android:layout_width="30dp"
-       android:layout_height="30dp"
-       android:src="@drawable/icon_next_white"
-	   android:tint="@color/black"
-	   android:layout_centerVertical="true"
-       android:layout_alignParentEnd="true"
-       android:layout_marginStart="10dp"
-       android:contentDescription="@string/action_settings"
-	   android:layout_marginEnd="20dp"
-       />
-   <ImageView
-       android:id="@+id/pause"
-       android:layout_width="30dp"
-       android:layout_height="30dp"
-	   android:layout_centerVertical="true"
-       android:layout_marginStart="10dp"
-       android:layout_toStartOf="@+id/next"
-       android:contentDescription="@string/action_settings"
-       android:src="@drawable/icon_pause_white"
-	   android:tint="@color/black"/>
-	
-   <ImageView 
-       android:id="@+id/pre"
-       android:layout_width="30dp"
-       android:layout_height="30dp"
-       android:src="@drawable/icon_pre_white"
-	   android:tint="@color/black"
-	   android:layout_centerVertical="true"
-       android:layout_toStartOf="@+id/pause"
-       android:contentDescription="@string/action_settings"
-       />
+	<ImageView
+		android:id="@+id/next"
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:src="@drawable/icon_next_white"
+		android:tint="@color/black"
+		android:layout_centerVertical="true"
+		android:layout_toStartOf="@id/tv_lyricsSetting"
+		android:layout_marginStart="10dp"
+		android:contentDescription="@string/action_settings"
+		android:layout_marginEnd="10dp"
+		/>
+	<ImageView
+		android:id="@+id/pause"
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:layout_centerVertical="true"
+		android:layout_marginStart="10dp"
+		android:layout_toStartOf="@+id/next"
+		android:contentDescription="@string/action_settings"
+		android:src="@drawable/icon_pause_white"
+		android:tint="@color/black"/>
+
+	<ImageView
+		android:id="@+id/pre"
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:src="@drawable/icon_pre_white"
+		android:tint="@color/black"
+		android:layout_centerVertical="true"
+		android:layout_toStartOf="@+id/pause"
+		android:contentDescription="@string/action_settings"
+		/>
 	<TextView
-        android:id="@+id/song"
-        android:layout_width="150dp"
-        android:layout_height="23dp"
-        android:textSize="@dimen/textSize_normal"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:singleLine="true"
+		android:id="@+id/song"
+		android:layout_width="150dp"
+		android:layout_height="23dp"
+		android:textSize="@dimen/textSize_normal"
+		android:ellipsize="marquee"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:singleLine="true"
 		android:layout_alignTop="@id/music_icon"
 		android:layout_toEndOf="@id/music_icon"
 		android:layout_toStartOf="@id/pre"
 		android:text="musicName"
 		android:textColor="@color/textColor_3"
-        />
-    <TextView 
-       android:id="@+id/singer"
-       android:layout_width="150dp"
-       android:layout_height="20dp" 
-       android:ellipsize="marquee"
-       android:marqueeRepeatLimit="marquee_forever"
-       android:singleLine="true"
-       android:textSize="@dimen/textSize_small"
-       android:gravity="center_vertical"
-       android:layout_below="@id/song"
-       android:layout_toEndOf="@id/music_icon"
-       android:layout_toStartOf="@id/pre"
+		/>
+	<TextView
+		android:id="@+id/singer"
+		android:layout_width="150dp"
+		android:layout_height="20dp"
+		android:ellipsize="marquee"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:singleLine="true"
+		android:textSize="@dimen/textSize_small"
+		android:gravity="center_vertical"
+		android:layout_below="@id/song"
+		android:layout_toEndOf="@id/music_icon"
+		android:layout_toStartOf="@id/pre"
 		android:textColor="@color/textColor_6"
 		android:text="musicName"
-       />
+		/>
+	<ImageView
+		android:id="@+id/tv_lyricsSetting"
+		android:layout_width="30dp"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_centerVertical="true"
+		android:layout_alignTop="@id/next"
+		android:layout_alignBottom="@id/next"
+		android:gravity="center"
+		android:layout_marginEnd="20dp"
+		android:src="@drawable/setting"
+		android:adjustViewBounds="true"
+		android:tint="@color/black"
+		android:text="ci"/>
 	
 </RelativeLayout>

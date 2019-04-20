@@ -7,7 +7,7 @@ import android.content.Intent
 import com.web.common.base.BaseNotification
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity
 
-class DownloadNotification(ctx: Context) : BaseNotification(ctx, "downloading", "d") {
+class DownloadNotification(ctx: Context) : BaseNotification(ctx, DownloadNotification::class.java.name, "下载通知") {
 
     private var pIntent: PendingIntent
     private var count=0

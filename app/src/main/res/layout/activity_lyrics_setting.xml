@@ -43,6 +43,23 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
+                android:id="@+id/tv_lyricsLock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lyrics_lyricsLock"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/sw_lyricsLock"
+                app:layout_constraintBottom_toBottomOf="@id/sw_lyricsLock"/>
+
+            <Switch
+                android:id="@+id/sw_lyricsLock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sw_lyricsOverlayWindow"/>
+
+            <TextView
                 android:id="@+id/tv_colorLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,7 +79,7 @@
                 android:layout_marginTop="12dp"
                 android:elevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sw_lyricsOverlayWindow"/>
+                app:layout_constraintTop_toBottomOf="@id/sw_lyricsLock"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_color"
                 android:layout_width="wrap_content"

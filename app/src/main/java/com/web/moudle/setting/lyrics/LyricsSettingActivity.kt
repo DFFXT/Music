@@ -44,6 +44,11 @@ class LyricsSettingActivity : BaseActivity() {
             enableLyricsOverlap(this,isChecked)
         }
 
+        sw_lyricsLock.isChecked= isFloatWindowLocked()
+        sw_lyricsLock.setOnCheckedChangeListener { _, isChecked ->
+            setFloatWindowLocked(this,isChecked)
+        }
+
 
         //**recyclerView设置
         rv_color.layoutManager=LinearLayoutManager(this,RecyclerView.HORIZONTAL,false)
@@ -146,7 +151,9 @@ class LyricsSettingActivity : BaseActivity() {
     companion object{
         @JvmStatic
         fun actionStart(ctx:Context){
-            ctx.startActivity(Intent(ctx,LyricsSettingActivity::class.java))
+            val intent=Intent(ctx,LyricsSettingActivity::class.java)
+            intent.flags=Intent.FLAG_ACTIVITY_SINGLE_TOP
+            ctx.startActivity(intent)
         }
 
 
@@ -184,6 +191,17 @@ class LyricsSettingActivity : BaseActivity() {
         @JvmStatic
         fun enableLyricsOverlap(ctx:Context,enable:Boolean){
             SP.putValue(Constant.spName,Constant.SpKey.lyricsOverlapOpen,enable)
+            MusicPlay.floatWindowChange(ctx)
+        }
+
+        @JvmStatic
+        fun isFloatWindowLocked():Boolean{
+            return SP.getBoolean(Constant.spName,Constant.SpKey.isFloatWindowLocked,false)
+        }
+
+        @JvmStatic
+        fun setFloatWindowLocked(ctx:Context,locked:Boolean){
+            SP.putValue(Constant.spName,Constant.SpKey.isFloatWindowLocked,locked)
             MusicPlay.floatWindowChange(ctx)
         }
 

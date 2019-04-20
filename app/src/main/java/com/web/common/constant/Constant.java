@@ -30,6 +30,7 @@ public final class Constant {
         public final static String lyricsFocusColor="lyricsFocusColor";
         public final static String lyricsSize="lyricsSize";
         public final static String lyricsOverlapOpen="lyricsOverlapOpen";
+        public final static String isFloatWindowLocked="isFloatWindowLocked";
 
 
         public final static String floatWindowX="floatWindowX";

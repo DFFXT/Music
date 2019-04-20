@@ -293,7 +293,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             if(floatLyricsManager==null){
                 floatLyricsManager=new FloatLyricsManager(getApplicationContext(),connect);
             }
-            floatLyricsManager.open();
+            floatLyricsManager.refresh();
         }else{
             if(floatLyricsManager!=null){
                 floatLyricsManager.close();
