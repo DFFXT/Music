@@ -58,14 +58,14 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
             }
             addListener?.invoke(it,position)
         }
-        holder.rootView.setOnClickListener{
+        holder.itemView.setOnClickListener{
             if(isSelect){
                 toggleSelect(position)
                 return@setOnClickListener
             }
             itemClickListener?.invoke(it,position)
         }
-        holder.rootView.setOnLongClickListener {
+        holder.itemView.setOnLongClickListener {
             if(isSelect)return@setOnLongClickListener false
             itemLongClickListener?.let {listener->
                 return@setOnLongClickListener listener.invoke(it,position)

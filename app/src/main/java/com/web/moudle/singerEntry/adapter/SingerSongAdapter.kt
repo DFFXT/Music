@@ -13,7 +13,7 @@ import com.web.web.R
 class SingerSongAdapter(private val ctx:Context,private val list:ArrayList<SimpleMusicInfo>): BaseAdapter<SimpleMusicInfo>(list) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SimpleMusicInfo?) {
         holder.bindText(R.id.tv_musicName,item?.musicName)
-        holder.rootView.setOnClickListener {
+        holder.itemView.setOnClickListener {
             MusicDetailActivity.actionStart(it.context,item!!.songId)
         }
         ImageLoad.load(item!!.picSmall).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_musicIcon))

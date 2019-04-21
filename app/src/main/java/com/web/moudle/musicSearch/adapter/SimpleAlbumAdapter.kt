@@ -9,6 +9,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.util.ResUtil
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R
@@ -18,24 +19,8 @@ class SimpleAlbumAdapter:PagedListAdapter<SimpleAlbumInfo,BaseViewHolder>(diff) 
     override fun onBindViewHolder(holder : BaseViewHolder, p1: Int) {
         val item= getItem(p1) ?: return
 
-        var start=item.stdAlbumName().indexOf(InternetMusicActivity.keyWords)
-        if(start>=0){
-            val end = start+ InternetMusicActivity.keyWords.length
-            val spannable= SpannableString(item.stdAlbumName())
-            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-            holder.bindSpannable(R.id.tv_albumName,spannable)
-        }else{
-            holder.bindText(R.id.tv_albumName,item.stdAlbumName())
-        }
-        start=item.stdArtistName().indexOf(InternetMusicActivity.keyWords)
-        if(start>=0){
-            val end = start+ InternetMusicActivity.keyWords.length
-            val spannable= SpannableString(item.stdArtistName())
-            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-            holder.bindSpannable(R.id.tv_artistName,spannable)
-        }else{
-            holder.bindText(R.id.tv_artistName,item.stdArtistName())
-        }
+        holder.bindText(R.id.tv_albumName,ResUtil.getSpannable(item.stdAlbumName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_artistName,ResUtil.getSpannable(item.stdArtistName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
 
         holder.bindText(R.id.tv_publishTime,item.publishTime)
         ImageLoad.load(item.albumImage).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_artistIcon))

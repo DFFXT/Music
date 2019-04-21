@@ -40,7 +40,7 @@ public class SimpleSelectListAdapter extends BaseAdapter<String> implements Remo
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position,String item) {
-        TextView tv= (TextView) holder.rootView;
+        TextView tv= (TextView) holder.itemView;
         tv.setText(list.get(position));
         tv.setOnClickListener((v1)->{
             if(listener!=null){

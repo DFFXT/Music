@@ -11,6 +11,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.util.ResUtil
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
@@ -27,24 +28,10 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val item= getItem(position) ?: return
-        var start=item.musicName.indexOf(InternetMusicActivity.keyWords)
-        if(start>=0){
-            val end = start+ InternetMusicActivity.keyWords.length
-            val spannable= SpannableString(item.musicName)
-            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-            holder.bindSpannable(R.id.tv_musicName,spannable)
-        }else{
-            holder.bindText(R.id.tv_musicName,item.musicName)
-        }
-        start=item.author.indexOf(InternetMusicActivity.keyWords)
-        if(start>=0){
-            val end = start+ InternetMusicActivity.keyWords.length
-            val spannable= SpannableString(item.author)
-            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-            holder.bindSpannable(R.id.tv_singerName,spannable)
-        }else{
-            holder.bindText(R.id.tv_singerName,item.author)
-        }
+
+        holder.bindText(R.id.tv_musicName,ResUtil.getSpannable(item.musicName,InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_singerName,ResUtil.getSpannable(item.author,InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+
         holder.findViewById<View>(R.id.tv_singerName).setOnClickListener {
             SingerEntryActivity.actionStart(it.context,item.uid)
         }
@@ -56,7 +43,7 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
         ImageLoad.load(item.picSmall).into(holder.findViewById(R.id.iv_musicIcon))
         //holder.bindText(R.itemId.size,ResUtil.getFileSize(item.size))
         //holder.bindText(R.itemId.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration*1000L))
-        holder.rootView.setOnClickListener {
+        holder.itemView.setOnClickListener {
             listener?.itemClick(item)
         }
 

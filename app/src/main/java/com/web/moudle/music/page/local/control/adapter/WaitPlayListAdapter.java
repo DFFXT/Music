@@ -38,7 +38,7 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        TextView tv= (TextView) holder.rootView;
+        TextView tv= (TextView) holder.itemView;
         tv.setText(list.get(position).getMusicName());
         tv.setOnClickListener((v1)->{
             if(listener!=null){

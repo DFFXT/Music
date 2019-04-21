@@ -27,7 +27,7 @@ class NetMusicListPagedAdapter(diff:DiffUtil.ItemCallback<SimpleMusicInfo>):Page
         val item=getItem(p1)
         ImageLoad.load(item?.picSmall).into(holder.findViewById(R.id.iv_musicIcon))
         holder.bindText(R.id.tv_musicName,item?.musicName)
-        holder.bindSpannable(R.id.tv_singerName,makeSpannable(item!!)).movementMethod= LinkMovementMethod.getInstance()
+        holder.bindText(R.id.tv_singerName,makeSpannable(item!!)).movementMethod= LinkMovementMethod.getInstance()
         holder.bindText(R.id.tv_albumName,item.albumTitle).setOnClickListener {
             AlbumEntryActivity.actionStart(it.context,item.albumId)
         }

@@ -1,14 +1,12 @@
 package com.web.moudle.musicSearch.adapter
 
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.util.ResUtil
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleVideoInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R
@@ -19,30 +17,8 @@ class SimpleVideoAdapter:PagedListAdapter<SimpleVideoInfo,BaseViewHolder>(diff) 
         val item= getItem(p1)?:return
 
 
-        val str=item.stdVideoName()
-        var start=str.indexOf(InternetMusicActivity.keyWords)
-        if(start>=0){
-            val end = start+ InternetMusicActivity.keyWords.length
-            val spannable= SpannableString(str)
-            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-            holder.bindSpannable(R.id.tv_videoName,spannable)
-        }else{
-            holder.bindText(R.id.tv_videoName,str)
-        }
-
-        val str1=item.stdVideoArtistName()
-        if(str1!=null){
-            start=str1.indexOf(InternetMusicActivity.keyWords)
-            if(start>=0){
-                val end = start+ InternetMusicActivity.keyWords.length
-                val spannable= SpannableString(str1)
-                spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-                holder.bindSpannable(R.id.tv_videoArtist,spannable)
-            }else{
-                holder.bindText(R.id.tv_videoArtist,str1)
-            }
-        }
-
+        holder.bindText(R.id.tv_videoName,ResUtil.getSpannable(item.stdVideoName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_videoArtist,ResUtil.getSpannable(item.stdVideoArtistName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
 
 
         ImageLoad.load(item.thumbnail).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_videoIcon))

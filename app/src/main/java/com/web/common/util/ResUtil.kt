@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.text.style.TextAppearanceSpan
 import androidx.annotation.*
 import com.web.common.base.MyApplication
@@ -42,16 +43,19 @@ object ResUtil {
     }
 
     @JvmStatic
-    fun getSpannable(origin:String, render:String,@ColorInt color:Int,size:Int=-1):Spannable{
+    fun getSpannable(origin:String?, render:String?,@ColorInt color:Int,size:Int=-1):Spannable{
         var mSize=size
         if(size==-1) mSize=ResUtil.getSize(R.dimen.textSize_normal)
-        val start=origin.indexOf(render,0,false)
-        val end=start+render.length
         val spannable= SpannableStringBuilder(origin)
-        spannable.setSpan(TextAppearanceSpan("",0,mSize, ColorStateList.valueOf(color),null),
-                start,
-                end,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        if(TextUtils.isEmpty(origin)||TextUtils.isEmpty(render))return spannable
+        var index=origin!!.indexOf(render!!,0)
+        while (index>=0){
+            spannable.setSpan(TextAppearanceSpan("",0,mSize, ColorStateList.valueOf(color),null),
+                    index,
+                    index+render.length,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            index=origin.indexOf(render,index+1)
+        }
         return spannable
     }
 

@@ -88,7 +88,7 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
                     holder.bindImage(R.id.downloadStatu,status==DownloadMusic.DOWNLOAD_DOWNLOADING?R.drawable.icon_play_black :R.drawable.icon_pause_black)
                             .setOnClickListener(v-> click(v,position));
                     holder.itemView.setOnClickListener(null);
-                    holder.rootView.findViewById(R.id.close).setOnClickListener(v-> click(v,position));
+                    holder.itemView.findViewById(R.id.close).setOnClickListener(v-> click(v,position));
                     if(dataList.get(position+1).getStatus()==DownloadMusic.DOWNLOAD_COMPLETE_HEAD){
                         holder.itemView.setBackgroundResource(R.color.transparent);
                     }else{

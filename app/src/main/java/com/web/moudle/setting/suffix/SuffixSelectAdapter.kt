@@ -45,7 +45,7 @@ class SuffixSelectAdapter(private val ctx:Context,private val list:ArrayList<Sca
             }
         }
 
-        holder.rootView.findViewById<View>(R.id.iv_deleteItem).setOnClickListener {
+        holder.itemView.findViewById<View>(R.id.iv_deleteItem).setOnClickListener {
             remove(position)
         }
     }

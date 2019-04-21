@@ -9,6 +9,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.util.ResUtil
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleArtistInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.web.R
@@ -19,16 +20,8 @@ class SimpleArtistAdapter:PagedListAdapter<SimpleArtistInfo,BaseViewHolder>(diff
         val item= getItem(p1) ?: return
 
 
-        val start=item.stdArtistName().indexOf(InternetMusicActivity.keyWords)
-        if(start>=0){
-            val end = start+InternetMusicActivity.keyWords.length
-            val spannable=SpannableString(item.stdArtistName())
-            spannable.setSpan(TextAppearanceSpan(holder.itemView.context,R.style.search_focus),start,end,Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-            holder.bindSpannable(R.id.tv_artistName,spannable)
-        }else{
-            holder.bindText(R.id.tv_artistName,item.stdArtistName())
-        }
-
+        holder.bindText(R.id.tv_artistName,ResUtil.getSpannable(item.stdArtistName(),
+                InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
         holder.bindText(R.id.tv_singleMusicNum, item.singleMusicNum)
         holder.bindText(R.id.tv_albumNum,item.albumNum)
         holder.bindText(R.id.tv_district,item.district)
