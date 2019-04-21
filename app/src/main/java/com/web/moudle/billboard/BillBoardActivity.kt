@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseActivity
 import com.web.common.base.showContent
 import com.web.common.base.showError
@@ -41,7 +42,7 @@ class BillBoardActivity:BaseActivity() {
 
 
 
-        rv_billboard.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        rv_billboard.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_billboard.addItemDecoration(GapItemDecoration(left = 10,right = 10,bottom = 10))
         model?.getBillboard()
         rootView.showLoading(true)

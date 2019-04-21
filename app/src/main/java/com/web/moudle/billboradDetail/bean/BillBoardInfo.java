@@ -52,6 +52,9 @@ public class BillBoardInfo {
          this.billboard_songnum = billboard_songnum;
      }
      public String getBillboard_songnum() {
+        if (billboard_songnum==null){
+            return "0";
+        }
          return billboard_songnum;
      }
 

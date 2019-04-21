@@ -18,7 +18,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.base.MyApplication;
@@ -133,7 +132,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         if (BIND.equals(arg0.getAction())) {
             if (connect == null){
                 connect = new Connect();
-                lyricsFloatWindowChange();
                 EqualizerActivity.saveDefaultSoundEffect(equalizer);
                 connect.setSoundEffect(EqualizerActivity.getCurrentSoundEffect());
             }
@@ -309,6 +307,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             player.setOnPreparedListener(mp -> {
                 config.setPrepared(true);
                 musicLoad();
+                if(floatLyricsManager==null){
+                    lyricsFloatWindowChange();
+                }
+
             });
             player.setOnCompletionListener(mp -> {
                 switch (config.getPlayType()) {
@@ -371,7 +373,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
         /**
          * 在已经初始化或调用
-         * @param group
+         * @param group g
          */
         public void getList(int group) {
             groupIndex = group;

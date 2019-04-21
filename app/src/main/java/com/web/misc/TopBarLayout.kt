@@ -20,7 +20,7 @@ class TopBarLayout : FrameLayout {
     private val view: View = LayoutInflater.from(context).inflate(R.layout.layout_topar, this, false)
     val startImageView: ImageView
     val endImageView: ImageView
-    private val mainTitle: TextView
+    val mainTitle: TextView
     private val subtitle: TextView
     private val endText: TextView
     private var mainTitleColor:Int=Color.WHITE

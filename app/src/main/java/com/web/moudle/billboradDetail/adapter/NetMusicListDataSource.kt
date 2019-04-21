@@ -75,7 +75,7 @@ class NetMusicListDataSource() : PageKeyedDataSource<String, SimpleMusicInfo>() 
     private fun load(callback:((NetMusicBox)->Unit)) {
         when (urlType) {
             NetMusicType.TYPE_BILLBOARD -> {
-                model.requestList(billboardType)
+                model.requestList(billboardType,(page-1)*pageSize,pageSize)
                         .get(
                                 onNext = {
                                     page++
@@ -90,7 +90,8 @@ class NetMusicListDataSource() : PageKeyedDataSource<String, SimpleMusicInfo>() 
                                     callback.invoke(it)
                                 },
                                 onError = {
-                                    wrapper.postValue(null)
+                                    w.code=LiveDataWrapper.CODE_ERROR
+                                    wrapper.postValue(w)
                                 }
                         )
             }

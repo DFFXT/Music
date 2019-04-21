@@ -196,6 +196,12 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
     }
 
     companion object{
+
+        @JvmStatic
+        fun configChange(ctx:Context){
+            MusicPlay.floatWindowChange(ctx)
+        }
+
         @JvmStatic
         fun getFloatWindowX():Int{
             return SP.getInt(Constant.spName,Constant.SpKey.floatWindowX,0)

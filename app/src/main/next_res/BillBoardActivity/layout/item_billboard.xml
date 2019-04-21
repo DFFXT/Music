@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
@@ -16,6 +16,26 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/textSize_big"
         tools:text="新歌榜"/>
+    <ImageView
+        android:id="@+id/iv_top1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/tv_billboardName"
+        tools:src="@color/themeColor" />
+    <ImageView
+        android:id="@+id/iv_top2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@id/iv_top1"
+        android:layout_alignTop="@id/iv_top1"
+        tools:src="@color/colorAccent"/>
+    <ImageView
+        android:id="@+id/iv_top3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@id/iv_top1"
+        android:layout_below="@id/iv_top1"
+        tools:src="@color/colorAccent"/>
     <TextView
         android:id="@+id/tv_no1"
         android:layout_width="wrap_content"
@@ -24,6 +44,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:maxLines="1"
+        android:layout_toEndOf="@id/iv_top2"
+        android:layout_alignTop="@id/iv_top1"
         tools:text="name1"/>
     <TextView
         android:id="@+id/tv_no2"
@@ -32,6 +54,9 @@
         android:textSize="@dimen/textSize_normal"
         android:layout_marginStart="20dp"
         android:maxLines="1"
+        android:layout_toEndOf="@id/iv_top2"
+        android:layout_below="@id/tv_no1"
+        android:layout_marginTop="10dp"
         tools:text="name2"/>
     <TextView
         android:id="@+id/tv_no3"
@@ -40,5 +65,8 @@
         android:textSize="@dimen/textSize_normal"
         android:layout_marginStart="20dp"
         android:maxLines="1"
+        android:layout_toEndOf="@id/iv_top2"
+        android:layout_below="@id/tv_no2"
+        android:layout_marginTop="10dp"
         tools:text="name2"/>
-</LinearLayout>
+</RelativeLayout>

@@ -16,6 +16,7 @@ import com.web.web.R
 
 class BillboardAdapter(data:List<Content>):BaseAdapter<Content>(data) {
     private val ids= arrayListOf(R.id.tv_no1,R.id.tv_no2,R.id.tv_no3)
+    private val ivIds= arrayListOf(R.id.iv_top1,R.id.iv_top2,R.id.iv_top3)
     @SuppressLint("CheckResult")
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Content?) {
         val ctx=holder.itemView.context
@@ -26,6 +27,7 @@ class BillboardAdapter(data:List<Content>):BaseAdapter<Content>(data) {
             holder.bindText(ids[index],"${index+1}. "+v.title+" - "+v.author).setOnClickListener {
                 MusicDetailActivity.actionStart(ctx,v.song_id)
             }
+            holder.bindImage(ivIds[index],v.pic_small)
         }
         holder.itemView.setBackgroundColor(Color.parseColor(item.bg_color.replace("0x","#")))
         val titleColor=Color.parseColor(item.color.replace("0x","#"))

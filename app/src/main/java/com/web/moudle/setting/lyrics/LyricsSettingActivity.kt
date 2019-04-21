@@ -18,6 +18,7 @@ import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.lyrics.bean.LyricsLine
+import com.web.moudle.music.player.FloatLyricsManager
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.preference.SP
 import com.web.web.R
@@ -191,7 +192,7 @@ class LyricsSettingActivity : BaseActivity() {
         @JvmStatic
         fun enableLyricsOverlap(ctx:Context,enable:Boolean){
             SP.putValue(Constant.spName,Constant.SpKey.lyricsOverlapOpen,enable)
-            MusicPlay.floatWindowChange(ctx)
+            FloatLyricsManager.configChange(ctx)
         }
 
         @JvmStatic
@@ -202,7 +203,7 @@ class LyricsSettingActivity : BaseActivity() {
         @JvmStatic
         fun setFloatWindowLocked(ctx:Context,locked:Boolean){
             SP.putValue(Constant.spName,Constant.SpKey.isFloatWindowLocked,locked)
-            MusicPlay.floatWindowChange(ctx)
+            FloatLyricsManager.configChange(ctx)
         }
 
 

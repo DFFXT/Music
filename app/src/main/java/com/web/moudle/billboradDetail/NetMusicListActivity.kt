@@ -31,6 +31,8 @@ class NetMusicListActivity:BaseActivity() {
 
     private lateinit var model:NetMusicListViewModel
 
+    private var textColor:Int=Color.WHITE
+
 
     private var loaded=false
     @SuppressLint("SetTextI18n")
@@ -56,20 +58,21 @@ class NetMusicListActivity:BaseActivity() {
                 tv_updateTime.text=ResUtil.getString(R.string.updateTime,it.update_date)
             }
 
-            if(it.billboard_songnum.toInt()>100){
-                it.billboard_songnum="100"
+            if(it.billboard_songnum.toInt()!=0){
+                tv_musicCount.text="共${it.billboard_songnum}首"
             }
-            tv_musicCount.text="共${it.billboard_songnum}首"
+
             collapseToolbarLayout.setBackgroundColor(Color.parseColor(it.bg_color.replace("0x","#")))
-            val textColor=Color.parseColor(it.color.replace("0x","#"))
+            textColor=Color.parseColor(it.color.replace("0x","#"))
             tv_title.setTextColor(textColor)
             tv_updateTime.setTextColor(textColor)
             tv_musicCount.setTextColor(textColor)
+            topBar.setMainTitle(title)
             topBar.setTint(textColor)
             topBar.setMainTitleColor(textColor)
             rootView.showContent()
         })
-        rv_netMusicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        rv_netMusicList.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_netMusicList.addItemDecoration(DrawableItemDecoration(left = 10,top = 10,right = 10,bottom = 10,
                 orientation =  LinearLayout.VERTICAL,drawable = getDrawable(R.drawable.recycler_divider)))
 
@@ -103,15 +106,23 @@ class NetMusicListActivity:BaseActivity() {
         appBarLayout.addOnOffsetChangedListener(object :BaseAppBarLayoutOffsetChangeListener(){
             override fun offsetChanged(state: Int, position: Int) {
                 when(state){
-                    BaseAppBarLayoutOffsetChangeListener.STATE_COLLAPSE->{
-                        topBar.setMainTitle(title)
-                                .alpha=1f
+                    STATE_COLLAPSE ->{
+                        topBar.mainTitle.alpha=1f
+                        topBar.startImageView.alpha=1f
+                        topBar.setTint(Color.WHITE)
+                        topBar.setMainTitleColor(Color.WHITE)
                     }
-                    BaseAppBarLayoutOffsetChangeListener.STATE_EXPANDING->{
+                    STATE_EXPANDING ->{
                         var alpha=1-(appBarLayout.totalScrollRange-position)/appBarLayout.totalScrollRange.toFloat()
                         if(alpha<0.5f) alpha=0f
-                        topBar.setMainTitle(title)
-                                .alpha=alpha*0.5f
+                        topBar.mainTitle.alpha=alpha*0.5f
+                        topBar.startImageView.alpha=alpha*0.5f
+                        topBar.setTint(Color.WHITE)
+                        topBar.setMainTitleColor(Color.WHITE)
+                    }
+                    STATE_EXPANDED->{
+                        topBar.setTint(textColor)
+                        topBar.setMainTitleColor(textColor)
                     }
                 }
             }

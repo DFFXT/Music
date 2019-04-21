@@ -11,9 +11,9 @@ import io.reactivex.Observable
 
 class NetMusicListModel:BaseRetrofit() {
 
-    fun requestList(type:Int):Observable<NetMusicBox>{
+    fun requestList(type:Int,offset:Int,size:Int):Observable<NetMusicBox>{
         return obtainClass(NetApis.NetMusicList::class.java)
-                .requestList(type)
+                .requestList(type,offset,size)
     }
     fun requestRecommend(page:Int,pageSize:Int):Observable<BaseNetBean<RecommendMusicBox>>{
         return obtainClass(NetApis.NetMusicList::class.java)
