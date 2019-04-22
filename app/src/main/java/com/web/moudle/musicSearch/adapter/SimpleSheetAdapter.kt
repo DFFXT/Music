@@ -19,7 +19,11 @@ class SimpleSheetAdapter:PagedListAdapter<SimpleSongSheet,BaseViewHolder>(diff) 
     override fun onBindViewHolder(holder : BaseViewHolder, p1: Int) {
         val item= getItem(p1)?:return
 
-        holder.bindText(R.id.tv_sheetName, ResUtil.getSpannable(item.stdSheetName(),InternetMusicActivity.keyWords, ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_sheetName,
+                ResUtil.getSpannable(item.stdSheetName(),
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_normal)))
 
 
         holder.bindText(R.id.tv_songCount,item.songCount)

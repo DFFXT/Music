@@ -6,12 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.drawable.BitmapDrawable
 import android.media.audiofx.Visualizer
-import android.net.Uri
 import android.os.IBinder
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import com.web.common.base.BaseActivity
 import com.web.common.base.PlayerObserver
@@ -26,8 +22,7 @@ import com.web.config.Shortcut
 import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
-import com.web.data.PlayerConfig
-import com.web.misc.BasePopupWindow
+import com.web.moudle.music.player.other.PlayerConfig
 import com.web.misc.imageDraw.WaveDraw
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.MusicPlay
@@ -41,9 +36,7 @@ import kotlinx.android.synthetic.main.music_lyrics_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.File
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 @ObsoleteCoroutinesApi
 class LyricsActivity : BaseActivity() {
@@ -58,7 +51,7 @@ class LyricsActivity : BaseActivity() {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             connect = service as MusicPlay.Connect
             connect?.addObserver(this@LyricsActivity, observer)
-            connect?.getPlayerInfo()
+            connect?.getPlayerInfo(this@LyricsActivity)
 
 
             visualizer=Visualizer(connect?.mediaPlayId!!)
@@ -136,12 +129,13 @@ class LyricsActivity : BaseActivity() {
                 PlayerConfig.PlayType.ONE_LOOP->R.drawable.music_type_one_loop
                 PlayerConfig.PlayType.ALL_ONCE->R.drawable.music_type_all_once
                 PlayerConfig.PlayType.ONE_ONCE->R.drawable.music_type_one_once
-                else -> R.drawable.music_type_all_loop
+                PlayerConfig.PlayType.RANDOM->R.drawable.random_icon
+                else ->R.drawable.random_icon
             })
         }
 
         override fun musicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
-            if(origin==PlayerConfig.MusicOrigin.INTERNET){
+            if(origin== PlayerConfig.MusicOrigin.INTERNET){
                 card_download.visibility=View.VISIBLE
             }else{
                 card_download.visibility=View.GONE
@@ -255,7 +249,7 @@ class LyricsActivity : BaseActivity() {
             val intent=Intent(Intent.ACTION_SEND)
 
             val music=connect!!.config.music
-            if(connect!!.config.musicOrigin==PlayerConfig.MusicOrigin.INTERNET){
+            if(connect!!.config.musicOrigin== PlayerConfig.MusicOrigin.INTERNET){
                 intent.type="text/plain"
                 intent.putExtra(Intent.EXTRA_TEXT,music.path)
             }else{
@@ -342,7 +336,6 @@ class LyricsActivity : BaseActivity() {
 
     override fun onDestroy() {
         tick.stop()
-        connect?.removeObserver(observer)
         unbindService(connection)
         visualizer?.release()
         super.onDestroy()

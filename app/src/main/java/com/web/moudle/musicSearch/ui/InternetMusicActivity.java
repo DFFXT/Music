@@ -11,6 +11,7 @@ import android.text.style.TextAppearanceSpan;
 import com.google.android.material.tabs.TabLayout;
 import com.web.common.base.BaseActivity;
 import com.web.common.base.BaseFragmentPagerAdapter;
+import com.web.common.util.ResUtil;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.search.SearchActivity;
 import com.web.web.R;
@@ -101,9 +102,11 @@ public class InternetMusicActivity extends BaseActivity {
 
     }
     private Spannable addNumber(CharSequence text,String number){
-        SpannableString spannable=new SpannableString(text+"("+number+")");
-        spannable.setSpan(new TextAppearanceSpan(this,R.style.searchResultNumber),text.length(),spannable.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-        return spannable;
+        return ResUtil.getSpannable(text+"("+number+")",
+                "("+number+")",
+                getColor(R.color.themeColor),
+                ResUtil.getSize(R.dimen.textSize_min));
+
     }
 
 

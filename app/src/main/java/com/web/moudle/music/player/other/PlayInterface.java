@@ -1,8 +1,8 @@
-package com.web.moudle.music.player;
+package com.web.moudle.music.player.other;
 
 import com.web.data.Music;
 import com.web.data.MusicList;
-import com.web.data.PlayerConfig;
+import com.web.moudle.music.player.other.PlayerConfig;
 
 import java.util.List;
 

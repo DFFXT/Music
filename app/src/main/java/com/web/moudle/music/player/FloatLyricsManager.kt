@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.ColorInt
 import com.web.common.base.BaseDragHelper
+import com.web.common.base.MyApplication
 import com.web.common.base.PlayerObserver
 import com.web.common.constant.Constant
 import com.web.common.util.ResUtil
@@ -105,7 +106,7 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
             }
         }
         connect.addObserver(null,observer)
-        connect.getPlayerInfo()
+        connect.getPlayerInfo(null)
 
 
         if(!LyricsSettingActivity.isFloatWindowLocked()){

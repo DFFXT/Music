@@ -27,9 +27,8 @@ import com.web.common.util.ViewUtil;
 import com.web.config.Shortcut;
 import com.web.data.Music;
 import com.web.data.MusicList;
-import com.web.data.PlayerConfig;
+import com.web.moudle.music.player.other.PlayerConfig;
 import com.web.misc.TopBarLayout;
-import com.web.moudle.lyrics.EqualizerActivity;
 import com.web.moudle.lyrics.LyricsActivity;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
@@ -66,7 +65,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     private int RESULT_CODE_SEARCH = 1;
 
-    private TextView songName, singer, tv_musicOrigin,tv_duration;//**音乐信息
+    private TextView songName, singer, tv_musicOrigin,tv_duration,tv_currentTime;//**音乐信息
     private SeekBar bar;//--进度条
     private ImageView iv_singerIcon;
     private ImageView pre, pause, next, musicPlay_type;//--各种图标
@@ -124,8 +123,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void currentTime(int group, int child, int time) {
-            if (!bar.isPressed())
+            if (!bar.isPressed()){
                 bar.setProgress(time / 1000);
+                tv_currentTime.setText(ResUtil.timeFormat("mm:ss",time));
+            }
+
         }
 
         @Override
@@ -317,6 +319,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         singer = findViewById(R.id.singer);
         tv_musicOrigin = findViewById(R.id.musicOrigin);
         tv_duration = findViewById(R.id.tv_duration);
+        tv_currentTime = findViewById(R.id.tv_currentTime);
         pre = findViewById(R.id.pre);
         pause = findViewById(R.id.pause);
         next = findViewById(R.id.next);
@@ -353,7 +356,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                 for (BaseMusicPage page : pageList) {
                     page.setConnect(connect);
                 }
-                connect.getPlayerInfo();//**获取播放器状态
+                connect.getPlayerInfo(MusicActivity.this);//**获取播放器状态
             }
 
             @Override
@@ -525,6 +528,10 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             break;
             case ONE_ONCE: {
                 musicPlay_type.setImageResource(R.drawable.music_type_one_once);
+            }
+            break;
+            case RANDOM:{
+                musicPlay_type.setImageResource(R.drawable.random_icon);
             }
             break;
         }

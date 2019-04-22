@@ -17,8 +17,16 @@ class SimpleVideoAdapter:PagedListAdapter<SimpleVideoInfo,BaseViewHolder>(diff) 
         val item= getItem(p1)?:return
 
 
-        holder.bindText(R.id.tv_videoName,ResUtil.getSpannable(item.stdVideoName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
-        holder.bindText(R.id.tv_videoArtist,ResUtil.getSpannable(item.stdVideoArtistName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_videoName,
+                ResUtil.getSpannable(item.stdVideoName(),
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_big)))
+        holder.bindText(R.id.tv_videoArtist,
+                ResUtil.getSpannable(item.stdVideoArtistName(),
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_min)))
 
 
         ImageLoad.load(item.thumbnail).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_videoIcon))

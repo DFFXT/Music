@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
@@ -40,9 +41,9 @@ class AlbumFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context)
+        rv_musicList.layoutManager= LinearLayoutManager(context)
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = RecyclerView.VERTICAL))
         adapter= SimpleAlbumAdapter()
         adapter.itemClick={
             if(it!=null){

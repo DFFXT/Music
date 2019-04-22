@@ -50,10 +50,10 @@ class ArtistFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context)
+        rv_musicList.layoutManager= LinearLayoutManager(context)
 
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
         adapter= SimpleArtistAdapter()
         adapter.itemClick={
             if(it!=null){//**无法提通过这个artistId获取正确信息，必须通过一次跳转获取真正的artistId

@@ -2,10 +2,10 @@ package com.web.common.base
 
 import com.web.data.Music
 import com.web.data.MusicList
-import com.web.data.PlayerConfig
-import com.web.moudle.music.player.PlayInterface
+import com.web.moudle.music.player.other.PlayerConfig
+import com.web.moudle.music.player.other.PlayInterface
 
-open class PlayerObserver:PlayInterface {
+open class PlayerObserver: PlayInterface {
     override fun play() {
 
     }

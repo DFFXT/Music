@@ -109,7 +109,6 @@
             android:name="com.web.moudle.lockScreen.ui.LockScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:taskAffinity="sfsddf.sdf"
             android:theme="@style/FullscreenTheme"/>
         <activity android:name="com.web.moudle.setting.suffix.SuffixSelectActivity" />
         <activity android:name="com.web.moudle.setting.lockscreen.LockScreenSettingActivity" />

@@ -78,7 +78,7 @@ class MusicDetailActivity : BaseActivity() {
                     music.imgAddress = res.songInfo.picSmall
                     music.lrcLink = res.songInfo.lrcLink
                     music.suffix = res.bitRate.format
-                    music.duration = res.songInfo.duration.toInt()
+                    music.duration = res.songInfo.duration.toInt()*1000
                     music.album = res.songInfo.albumName
                     music.size = res.bitRate.fileSize
 
@@ -115,7 +115,7 @@ class MusicDetailActivity : BaseActivity() {
                         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                             connection = service as MusicPlay.Connect
                             connection!!.addObserver(this@MusicDetailActivity, observer)
-                            connection!!.getPlayerInfo()
+                            connection!!.getPlayerInfo(this@MusicDetailActivity)
                         }
                     }
                     //**连接 播放器

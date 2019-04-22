@@ -48,7 +48,7 @@ class MusicFragment:BaseSearchFragment() {
 
         rv_musicList.layoutManager= LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
         adapter=InternetMusicAdapter(context!!)
         adapter.listener = object : InternetMusicAdapter.OnItemClickListener {
             override fun itemClick(music: SimpleMusicInfo) {

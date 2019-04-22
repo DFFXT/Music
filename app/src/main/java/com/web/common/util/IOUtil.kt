@@ -103,6 +103,7 @@ object IOUtil{
                             break
                         }
                         offset+=length
+                        Thread.sleep(1000)
                         ra.write(byte,0,length)
                         if(update){
                             update=false

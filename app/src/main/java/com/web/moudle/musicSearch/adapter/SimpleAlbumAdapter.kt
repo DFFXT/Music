@@ -1,8 +1,5 @@
 package com.web.moudle.musicSearch.adapter
 
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
@@ -19,8 +16,16 @@ class SimpleAlbumAdapter:PagedListAdapter<SimpleAlbumInfo,BaseViewHolder>(diff) 
     override fun onBindViewHolder(holder : BaseViewHolder, p1: Int) {
         val item= getItem(p1) ?: return
 
-        holder.bindText(R.id.tv_albumName,ResUtil.getSpannable(item.stdAlbumName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
-        holder.bindText(R.id.tv_artistName,ResUtil.getSpannable(item.stdArtistName(),InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_albumName,
+                ResUtil.getSpannable(item.stdAlbumName(),
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_normal)))
+        holder.bindText(R.id.tv_artistName,
+                ResUtil.getSpannable(item.stdArtistName(),
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_min)))
 
         holder.bindText(R.id.tv_publishTime,item.publishTime)
         ImageLoad.load(item.albumImage).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_artistIcon))

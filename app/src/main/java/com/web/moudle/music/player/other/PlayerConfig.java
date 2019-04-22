@@ -1,9 +1,10 @@
-package com.web.data;
+package com.web.moudle.music.player.other;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.web.config.GetFiles;
+import com.web.data.Music;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,7 +85,8 @@ public class PlayerConfig {
         ONE_LOOP,
         ALL_LOOP,
         ALL_ONCE,
-        ONE_ONCE
+        ONE_ONCE,
+        RANDOM,
     }
     public enum MusicOrigin{
         LOCAL,

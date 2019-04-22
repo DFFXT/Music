@@ -14,11 +14,22 @@
         android:background="@color/colorPrimaryDark"
         app:layout_constraintTop_toTopOf="parent"
         />
+    <TextView
+        android:id="@+id/tv_currentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_small"
+        android:textColor="@color/textColor_9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bar"
+        app:layout_constraintBottom_toBottomOf="@id/bar"
+        android:layout_marginStart="10dp"
+        android:text="@string/musicTime"/>
     <SeekBar
         android:id="@+id/bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_currentTime"
         app:layout_constraintTop_toBottomOf="@id/view_line"
         app:layout_constraintEnd_toStartOf="@id/tv_duration"
         style="@android:style/Widget.Holo.SeekBar"

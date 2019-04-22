@@ -51,10 +51,10 @@ class VideoFragment:BaseSearchFragment() {
         smartRefreshLayout.setEnableLoadMore(true)
         smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= androidx.recyclerview.widget.LinearLayoutManager(context)
+        rv_musicList.layoutManager= LinearLayoutManager(context)
 
         rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL))
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = LinearLayoutManager.VERTICAL))
         adapter= SimpleVideoAdapter()
         adapter.itemClick={
             if(it!=null){//**进入mv

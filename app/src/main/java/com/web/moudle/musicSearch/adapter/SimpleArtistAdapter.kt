@@ -20,8 +20,11 @@ class SimpleArtistAdapter:PagedListAdapter<SimpleArtistInfo,BaseViewHolder>(diff
         val item= getItem(p1) ?: return
 
 
-        holder.bindText(R.id.tv_artistName,ResUtil.getSpannable(item.stdArtistName(),
-                InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_artistName,
+                ResUtil.getSpannable(item.stdArtistName(),
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_normal)))
         holder.bindText(R.id.tv_singleMusicNum, item.singleMusicNum)
         holder.bindText(R.id.tv_albumNum,item.albumNum)
         holder.bindText(R.id.tv_district,item.district)

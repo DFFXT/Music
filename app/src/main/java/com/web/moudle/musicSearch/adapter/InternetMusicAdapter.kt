@@ -29,8 +29,16 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val item= getItem(position) ?: return
 
-        holder.bindText(R.id.tv_musicName,ResUtil.getSpannable(item.musicName,InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
-        holder.bindText(R.id.tv_singerName,ResUtil.getSpannable(item.author,InternetMusicActivity.keyWords,ResUtil.getColor(R.color.themeColor)))
+        holder.bindText(R.id.tv_musicName,
+                ResUtil.getSpannable(item.musicName,
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_normal)))
+        holder.bindText(R.id.tv_singerName,
+                ResUtil.getSpannable(item.author,
+                        InternetMusicActivity.keyWords,
+                        ResUtil.getColor(R.color.themeColor),
+                        ResUtil.getSize(R.dimen.textSize_small)))
 
         holder.findViewById<View>(R.id.tv_singerName).setOnClickListener {
             SingerEntryActivity.actionStart(it.context,item.uid)
