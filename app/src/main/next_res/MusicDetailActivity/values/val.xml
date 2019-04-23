@@ -8,6 +8,7 @@
     <string name="musicDetailActivity_listenTimes">播放次数：</string>
     <string name="musicDetailActivity_lyrics">歌词</string>
     <string name="musicDetailActivity_styles">风格：</string>
+    <string name="musicDetailActivity_comment">评论</string>
     <string name="albumEntry_albumList">专辑歌曲：</string>
     <string name="albumEntry_MV">MV</string>
 

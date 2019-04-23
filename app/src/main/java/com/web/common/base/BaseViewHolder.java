@@ -29,6 +29,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         ImageLoad.load(url).into(iv);
         return iv;
     }
+    public ImageView bindImage(@IdRes int id,@DrawableRes int placeHolder,String url){
+        ImageView iv=itemView.findViewById(id);
+        ImageLoad.load(url).placeholder(placeHolder).into(iv);
+        return iv;
+    }
     public <T extends View> T findViewById(int id){
         return itemView.findViewById(id);
     }

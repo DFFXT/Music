@@ -7,6 +7,7 @@ import com.web.common.base.get
 import com.web.common.bean.LiveDataWrapper
 import com.web.config.Shortcut
 import com.web.moudle.lyrics.bean.LyricsLine
+import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 
 class DetailMusicViewModel : ViewModel() {
@@ -15,6 +16,10 @@ class DetailMusicViewModel : ViewModel() {
     val lyrics = MutableLiveData<LiveDataWrapper<ArrayList<LyricsLine>>>()
     private val lyricsWrapper = LiveDataWrapper<ArrayList<LyricsLine>>()
     private val detailMusicWrapper=LiveDataWrapper<MusicDetailInfo>()
+
+
+    private val mComment=LiveDataWrapper<CommentBox>()
+    val comment= MutableLiveData<LiveDataWrapper<CommentBox>>()
 
     fun getDetail(songId: String) {
         model.getMusicDetail(songId)
@@ -50,5 +55,25 @@ class DetailMusicViewModel : ViewModel() {
                         lyrics.value=lyricsWrapper
                     }
                 })
+    }
+
+    fun getComment(songId:String,page:Int,pageSize:Int){
+        model.getCommentInfo(songId,page*pageSize,pageSize)
+                .get(
+                        onNext = {
+                            if(it.commentlist_last_nums==0){
+                                mComment.code=LiveDataWrapper.CODE_NO_DATA
+                            }else{
+                                mComment.code=LiveDataWrapper.CODE_OK
+                            }
+                            mComment.value=it
+                            comment.value=mComment
+                        },
+                        onError = {
+                            it.printStackTrace()
+                            mComment.code=LiveDataWrapper.CODE_ERROR
+                            comment.value=mComment
+                        }
+                )
     }
 }

@@ -39,21 +39,16 @@ public class JSEngine{
         Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
         String res=runScript(reader,"getSheetInfo",new Object[]{sheetId,pageSize*page,pageSize});
         String[] arr=res.split("\\?");
+        reader.close();
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 
-    public void s(){
-
-        String res= null;
-        try {
-            Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
-            res = runScript(reader,"getCommentInfo",new Object[]{"606149060",0,30});
-            String[] arr=res.split("\\?");
-            Log.i("log",res);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public SongSheetRequestParams getComment(String songId, int offset,int pageSize) throws IOException {
+        Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
+        String res=runScript(reader,"getCommentListByType",new Object[]{songId,offset,pageSize});
+        String[] arr=res.split("\\?");
+        reader.close();
+        return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 
     private String runScript(Reader reader, String functionName, Object[] functionParams) throws IOException {

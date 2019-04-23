@@ -7,6 +7,7 @@ import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.billboradDetail.bean.NetMusicBox
 import com.web.moudle.billboradDetail.bean.RecommendMusicBox
+import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicSearch.bean.RowMusicData
 import com.web.moudle.musicSearch.bean.next.*
@@ -21,9 +22,7 @@ import com.web.moudle.songSheetEntry.bean.SongSheetInfoBox
 import com.web.moudle.videoEntry.bean.VideoInfoBox
 import io.reactivex.Observable
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 class NetApis {
     interface Music {
@@ -91,6 +90,11 @@ class NetApis {
     interface SongEntry {
         @GET("http://musicapi.taihe.com/v1/restserver/ting?method=baidu.ting.song.playAAC")
         fun getMusicDetail(@Query("songid") songId: String): Observable<MusicDetailInfo>
+
+
+        @Headers("Referer: http://music.taihe.com")
+        @GET("http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.ugcmsg.getCommentListByType&from=web")
+        fun getMusicCommentInfo(@Query("timestamp") timestamp: String,@Query("param") param: String,@Query("sign") sign: String):Observable<BaseNetBean<CommentBox>>
     }
 
     interface AlbumEntry {

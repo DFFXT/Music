@@ -11,8 +11,11 @@ import android.os.IBinder
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
@@ -22,7 +25,10 @@ import com.web.common.util.WindowUtil
 import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
+import com.web.misc.DrawableItemDecoration
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.musicEntry.adapter.CommentAdapter
+import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.service.FileDownloadService
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
@@ -34,6 +40,11 @@ class MusicDetailActivity : BaseActivity() {
     private lateinit var model: DetailMusicViewModel
     private var connection: MusicPlay.Connect? = null
     private var serviceConnection: ServiceConnection? = null
+
+    private var commentPage=0
+    private val commentList=ArrayList<CommentItem>()
+    private var adapter:CommentAdapter= CommentAdapter(commentList)
+
     override fun getLayoutId(): Int {
         return R.layout.activity_music_detail
     }
@@ -154,17 +165,45 @@ class MusicDetailActivity : BaseActivity() {
                 lyricsView.text = builder.toString()
             }
         })
+
+        model.comment.observe(this, Observer {wrapper->
+            srl_comment.finishLoadMore()
+            when {
+                wrapper==null -> return@Observer
+                wrapper.code == LiveDataWrapper.CODE_ERROR -> {
+
+                }
+                wrapper.code == LiveDataWrapper.CODE_OK -> {
+                    commentPage++
+                    tv_commentNum.text=wrapper.value.commentlist_last_nums.toString()
+                    if(wrapper.value.commentlist_hot!=null){
+                        commentList.addAll(wrapper.value.commentlist_hot)
+                    }
+                    if(wrapper.value.commentlist_last!=null){
+                        commentList.addAll(wrapper.value.commentlist_last)
+                    }
+                    if(commentList.size==wrapper.value.commentlist_last_nums){
+                        srl_comment.setNoMoreData(true)
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+                wrapper.code == LiveDataWrapper.CODE_NO_DATA->{
+                    srl_comment.setEnableLoadMore(false)
+                    layout_noMoreData.visibility=View.VISIBLE
+                }
+            }
+        })
         model.getDetail(id)
+        model.getComment(id,commentPage, pageSize)
     }
 
     override fun initView() {
         rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
-        loadData()
+
         val toolbar = toolbar
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
-            val offset = -dy
-            when (offset) {
+            when (-dy) {
                 appBar.totalScrollRange -> {//**完全折叠
                     appBar.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                     toolbar.setBackgroundColor(getColor(R.color.themeColor))
@@ -175,6 +214,18 @@ class MusicDetailActivity : BaseActivity() {
                 }
             }
         })
+        srl_comment.setRefreshFooter(ClassicsFooter(this))
+        srl_comment.setOnLoadMoreListener {
+            model.getComment(id,commentPage, pageSize)
+        }
+        rv_comment.layoutManager=LinearLayoutManager(this)
+        rv_comment.addItemDecoration(
+                DrawableItemDecoration(0,0,0,2,
+                        RecyclerView.VERTICAL,getDrawable(R.drawable.recycler_divider)))
+        rv_comment.adapter=adapter
+
+        loadData()
+
     }
 
     /**
@@ -218,6 +269,7 @@ class MusicDetailActivity : BaseActivity() {
     }
 
     companion object {
+        private const val pageSize=30
         private const val ID = "itemId"
         @JvmStatic
         fun actionStart(ctx: Context, id: String) {
