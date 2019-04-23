@@ -1,5 +1,7 @@
 package com.web.moudle.songSheetEntry.adapter;
 
+import android.util.Log;
+
 import com.web.common.base.MyApplication;
 import com.web.moudle.songSheetEntry.bean.SongSheetRequestParams;
 import com.web.web.Index;
@@ -38,6 +40,20 @@ public class JSEngine{
         String res=runScript(reader,"getSheetInfo",new Object[]{sheetId,pageSize*page,pageSize});
         String[] arr=res.split("\\?");
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
+    }
+
+    public void s(){
+
+        String res= null;
+        try {
+            Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
+            res = runScript(reader,"getCommentInfo",new Object[]{"606149060",0,30});
+            String[] arr=res.split("\\?");
+            Log.i("log",res);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String runScript(Reader reader, String functionName, Object[] functionParams) throws IOException {

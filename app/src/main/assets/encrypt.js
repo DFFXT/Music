@@ -1119,7 +1119,65 @@ function aesPassEncod(jsonData) {
     };
     return jsonRet;
 };
-
+function aseP(e) {
+            var t = 1555962866;
+            var r = md5("baidu_taihe_music_secret_key" + t),
+            r = r.substr(8, 16),
+            n = r;
+            var i = [],
+            a = "";
+            for (var o in e) {
+                i.push(o)
+            }
+            i.sort();
+            for (var s = 0; s < i.length; s++) {
+                var o = i[s];
+                a += (s === 0 ? "": "&") + o + "=" + encodeURIComponent(e[o])
+            }
+            var c = {
+                stringify: function(e) {
+                    var t = {
+                        ct: e.ciphertext.toString(CryptoJS.enc.Base64)
+                    };
+                    if (e.iv) {
+                        t.iv = e.iv.toString()
+                    }
+                    if (e.salt) {
+                        t.s = e.salt.toString()
+                    }
+                    return t
+                },
+                parse: function(e) {
+                    var t = JSON.parse(e);
+                    var r = CryptoJS.lib.CipherParams.create({
+                        ciphertext: CryptoJS.enc.Base64.parse(t.ct)
+                    });
+                    if (t.iv) {
+                        r.iv = CryptoJS.enc.Hex.parse(t.iv)
+                    }
+                    if (t.s) {
+                        r.salt = CryptoJS.enc.Hex.parse(t.s)
+                    }
+                    return r
+                }
+            };
+            var o = CryptoJS.enc.Utf8.parse(r);
+            var n = CryptoJS.enc.Utf8.parse(r);
+            var u = CryptoJS.AES.encrypt(a, o, {
+                iv: n,
+                blockSize: 16,
+                mode: CryptoJS.mode.CBC,
+                format: c
+            });
+            var p = u.toString().ct;
+            var d = md5("baidu_taihe_music" + p + t);
+            var f = {
+                timestamp: t,
+                param: p,
+                sign: d
+            };
+            return f
+        }
 /**
  * 获取歌单信息，通过对id和时间的加密得到参数
  */
@@ -1138,3 +1196,20 @@ function getSheetInfo(sheetId,offset,size) {
     return obj.timestamp+"?"+obj.param+"?"+obj.sign;
     //return "http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo&timestamp="+obj.timestamp+"&param="+obj.param+"&sign="+obj.sign;
 }
+function getCommentInfo(songId,offset,size) {
+	var mdata={
+	    from:'web',
+	    offset:0,
+	    size:20,
+	    type:2,
+	    type_id:"606149060"
+	}
+    var obj=aseP(mdata);
+
+    return obj.timestamp+"?"+obj.param+"?"+obj.sign;
+
+    //http://music.taihe.com/data/tingapi/v1/restserver/ting?method=baidu.ting.ugccenter.checkFollRedPoint&timestamp=1555962866&param=mUp%2BObjywyJXGDlZrF%2Fpye8ff4xRlygi2DOBGR8SyAQ%3D&sign=e1cd239f4fda605206de83797f8ec0c5&from=web
+    //return "http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo&timestamp="+obj.timestamp+"&param="+obj.param+"&sign="+obj.sign;
+}
+
+
