@@ -21,8 +21,8 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     private String path;
     private int groupId;
     private int duration;
-    private int song_id;
-    private int album_id;
+    private String song_id;
+    private String album_id;
     private String album;
     private String suffix;//** "mp3"无.
     private long size;
@@ -141,19 +141,19 @@ public class Music extends DataSupport implements Cloneable,Serializable {
         this.duration = duration;
     }
 
-    public int getSong_id() {
-        return song_id;
+    public String getSong_id() {
+        return song_id==null?"":song_id;
     }
 
-    public void setSong_id(int song_id) {
+    public void setSong_id(String song_id) {
         this.song_id = song_id;
     }
 
-    public int getAlbum_id() {
+    public String getAlbum_id() {
         return album_id;
     }
 
-    public void setAlbum_id(int album_id) {
+    public void setAlbum_id(String album_id) {
         this.album_id = album_id;
     }
 

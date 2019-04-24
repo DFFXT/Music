@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.web.common.base.get
 import com.web.moudle.net.baseBean.BaseNetBean
 import com.web.moudle.songSheetEntry.bean.SongSheetInfoBox
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SongSheetViewModel:ViewModel() {
 
@@ -13,16 +16,19 @@ class SongSheetViewModel:ViewModel() {
 
 
     fun getSongSheetInfo(sheetId:String,page:Int){
-        model.getSongSheetInfo(sheetId,page)
-                .get(
-                        onNext = {
-                            songSheetInfo.value = it
-                        },
-                        onError = {
-                            it.printStackTrace()
-                            songSheetInfo.value=null
-                        }
-                )
+        GlobalScope.launch(Dispatchers.IO) {
+            model.getSongSheetInfo(sheetId,page)
+                    .get(
+                            onNext = {
+                                songSheetInfo.value = it
+                            },
+                            onError = {
+                                it.printStackTrace()
+                                songSheetInfo.value=null
+                            }
+                    )
+        }
+
 
 
     }

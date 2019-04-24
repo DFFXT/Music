@@ -86,6 +86,7 @@ class MusicDetailActivity : BaseActivity() {
                     //**获取歌词
                     model.getLyrics(res.songInfo.lrcLink)
                     val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
+                    music.song_id=id
                     music.imgAddress = res.songInfo.picSmall
                     music.lrcLink = res.songInfo.lrcLink
                     music.suffix = res.bitRate.format

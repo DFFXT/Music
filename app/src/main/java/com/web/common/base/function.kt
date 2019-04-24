@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
-import com.web.common.imageLoader.glide.GlideApp
+
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.ViewUtil
 import com.web.web.R
@@ -150,7 +151,7 @@ private fun View.mShowLoading(w: Int = 0, h: Int = 0) {
     var mLoadingView = loadingView
     if (mLoadingView == null) {
         mLoadingView = LayoutInflater.from(context).inflate(R.layout.layout_loading, null, false)
-        GlideApp.with(this).asGif().load(R.drawable.loading_gif).into((mLoadingView as ViewGroup).findViewById(R.id.iv_loadingGif))
+        Glide.with(this).asGif().load(R.drawable.loading_gif).into((mLoadingView as ViewGroup).findViewById(R.id.iv_loadingGif))
         loadingView = mLoadingView
     }
     val p = parent as ViewGroup

@@ -7,18 +7,20 @@ import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import androidx.annotation.FloatRange
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.web.common.base.MyApplication
 
 object ImageLoad {
     @JvmStatic
-    fun load(path:String?):GlideRequest<Drawable>{
-        return GlideApp.with(MyApplication.context).load(path).diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+    fun load(path:String?):RequestBuilder<Drawable>{
+        return Glide.with(MyApplication.context).load(path).diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .skipMemoryCache(false).centerCrop()
     }
     @JvmStatic
-    fun loadAsBitmap(path:String?):GlideRequest<Bitmap>{
-        return GlideApp.with(MyApplication.context).asBitmap().load(path).diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+    fun loadAsBitmap(path:String?):RequestBuilder<Bitmap>{
+        return Glide.with(MyApplication.context).asBitmap().load(path).diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .skipMemoryCache(false).centerCrop()
     }
     @JvmStatic
@@ -36,8 +38,8 @@ object ImageLoad {
         return out
     }
     @JvmStatic
-    fun loadBlur(bitmap: Bitmap,@FloatRange(from = 0.0,to = 25.0) radius:Float):GlideRequest<Drawable>{
-        return GlideApp.with(MyApplication.context).load(buildBlurBitmap(bitmap,radius = radius)).diskCacheStrategy(DiskCacheStrategy.NONE)
+    fun loadBlur(bitmap: Bitmap,@FloatRange(from = 0.0,to = 25.0) radius:Float):RequestBuilder<Drawable>{
+        return Glide.with(MyApplication.context).load(buildBlurBitmap(bitmap,radius = radius)).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
     }
 }

@@ -94,6 +94,15 @@ public class ViewUtil {
         }
         valueAnimator.start();
     }
+    public static void animator(View v, float from, float to, int duration, ValueAnimator.AnimatorUpdateListener updateListener, Animator.AnimatorListener animatorListener){
+        ValueAnimator valueAnimator=ValueAnimator.ofFloat(from,to)
+                .setDuration(duration);
+        valueAnimator.addUpdateListener(updateListener);
+        if(animatorListener!=null){
+            valueAnimator.addListener(animatorListener);
+        }
+        valueAnimator.start();
+    }
 
 
 }

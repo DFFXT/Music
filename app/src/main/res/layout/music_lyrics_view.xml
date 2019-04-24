@@ -188,6 +188,24 @@
             android:foreground="?android:attr/selectableItemBackground"
             />
     </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_musicControl">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/three_h_line"
+            android:tint="@color/themeColor"
+            android:padding="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            />
+    </androidx.cardview.widget.CardView>
 
 
     <include
@@ -197,5 +215,20 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
+    <FrameLayout
+        android:id="@+id/layout_commentBox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        android:visibility="gone"
+        android:background="@color/transparentWhite">
+        <include
+            android:id="@+id/layout_comment"
+            layout="@layout/fragment_comment"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="bottom"
+            />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

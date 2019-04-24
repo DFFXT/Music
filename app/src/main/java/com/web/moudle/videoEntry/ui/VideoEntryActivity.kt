@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
 import android.view.SurfaceHolder
 import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +16,7 @@ import com.web.common.base.BaseActivity
 import com.web.common.base.MyApplication
 import com.web.common.base.errorClickLinsten
 import com.web.common.base.showError
+import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.config.Shortcut
@@ -67,8 +69,12 @@ class VideoEntryActivity : BaseActivity() {
                 return@Observer
             }
             url = it
-            player.setDataSource(it)
-            player.prepareAsync()
+            try {
+                player.setDataSource(it)
+                player.prepareAsync()
+            }catch (e:Exception){
+                MToast.showToast(this,R.string.unkownError)
+            }
             //vv_video.setVideoURI(Uri.parse(it))
         })
 
@@ -153,18 +159,22 @@ class VideoEntryActivity : BaseActivity() {
     private fun sizeChanged(){
         val width=MyApplication.context.resources.displayMetrics.widthPixels
         val height=MyApplication.context.resources.displayMetrics.heightPixels
-        val vvW: Int
-        val vvH: Int
-        if(width<height){//**横屏
-            vvW=width
-            vvH=player.videoHeight*width/player.videoWidth
+        var vvW: Float
+        val vvH: Float
+        if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE){//**横屏
+            vvW=player.videoWidth*width.toFloat()/player.videoHeight
+            if(vvW>height){
+                vvW=ViewGroup.LayoutParams.WRAP_CONTENT.toFloat()
+            }
+
+            vvH=width.toFloat()
         }else{
-            vvH=height
-            vvW=player.videoWidth*height/player.videoHeight
+            vvH=player.videoHeight*width.toFloat()/player.videoWidth
+            vvW=width.toFloat()
         }
         val lp=vv_video.layoutParams
-        lp.width=vvW
-        lp.height=vvH
+        lp.width=vvW.toInt()
+        lp.height=vvH.toInt()
         vv_video.layoutParams=lp
     }
 
@@ -219,6 +229,7 @@ class VideoEntryActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FINISH) {
             finish()
         }

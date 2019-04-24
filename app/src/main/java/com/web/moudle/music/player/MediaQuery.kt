@@ -67,10 +67,8 @@ object MediaQuery {
                             music.suffix=out[0]!!.substring(lastIndex+1)
                             index = cursor.getColumnIndex("duration")
                             music.duration = cursor.getInt(index)
-                            index = cursor.getColumnIndex("_id")
-                            music.song_id = cursor.getInt(index)
                             index = cursor.getColumnIndex("album_id")
-                            music.album_id = cursor.getInt(index)
+                            music.album_id = cursor.getInt(index).toString()
                             index = cursor.getColumnIndex("album")
                             music.album = cursor.getString(index)
 
