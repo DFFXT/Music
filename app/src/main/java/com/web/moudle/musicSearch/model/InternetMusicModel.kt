@@ -12,10 +12,7 @@ import io.reactivex.Observable
 
 class InternetMusicModel : BaseRetrofit() {
 
-    private val pageSize=30
-    fun search(keyword: String){
-
-    }
+    var pageSize=30
 
 
     fun search(keyword: String, page: Int, pageSize: Int): Observable<SearchResultBd> {

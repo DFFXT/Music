@@ -19,6 +19,7 @@ open class BasePopupWindow @JvmOverloads constructor (
         maxHeight:Int=ViewGroup.LayoutParams.WRAP_CONTENT) {
 
     private val popupWindow: PopupWindow = PopupWindow(width, height)
+    private var enableWindowDark=true
     var dismissCallback:(()->Unit)?=null
     init {
         val viewGroup=MyViewGroup(ctx)
@@ -35,6 +36,9 @@ open class BasePopupWindow @JvmOverloads constructor (
         }
     }
 
+    fun enableWindowDark(enable:Boolean){
+        enableWindowDark=enable
+    }
 
     fun enableTouchDismiss(touchDismiss: Boolean):BasePopupWindow{
         if (!touchDismiss) {
@@ -65,6 +69,7 @@ open class BasePopupWindow @JvmOverloads constructor (
     }
 
     private fun applyWindowDarkAlpha(from: Float, to: Float, duration: Int) {
+        if(!enableWindowDark)return
         val window = (ctx as Activity).window
         val lp = window.attributes
         val animator = ValueAnimator.ofFloat(from, to)

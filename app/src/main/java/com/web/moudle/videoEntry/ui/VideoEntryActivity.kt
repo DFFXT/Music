@@ -20,11 +20,15 @@ import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.config.Shortcut
+import com.web.moudle.songSheetEntry.adapter.JSEngine
 import com.web.moudle.videoEntry.bean.VideoInfoBox
 import com.web.moudle.videoEntry.model.VideoViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_video_entry.*
 import kotlinx.android.synthetic.main.layout_video_control.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -192,7 +196,7 @@ class VideoEntryActivity : BaseActivity() {
     }
 
     private var preClickTime = 0L
-    private fun toggleShow(forceShow:Boolean?=false) {
+    private fun toggleShow() {
         if (g_controlGroup.visibility != View.VISIBLE) {
             g_controlGroup.visibility = View.VISIBLE
             preClickTime = System.currentTimeMillis()

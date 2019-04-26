@@ -32,18 +32,16 @@ public class SettingActivity extends BaseActivity {
         TextWithDrawable twd_checkUpdate = findViewById(R.id.twd_checkUpdate);
         twd_lockScreen.setOnClickListener(v -> LockScreenSettingActivity.Companion.actionStart(this));
         twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
-        twd_lyrics.setOnClickListener(v-> LyricsSettingActivity.actionStart(this));
+        twd_lyrics.setOnClickListener(v -> LyricsSettingActivity.actionStart(this));
         twd_checkUpdate.setText(ResUtil.getString(R.string.setting_checkUpdate, Apk.getVersionName()));
-        twd_checkUpdate.setOnClickListener(v ->Apk.checkUpdate(this,v));
+        twd_checkUpdate.setOnClickListener(v -> Apk.checkUpdate(this, v));
 
-        findViewById(R.id.twd_cacheSetting).setOnClickListener(v-> CacheActivity.actionStart(this));
+        findViewById(R.id.twd_cacheSetting).setOnClickListener(v -> CacheActivity.actionStart(this));
 
 
-
-        findViewById(R.id.twd_about).setOnClickListener(v-> AboutActivity.actionStart(this));
+        findViewById(R.id.twd_about).setOnClickListener(v -> AboutActivity.actionStart(this));
 
     }
-
 
 
     public static void actionStart(Context context) {

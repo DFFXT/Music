@@ -43,11 +43,12 @@ public class JSEngine{
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 
-    public SongSheetRequestParams getComment(String songId, int offset,int pageSize) throws IOException {
+    public SongSheetRequestParams getComment(String songId, int offset,int pageSize,int type) throws IOException {
         Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
-        String res=runScript(reader,"getCommentListByType",new Object[]{songId,offset,pageSize});
+        String res=runScript(reader,"getCommentListByType",new Object[]{songId,offset,pageSize,type});
         String[] arr=res.split("\\?");
         reader.close();
+
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 

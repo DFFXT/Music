@@ -52,6 +52,16 @@
         app:layout_constraintTop_toBottomOf="@id/card_artistIcon"
         app:layout_constraintBottom_toTopOf="@id/layout_musicControl">
     </com.web.moudle.lyrics.LyricsView>
+    <ImageView
+        android:id="@+id/iv_searchLyrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_search"
+        android:tint="@color/themeColor"
+        app:layout_constraintStart_toStartOf="@id/lv_lyrics"
+        app:layout_constraintBottom_toBottomOf="@id/lv_lyrics"
+        app:layout_constraintTop_toTopOf="@id/lv_lyrics"
+        app:layout_constraintEnd_toEndOf="@id/lv_lyrics"/>
     <com.web.misc.TopBarLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"

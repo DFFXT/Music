@@ -1061,7 +1061,8 @@ if (typeof JSON !== "object") {
 } ());
 
 function aesPassEncod(jsonData) {
-    var timestamp = Math.floor(new Date().getTime() / 1000);
+    //var timestamp = Math.floor(new Date().getTime() / 1000);
+    var timestamp = 1556188464;
     var privateKey = md5('baidu_taihe_music_secret_key' + timestamp),
     privateKey = privateKey.substr(8, 16),
     iv = privateKey;
@@ -1138,12 +1139,12 @@ function getSheetInfo(sheetId,offset,size) {
     return obj.timestamp+"?"+obj.param+"?"+obj.sign;
     //return "http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo&timestamp="+obj.timestamp+"&param="+obj.param+"&sign="+obj.sign;
 }
-function getCommentListByType(songId,offset,size) {
+function getCommentListByType(songId,offset,size,type) {
 	var mdata={
 	    from:'web',
 	    offset:offset,
 	    size:size,
-	    type:2,
+	    type:type,
 	    type_id:songId
 	}
     var obj=aesPassEncod(mdata);

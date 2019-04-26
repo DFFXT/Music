@@ -56,6 +56,7 @@ class LyricsActivity : BaseActivity() {
     private var connect: MusicPlay.Connect? = null
     private var visualizer:Visualizer?=null
     private val list = ArrayList<LyricsLine>()
+    private var lyricsPlug:LyricsSearchPlug?=null
     private var connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
 
@@ -160,6 +161,7 @@ class LyricsActivity : BaseActivity() {
             }
         }
     }
+
 
     override fun enableSwipeToBack(): Boolean =true
 
@@ -282,6 +284,14 @@ class LyricsActivity : BaseActivity() {
 
         }
 
+        iv_searchLyrics.setOnClickListener {
+            if(connect?.config?.music==null)return@setOnClickListener
+            if(lyricsPlug==null){
+                lyricsPlug= LyricsSearchPlug(this)
+            }
+            lyricsPlug?.showCenter(rootView,connect!!.config.music)
+        }
+
 
 
 
@@ -352,12 +362,15 @@ class LyricsActivity : BaseActivity() {
         if (Shortcut.fileExsist(music.lyricsPath)) {//---存在歌词
             val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(music.lyricsPath))
             list.addAll(lyricsAnalysis.lyrics)
+            iv_searchLyrics.visibility=View.GONE
         } else {//**没找到歌词
-            val line = LyricsLine()
+            /*val line = LyricsLine()
             line.time = 0
             line.line = ResUtil.getString(R.string.lyrics_noLyrics)
-            list.add(line)
+            list.add(line)*/
+            iv_searchLyrics.visibility=View.VISIBLE
         }
+
         lv_lyrics!!.lyrics = list
     }
 
