@@ -1,11 +1,6 @@
 package com.web.moudle.music.page.local;
 
 import android.animation.ValueAnimator;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -33,7 +28,6 @@ import com.web.web.R;
 import net.sourceforge.pinyin4j.PinyinHelper;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,6 +158,10 @@ public class MusicListPage extends BaseMusicPage {
             if (!text.equals(music.getMusicName()) && music.rename(text, music.getSinger())) {
                 adapter.notifyItemChanged(index);
                 tv_abPath.setText(music.getPath());
+                //**修改的是当前音乐需要重新load
+                if(music==connect.getConfig().getMusic()){
+                    connect.dispatchLoad();
+                }
             }
             return music.getMusicName();
         });
@@ -173,6 +171,10 @@ public class MusicListPage extends BaseMusicPage {
         ii_artist.setListenerSave(text -> {
             if (!text.equals(music.getSinger()) && music.rename(music.getMusicName(), text)) {
                 adapter.notifyItemChanged(index);
+                //**修改的是当前音乐需要重新load
+                if(music==connect.getConfig().getMusic()){
+                    connect.dispatchLoad();
+                }
                 tv_abPath.setText(music.getPath());
             }
             return music.getSinger();

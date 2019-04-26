@@ -24,8 +24,8 @@ data class SimpleMusicInfo(
         val hasFilmTv:String?=null,
         @JSONField(name = "has_mv")
         val hasMV:Int,
-        /*@JSONField(name = "lrclink")
-        val lrcLink:String,*/
+        @JSONField(name = "lrclink")
+        val lrcLink:String?=null,
         @JSONField(name = "pic_small")
         val picSmall:String?,
         @JSONField(name = "si_proxycompany")

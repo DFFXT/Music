@@ -521,6 +521,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         public void getPlayerInfo(LifecycleOwner owner) {
             disPatchMusicInfo(owner);
         }
+        public void dispatchLoad(){
+            play.load(groupIndex,childIndex,config.getMusic(),getDuration());
+        }
 
         public PlayerConfig getConfig() {
             return config;

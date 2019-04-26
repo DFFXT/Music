@@ -106,6 +106,9 @@ public class Music extends DataSupport implements Cloneable,Serializable {
         }
         File file=new File(path);
         File newFile=new File(Shortcut.createPath(musicName,singer,suffix));
+
+        File lyricsFile=new File(getLyricsPath());
+
         Music newMusic=this.copy();
         newMusic.setMusicName(musicName);
         newMusic.setSinger(singer);
@@ -121,6 +124,11 @@ public class Music extends DataSupport implements Cloneable,Serializable {
             setMusicName(musicName);
             setSinger(singer);
             setPath(newMusic.path);
+            File newLyricsFile=new File(getLyricsPath());
+            //**歌词路径修改
+            if(lyricsFile.exists()){
+                lyricsFile.renameTo(newLyricsFile);
+            }
             update(id);
         }else{
             MToast.showToast(MyApplication.context, R.string.renameFailed);

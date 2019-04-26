@@ -12,13 +12,30 @@ import com.web.web.R
  * 仅仅是单一text展示，没有其他功能
  */
 open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
+    var selectIndex=-1
+    var selectRender:((holder:BaseViewHolder,index:Int)->Unit)?=null
+    var commonRender:((holder:BaseViewHolder,index:Int)->Unit)?=null
     var itemClickListener:((Int)->Unit)?=null
     private val padding=ViewUtil.dpToPx(10f)
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String?) {
         (holder.itemView as TextView).text = item
+        if(position==selectIndex){
+            selectRender?.invoke(holder,position)
+        }else{
+            commonRender?.invoke(holder,position)
+        }
         holder.itemView.setPadding(padding,padding,padding,padding)
         holder.itemView.setOnClickListener {
             itemClickListener?.invoke(position)
+            if(selectIndex>=0){
+                val pre=selectIndex
+                notifyItemChanged(pre)
+            }
+            if(selectRender!=null){
+                selectIndex=position
+                notifyItemChanged(position)
+            }
+
         }
     }
 
@@ -28,5 +45,9 @@ open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
 
     override fun getItemViewType(position: Int): Int {
         return position
+    }
+
+    fun reset(){
+        selectIndex=-1
     }
 }

@@ -9,6 +9,7 @@ import com.web.config.Shortcut
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
+import com.web.moudle.net.retrofit.SchedulerTransform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ class DetailMusicViewModel : ViewModel() {
 
     fun getDetail(songId: String) {
         model.getMusicDetail(songId)
+                .compose(SchedulerTransform())
                 .get(
                         onNext = {res->
                             detailMusicWrapper.code= LiveDataWrapper.CODE_OK

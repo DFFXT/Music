@@ -55,6 +55,7 @@
 
 	<string name="updata">web有更新</string>
 	<string name="downloadYes">下载成功</string>
+	<string name="downloadFailed">下载失败</string>
 	<string name="updataYes">更新成功</string>
 
 	<string name="local">本地</string>

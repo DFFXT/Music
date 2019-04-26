@@ -19,7 +19,7 @@ class MusicDetailModel:BaseRetrofit() {
     fun getMusicDetail(songId:String):Observable<MusicDetailInfo>{
         return obtainClass(NetApis.SongEntry::class.java)
                 .getMusicDetail(songId)
-                .compose(SchedulerTransform())
+
     }
     fun getLyrics(lrcLink:String):Single<ArrayList<LyricsLine>>{
         return Single.create<ArrayList<LyricsLine>> {

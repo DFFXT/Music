@@ -267,6 +267,9 @@ class LyricsActivity : BaseActivity() {
             LyricsSettingActivity.setLyricsFocusColor(nextColor)
             lv_lyrics.setTextFocusColor(nextColor)
         }
+        iv_lyricsSelect.setOnClickListener {
+            iv_searchLyrics.performClick()
+        }
         iv_share.setOnClickListener {
             if(connect==null)return@setOnClickListener
             val intent=Intent(Intent.ACTION_SEND)
@@ -287,7 +290,7 @@ class LyricsActivity : BaseActivity() {
         iv_searchLyrics.setOnClickListener {
             if(connect?.config?.music==null)return@setOnClickListener
             if(lyricsPlug==null){
-                lyricsPlug= LyricsSearchPlug(this)
+                lyricsPlug= LyricsSearchPlug(this,connect!!)
             }
             lyricsPlug?.showCenter(rootView,connect!!.config.music)
         }

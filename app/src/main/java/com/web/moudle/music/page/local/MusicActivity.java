@@ -279,7 +279,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             if (path != null) {
                 File file = new File(path);
                 String name = file.getName();
-                String out[] = new String[2];
+                String[] out = new String[2];
                 Shortcut.getName(out, name);
                 Music music = new Music(out[0], out[1], path);
                 connect.playLocal(music);
@@ -560,6 +560,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         if (resultCode != RESULT_OK) return;
         if (data == null) return;
         if (requestCode == RESULT_CODE_SEARCH) {
