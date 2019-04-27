@@ -16,12 +16,16 @@ import com.web.web.R
 class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherSong>?):BaseAdapter<OtherSong>(list) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: OtherSong?) {
         if(item==null)return
-        if(TextUtils.isEmpty(item.version)){
-            holder.bindText(R.id.tv_albumName,item.title)
-        }else{
-            holder.bindText(R.id.tv_albumName,item.title+" - "+item.version)
-        }
+        holder.bindText(R.id.tv_albumName,item.title)
         holder.bindText(R.id.tv_duration,ResUtil.timeFormat("mm:ss",item.duration.toLong()*1000))
+
+        if(TextUtils.isEmpty(item.info)){
+            holder.bindText(R.id.tv_subTitle,item.author)
+        }else{
+            holder.bindText(R.id.tv_subTitle,item.author+" - "+item.info)
+        }
+
+
         val mv=holder.findViewById<View>(R.id.tv_hasMv)
         if(item.hasMv==0){
             mv.visibility=View.GONE

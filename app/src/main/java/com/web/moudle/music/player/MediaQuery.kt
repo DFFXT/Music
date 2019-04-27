@@ -123,11 +123,6 @@ object MediaQuery {
                 }
                 musicList.add(group)
             }
-            for (ml in musicList) {
-                ml.musicList.sortWith(Comparator { m1, m2 ->
-                    return@Comparator ChineseComparator.compare(m1.musicName,m2.musicName)
-                })
-            }
             launch(Dispatchers.Main) {
                 callback(musicList)
             }

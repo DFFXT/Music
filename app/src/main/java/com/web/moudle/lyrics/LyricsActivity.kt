@@ -5,11 +5,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Outline
 import android.graphics.drawable.BitmapDrawable
 import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewOutlineProvider
+import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -57,6 +60,7 @@ class LyricsActivity : BaseActivity() {
     private var visualizer:Visualizer?=null
     private val list = ArrayList<LyricsLine>()
     private var lyricsPlug:LyricsSearchPlug?=null
+    private var commentDialog:CommentDialog?=null
     private var connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
 
@@ -188,7 +192,10 @@ class LyricsActivity : BaseActivity() {
 
 
         card_comment.setOnClickListener {
-            showComment()
+            if(commentDialog==null){
+                commentDialog= CommentDialog(this,connect!!)
+            }
+            commentDialog?.show()
         }
 
 
@@ -196,7 +203,7 @@ class LyricsActivity : BaseActivity() {
             val m= (connect?.config?.music ?: return@setOnClickListener) as? InternetMusicForPlay
                     ?: return@setOnClickListener
             val im=InternetMusicDetail(
-                    "",
+                    m.song_id,
                     m.musicName,
                     m.singer,
                     null,
@@ -303,16 +310,6 @@ class LyricsActivity : BaseActivity() {
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
 
-
-
-        addKeyEventListener {
-            if(it.keyCode==KeyEvent.KEYCODE_BACK&&layout_commentBox.visibility==View.VISIBLE){
-                hideComment()
-                return@addKeyEventListener true
-            }
-            return@addKeyEventListener false
-        }
-
     }
     private fun getNextLyricsColor(currentColor:Int):Int{
         var index=0
@@ -377,81 +374,6 @@ class LyricsActivity : BaseActivity() {
         lv_lyrics!!.lyrics = list
     }
 
-
-    private var songId=""
-    private var page:Int=0
-    private var pageSize=30
-    private var model: DetailMusicViewModel?=null
-    private val commentList=ArrayList<CommentItem>()
-    private val adapter= CommentAdapter(commentList)
-    private fun showComment(){
-        if(model==null){
-            model=ViewModelProviders.of(this)[DetailMusicViewModel::class.java]
-            layout_commentBox.setOnClickListener {
-                hideComment()
-            }
-            initView(layout_comment!!)
-        }
-        if(songId!=connect!!.config!!.music.song_id){
-            page=0
-            commentList.clear()
-            adapter.notifyDataSetChanged()
-            songId=connect!!.config!!.music.song_id
-            model?.getComment(songId,page,pageSize)
-            layout_commentBox.visibility=View.VISIBLE
-            rootView.post {
-                layout_comment!!.rv_comment.showLoading()
-            }
-        }
-
-        layout_commentBox.visibility=View.VISIBLE
-        ViewUtil.animator(layout_comment,
-                0f,1f,400, {
-            layout_commentBox!!.alpha=it.animatedValue as Float
-        },null)
-    }
-    private fun initView(rootView: View) {
-        model?.comment?.observe(this, Observer {
-            if(it==null)return@Observer
-            when(it.code){
-                LiveDataWrapper.CODE_OK->{
-                    page++
-                    rootView.tv_commentNum.text=ResUtil.getString(R.string.commentNum,it.value.commentlist_last_nums)
-                    if(it.value.commentlist_hot!=null){
-                        commentList.addAll(it.value.commentlist_hot)
-                    }
-                    if(it.value.commentlist_last!=null){
-                        commentList.addAll(it.value.commentlist_last)
-                    }
-                    adapter.notifyDataSetChanged()
-                    layout_comment!!.rv_comment.showContent()
-                }
-                LiveDataWrapper.CODE_NO_DATA->{
-                    rootView.tv_commentNum.text=getString(R.string.commentNum,"0")
-                    layout_comment.rv_comment.showError(getString(R.string.noData))
-                }
-                LiveDataWrapper.CODE_ERROR->{
-                    layout_comment!!.rv_comment.showError()
-                }
-            }
-        })
-        rootView.rv_comment.layoutManager= LinearLayoutManager(rootView.context)
-        rootView.rv_comment.adapter=adapter
-        rv_comment.addItemDecoration(
-                DrawableItemDecoration(ViewUtil.dpToPx(10f),0,ViewUtil.dpToPx(10f),2,
-                        RecyclerView.VERTICAL,getDrawable(R.drawable.recycler_divider)))
-
-    }
-    private fun hideComment(){
-        ViewUtil.animator(layout_comment,layout_comment!!.top,
-                ViewUtil.screenHeight(),400, {
-                    layout_comment!!.top=it.animatedValue as Int
-                },object :BaseAnimatorListener(){
-            override fun onAnimationEnd(animation: Animator) {
-                layout_commentBox.visibility=View.GONE
-            }
-        })
-    }
 
 
 

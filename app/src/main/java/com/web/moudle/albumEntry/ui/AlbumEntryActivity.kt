@@ -75,7 +75,7 @@ class AlbumEntryActivity : BaseActivity() {
 
         val manager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_albumList.layoutManager=manager
-        rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,bottom = 20,drawable = getDrawable(R.drawable.dash_line_1px)!!))
+        rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = RecyclerView.VERTICAL,bottom = 2,drawable = getDrawable(R.drawable.recycler_divider)!!))
         loadData()
     }
 

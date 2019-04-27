@@ -58,4 +58,52 @@
         <item>道谢说得腼腆</item>
         <item>骤雨停了你就这样越走越远</item>
     </string-array>
+
+
+
+    <string-array name="artistType_name">
+        <item>华语男歌手</item>
+        <item>华语女歌手</item>
+        <item>华语组合</item>
+        <item>欧美男歌手</item>
+        <item>欧美女歌手</item>
+        <item>欧美组合</item>
+        <item>韩国男歌手</item>
+        <item>韩国女歌手</item>
+        <item>韩国组合</item>
+        <item>日本男歌手</item>
+        <item>日本女歌手</item>
+        <item>日本组合</item>
+        <item>其他歌手</item>
+    </string-array>
+    <integer-array name="artistType_areaCode">
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>3</item>
+        <item>3</item>
+        <item>3</item>
+        <item>7</item>
+        <item>7</item>
+        <item>7</item>
+        <item>60</item>
+        <item>60</item>
+        <item>60</item>
+        <item>5</item>
+    </integer-array>
+    <integer-array name="artistType_sexCode">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>0</item>
+    </integer-array>
 </resources>

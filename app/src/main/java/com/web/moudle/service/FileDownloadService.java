@@ -420,10 +420,7 @@ public class FileDownloadService extends Service {
         downloadList.remove(dm);
         completeList.add(0, dm);
         listChange();
-        Intent intent = new Intent(this, MusicPlay.class);
-        intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);
-        intent.putExtra("path", dm.getInternetMusicDetail().getPath());
-        startService(intent);
+        MusicPlay.musicDownloadComplete(this,dm.getInternetMusicDetail().getPath());
 
         //***添加进媒体库
         Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

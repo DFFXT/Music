@@ -20,6 +20,7 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
 import com.web.common.base.BaseSingleObserver;
+import com.web.common.base.ChineseComparator;
 import com.web.common.base.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
@@ -48,6 +49,8 @@ import org.litepal.crud.DataSupport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -837,6 +840,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 Music music = DataSupport.where("path=?",
                         intent.getStringExtra("path")).findFirst(Music.class);
                 musicList.get(0).add(music);
+                sort();
                 musicListChange();
             }
             break;
@@ -924,6 +928,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         MediaQuery.getLocalList((res) -> {
             musicList.clear();
             musicList.addAll(res);
+            sort();
             if(musicList.get(0).size()==0&&MediaQuery.needScan()){//**没有扫描媒体库
                 scanMusicMedia();
             }else{
@@ -933,6 +938,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             return null;
         });
 
+    }
+    private void sort(){
+        for (MusicList<Music> ml : musicList) {
+            Collections.sort(ml.getMusicList(), (m1, m2) -> ChineseComparator.INSTANCE.compare(m1.getMusicName(),m2.getMusicName()));
+        }
     }
 
     @UiThread
@@ -976,6 +986,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     public static void floatWindowChange(Context ctx){
         Intent intent = new Intent(ctx, MusicPlay.class);
         intent.setAction(MusicPlay.ACTION_FLOAT_WINDOW_CHANGE);
+        ctx.startService(intent);
+    }
+
+    public static void musicDownloadComplete(Context ctx,String path){
+        Intent intent = new Intent(ctx, MusicPlay.class);
+        intent.setAction(MusicPlay.ACTION_DOWNLOAD_COMPLETE);
+        intent.putExtra("path", path);
         ctx.startService(intent);
     }
 }

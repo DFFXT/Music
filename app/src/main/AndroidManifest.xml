@@ -137,6 +137,8 @@
         <activity android:name="com.web.moudle.setting.cache.CacheActivity" />
         <activity android:name="com.web.moudle.setting.chooser.LocalChooserActivity" />
         <activity android:name="com.web.moudle.setting.lyrics.LyricsSettingActivity" />
+        <activity android:name="com.web.moudle.artist.AllArtistActivity" />
+        <activity android:name="com.web.moudle.artist.ArtistTypeActivity" />
 
     </application>
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.web.misc.TopBarLayout
+        android:id="@+id/topBar"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/themeColor"
+        app:topBar_startImage="@drawable/icon_back_black"
+        app:topBar_tint="@color/white"
+        app:topBar_mainTitleColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:topBar_mainTitleText="@string/hotArtist"
+        />
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/srl_artist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srlEnableRefresh="false"
+        app:layout_constraintTop_toBottomOf="@id/topBar">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

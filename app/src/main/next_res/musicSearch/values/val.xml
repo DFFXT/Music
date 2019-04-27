@@ -11,5 +11,7 @@
     <string name="sheetCreateTime">创建时间：</string>
     <string name="playCount">播放：</string>
 
+    <string name="hotArtist">热门歌手</string>
+
 
 </resources>

@@ -7,6 +7,7 @@ public class LiveDataWrapper<T> {
     public final static int CODE_OK=999;
     public final static int CODE_ERROR=998;
     public final static int CODE_NO_DATA=997;
+    public final static int CODE_NO_MORE=996;
 
     public int getCode() {
         return code;

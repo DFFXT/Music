@@ -3,5 +3,6 @@
     android:id="@+id/textView"
     android:textColor="@color/textColor_3"
     android:textSize="@dimen/textSize_normal"
+    android:foreground="?android:selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>

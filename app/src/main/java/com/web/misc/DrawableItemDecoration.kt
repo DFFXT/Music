@@ -3,17 +3,18 @@ package com.web.misc
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * RecyclerView添加底部或者右部间隔和分割图
  */
-class DrawableItemDecoration(left:Int=0,private val top:Int=0,private val right:Int=0,private val bottom:Int=0,private val orientation: Int, private var drawable: Drawable?) : GapItemDecoration(
+class DrawableItemDecoration(left:Int=0, private val top:Int=0, private val right:Int=0, private val bottom:Int=0, private val orientation: Int?=RecyclerView.VERTICAL, private var drawable: Drawable?) : GapItemDecoration(
         left,
         top,
         right,
         bottom
 ){
-    override fun onDraw(c: Canvas, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
+    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDraw(c, parent, state)
         val parentLeft = parent.paddingLeft
         val parentRight = parent.width - parent.paddingRight
@@ -21,7 +22,7 @@ class DrawableItemDecoration(left:Int=0,private val top:Int=0,private val right:
         val parentBottom = parent.height - parent.paddingBottom
         if(orientation==LinearLayout.VERTICAL){
             for(index in 0 until parent.childCount){
-                val lp=parent.getChildAt(index).layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
+                val lp=parent.getChildAt(index).layoutParams as RecyclerView.LayoutParams
                 val top=parent.getChildAt(index).bottom + lp.bottomMargin
                 drawable?.setBounds(parentLeft,top,parentRight,top+this.bottom)
 

@@ -68,6 +68,15 @@ class RecommendViewState extends State<RecommendView> {
                     onTapUp: (d) {
                       channel.invokeMethod("billboard");
                     },
+                  ),
+                  GestureDetector(
+                    child: Container(
+                        child: MText("歌手",size: 20,weight: FontWeight.bold),
+                        padding: EdgeInsets.all(10)
+                    ),
+                    onTapUp: (d) {
+                      channel.invokeMethod("actionsStart_AllArtistActivity");
+                    },
                   )
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
