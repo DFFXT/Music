@@ -139,6 +139,7 @@
         <activity android:name="com.web.moudle.setting.lyrics.LyricsSettingActivity" />
         <activity android:name="com.web.moudle.artist.AllArtistActivity" />
         <activity android:name="com.web.moudle.artist.ArtistTypeActivity" />
+        <activity android:name="com.web.moudle.home.HomePageActivity" />
 
     </application>
 

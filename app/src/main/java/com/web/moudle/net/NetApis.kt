@@ -8,6 +8,7 @@ import com.web.moudle.artist.bean.ArtistBox
 import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.billboradDetail.bean.NetMusicBox
 import com.web.moudle.billboradDetail.bean.RecommendMusicBox
+import com.web.moudle.home.video.bean.VideoRecommendBox
 import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicSearch.bean.RowMusicData
@@ -201,6 +202,11 @@ class NetApis {
 
         @GET
         fun getMvUrl(@Url fakeUrl: String): Call<Any>
+    }
+
+    interface HomePage{
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.2.0&channel=Android_webappbanner&operator=0&method=baidu.ting.plaza.recommIndex&project=daily&column_id=1&feed_data=1&show_recommend_mv=0")
+        fun getRecommendVideo():Observable<VideoRecommendBox>
     }
 
     interface Global{

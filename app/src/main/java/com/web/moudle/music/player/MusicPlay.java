@@ -77,6 +77,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     public final static String ACTION_ClEAR_ALL_MUSIC = "clearAllMusic";
     public final static String ACTION_LOCKSCREEN = "ACTION_OpenLockScreen";
     public final static String ACTION_FLOAT_WINDOW_CHANGE = "ACTION_FLOAT_WINDOW_CHANGE";
+    public final static String ACTION_SCAN = "ACTION_SCAN";
 
     public final static String COMMAND_GET_CURRENT_POSITION = "getCurrentPosition";
     public final static String COMMAND_GET_STATUS = "getStatus";
@@ -871,6 +872,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             break;
             case ACTION_FLOAT_WINDOW_CHANGE:{
                 lyricsFloatWindowChange();
+            }break;
+            case ACTION_SCAN:{
+                scanMusicMedia();
             }
         }
         return START_NOT_STICKY;
@@ -960,6 +964,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             return null;
         });
 
+    }
+
+
+    public static void scan(Context context){
+        Intent intent=new Intent(context,MusicPlay.class);
+        intent.setAction(ACTION_SCAN);
+        context.startService(intent);
     }
 
 

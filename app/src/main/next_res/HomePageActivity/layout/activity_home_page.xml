@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fragment_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_tab">
+        <!--<fragment
+            android:id="@+id/fragment_main"
+            android:tag="fragment_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.web.moudle.home.local.LocalFragment">
+        </fragment>-->
+    </FrameLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/layout_tab"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <FrameLayout
+            android:id="@+id/layout_overAll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/iv_home"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:tint="@color/textColor_9"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_home"/>
+            <TextView
+                android:id="@+id/tv_home"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize_small"
+                android:textColor="@color/textColor_6"
+                android:text="@string/page_primary"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/layout_video"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/iv_video"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:tint="@color/textColor_9"
+                android:src="@drawable/icon_video"/>
+            <TextView
+                android:id="@+id/tv_video"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize_small"
+                android:textColor="@color/textColor_6"
+                android:text="@string/page_video"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/layout_local"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/iv_local"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:tint="@color/textColor_9"
+                android:src="@drawable/icon_local"/>
+            <TextView
+                android:id="@+id/tv_local"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize_small"
+                android:textColor="@color/textColor_6"
+                android:text="@string/local"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import com.web.data.MusicList
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
 import com.web.common.base.PlayerObserver
+import com.web.moudle.home.HomePageActivity
 
 /**
  * logo界面
@@ -31,7 +32,8 @@ class HelloActivity : BaseActivity() {
     private val observer = object : PlayerObserver() {
         override fun musicListChange(group: Int,child:Int,list: MutableList<MusicList<Music>>?) {
             connect?.removeObserver(this@HelloActivity)
-            MusicActivity.actionStartForResult(this@HelloActivity, code)
+           // MusicActivity.actionStartForResult(this@HelloActivity, code)
+            HomePageActivity.actionStart(this@HelloActivity)
         }
     }
 
@@ -62,6 +64,7 @@ class HelloActivity : BaseActivity() {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode,resultCode,data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == code) {
                 finish()

@@ -34,9 +34,14 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 
+/**
+ * 加载视频
+ * 如果是传入的 id 就用id获取路径，如果路径是爱奇艺网页版，就跳转到网页
+ * 如果传入的是路径，就直接播放
+ */
 class VideoEntryActivity : BaseActivity() {
-    private lateinit var videoId: String
-    private lateinit var songId:String
+    private var videoId: String?=null
+    private var songId:String?=null
     override fun getLayoutId(): Int = R.layout.activity_video_entry
     private lateinit var model: VideoViewModel
     private val FINISH = 1
@@ -53,6 +58,10 @@ class VideoEntryActivity : BaseActivity() {
         })
         videoId = intent.getStringExtra(INTENT_DATA)
         songId = intent.getStringExtra(SONG_ID)
+        val mUrl=intent.getStringExtra(VIDEO_PATH)
+        if(mUrl!=null){
+            url=mUrl
+        }
         model = ViewModelProviders.of(this)[VideoViewModel::class.java]
         model.videoInfo.observe(this, Observer<VideoInfoBox> {
             if (it == null) {
@@ -73,17 +82,28 @@ class VideoEntryActivity : BaseActivity() {
                 return@Observer
             }
             url = it
-            try {
-                player.setDataSource(it)
-                player.prepareAsync()
-            }catch (e:Exception){
-                MToast.showToast(this,R.string.unkownError)
-            }
-            //vv_video.setVideoURI(Uri.parse(it))
+            loadVideo(url)
         })
 
         initVideoController()
-        model.getVideoInfo(videoId = videoId,songId = songId)
+        if(url==null){
+            model.getVideoInfo(videoId = videoId,songId = songId)
+        }else{
+            loadVideo(url)
+        }
+
+    }
+
+    /**
+     * 加载视频
+     */
+    private fun loadVideo(url:String?){
+        try {
+            player.setDataSource(url)
+            player.prepareAsync()
+        }catch (e:Exception){
+            MToast.showToast(this,R.string.unkownError)
+        }
     }
 
     private fun initVideoController() {
@@ -284,11 +304,19 @@ class VideoEntryActivity : BaseActivity() {
 
     companion object {
         private const val SONG_ID="songId"
+        private const val VIDEO_PATH="videoPath"
         @JvmStatic
         fun actionStart(ctx: Context, videoId: String="",songId:String="") {
             val intent = Intent(ctx, VideoEntryActivity::class.java)
             intent.putExtra(INTENT_DATA, videoId)
             intent.putExtra(SONG_ID, songId)
+            ctx.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun actionStart(ctx:Context,videoUrl:String){
+            val intent = Intent(ctx,VideoEntryActivity::class.java)
+            intent.putExtra(VIDEO_PATH,videoUrl)
             ctx.startActivity(intent)
         }
 

@@ -63,6 +63,7 @@ class TopBarLayout : FrameLayout {
 
         //**默认点击事件
         setStartImageListener(OnClickListener {
+            if(startImageView.drawable==null)return@OnClickListener
             (context as Activity).finish()
         })
     }

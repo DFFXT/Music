@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_videoIcon"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@color/themeColor"/>
+    <com.web.misc.RoundImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="#44444444"
+        app:iv_type="circle"
+        app:layout_constraintStart_toStartOf="@id/iv_videoIcon"
+        app:layout_constraintEnd_toEndOf="@id/iv_videoIcon"
+        app:layout_constraintTop_toTopOf="@id/iv_videoIcon"
+        app:layout_constraintBottom_toBottomOf="@id/iv_videoIcon"/>
+    <com.web.misc.RoundImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_video_pause"
+        android:tint="@color/white"
+        app:iv_type="circle"
+        app:layout_constraintStart_toStartOf="@id/iv_videoIcon"
+        app:layout_constraintEnd_toEndOf="@id/iv_videoIcon"
+        app:layout_constraintTop_toTopOf="@id/iv_videoIcon"
+        app:layout_constraintBottom_toBottomOf="@id/iv_videoIcon"/>
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/textColor_3"
+        app:layout_constraintTop_toBottomOf="@id/iv_videoIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/bottom_sheet_behavior"/>
+    <TextView
+        android:id="@+id/tv_peopleToSee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textColor_9"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="24w人看过"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

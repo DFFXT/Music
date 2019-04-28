@@ -20,6 +20,7 @@ import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.musicEntry.adapter.CommentAdapter
 import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
+import com.web.moudle.songSheetEntry.adapter.JSEngine
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_comment.view.*
 import kotlinx.coroutines.Dispatchers
@@ -96,6 +97,9 @@ class CommentDialog (private val ctx:FragmentActivity,private val connect: Music
 
     }
     fun show(){
+        GlobalScope.launch (Dispatchers.IO){
+            JSEngine().ff()
+        }
         init()
         dialog?.show()
     }

@@ -52,6 +52,13 @@ public class JSEngine{
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 
+    public void ff() throws IOException {
+        Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
+        String res=runScript(reader,"getSongList",new Object[]{});
+        Log.i("log",res);
+        reader.close();
+    }
+
     private String runScript(Reader reader, String functionName, Object[] functionParams) throws IOException {
         Context rhino = Context.enter();
         rhino.setOptimizationLevel(-1);

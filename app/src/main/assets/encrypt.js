@@ -1141,7 +1141,6 @@ function getSheetInfo(sheetId,offset,size) {
 }
 function getCommentListByType(songId,offset,size,type) {
 	var mdata={
-	    from:'web',
 	    offset:offset,
 	    size:size,
 	    type:type,
@@ -1154,4 +1153,17 @@ function getCommentListByType(songId,offset,size,type) {
     //return "http://musicmini.qianqian.com/v1/restserver/ting?method=baidu.ting.ugcdiy.getBaseInfo&timestamp="+obj.timestamp+"&param="+obj.param+"&sign="+obj.sign;
 }
 
+
+function getSongList(){
+    var mdata={
+         method: "baidu.ting.ugcdiy.getChanneldiy",
+                       offset: 0,
+                       size: 10,
+                       order_type: 1,
+                       channelname: "全部",
+                       from: "webapp_music"
+    }
+    var obj=aesPassEncod(mdata);
+    return "timestamp="+obj.timestamp+"&param="+obj.param+"&sign="+obj.sign
+}
 

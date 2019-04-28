@@ -35,6 +35,7 @@ class ArtistTypeActivity:BaseActivity() {
         vm=ViewModelProviders.of(this)[AllArtistViewModel::class.java]
 
         vm!!.artistList.observe(this, Observer {
+            srl_artist.finishLoadMore()
             when(it.code){
                 LiveDataWrapper.CODE_OK->{
                     artistList.addAll(it.value.artist)

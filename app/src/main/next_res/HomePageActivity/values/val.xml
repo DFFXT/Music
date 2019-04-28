@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="page_primary">首页</string>
+    <string name="page_video">视频</string>
+    <string name="local">本地</string>
+
+    <string name="carefullyChoosedMv">精选MV</string>
+    
+    <string name="xPeopleToSee">%1$s人看过</string>
+    <string name="recentListen">最近听过</string>
+    <string name="preferList">偏好列表</string>
+    <string name="fastScan">快速扫描</string>
+</resources>

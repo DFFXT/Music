@@ -3,6 +3,7 @@ package com.web.moudle.music.page.local;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Outline;
@@ -538,17 +539,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-    }
 
 
-    @Override
-    public void finish() {
-        setResult(RESULT_OK);
-        super.finish();
-    }
 
     public void onDestroy() {
 
@@ -569,8 +561,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
 
-    public static void actionStartForResult(Activity context, int code) {
-        context.startActivityForResult(new Intent(context, MusicActivity.class), code);
+    public static void actionStart(Context context) {
+        context.startActivity(new Intent(context, MusicActivity.class));
     }
 
 }
