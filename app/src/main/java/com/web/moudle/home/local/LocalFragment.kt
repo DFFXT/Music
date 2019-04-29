@@ -1,15 +1,19 @@
 package com.web.moudle.home.local
 
+import android.content.Intent
 import android.view.View
 import com.web.common.base.BaseFragment
 import com.web.moudle.home.local.model.LocalModel
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.musicSearch.ui.InternetMusicActivity
+import com.web.moudle.search.SearchActivity
 import com.web.moudle.setting.ui.SettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_local.view.*
 
-class LocalFragment:BaseFragment(){
+class LocalFragment : BaseFragment() {
+    private val requestCode = 333
     private val model = LocalModel()
     override fun getLayoutId(): Int = R.layout.fragment_local
 
@@ -21,15 +25,9 @@ class LocalFragment:BaseFragment(){
         rootView.layout_localBg.setOnClickListener {
             MusicActivity.actionStart(context)
         }
-        model.getMusicNum {
-            rootView.tv_musicNum?.text = it.toString()
-        }
-        model.getPreferNum {
-            rootView.tv_preferNum?.text = it.toString()
-        }
 
-        model.getDownloadNum {
-            rootView.tv_downloadNum.text = it.toString()
+        rootView.iv_search.setOnClickListener {
+            SearchActivity.actionStart(this, requestCode)
         }
 
 
@@ -37,6 +35,40 @@ class LocalFragment:BaseFragment(){
             MusicPlay.scan(context)
         }
 
+        initData()
+
+    }
+
+    private fun initData(){
+        model.getMusicNum {
+            rootView!!.tv_musicNum?.text = it.toString()
+        }
+        model.getPreferNum {
+            rootView!!.tv_preferNum?.text = it.toString()
+        }
+
+        model.getDownloadNum {
+            rootView!!.tv_downloadNum.text = it.toString()
+        }
+
+        model.getRecentMusicNum {
+            rootView!!.tv_recentListen.text = it.toString()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initData()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == this.requestCode) {
+            data?.getStringExtra(SearchActivity.INPUT_DATA)?.let {
+                InternetMusicActivity.actionStart(context, it)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 

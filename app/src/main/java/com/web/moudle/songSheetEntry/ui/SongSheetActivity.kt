@@ -66,7 +66,7 @@ class SongSheetActivity:BaseActivity() {
             rootView.showContent()
         })
 
-        rootView.showLoading()
+        rootView.showLoading(true)
         model.getSongSheetInfo(sheetId,page)
 
         srl_sheetSong.setRefreshFooter(ClassicsFooter(this))

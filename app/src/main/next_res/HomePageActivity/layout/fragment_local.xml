@@ -16,41 +16,65 @@
         app:topBar_endImage="@drawable/setting"
         app:topBar_tint="@color/white"/>
 
-    <FrameLayout
-        android:id="@+id/layout_localBg"
-        android:layout_width="300dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/themeColor"
-        android:padding="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" >
-        <TextView
-            android:id="@+id/tv_localMusic"
-            android:layout_width="wrap_content"
+        android:layout_marginTop="10dp">
+        <FrameLayout
+            android:id="@+id/layout_localBg"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="@string/page_local"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textSize_normal"
-            />
-        <TextView
-            android:id="@+id/tv_musicNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="4dp"
-            tools:text="34"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textSize_normal"
-            />
+            android:background="@color/themeColor"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+             >
+            <TextView
+                android:id="@+id/tv_localMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/page_local"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_normal"
+                />
+            <TextView
+                android:id="@+id/tv_musicNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="4dp"
+                tools:text="34"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_normal"
+                />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icon_video_pause"
+                android:tint="@color/white"
+                android:layout_gravity="end|bottom"/>
+        </FrameLayout>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/icon_video_pause"
-            android:tint="@color/white"
-            android:layout_gravity="end|bottom"/>
-    </FrameLayout>
+            android:id="@+id/iv_search"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/themeColor"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/icon_search"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="25dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layout_localBg"
+            app:layout_constraintBottom_toBottomOf="@id/layout_localBg"
+            app:layout_constraintStart_toEndOf="@id/layout_localBg"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -65,7 +89,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:src="@color/themeColor"/>
+            android:tint="@color/textColor_6"
+            android:src="@drawable/recent_icon"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,6 +99,7 @@
             android:textSize="@dimen/textSize_normal"
             android:text="@string/recentListen"/>
         <TextView
+            android:id="@+id/tv_recentListen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
@@ -104,7 +130,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:src="@color/themeColor"/>
+            android:tint="@color/textColor_6"
+            android:src="@drawable/like_icon"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -143,7 +170,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:src="@color/themeColor"/>
+            android:padding="5dp"
+            android:tint="@color/textColor_6"
+            android:src="@drawable/download"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -181,7 +210,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:src="@color/themeColor"/>
+            android:tint="@color/textColor_6"
+            android:src="@drawable/scan_icon"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

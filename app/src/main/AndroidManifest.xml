@@ -45,9 +45,6 @@
             android:name="androidx.core.content.FileProvider">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/paths"/>
         </provider>
-        <receiver
-            android:name=".Alarm"
-            android:process=":remote" />
 
         <activity
             android:name="com.web.moudle.music.page.local.MusicActivity"
@@ -91,7 +88,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Alarm_Activity" />
-        <activity android:name=".Ring" />
 
         <service android:name="com.web.moudle.music.player.MusicPlay" />
         <service android:name="com.web.moudle.service.FileDownloadService" />
@@ -137,7 +133,6 @@
         <activity android:name="com.web.moudle.setting.cache.CacheActivity" />
         <activity android:name="com.web.moudle.setting.chooser.LocalChooserActivity" />
         <activity android:name="com.web.moudle.setting.lyrics.LyricsSettingActivity" />
-        <activity android:name="com.web.moudle.artist.AllArtistActivity" />
         <activity android:name="com.web.moudle.artist.ArtistTypeActivity" />
         <activity android:name="com.web.moudle.home.HomePageActivity" />
 

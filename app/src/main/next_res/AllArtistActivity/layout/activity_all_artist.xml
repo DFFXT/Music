@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.web.misc.TopBarLayout
-        android:id="@+id/topBar"
-        android:fitsSystemWindows="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/themeColor"
-        android:elevation="2dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:topBar_mainTitleColor="@color/white"
-        app:topBar_mainTitleText="@string/singer_tab"
-        app:topBar_startImage="@drawable/icon_back_black"
-        app:topBar_tint="@color/white" />
-
-    <TextView
-        android:id="@+id/tv_hotArtist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/hotArtist"
-        android:textColor="@color/textColor_3"
-        android:textSize="@dimen/textSize_big"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_hotArtist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="120dp"
+        android:paddingTop="10dp"
         android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/tv_hotArtist" />
+        android:background="@color/white"
+        android:elevation="1px"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_artistType"
@@ -46,7 +21,5 @@
         android:layout_marginTop="10dp"
         android:overScrollMode="never"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_hotArtist" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:paddingEnd="10dp"/>
+</LinearLayout>

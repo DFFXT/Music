@@ -1,6 +1,5 @@
 package com.web.moudle.music.page.recommend
 
-import android.graphics.Color
 import android.graphics.PixelFormat
 import android.view.SurfaceView
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.alibaba.fastjson.JSON
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
-import com.web.moudle.artist.AllArtistActivity
 import com.web.moudle.billboard.BillBoardActivity
 import com.web.moudle.billboradDetail.NetMusicListActivity
 import com.web.moudle.music.page.BaseMusicPage
@@ -70,7 +68,7 @@ class RecommendPage : BaseMusicPage() {
                     MusicDetailActivity.actionStart(context!!,methodCall.arguments.toString())
                 }
                 "actionsStart_AllArtistActivity"->{
-                    AllArtistActivity.actionStart(context!!)
+                    //AllArtistFragment.actionStart(context!!)
                 }
 
             }

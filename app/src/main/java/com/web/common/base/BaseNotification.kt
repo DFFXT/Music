@@ -13,6 +13,7 @@ import com.web.web.R
  */
 abstract class BaseNotification(private val context: Context,id: String, name: String) {
     var builder: Notification.Builder
+    var clear=false
     private var notificationId=0
 
     init {
@@ -29,6 +30,7 @@ abstract class BaseNotification(private val context: Context,id: String, name: S
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT)
             channel.setSound(null,null)
+
             manager().createNotificationChannel(channel)
         }
     }
@@ -39,10 +41,15 @@ abstract class BaseNotification(private val context: Context,id: String, name: S
 
     @CallSuper
     open fun notifyChange() {
-        update(builder)
         builder.setAutoCancel(false)
+        update(builder)
         val notification = builder.build()
-        notification.flags = Notification.FLAG_NO_CLEAR
+        if(!clear){
+            notification.flags = Notification.FLAG_NO_CLEAR
+        }else{
+            notification.flags = Notification.FLAG_LOCAL_ONLY
+        }
+
 
         manager().notify(notificationId,notification)
     }

@@ -2,6 +2,7 @@ package com.web.moudle.home.local.model
 
 import com.web.data.InternetMusicDetail
 import com.web.data.Music
+import com.web.data.RecentPlayMusic
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +37,18 @@ class LocalModel {
 
     fun getDownloadNum(callback: (Int) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
+            val num=DataSupport.count(InternetMusicDetail::class.java)
             withContext(Dispatchers.Main) {
-                callback(DataSupport.count(InternetMusicDetail::class.java))
+                callback(num)
+            }
+        }
+    }
+
+    fun getRecentMusicNum(callback: (Int) -> Unit){
+        GlobalScope.launch(Dispatchers.IO) {
+            val num=DataSupport.count(RecentPlayMusic::class.java)
+            withContext(Dispatchers.Main) {
+                callback(num)
             }
         }
     }

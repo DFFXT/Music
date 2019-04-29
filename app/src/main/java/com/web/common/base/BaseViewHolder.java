@@ -1,5 +1,6 @@
 package com.web.common.base;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public ImageView bindImage(@IdRes int id, @DrawableRes int drawableId){
         ImageView iv=itemView.findViewById(id);
         iv.setImageResource(drawableId);
+        return iv;
+    }
+    public ImageView bindImage(@IdRes int id, Drawable drawable){
+        ImageView iv=itemView.findViewById(id);
+        iv.setImageDrawable(drawable);
         return iv;
     }
     public ImageView bindImage(@IdRes int id,String url){

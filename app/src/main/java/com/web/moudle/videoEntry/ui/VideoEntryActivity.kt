@@ -17,21 +17,16 @@ import com.web.common.base.MyApplication
 import com.web.common.base.errorClickLinsten
 import com.web.common.base.showError
 import com.web.common.tool.MToast
+import com.web.common.tool.Ticker
 import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
-import com.web.config.Shortcut
-import com.web.moudle.songSheetEntry.adapter.JSEngine
 import com.web.moudle.videoEntry.bean.VideoInfoBox
 import com.web.moudle.videoEntry.model.VideoViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_video_entry.*
 import kotlinx.android.synthetic.main.layout_video_control.view.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.util.concurrent.LinkedBlockingDeque
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 
 
 /**
@@ -39,6 +34,7 @@ import java.util.concurrent.TimeUnit
  * 如果是传入的 id 就用id获取路径，如果路径是爱奇艺网页版，就跳转到网页
  * 如果传入的是路径，就直接播放
  */
+@ObsoleteCoroutinesApi
 class VideoEntryActivity : BaseActivity() {
     private var videoId: String?=null
     private var songId:String?=null
@@ -206,13 +202,14 @@ class VideoEntryActivity : BaseActivity() {
     private fun videoStart() {
         iv_videoStatus.setImageResource(R.drawable.icon_video_play)
         player.start()
-        run()
+        ticker.start()
     }
 
     private fun videoPause() {
         position=player.currentPosition
         iv_videoStatus.setImageResource(R.drawable.icon_video_pause)
         player.pause()
+        ticker.stop()
     }
 
     private var preClickTime = 0L
@@ -237,20 +234,15 @@ class VideoEntryActivity : BaseActivity() {
 
 
     private var position=0
-    private val execute = ThreadPoolExecutor(1, 1, 10, TimeUnit.MILLISECONDS, LinkedBlockingDeque())
-    private fun run() {
-        execute.execute {
-            while (player.isPlaying) {
-                if(!seekBarTouch){
-                    runOnUiThread {
-                        position=player.currentPosition
-                        mc_videoController.bar.progress = player.currentPosition
-                    }
-                }
-                Shortcut.sleep(400)
+    private val ticker=Ticker(400,0,Dispatchers.Main){
+        if(!seekBarTouch){
+            runOnUiThread {
+                position=player.currentPosition
+                mc_videoController.bar.progress = player.currentPosition
             }
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -93,7 +93,6 @@
                 android:textSize="@dimen/textSize_small"
                 app:layout_constraintStart_toEndOf="@id/tv_tagLabel"
                 app:layout_constraintTop_toTopOf="@id/tv_tagLabel"
-                app:layout_constraintEnd_toStartOf="@id/tv_downloadMusic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 tools:text="123567"

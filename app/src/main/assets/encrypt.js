@@ -1061,8 +1061,8 @@ if (typeof JSON !== "object") {
 } ());
 
 function aesPassEncod(jsonData) {
-    //var timestamp = Math.floor(new Date().getTime() / 1000);
-    var timestamp = 1556188464;
+    var timestamp = Math.floor(new Date().getTime() / 1000);
+    //var timestamp = 1556188464;
     var privateKey = md5('baidu_taihe_music_secret_key' + timestamp),
     privateKey = privateKey.substr(8, 16),
     iv = privateKey;
@@ -1154,16 +1154,16 @@ function getCommentListByType(songId,offset,size,type) {
 }
 
 
-function getSongList(){
+function getSongSheetType(tag,offset,size){
     var mdata={
          method: "baidu.ting.ugcdiy.getChanneldiy",
-                       offset: 0,
-                       size: 10,
+                       offset: offset,
+                       size: size,
                        order_type: 1,
-                       channelname: "全部",
+                       channelname: tag,
                        from: "webapp_music"
     }
     var obj=aesPassEncod(mdata);
-    return "timestamp="+obj.timestamp+"&param="+obj.param+"&sign="+obj.sign
+    return obj.timestamp+"?"+obj.param+"?"+obj.sign;
 }
 

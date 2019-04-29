@@ -124,7 +124,7 @@ public class MusicListPage extends BaseMusicPage {
             connect.groupChange();
             return null;
         });
-        alert.setItemClickListener(index -> {
+        alert.setItemClickListener((v,index) -> {
             for (int id : musicIds) {
                 list.get(index).add(id);
             }

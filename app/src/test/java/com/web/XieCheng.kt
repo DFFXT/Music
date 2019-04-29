@@ -7,7 +7,7 @@ import java.lang.Exception
 class XieCheng {
     @Test
     fun test(){
-        f()
+        f("\u70ed\u95e8")
     }
 
     fun f(x:String?="22"){

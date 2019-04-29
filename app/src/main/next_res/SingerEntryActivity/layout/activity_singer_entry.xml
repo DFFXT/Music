@@ -87,7 +87,6 @@
                 android:textSize="@dimen/textSize_small"
                 app:layout_constraintStart_toEndOf="@id/tv_countryLabel"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_countryLabel"
-                app:layout_constraintEnd_toStartOf="@id/tv_downloadMusic"
                 app:layout_constraintHorizontal_bias="0"
                 tools:text="1234567"
                 />

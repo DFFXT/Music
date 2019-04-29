@@ -96,6 +96,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'com.tencent:mmkv:1.0.10'
     implementation 'junit:junit:4.13-beta-2'
+    implementation 'com.google.android:flexbox:1.1.0'
 }
 
 repositories {

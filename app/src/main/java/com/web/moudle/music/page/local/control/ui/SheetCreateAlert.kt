@@ -1,6 +1,7 @@
 package com.web.moudle.music.page.local.control.ui
 
 import android.content.Context
+import android.view.View
 import com.web.common.base.BaseAdapter
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
@@ -24,7 +25,7 @@ class SheetCreateAlert constructor(context: Context, title: String) : BaseListPo
         }
     }
 
-    fun setItemClickListener(listener:((Int)->Unit)){
+    fun setItemClickListener(listener:((View?, Int)->Unit)){
         (adapter as SingleTextAdapter).itemClickListener=listener
     }
 

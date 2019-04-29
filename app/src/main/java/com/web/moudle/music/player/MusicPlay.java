@@ -31,6 +31,7 @@ import com.web.config.Shortcut;
 import com.web.data.InternetMusicForPlay;
 import com.web.data.Music;
 import com.web.data.MusicList;
+import com.web.data.RecentPlayMusic;
 import com.web.moudle.music.player.other.PlayInterface;
 import com.web.moudle.music.player.other.PlayInterfaceManager;
 import com.web.moudle.music.player.other.PlayerConfig;
@@ -573,6 +574,20 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             loadMusic(music);
             //**下载歌词和图片
             Single.create(emitter -> {
+                RecentPlayMusic recentPlayMusic=new RecentPlayMusic();
+                recentPlayMusic.setSongId(music.getSong_id());
+                recentPlayMusic.setMusicName(music.getMusicName());
+                recentPlayMusic.setArtist(music.getSinger());
+                recentPlayMusic.setDuration(music.getDuration());
+
+                //**可以尝试设置为本地路径
+                recentPlayMusic.setImageLink(music.getImgAddress());
+                recentPlayMusic.setLrcLink(music.getLrcLink());
+
+                recentPlayMusic.setPath(music.getPath());
+                recentPlayMusic.saveOrUpdate();
+
+
                 if (!Shortcut.fileExsist(music.getLyricsPath())) {
                     IOUtil.onlineDataToLocal(music.getLrcLink(), music.getLyricsPath());
                 }
@@ -590,6 +605,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                                 musicLoad();
                         }
                     });
+
         }
 
         /**

@@ -4,6 +4,9 @@
     <string name="page_video">视频</string>
     <string name="local">本地</string>
 
+
+    <string name="musicBillboard">音乐榜</string>
+
     <string name="carefullyChoosedMv">精选MV</string>
     
     <string name="xPeopleToSee">%1$s人看过</string>

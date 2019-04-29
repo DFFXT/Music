@@ -89,8 +89,10 @@ public class MyNotification extends BaseCustomNotification {
 			view.setImageViewResource(R.id.music_icon, R.drawable.ic_launcher);
 		}
 		if(isPlay){
+			setClear(false);
 			view.setImageViewResource(R.id.pause, R.drawable.icon_play_white);
 		}else{
+			setClear(true);
 			view.setImageViewResource(R.id.pause, R.drawable.icon_pause_white);
 		}
 

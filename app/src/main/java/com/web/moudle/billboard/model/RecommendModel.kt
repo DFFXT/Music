@@ -9,8 +9,8 @@ import io.reactivex.Observable
 class RecommendModel : BaseRetrofit(){
 
     fun getBillBroad(): Observable<BillBoardList> {
-        return obtainClass(NetApis.Recommend::class.java)
-                .billboard()
+        return obtainClass(NetApis.HomePage::class.java)
+                .requestBillboardList()
                 .compose(SchedulerTransform())
     }
 }

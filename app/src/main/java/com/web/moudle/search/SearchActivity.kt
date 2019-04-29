@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -119,6 +120,11 @@ class SearchActivity : BaseActivity() {
         fun actionStart(ctx: Activity, resCode: Int) {
             val intent = Intent(ctx, SearchActivity::class.java)
             ctx.startActivityForResult(intent,resCode)
+        }
+        @JvmStatic
+        fun actionStart(fragment: Fragment, resCode: Int) {
+            val intent = Intent(fragment.context, SearchActivity::class.java)
+            fragment.startActivityForResult(intent,resCode)
         }
         const val INPUT_DATA="input_data"
     }

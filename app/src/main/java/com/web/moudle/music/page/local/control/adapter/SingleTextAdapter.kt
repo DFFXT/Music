@@ -1,6 +1,7 @@
 package com.web.moudle.music.page.local.control.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.web.common.base.BaseAdapter
@@ -15,7 +16,7 @@ open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
     var selectIndex=-1
     var selectRender:((holder:BaseViewHolder,index:Int)->Unit)?=null
     var commonRender:((holder:BaseViewHolder,index:Int)->Unit)?=null
-    var itemClickListener:((Int)->Unit)?=null
+    var itemClickListener:((View?, Int)->Unit)?=null
     private val padding=ViewUtil.dpToPx(10f)
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String?) {
         (holder.itemView as TextView).text = item
@@ -26,7 +27,7 @@ open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
         }
         holder.itemView.setPadding(padding,padding,padding,padding)
         holder.itemView.setOnClickListener {
-            itemClickListener?.invoke(position)
+            itemClickListener?.invoke(it,position)
             if(selectIndex>=0){
                 val pre=selectIndex
                 notifyItemChanged(pre)

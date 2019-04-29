@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal >
     <dbname value="Music"/>
-    <version value="22"/>
+    <version value="23"/>
     <list>
         <mapping class="com.web.data.Music"/>
         <mapping class="com.web.data.ScanMusicType"/>
@@ -11,5 +11,6 @@
         <mapping class="com.web.moudle.lyrics.bean.SoundSettingList"/>
         <mapping class="com.web.data.MusicCache"/>
         <mapping class="com.web.moudle.search.bean.SearchResItem"/>
+        <mapping class="com.web.data.RecentPlayMusic"/>
     </list>
 </litepal>

@@ -106,4 +106,14 @@
         <item>3</item>
         <item>0</item>
     </integer-array>
+
+
+    <string-array name="songSheetStyle">
+        <item>全部</item>
+        <item>古风</item>
+        <item>流行</item>
+        <item>放松</item>
+        <item>华语</item>
+        <item>网络歌曲</item>
+    </string-array>
 </resources>

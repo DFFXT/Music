@@ -23,13 +23,13 @@ class VideoRecommendFragment:BaseFragment() {
 
     override fun getLayoutId(): Int = R.layout.fragment_video
 
+
     override fun initView(rootView: View) {
         vm=ViewModelProviders.of(this)[VideoRecommendViewModel::class.java]
 
 
         vm!!.recommendVideo.observe(this, Observer {
             rootView.srl_video.finishLoadMore()
-
             videoList.addAll(it.feed_data)
             adapter.update(videoList)
         })
@@ -41,6 +41,11 @@ class VideoRecommendFragment:BaseFragment() {
         val gap=ViewUtil.dpToPx(10f)
         rootView.rv_video.addItemDecoration(GapItemDecoration(gap,gap,gap,gap,remainEndPadding = true))
         rootView.rv_video.adapter=adapter
+        val fakeList=ArrayList<FeedData>()
+        for(i in 0..5){
+            fakeList.add(FeedData())
+        }
+        adapter.update(fakeList)
 
 
 

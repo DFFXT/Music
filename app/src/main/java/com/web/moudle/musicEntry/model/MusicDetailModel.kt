@@ -32,8 +32,7 @@ class MusicDetailModel:BaseRetrofit() {
     }
 
     fun getCommentInfo(songId:String,offset:Int,pageSize:Int):Observable<CommentBox>{
-        val jsEngine=JSEngine()
-        val data=jsEngine.getComment(songId,offset,pageSize,2)
+        val data=JSEngine.getInstance().getComment(songId,offset,pageSize,2)
         return obtainClass(NetApis.SongEntry::class.java)
                 .getMusicCommentInfo(data.timestamp,data.param,data.sign)
                 .compose(SchedulerTransform())

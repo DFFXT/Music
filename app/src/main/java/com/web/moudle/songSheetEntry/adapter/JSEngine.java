@@ -1,15 +1,11 @@
 package com.web.moudle.songSheetEntry.adapter;
 
-import android.util.Log;
-
 import com.web.common.base.MyApplication;
 import com.web.moudle.songSheetEntry.bean.SongSheetRequestParams;
 import com.web.web.Index;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeJavaObject;
-import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -22,15 +18,34 @@ import java.io.Reader;
  */
 public class JSEngine{
 
-    /** Java执行js的方法 */
-    private static final String JAVA_CALL_JS_FUNCTION = "function Test(){ return 1+2; }";
+    private Context rhino=Context.enter();
+    private Scriptable scope;
+    private static JSEngine jsEngine;
 
-    /** js调用Java中的方法 */
-    private static final String JS_CALL_JAVA_FUNCTION = //
-            "var ScriptAPI = java.lang.Class.forName(\"" + JSEngine.class.getName()+ "\", true, javaLoader);" + //
-                    "var methodRead = ScriptAPI.getMethod(\"jsCallJava\", [java.lang.String]);" + //
-                    "function jsCallJava(url) {return methodRead.invoke(null, url);}" + //
-                    "function Test(){ return jsCallJava(); }";
+    private JSEngine(){}
+    //**并发？？
+    public static JSEngine getInstance(){
+        if(jsEngine==null){
+            jsEngine=new JSEngine();
+            try {
+                jsEngine.rhino.setOptimizationLevel(-1);
+                jsEngine.scope= jsEngine.rhino.initStandardObjects();
+                Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
+                ScriptableObject.putProperty(jsEngine.scope, "javaContext", Context.javaToJS(jsEngine, jsEngine.scope));
+                ScriptableObject.putProperty(jsEngine.scope, "javaLoader", Context.javaToJS(Index.class.getClassLoader(), jsEngine.scope));
+
+
+                jsEngine.rhino.evaluateReader(jsEngine.scope, reader, "JSEngine", 1, null);
+                ScriptableObject.putProperty(jsEngine.scope, "javaLoader", Context.javaToJS(Index.class.getClassLoader(), jsEngine.scope));
+                reader.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return jsEngine;
+    }
 
 
     private int pageSize=25;
@@ -52,11 +67,15 @@ public class JSEngine{
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 
-    public void ff() throws IOException {
-        Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
-        String res=runScript(reader,"getSongList",new Object[]{});
-        Log.i("log",res);
-        reader.close();
+    public SongSheetRequestParams getSongSheetTypeParam(String tag,int offset,int pageSize) {
+        String res=run("getSongSheetType",new Object[]{tag,offset,pageSize});
+        String[] arr=res.split("\\?");
+        return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
+    }
+
+    private String run(String functionName,Object[] params){
+        return ((Function)scope.get("getSongSheetType",scope))
+                .call(rhino,scope,scope,params).toString();
     }
 
     private String runScript(Reader reader, String functionName, Object[] functionParams) throws IOException {
@@ -74,20 +93,10 @@ public class JSEngine{
             Function function = (Function) scope.get(functionName, scope);
 
             Object result = function.call(rhino, scope, scope, functionParams);
-            if (result instanceof String) {
-                return (String) result;
-            } else if (result instanceof NativeJavaObject) {
-                return (String) ((NativeJavaObject) result).getDefaultValue(String.class);
-            } else if (result instanceof NativeObject) {
-                return (String) ((NativeObject) result).getDefaultValue(String.class);
-            }
             return result.toString();//(String) function.call(rhino, scope, scope, functionParams);
         } finally {
             Context.exit();
         }
     }
 
-    public static String jsCallJava(String url) {
-        return "农民伯伯 encrypt.js call Java Rhino";
-    }
 }

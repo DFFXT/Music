@@ -8,6 +8,9 @@ import com.web.moudle.artist.bean.ArtistBox
 import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.billboradDetail.bean.NetMusicBox
 import com.web.moudle.billboradDetail.bean.RecommendMusicBox
+import com.web.moudle.home.mainFragment.subFragment.bean.HomePageMusicInfoBox
+import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
+import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItemBox
 import com.web.moudle.home.video.bean.VideoRecommendBox
 import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
@@ -104,24 +107,10 @@ class NetApis {
     }
 
     interface Recommend{
-        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
-                "deviceid: 863254010121571",
-                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
-        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billCategory&format=json&kflag=2")
-        fun billboard():Observable<BillBoardList>
+
     }
     interface NetMusicList{
-        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
-                "deviceid: 863254010121571",
-                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
-        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billList&format=json")
-        fun requestList(@Query("type") type:Int,@Query("offset")  offset:Int,@Query("size")  size:Int):Observable<NetMusicBox>
 
-        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
-                "deviceid: 863254010121571",
-                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
-        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.song.userRecSongList&format=json")
-        fun requestRecommend(@Query("page_no") page: Int,@Query("page_size") pageSize: Int):Observable<BaseNetBean<RecommendMusicBox>>
 
         //@GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.artist.getSongList&format=json&order=2")
         //fun requestSingerAllMusic(@Query("tinguid") uid:String,@Query("offset") offset: Int,@Query("limits") limits:Int):Observable<SongEntryBox>
@@ -205,8 +194,50 @@ class NetApis {
     }
 
     interface HomePage{
+
+
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.tag.getAllTag")
+        fun requestMusicTag():Observable<MusicTagBox>
+
+
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.tag.songlist")
+        fun requestTagMusic(@Query("tagname")tagName:String,@Query("offset") offset: Int,@Query("limit") limit: Int):Observable<HomePageMusicInfoBox>
+
+        //**获取榜单列表
+        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
+                "deviceid: 863254010121571",
+                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billCategory&format=json&kflag=2")
+        fun requestBillboardList():Observable<BillBoardList>
+
+        //**获取榜单
+        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
+                "deviceid: 863254010121571",
+                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.billboard.billList&format=json")
+        fun requestList(@Query("type") type:Int,@Query("offset")  offset:Int,@Query("size")  size:Int):Observable<NetMusicBox>
+
+        //**获取今日推荐
+        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
+                "deviceid: 863254010121571",
+                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
+        @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.1.1&channel=1413b&operator=0&method=baidu.ting.song.userRecSongList&format=json")
+        fun requestRecommend(@Query("page_no") page: Int,@Query("page_size") pageSize: Int):Observable<BaseNetBean<RecommendMusicBox>>
+
+
+        //**获取歌单类型
+        @GET("http://musicapi.taihe.com/v1/restserver/ting?from=webapp_music&format=json&method=baidu.ting.ugcdiy.getChanneldiy")
+        fun requestSongSheetType(@Query("param") param: String,@Query("timestamp") timestamp: String,@Query("sign") sign: String):Observable<SongSheetItemBox>
+
+        //**获取mv列表
+        @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
+                "deviceid: 863254010121571",
+                "cuid: C08F3FE0D20BC1C506E601E6367BFD54")
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=7.0.2.0&channel=Android_webappbanner&operator=0&method=baidu.ting.plaza.recommIndex&project=daily&column_id=1&feed_data=1&show_recommend_mv=0")
         fun getRecommendVideo():Observable<VideoRecommendBox>
+
+
+
     }
 
     interface Global{
