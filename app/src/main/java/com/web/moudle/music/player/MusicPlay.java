@@ -579,6 +579,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 recentPlayMusic.setMusicName(music.getMusicName());
                 recentPlayMusic.setArtist(music.getSinger());
                 recentPlayMusic.setDuration(music.getDuration());
+                recentPlayMusic.setAlbumName(music.getAlbum());
+                recentPlayMusic.setAlbumId(music.getAlbum_id());
 
                 //**可以尝试设置为本地路径
                 recentPlayMusic.setImageLink(music.getImgAddress());

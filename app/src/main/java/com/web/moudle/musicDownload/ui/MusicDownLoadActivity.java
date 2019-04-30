@@ -23,7 +23,6 @@ import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.musicEntry.ui.MusicDetailActivity;
-import com.web.moudle.net.NetApis;
 import com.web.moudle.service.FileDownloadService;
 import com.web.web.R;
 
@@ -152,12 +151,10 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             toolsBar.removeAllItem();
             toolsBar.addItem(1, ResUtil.getString(R.string.delete));
             toolsBar.setItemClick(id -> {
-                switch (id) {
-                    case 1: {
-                        connect.delete(adapter.getSelectList((item,index)->item.getInternetMusicDetail().getId()));
-                        adapter.setSelect(false);
-                        toolsBar.close();
-                    }
+                if (id == 1) {
+                    connect.delete(adapter.getSelectList((item, index) -> item.getInternetMusicDetail().getId()));
+                    adapter.setSelect(false);
+                    toolsBar.close();
                 }
                 return null;
             });
@@ -228,7 +225,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
     }
 
     public static void actionStart(Context ctx) {
-        Intent intent = new Intent(ctx, NetApis.Music.class);
+        Intent intent = new Intent(ctx, MusicDownLoadActivity.class);
         ctx.startActivity(intent);
     }
 }

@@ -193,7 +193,7 @@ class SingerEntryActivity : BaseActivity() {
         private const val ID = "itemId"
         @JvmStatic
         fun actionStart(ctx: Context, id: String) {
-            val intent = Intent(ctx, SingerEntryActivity::class.java)
+            val intent = Intent(ctx, SingerEntryActivityNew::class.java)
             intent.putExtra(ID, id)
             ctx.startActivity(intent)
         }

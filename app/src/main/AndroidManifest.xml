@@ -135,6 +135,8 @@
         <activity android:name="com.web.moudle.setting.lyrics.LyricsSettingActivity" />
         <activity android:name="com.web.moudle.artist.ArtistTypeActivity" />
         <activity android:name="com.web.moudle.home.HomePageActivity" />
+        <activity android:name="com.web.moudle.recentListen.RecentListenActivity" />
+        <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivityNew" />
 
     </application>
 

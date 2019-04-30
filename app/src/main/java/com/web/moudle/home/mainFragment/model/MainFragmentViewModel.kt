@@ -7,6 +7,9 @@ import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.home.mainFragment.subFragment.bean.HomePageMusicInfoBox
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItemBox
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainFragmentViewModel : ViewModel() {
 
@@ -28,13 +31,16 @@ class MainFragmentViewModel : ViewModel() {
     }
 
     fun getSongSheetType(tag: String, offset: Int, pageSize: Int) {
-        model.getSongSheetType(tag, offset, pageSize)
-                .get(onNext = {
-                    it.tag = tag
-                    songSheetList.value = it
-                }, onError = {
-                    it.printStackTrace()
-                })
+        GlobalScope.launch(Dispatchers.IO) {
+            model.getSongSheetType(tag, offset, pageSize)
+                    .get(onNext = {
+                        it.tag = tag
+                        songSheetList.value = it
+                    }, onError = {
+                        it.printStackTrace()
+                    })
+        }
+
     }
 
     fun getMusicTag() {

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.scwang.smartrefresh.layout.SmartRefreshLayout
-    android:id="@+id/srl_sheetList"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:srlEnableRefresh="false"
+    android:id="@+id/srl_allMusic"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    app:srlEnableRefresh="false"
+    >
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_SheetList"
+        android:id="@+id/rv_allMusic"
         android:overScrollMode="never"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

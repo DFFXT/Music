@@ -23,13 +23,11 @@ import androidx.annotation.NonNull;
 
 
 public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
-	private List<DownloadMusic> dataList;
 	private Context context;
 	private OnItemClickListener itemClickListener;
 	private OnItemLongClickListener itemLongClickListener;
 	public DownloadViewAdapter(Context c, List<DownloadMusic> data){
 	    super(c,data);
-		dataList=data;
 		context=c;
 	}
 
@@ -55,8 +53,9 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
 
     @Override
     public void onBindItemView(@NotNull BaseViewHolder holder, int position, @Nullable DownloadMusic item) {
-	    InternetMusicDetail music=dataList.get(position).getInternetMusicDetail();
-        int status=dataList.get(position).getStatus();
+	    if(item==null)return;
+	    InternetMusicDetail music=item.getInternetMusicDetail();
+        int status=item.getStatus();
         switch (status) {
             case DownloadMusic.DOWNLOAD_COMPLETE_HEAD: {
                 TextView tv =holder.bindText(R.id.textView,ResUtil.getString(R.string.downloadComplete));
@@ -72,11 +71,11 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
                 holder.bindText(R.id.musicName,music.getSongName());
                 if(status==DownloadMusic.DOWNLOAD_COMPLETE){//**构建已完成item
                     if(!Shortcut.isStrictEmpty(music.getAlbumName())){
-                        holder.bindText(R.id.tv_albumName, music.getAlbumName()+" - ");
+                        holder.bindText(R.id.tv_albumName, music.getAlbumName()+"  - ");
                     }
                     holder.bindText(R.id.tv_singerName,music.getArtistName());
                     holder.findViewById(R.id.iv_play).setOnClickListener(v->click(v,position));
-                    if(position==dataList.size()-1){
+                    if(position==getItemCount()-1){
                         holder.itemView.setBackgroundResource(R.color.transparent);
                     }else{
                         holder.itemView.setBackgroundResource(R.drawable.bottom_dashline_1px);
@@ -89,7 +88,7 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
                             .setOnClickListener(v-> click(v,position));
                     holder.itemView.setOnClickListener(null);
                     holder.itemView.findViewById(R.id.close).setOnClickListener(v-> click(v,position));
-                    if(dataList.get(position+1).getStatus()==DownloadMusic.DOWNLOAD_COMPLETE_HEAD){
+                    if(getData().get(position+1).getStatus()==DownloadMusic.DOWNLOAD_COMPLETE_HEAD){
                         holder.itemView.setBackgroundResource(R.color.transparent);
                     }else{
                         holder.itemView.setBackgroundResource(R.drawable.bottom_dashline_1px);
@@ -146,7 +145,7 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
 
     @Override
     public int getViewType(int position) {
-        return dataList.get(position).getStatus();
+        return getData().get(position).getStatus();
     }
     public interface OnItemClickListener{
         void itemClick(View v,int position);

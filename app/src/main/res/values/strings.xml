@@ -185,5 +185,6 @@
 	<string name="commentNum">%1$s条评论</string>
 	<string name="noData">没有数据</string>
 
+	<string name="weatherDeleteAllRecord">是否删除所有记录</string>
 
 </resources>

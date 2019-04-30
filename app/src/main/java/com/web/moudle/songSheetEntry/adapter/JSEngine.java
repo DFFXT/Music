@@ -25,26 +25,7 @@ public class JSEngine{
     private JSEngine(){}
     //**并发？？
     public static JSEngine getInstance(){
-        if(jsEngine==null){
-            jsEngine=new JSEngine();
-            try {
-                jsEngine.rhino.setOptimizationLevel(-1);
-                jsEngine.scope= jsEngine.rhino.initStandardObjects();
-                Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
-                ScriptableObject.putProperty(jsEngine.scope, "javaContext", Context.javaToJS(jsEngine, jsEngine.scope));
-                ScriptableObject.putProperty(jsEngine.scope, "javaLoader", Context.javaToJS(Index.class.getClassLoader(), jsEngine.scope));
-
-
-                jsEngine.rhino.evaluateReader(jsEngine.scope, reader, "JSEngine", 1, null);
-                ScriptableObject.putProperty(jsEngine.scope, "javaLoader", Context.javaToJS(Index.class.getClassLoader(), jsEngine.scope));
-                reader.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return jsEngine;
+        return new JSEngine();
     }
 
 
@@ -67,9 +48,13 @@ public class JSEngine{
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 
-    public SongSheetRequestParams getSongSheetTypeParam(String tag,int offset,int pageSize) {
-        String res=run("getSongSheetType",new Object[]{tag,offset,pageSize});
+    public SongSheetRequestParams getSongSheetTypeParam(String tag,int offset,int pageSize) throws IOException {
+
+        Reader reader=new InputStreamReader(MyApplication.getContext().getAssets().open("encrypt.js"));
+        String res=runScript(reader,"getSongSheetType",new Object[]{tag,offset,pageSize});
         String[] arr=res.split("\\?");
+        reader.close();
+
         return new SongSheetRequestParams(arr[0],arr[1],arr[2]);
     }
 

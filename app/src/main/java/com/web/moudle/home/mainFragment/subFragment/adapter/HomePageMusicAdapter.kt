@@ -13,6 +13,7 @@ import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.web.web.R
 
 class HomePageMusicAdapter:BaseAdapter<HomePageMusic>() {
+    var itemClick:((item:HomePageMusic,index:Int)->Unit)?=null
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: HomePageMusic?) {
         if(item==null)return
         holder.bindImage(R.id.iv_musicIcon,R.drawable.def_song_sheet_icon,item.pic_big)
@@ -23,7 +24,8 @@ class HomePageMusicAdapter:BaseAdapter<HomePageMusic>() {
         if(item.has_mv==1){
             mv.visibility=View.VISIBLE
             mv.setOnClickListener {
-                VideoEntryActivity.actionStart(it.context,"",item.song_id)
+                itemClick?.invoke(item,position)
+                //VideoEntryActivity.actionStart(it.context,"",item.song_id)
             }
         }
         holder.itemView.setOnClickListener {

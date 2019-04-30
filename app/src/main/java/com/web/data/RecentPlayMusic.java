@@ -15,6 +15,9 @@ public class RecentPlayMusic extends DataSupport {
     private String lrcLink;
     private String imageLink;
 
+    private String albumId;
+    private String albumName;
+
     public String getSongId() {
         return songId;
     }
@@ -71,6 +74,21 @@ public class RecentPlayMusic extends DataSupport {
         this.imageLink = imageLink;
     }
 
+    public String getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(String albumId) {
+        this.albumId = albumId;
+    }
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
 
     public void saveOrUpdate() {
         super.saveOrUpdate("songId=?",songId);

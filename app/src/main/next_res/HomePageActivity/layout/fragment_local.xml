@@ -77,6 +77,7 @@
 
 
     <FrameLayout
+        android:id="@+id/layout_recent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
@@ -84,7 +85,7 @@
         android:paddingEnd="10dp"
         android:paddingBottom="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bottom_line">
+        android:background="@drawable/border_bottom_1px">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -119,13 +120,14 @@
 
 
     <FrameLayout
+        android:id="@+id/layout_prefer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bottom_line">
+        android:background="@drawable/border_bottom_1px">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -159,13 +161,14 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/layout_download"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bottom_line">
+        android:background="@drawable/border_bottom_1px">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

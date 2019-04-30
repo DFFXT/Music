@@ -6,7 +6,9 @@ import com.web.common.base.BaseFragment
 import com.web.moudle.home.local.model.LocalModel
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.musicDownload.ui.MusicDownLoadActivity
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
+import com.web.moudle.recentListen.RecentListenActivity
 import com.web.moudle.search.SearchActivity
 import com.web.moudle.setting.ui.SettingActivity
 import com.web.web.R
@@ -26,10 +28,20 @@ class LocalFragment : BaseFragment() {
             MusicActivity.actionStart(context)
         }
 
+        rootView.layout_recent.setOnClickListener {
+            RecentListenActivity.actionStart(it.context)
+        }
+
         rootView.iv_search.setOnClickListener {
             SearchActivity.actionStart(this, requestCode)
         }
+        rootView.layout_prefer.setOnClickListener {
+            MusicActivity.actionStartLike(context)
+        }
 
+        rootView.layout_download.setOnClickListener {
+            MusicDownLoadActivity.actionStart(it.context)
+        }
 
         rootView.layout_fastScan.setOnClickListener {
             MusicPlay.scan(context)

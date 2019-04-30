@@ -195,7 +195,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         findID();
         setToolbar();
         musicListPage = new MusicListPage();
-        pageList.add(new RecommendPage());
+        //pageList.add(new RecommendPage());
         pageList.add(musicListPage);
         musicListPage.setTitle(tv_title);
         setAdapter();
@@ -214,10 +214,10 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     @SuppressLint("RestrictedApi")
     private void setToolbar() {
         TopBarLayout toolbar = findViewById(R.id.toolbar);
-        toolbar.setStartImageListener(v -> drawer.openDrawer(GravityCompat.START));
-        int paddingTop = ViewUtil.dpToPx(8);
+        //toolbar.setStartImageListener(v -> drawer.openDrawer(GravityCompat.START));
+        //int paddingTop = ViewUtil.dpToPx(8);
         int paddingStart = ViewUtil.dpToPx(6);
-        toolbar.getStartImageView().setPadding(paddingStart, paddingTop, paddingStart, paddingTop);
+        //toolbar.getStartImageView().setPadding(paddingStart, paddingTop, paddingStart, paddingTop);
         toolbar.getEndImageView().setPadding(paddingStart, paddingStart, paddingStart, paddingStart);
         toolbar.setEndImageListener(v -> SearchActivity.actionStart(MusicActivity.this, RESULT_CODE_SEARCH));
         tv_title = toolbar.setMainTitle(ResUtil.getString(R.string.page_local));
@@ -275,7 +275,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
      */
     private void getIntentData() {
         Intent intent = getIntent();
-        if (intent.getData() != null) {
+        String action=intent.getAction();
+        if("def".equals(action)){
+
+        }else if(ACTION_LIKE_SHEET.equals(action)){
+            connect.getList(1);
+        }else if (intent.getData() != null) {
             String path = intent.getData().getPath();
             if (path != null) {
                 File file = new File(path);
@@ -431,8 +436,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     public void onClick(View v) {//--点击事件
         switch (v.getId()) {
             case R.id.goDownload: {
-                Intent intent = new Intent(this, MusicDownLoadActivity.class);
-                startActivity(intent);
+                MusicDownLoadActivity.actionStart(this);
                 drawer.closeDrawer(GravityCompat.START);
             }
             break;
@@ -560,9 +564,15 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         }
     }
 
+    private static String ACTION_LIKE_SHEET="like";
 
     public static void actionStart(Context context) {
         context.startActivity(new Intent(context, MusicActivity.class));
+    }
+    public static void actionStartLike(Context context){
+        Intent intent=new Intent(context,MusicActivity.class);
+        intent.setAction(ACTION_LIKE_SHEET);
+        context.startActivity(intent);
     }
 
 }

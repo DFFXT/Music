@@ -26,7 +26,7 @@ class ToolsBar(private val ctx:BaseActivity) {
     private var itemNames=ArrayList<String>()
     private var itemIds=ArrayList<Int>()
 
-    var itemClick:((Int)->Unit)?=null
+    var itemClick:((id:Int)->Unit)?=null
     //**返回false关闭
     var backClick:(()->Unit)?=null
     private var backListener= BaseActivity.KeyListener {

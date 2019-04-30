@@ -46,7 +46,7 @@ class RecommendPage : BaseMusicPage() {
         MethodChannel(flutterView, "recommend/io").setMethodCallHandler { methodCall, _ ->
             when (methodCall.method) {
                 "todayRecommend" -> {
-                    NetMusicListActivity.actionStartRecommend(context!!, getString(R.string.todayRecommend))
+                    //NetMusicListActivity.actionStartRecommend(context!!, getString(R.string.todayRecommend))
                 }
                 "billboard" -> {
                     BillBoardActivity.actionStart(context!!)
@@ -59,7 +59,7 @@ class RecommendPage : BaseMusicPage() {
                 }
                 "actionStart_NetMusicListActivity" -> {
                     val json = JSON.parseObject(methodCall.arguments.toString())
-                    NetMusicListActivity.actionStartSingerMusic(context!!, json.getString("title"), json.getString("itemId"))
+                    //NetMusicListActivity.actionStartSingerMusic(context!!, json.getString("title"), json.getString("itemId"))
                 }
                 "actionStart_Video" -> {
                     VideoEntryActivity.actionStart(context!!, videoId = methodCall.arguments.toString())

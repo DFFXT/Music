@@ -9,6 +9,7 @@ import android.widget.RemoteViews;
 import com.web.common.base.BaseCustomNotification;
 import com.web.common.util.ResUtil;
 import com.web.moudle.lyrics.LyricsActivity;
+import com.web.moudle.music.page.local.MusicActivity;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.setting.lyrics.LyricsSettingActivity;
 import com.web.web.R;
@@ -46,13 +47,23 @@ public class MyNotification extends BaseCustomNotification {
 		Intent enterIntent=new Intent(context, LyricsActivity.class).
 				addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		getView().setOnClickPendingIntent(R.id.op, enter);
+		getView().setOnClickPendingIntent(R.id.music_icon, enter);
 
 
+
+		//**今日歌词设置页面
 		Intent settingIntent=new Intent(context, LyricsSettingActivity.class)
 				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pendingIntent=PendingIntent.getActivity(context,0,settingIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 		getView().setOnClickPendingIntent(R.id.tv_lyricsSetting,pendingIntent);
+
+
+		//**进入本地列表
+		Intent localIntent=new Intent(context, MusicActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent localIntentP=PendingIntent.getActivity(context,0,localIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+		getView().setOnClickPendingIntent(R.id.rootView,localIntentP);
+
 	}
 
 	public MyNotification setName(String name){

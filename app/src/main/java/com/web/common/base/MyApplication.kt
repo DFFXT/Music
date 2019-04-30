@@ -2,6 +2,8 @@ package com.web.common.base
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.constant.Constant
 import com.web.common.util.UncaughtException
 import com.web.moudle.net.proxy.InternetProxy
@@ -22,6 +24,11 @@ class MyApplication : LitePalApplication(){
         InternetProxy.startProxy()
         FlutterMain.startInitialization(this)
         Constant.LocalConfig.initPath()
+
+        SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
+            ClassicsFooter(context)
+        }
+
 
     }
     companion object {
