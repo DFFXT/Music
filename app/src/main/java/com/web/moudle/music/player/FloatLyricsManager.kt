@@ -3,15 +3,14 @@ package com.web.moudle.music.player
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.PixelFormat
+import android.net.Uri.fromParts
 import android.os.Build
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.annotation.ColorInt
 import com.web.common.base.BaseDragHelper
-import com.web.common.base.MyApplication
 import com.web.common.base.PlayerObserver
 import com.web.common.constant.Constant
 import com.web.common.util.ResUtil
@@ -23,6 +22,7 @@ import com.web.moudle.preference.SP
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.layout_float_lyrics.view.*
+
 
 /**
  * 歌词浮窗
@@ -147,6 +147,13 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
     }
 
     fun open(){
+        if(!Settings.canDrawOverlays(appContext)){
+            val intent = Intent()
+            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            intent.data = fromParts("package", appContext.packageName, null)
+            appContext.startActivity(intent)
+            return
+        }
         timeImmediately=true
         if(rootView!=null)return
         init()
@@ -194,6 +201,7 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         rootView?.lv_lyrics?.textColor=LyricsSettingActivity.getLyricsColor()
         rootView?.lv_lyrics?.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
         rootView?.lv_lyrics?.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
+        rootView?.lv_lyrics?.setBlod(true)
     }
 
     companion object{

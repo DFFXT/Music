@@ -1,15 +1,20 @@
 package com.web.moudle.recentListen
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import android.telephony.mbms.DownloadStatusListener
 import android.view.View
 import android.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.base.BaseActivity
+import com.web.common.base.PlayerObserver
 import com.web.common.util.ResUtil
 import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
+import com.web.data.Music
 import com.web.data.RecentPlayMusic
 import com.web.misc.ConfirmDialog
 import com.web.misc.ToolsBar
@@ -34,10 +39,23 @@ class RecentListenActivity :BaseActivity(){
 
     override fun getLayoutId(): Int = R.layout.activity_recent_listen
 
+    private var connect:MusicPlay.Connect?=null
+
+    private val connection=object:ServiceConnection{
+        override fun onServiceDisconnected(name: ComponentName?) {
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            connect= service as MusicPlay.Connect
+        }
+    }
+
     override fun initView() {
 
         topBar.setEndImageListener(View.OnClickListener {
-            confirmDelete()
+            connect?.addListToWait(list.map {
+                map(it.internetMusicDetail)
+            })
         })
         adapter= DownloadViewAdapter(this,null)
         rv_recentList.layoutManager=LinearLayoutManager(this)
@@ -59,6 +77,9 @@ class RecentListenActivity :BaseActivity(){
         }
 
         reload()
+        val intent=Intent(this,MusicPlay::class.java)
+        intent.action=MusicPlay.BIND
+        bindService(intent,connection,Context.BIND_AUTO_CREATE)
     }
     private fun reload(){
         GlobalScope.launch(Dispatchers.IO) {
@@ -76,10 +97,13 @@ class RecentListenActivity :BaseActivity(){
         if(toolsBar==null){
             toolsBar= ToolsBar(this)
             toolsBar!!.addItem(1,R.string.delete)
+            toolsBar!!.addItem(2,R.string.selectAll)
             toolsBar!!.itemClick={id->
                 if(id==1){
                     deleteRecords()
                     toolsBar?.close()
+                }else if(id==2){
+                    adapter.isSelectAll=!adapter.isSelectAll
                 }
             }
             toolsBar!!.backClick={
@@ -154,6 +178,11 @@ class RecentListenActivity :BaseActivity(){
                 songLink = item.path,
                 songName = item.musicName
         )
+    }
+
+    override fun onDestroy() {
+        unbindService(connection)
+        super.onDestroy()
     }
 
     companion object{

@@ -44,6 +44,7 @@ class MusicDetailActivity : BaseActivity() {
     private var commentPage=0
     private val commentList=ArrayList<CommentItem>()
     private var adapter:CommentAdapter= CommentAdapter(commentList)
+    private lateinit var music:InternetMusicForPlay
 
     override fun getLayoutId(): Int {
         return R.layout.activity_music_detail
@@ -70,6 +71,14 @@ class MusicDetailActivity : BaseActivity() {
                     tv_downloadMusic.setOnClickListener {
                         FileDownloadService.addTask(it.context, attributesMap(res))
                     }
+                    val drawableAdd=getDrawable(R.drawable.add_icon)
+                    drawableAdd?.setBounds(0, 0, ViewUtil.dpToPx(20f), ViewUtil.dpToPx(20f))
+                    tv_addToWait.setCompoundDrawables(drawableAdd, null, null, null)
+                    tv_addToWait.setOnClickListener {
+                        connection?.addToWait(music)
+                    }
+
+
                     //**加载图片
                     ImageLoad.loadAsBitmap(res.songInfo.artistPic500x500).into(object : BaseGlideTarget() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -85,14 +94,7 @@ class MusicDetailActivity : BaseActivity() {
                     rootView.showContent()
                     //**获取歌词
                     model.getLyrics(res.songInfo.lrcLink)
-                    val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
-                    music.song_id=id
-                    music.imgAddress = res.songInfo.picSmall
-                    music.lrcLink = res.songInfo.lrcLink
-                    music.suffix = res.bitRate.format
-                    music.duration = res.songInfo.duration.toInt()*1000
-                    music.album = res.songInfo.albumName
-                    music.size = res.bitRate.fileSize
+                    music = map(res)
 
 
                     var theSameMusic = false
@@ -227,6 +229,18 @@ class MusicDetailActivity : BaseActivity() {
 
         loadData()
 
+    }
+
+    private fun map(res:MusicDetailInfo):InternetMusicForPlay{
+        val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
+        music.song_id=id
+        music.imgAddress = res.songInfo.picSmall
+        music.lrcLink = res.songInfo.lrcLink
+        music.suffix = res.bitRate.format
+        music.duration = res.songInfo.duration.toInt()*1000
+        music.album = res.songInfo.albumName
+        music.size = res.bitRate.fileSize
+        return music
     }
 
     /**

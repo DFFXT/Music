@@ -1,8 +1,10 @@
 package com.web.moudle.home.local
 
+import android.app.Activity
 import android.content.Intent
 import android.view.View
 import com.web.common.base.BaseFragment
+import com.web.moudle.home.HomePageActivity
 import com.web.moudle.home.local.model.LocalModel
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
@@ -15,7 +17,6 @@ import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_local.view.*
 
 class LocalFragment : BaseFragment() {
-    private val requestCode = 333
     private val model = LocalModel()
     override fun getLayoutId(): Int = R.layout.fragment_local
 
@@ -33,7 +34,7 @@ class LocalFragment : BaseFragment() {
         }
 
         rootView.iv_search.setOnClickListener {
-            SearchActivity.actionStart(this, requestCode)
+            SearchActivity.actionStart(context as Activity, HomePageActivity.searchCode)
         }
         rootView.layout_prefer.setOnClickListener {
             MusicActivity.actionStartLike(context)
@@ -73,15 +74,7 @@ class LocalFragment : BaseFragment() {
         initData()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == this.requestCode) {
-            data?.getStringExtra(SearchActivity.INPUT_DATA)?.let {
-                InternetMusicActivity.actionStart(context, it)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
+
 
 
 }

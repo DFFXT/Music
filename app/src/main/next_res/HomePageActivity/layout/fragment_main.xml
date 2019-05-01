@@ -11,7 +11,7 @@
         android:background="@color/themeColor"
         app:topBar_mainTitleText="@string/page_Internet"
         app:topBar_mainTitleColor="@color/white"
-
+        app:topBar_endImage="@drawable/icon_search"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

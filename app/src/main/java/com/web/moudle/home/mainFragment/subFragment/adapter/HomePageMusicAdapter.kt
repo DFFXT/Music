@@ -24,8 +24,7 @@ class HomePageMusicAdapter:BaseAdapter<HomePageMusic>() {
         if(item.has_mv==1){
             mv.visibility=View.VISIBLE
             mv.setOnClickListener {
-                itemClick?.invoke(item,position)
-                //VideoEntryActivity.actionStart(it.context,"",item.song_id)
+                VideoEntryActivity.actionStart(it.context,"",item.song_id)
             }
         }
         holder.itemView.setOnClickListener {
@@ -33,7 +32,7 @@ class HomePageMusicAdapter:BaseAdapter<HomePageMusic>() {
             mv.setOnClickListener(null)
         }
         holder.itemView.setOnClickListener {
-            MusicDetailActivity.actionStart(it.context,item.song_id)
+            itemClick?.invoke(item,position)
         }
     }
 

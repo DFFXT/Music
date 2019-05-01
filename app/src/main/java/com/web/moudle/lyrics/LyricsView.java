@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -54,6 +55,8 @@ public class LyricsView extends RelativeLayout {
     //**当前歌词颜色
     private @ColorInt
     int textFocusColor = 0xffff00ee;
+
+    private boolean blod=false;
 
     private int clipPaddingTop,clipPaddingBottom;
 
@@ -475,6 +478,16 @@ public class LyricsView extends RelativeLayout {
 
     public void setClipPaddingBottom(int clipPaddingBottom) {
         this.clipPaddingBottom = clipPaddingBottom;
+    }
+
+    public void setBlod(boolean blod) {
+        this.blod = blod;
+        if(blod){
+            paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        }else{
+            paint.setTypeface(Typeface.DEFAULT_BOLD);
+        }
+
     }
 
     public interface SeekListener {

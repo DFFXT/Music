@@ -400,7 +400,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 //**列表循环
                 case ALL_LOOP: {
                     if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {//***播放准备音乐
-                        loadNextWait();
+                        loadNextWait(-1);
                     } else{
                         config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
                         connect.play(groupIndex, nextIndex());
@@ -417,7 +417,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 case ALL_ONCE: {
                     if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {//***播放准备音乐
                         if (waitIndex < waitMusic.size()) {
-                            loadNextWait();
+                            loadNextWait(-1);
                         }
                     } else if (childIndex < musicList.get(groupIndex).size() - 1) {
                         connect.next();
@@ -433,8 +433,14 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 break;
                 case RANDOM:{
                     if(groupIndex<0) groupIndex=0;
-                    int index = new Random().nextInt(musicList.get(groupIndex).size());
-                    connect.play(groupIndex,index);
+                    if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.WAIT){
+                        int index = new Random().nextInt(waitMusic.size());
+                        loadNextWait(index);
+                    }else{
+                        int index = new Random().nextInt(musicList.get(groupIndex).size());
+                        connect.play(groupIndex,index);
+                    }
+
                 }
                 break;
             }
@@ -478,15 +484,34 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         public void addToWait(int group,int child) {
             groupIndex=group;
             childIndex=child;
-            Music music=musicList.get(group).get(child);
-            for (Music m : waitMusic) {
-                if (m.getPath().equals(music.getPath())) return;
+            addToWait(musicList.get(group).get(child));
+        }
+        public void addToWait(Music music){
+            if(config.getMusicOrigin()!=PlayerConfig.MusicOrigin.WAIT){
+                waitIndex=0;
+                waitMusic.clear();
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.WAIT);
+                waitMusic.add(music);
+                loadNextWait(0);
             }
-            config.setMusicOrigin(PlayerConfig.MusicOrigin.WAIT);
+            if(music instanceof InternetMusicForPlay){//**添加的是网络音乐
+                for(Music m:waitMusic){
+                    if(music.getSong_id().equals(m.getSong_id())){//**已经存在
+                        return;
+                    }
+                }
+            }
+            else {
+                for (Music m : waitMusic) {
+                    if (m.getPath().equals(music.getPath())) return;
+                }
+            }
             waitMusic.add(music);
-            if (waitMusic.size() == 1) {//**添加了播放列表，第一个添加的直接抢占播放
-                waitIndex = 0;
-                loadNextWait();
+
+        }
+        public void addListToWait(List<Music> ml){
+            for(Music m:ml){
+                addToWait(m);
             }
         }
 
@@ -512,7 +537,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             } else if (index == waitIndex) {//**移除正在播放的
                 waitIndex--;
                 waitMusic.remove(index);
-                loadNextWait();
+                loadNextWait(-1);
             }
         }
 
@@ -570,7 +595,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
          * @param music music
          */
         public void playInternet(final InternetMusicForPlay music) {
-            config.setMusicOrigin(PlayerConfig.MusicOrigin.INTERNET);
+
             loadMusic(music);
             //**下载歌词和图片
             Single.create(emitter -> {
@@ -686,11 +711,19 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
     /**
      * 加载等待歌曲
+     * index<0 下一曲 index>0 指定index
      */
-    private void loadNextWait() {
-        waitIndex++;
+    private void loadNextWait(int index) {
+        if(index<0){
+            waitIndex++;
+        }
         if (waitMusic.size() <= waitIndex) waitIndex = 0;
-        checkMusicIndexAndLoad(waitMusic.get(waitIndex));
+        Music music=waitMusic.get(waitIndex);
+        if(music instanceof InternetMusicForPlay){
+            connect.playInternet((InternetMusicForPlay) music);
+        }else{
+            checkMusicIndexAndLoad(waitMusic.get(waitIndex));
+        }
     }
 
     /**
@@ -734,7 +767,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 deleteMusic(false, groupIndex, childIndex);
                 connect.next();
             } else if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {
-                loadNextWait();
+                loadNextWait(-1);
             } else if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.STORAGE) {
                 MToast.showToast(this, ResUtil.getString(R.string.cannotPlay));
             }
@@ -880,6 +913,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             }
             break;
             case ACTION_PLAY_INTERNET_MUSIC: {
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.INTERNET);
                 connect.playInternet((InternetMusicForPlay) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
             }
             break;

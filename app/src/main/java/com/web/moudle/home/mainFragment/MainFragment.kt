@@ -1,14 +1,19 @@
 package com.web.moudle.home.mainFragment
 
+import android.app.Activity
+import android.content.Intent
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.web.common.base.BaseFragment
 import com.web.common.base.BaseFragmentPagerAdapter
+import com.web.moudle.home.HomePageActivity
 import com.web.moudle.home.mainFragment.subFragment.AllArtistFragment
 import com.web.moudle.home.mainFragment.model.MainFragmentViewModel
 import com.web.moudle.home.mainFragment.subFragment.BillBoardFragment
 import com.web.moudle.home.mainFragment.subFragment.MusicMainFragment
 import com.web.moudle.home.mainFragment.subFragment.SongSheetFragment
+import com.web.moudle.musicSearch.ui.InternetMusicActivity
+import com.web.moudle.search.SearchActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_main.view.*
 
@@ -33,6 +38,10 @@ class MainFragment : BaseFragment() {
         for(i in pageList.indices){
             rootView.tabLayout.getTabAt(i)?.text=pageList[i].title
         }
+
+        rootView.topBar.setEndImageListener(View.OnClickListener {
+            SearchActivity.actionStart(context as Activity, HomePageActivity.searchCode)
+        })
 
 
 

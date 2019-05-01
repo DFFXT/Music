@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.web.common.base.BaseFragment
+import com.web.common.base.log
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration

@@ -13,6 +13,8 @@ import com.web.common.util.ResUtil
 import com.web.moudle.home.local.LocalFragment
 import com.web.moudle.home.mainFragment.MainFragment
 import com.web.moudle.home.video.VideoRecommendFragment
+import com.web.moudle.musicSearch.ui.InternetMusicActivity
+import com.web.moudle.search.SearchActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_home_page.*
 
@@ -109,7 +111,18 @@ class HomePageActivity : BaseActivity(), View.OnClickListener {
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == searchCode) {
+            data?.getStringExtra(SearchActivity.INPUT_DATA)?.let {
+                InternetMusicActivity.actionStart(this, it)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
     companion object {
+        const val searchCode=333
         @JvmStatic
         fun actionStart(ctx: Context) {
 

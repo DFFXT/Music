@@ -15,7 +15,7 @@
         app:topBar_startImage="@drawable/icon_back_black"
         app:topBar_tint="@color/white"
         app:topBar_mainTitleColor="@color/white"
-        app:topBar_endText="@string/clearGroup"/>
+        app:topBar_endText="@string/playCount"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recentList"
         android:layout_width="match_parent"
