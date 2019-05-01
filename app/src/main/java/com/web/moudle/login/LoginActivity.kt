@@ -27,10 +27,10 @@ class LoginActivity : BaseActivity(){
         tv_switchPage.setOnClickListener {
             if(currentPage == login){
                 switchPage(register)
-                tv_switchPage.text=getString(R.string.register)
+                tv_switchPage.text=getString(R.string.login)
             }else{
                 switchPage(login)
-                tv_switchPage.text=getString(R.string.login)
+                tv_switchPage.text=getString(R.string.register)
             }
         }
     }
