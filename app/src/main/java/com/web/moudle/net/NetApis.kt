@@ -12,6 +12,7 @@ import com.web.moudle.home.mainFragment.subFragment.bean.HomePageMusicInfoBox
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItemBox
 import com.web.moudle.home.video.bean.VideoRecommendBox
+import com.web.moudle.login.bean.RegistResponse
 import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicSearch.bean.RowMusicData
@@ -238,6 +239,13 @@ class NetApis {
 
 
 
+    }
+
+    interface Login{
+        @GET("http://132.232.106.140/QFMusic/register")
+        fun register(@Query("id")account: String,@Query("pwd")password: String,@Query("nickname")nickName:String):Observable<RegistResponse>
+        @GET("http://132.232.106.140/QFMusic/login")
+        fun login(@Query("id") account: Long,@Query("pwd")password: String):Observable<RegistResponse>
     }
 
     interface Global{

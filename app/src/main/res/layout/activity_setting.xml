@@ -73,4 +73,13 @@
 		android:paddingBottom="10dp"
 		android:background="@drawable/selector_transparent_gray"
 		app:textWithDrawable_text="@string/setting_about"/>
+	<com.web.misc.TextWithDrawable
+		android:id="@+id/twd_logout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingTop="10dp"
+		android:paddingBottom="10dp"
+		android:background="@drawable/selector_transparent_gray"
+		app:textWithDrawable_text="@string/logout" />
+
 </LinearLayout>

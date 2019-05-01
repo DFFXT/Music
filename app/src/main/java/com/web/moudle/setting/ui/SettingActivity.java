@@ -3,6 +3,7 @@ package com.web.moudle.setting.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import com.web.common.base.BaseActivity;
 import com.web.common.constant.Apk;
@@ -14,6 +15,7 @@ import com.web.moudle.setting.cache.CacheActivity;
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.moudle.setting.lyrics.LyricsSettingActivity;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
+import com.web.moudle.user.UserManager;
 import com.web.web.R;
 
 @SuppressLint("InlinedApi")
@@ -30,6 +32,7 @@ public class SettingActivity extends BaseActivity {
         TextWithDrawable twd_musicScan = findViewById(R.id.twd_musicScan);
         TextWithDrawable twd_lyrics = findViewById(R.id.twd_lyrics);
         TextWithDrawable twd_checkUpdate = findViewById(R.id.twd_checkUpdate);
+        TextWithDrawable twd_logout = findViewById(R.id.twd_logout);
         twd_lockScreen.setOnClickListener(v -> LockScreenSettingActivity.Companion.actionStart(this));
         twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
         twd_lyrics.setOnClickListener(v -> LyricsSettingActivity.actionStart(this));
@@ -40,6 +43,17 @@ public class SettingActivity extends BaseActivity {
 
 
         findViewById(R.id.twd_about).setOnClickListener(v -> AboutActivity.actionStart(this));
+
+        twd_logout.setOnClickListener(v->{
+            UserManager.setLogin(false);
+            twd_logout.setVisibility(View.GONE);
+        });
+
+        if(UserManager.isLogin()){
+            twd_logout.setVisibility(View.VISIBLE);
+        }else{
+            twd_logout.setVisibility(View.GONE);
+        }
 
     }
 

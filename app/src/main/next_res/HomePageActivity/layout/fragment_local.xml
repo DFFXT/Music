@@ -16,19 +16,39 @@
         app:topBar_endImage="@drawable/setting"
         app:topBar_tint="@color/white"/>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp">
+        <com.web.misc.RoundImageView
+            android:id="@+id/iv_userIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:iv_type="circle"
+            tools:src="@color/themeColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/tv_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="@dimen/textSize_big"
+            app:layout_constraintStart_toEndOf="@id/iv_userIcon"
+            app:layout_constraintTop_toTopOf="@id/iv_userIcon"
+            app:layout_constraintBottom_toBottomOf="@id/iv_userIcon"
+            tools:text="@string/login"/>
         <FrameLayout
             android:id="@+id/layout_localBg"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:background="@color/themeColor"
             android:padding="10dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_userIcon"
              >
             <TextView
                 android:id="@+id/tv_localMusic"

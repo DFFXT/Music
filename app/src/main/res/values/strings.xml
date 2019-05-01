@@ -187,4 +187,17 @@
 
 	<string name="weatherDeleteAllRecord">是否删除所有记录</string>
 
+
+
+	<string name="account">账号</string>
+	<string name="account_hint">账号(4–11位)</string>
+	<string name="nickName">昵称</string>
+	<string name="password">  密码</string>
+	<string name="passwordConfirm">确认密码</string>
+	<string name="register">注册</string>
+	<string name="register_ok">注册成功</string>
+	<string name="login">登录</string>
+	<string name="login_ok">登录成功</string>
+	<string name="logout">退出登录</string>
+
 </resources>

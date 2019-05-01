@@ -137,6 +137,7 @@
         <activity android:name="com.web.moudle.home.HomePageActivity" />
         <activity android:name="com.web.moudle.recentListen.RecentListenActivity" />
         <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivityNew" />
+        <activity android:name="com.web.moudle.login.LoginActivity" />
 
     </application>
 

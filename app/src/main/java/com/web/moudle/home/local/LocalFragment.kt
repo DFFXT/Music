@@ -4,8 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.view.View
 import com.web.common.base.BaseFragment
+import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.util.ResUtil
 import com.web.moudle.home.HomePageActivity
 import com.web.moudle.home.local.model.LocalModel
+import com.web.moudle.login.LoginActivity
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity
@@ -13,6 +16,7 @@ import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.moudle.recentListen.RecentListenActivity
 import com.web.moudle.search.SearchActivity
 import com.web.moudle.setting.ui.SettingActivity
+import com.web.moudle.user.UserManager
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_local.view.*
 
@@ -50,6 +54,7 @@ class LocalFragment : BaseFragment() {
 
         initData()
 
+
     }
 
     private fun initData(){
@@ -66,6 +71,18 @@ class LocalFragment : BaseFragment() {
 
         model.getRecentMusicNum {
             rootView!!.tv_recentListen.text = it.toString()
+        }
+
+        if(UserManager.isLogin()){
+            ImageLoad.load("").placeholder(R.drawable.def_user_icon).into(rootView!!.iv_userIcon)
+            rootView!!.tv_userName.text=UserManager.getUserName()
+            rootView!!.iv_userIcon.setOnClickListener(null)
+        }else{
+            rootView!!.iv_userIcon.setImageResource(R.drawable.def_user_icon)
+            rootView!!.tv_userName.text=ResUtil.getString(R.string.login)
+            rootView!!.iv_userIcon.setOnClickListener {
+                LoginActivity.actionStart(it.context)
+            }
         }
     }
 

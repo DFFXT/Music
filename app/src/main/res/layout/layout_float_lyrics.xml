@@ -10,7 +10,7 @@
         android:id="@+id/layout_op"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparentWhite"
+        android:background="#aaffffff"
         android:foreground="@drawable/bottom_line">
         <ImageView
             android:id="@+id/iv_sizeIncrease"
