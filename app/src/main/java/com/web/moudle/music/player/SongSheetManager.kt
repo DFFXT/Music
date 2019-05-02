@@ -1,15 +1,11 @@
 package com.web.moudle.music.player
 
 import com.web.common.base.MyApplication
-import com.web.common.base.get
 import com.web.common.util.IOUtil
 import com.web.data.Music
 import com.web.moudle.music.player.bean.DiskObject
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.music.player.bean.SongSheetList
-import com.web.moudle.music.player.bean.SongSheetWW
-import com.web.moudle.music.player.model.WWSongSheetModel
-import com.web.moudle.user.UserManager
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -17,8 +13,6 @@ import java.io.ObjectInputStream
 
 object SongSheetManager {
     private var songSheetList:SongSheetList?=null
-
-    private val model=WWSongSheetModel
 
     private var mBasePath=MyApplication.context.filesDir.absolutePath+ File.separator+"sheet"
         get(){
@@ -47,13 +41,9 @@ object SongSheetManager {
 
         return songSheetList!!
     }
-    fun createNewSongSheet(sheetName:String,callback:((SongSheetWW)->Unit)?=null){
+    fun createNewSongSheet(sheetName:String){
         val songSheet= SongSheet(sheetName)
         getSongSheetList().addSongSheet(songSheet)
-        val songSheetWW=SongSheetWW()
-        songSheetWW.code=200
-        songSheetWW.name=sheetName
-        callback?.invoke(songSheetWW)
     }
 
 

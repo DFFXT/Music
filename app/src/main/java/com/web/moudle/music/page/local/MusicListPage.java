@@ -118,20 +118,16 @@ public class MusicListPage extends BaseMusicPage {
         alert.setCreateListener(() -> {
             String name = "sheet-" + SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
 
-            SongSheetManager.INSTANCE.createNewSongSheet(name,res->{
-                if(res.getCode()==200){
-                    sheetNameList.add(sheetNameList.size(), name);
-                    alert.setList(sheetNameList);
-                    alert.getAdapter().notifyItemRangeInserted(sheetNameList.size() - 1, 1);
-                    connect.groupChange();
-                }
-                return null;
-            });
+            SongSheetManager.INSTANCE.createNewSongSheet(name);
+            sheetNameList.add(sheetNameList.size(), name);
+            alert.setList(sheetNameList);
+            alert.getAdapter().notifyItemRangeInserted(sheetNameList.size() - 1, 1);
+            connect.groupChange();
             return null;
         });
         alert.setItemClickListener((v,index) -> {
             for (int id : musicIds) {
-                list.get(index).add(id);
+                list.get(index+1).add(id);
             }
             connect.groupChange();
             SongSheetManager.INSTANCE.getSongSheetList().save();
