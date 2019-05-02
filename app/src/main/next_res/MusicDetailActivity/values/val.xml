@@ -7,6 +7,7 @@
     <string name="musicDetailActivity_publishCompany">发行公司：</string>
     <string name="musicDetailActivity_listenTimes">播放次数：</string>
     <string name="musicDetailActivity_addToWait">添加播放</string>
+    <string name="musicDetailActivity_addToSheet">加入歌单</string>
     <string name="musicDetailActivity_lyrics">歌词</string>
     <string name="musicDetailActivity_styles">风格：</string>
     <string name="musicDetailActivity_comment">评论</string>

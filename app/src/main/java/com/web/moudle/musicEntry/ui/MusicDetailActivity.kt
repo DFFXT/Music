@@ -19,6 +19,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.web.common.base.*
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
+import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
@@ -26,7 +27,12 @@ import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
 import com.web.misc.DrawableItemDecoration
+import com.web.moudle.home.local.ListDialog
+import com.web.moudle.music.page.local.control.interf.ListSelectListener
+import com.web.moudle.music.page.local.control.ui.SelectorListAlert
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.bean.SongSheetWW
+import com.web.moudle.music.player.model.WWSongSheetModel
 import com.web.moudle.musicEntry.adapter.CommentAdapter
 import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.service.FileDownloadService
@@ -34,6 +40,8 @@ import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_music_detail.*
+import kotlinx.android.synthetic.main.activity_music_detail.rootView
+import kotlinx.android.synthetic.main.music_navigator_control.*
 
 class MusicDetailActivity : BaseActivity() {
     private lateinit var id: String
@@ -44,6 +52,7 @@ class MusicDetailActivity : BaseActivity() {
     private var commentPage=0
     private val commentList=ArrayList<CommentItem>()
     private var adapter:CommentAdapter= CommentAdapter(commentList)
+    private lateinit var data:MusicDetailInfo
     private lateinit var music:InternetMusicForPlay
 
     override fun getLayoutId(): Int {
@@ -56,6 +65,7 @@ class MusicDetailActivity : BaseActivity() {
         model.detailMusic.observe(this, Observer<LiveDataWrapper<MusicDetailInfo>> { data ->
             if (data != null) {
                 if (data.code == LiveDataWrapper.CODE_OK) {
+                    this.data=data.value
                     val res = data.value
                     tv_musicName.text = res.songInfo.title
                     tv_mainSinger.text = res.songInfo.artistName
@@ -64,18 +74,10 @@ class MusicDetailActivity : BaseActivity() {
                     tv_publishTime.text = res.songInfo.publishTime
                     tv_publishCompany.text = res.songInfo.proxyCompany
                     tv_listenTimes.text = res.songInfo.listenTimes
-                    tv_downloadMusic.text = ResUtil.getFileSize(res.bitRate.fileSize)
-                    val drawable = getDrawable(R.drawable.download)
-                    drawable!!.setBounds(0, 0, ViewUtil.dpToPx(20f), ViewUtil.dpToPx(20f))
-                    tv_downloadMusic.setCompoundDrawables(drawable, null, null, null)
-                    tv_downloadMusic.setOnClickListener {
-                        FileDownloadService.addTask(it.context, attributesMap(res))
-                    }
-                    val drawableAdd=getDrawable(R.drawable.add_icon)
-                    drawableAdd?.setBounds(0, 0, ViewUtil.dpToPx(20f), ViewUtil.dpToPx(20f))
-                    tv_addToWait.setCompoundDrawables(drawableAdd, null, null, null)
-                    tv_addToWait.setOnClickListener {
-                        connection?.addToWait(music)
+
+
+                    card_info.setOnClickListener {
+                        showListPop()
                     }
 
 
@@ -196,6 +198,9 @@ class MusicDetailActivity : BaseActivity() {
                 }
             }
         })
+        WWSongSheetModel.isLikeMusic(id.toLong()){
+            isLike=it
+        }
         model.getDetail(id)
         model.getComment(id,commentPage, pageSize)
     }
@@ -231,17 +236,78 @@ class MusicDetailActivity : BaseActivity() {
 
     }
 
-    private fun map(res:MusicDetailInfo):InternetMusicForPlay{
-        val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
-        music.song_id=id
-        music.imgAddress = res.songInfo.picSmall
-        music.lrcLink = res.songInfo.lrcLink
-        music.suffix = res.bitRate.format
-        music.duration = res.songInfo.duration.toInt()*1000
-        music.album = res.songInfo.albumName
-        music.size = res.bitRate.fileSize
-        return music
+    private var isLike=false
+    private var listPop:ListDialog?=null
+    private fun showListPop(){
+        listPop=ListDialog(this)
+                .addItem(ResUtil.getString(R.string.downloadSure), View.OnClickListener {
+                    FileDownloadService.addTask(it.context, attributesMap(data))
+                    listPop?.dismiss()
+                })
+                .addItem(ResUtil.getString(R.string.musicDetailActivity_addToWait), View.OnClickListener {
+                    connection?.addToWait(music)
+                    listPop?.dismiss()
+                })
+                .addItem(ResUtil.getString(R.string.musicDetailActivity_addToSheet), View.OnClickListener {
+                    showSheetList()
+                    listPop?.dismiss()
+                })
+                .addItem(//***根据是否已经喜爱来显示
+                        if(!isLike)ResUtil.getString(R.string.setAsLike_real)
+                        else ResUtil.getString(R.string.cancelLike), View.OnClickListener {
+                    if(isLike){
+                        WWSongSheetModel.removeAsLike(id.toLong()){
+                            isLike=!it
+                        }
+                    }else{
+                        WWSongSheetModel.setAsLike(id.toLong()){
+                            if(it.code==200){
+                                MToast.showToast(this,R.string.setAsLike_real)
+                                isLike=true
+                            }
+                        }
+                    }
+                    listPop?.dismiss()
+
+                })
+        listPop?.show()
     }
+
+
+
+
+
+
+    private var sheetListPop:SelectorListAlert?=null
+    private fun showSheetList(){
+        if(sheetListPop==null){
+            WWSongSheetModel.getSongSheetList {res->
+                sheetListPop=SelectorListAlert(this,ResUtil.getString(R.string.songSheet))
+                sheetListPop!!.setIndex(-1)
+                sheetListPop!!.list= ArrayList(res.map { it.name })
+                sheetListPop!!.setListener(object :ListSelectListener{
+                    override fun select(v: View?, position: Int) {
+                        addSongToSheet(res[position].id)
+                    }
+
+                    override fun remove(v: View?, position: Int) {
+                        sheetListPop!!.adapter.notifyDataSetChanged()
+                    }
+                })
+                sheetListPop!!.showCenter(srl_comment)
+            }
+        }else{
+            sheetListPop?.showCenter(srl_comment)
+        }
+    }
+    private fun addSongToSheet(sheetId:Long){
+        WWSongSheetModel.addSongToSheet(sheetId,id.toLong(),
+                data.songInfo.title,data.songInfo.artistName,
+                data.songInfo.albumName){
+            sheetListPop?.dismiss()
+        }
+    }
+
 
     /**
      * 比较音乐是否是同一个地址
@@ -291,6 +357,32 @@ class MusicDetailActivity : BaseActivity() {
             val intent = Intent(ctx, MusicDetailActivity::class.java)
             intent.putExtra(ID, id)
             ctx.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun map(res:MusicDetailInfo):InternetMusicForPlay{
+            val music = InternetMusicForPlay(res.songInfo.title,res.songInfo.artistName,res.bitRate.songLink)
+            music.song_id=res.songInfo.songId
+            music.imgAddress = res.songInfo.picSmall
+            music.lrcLink = res.songInfo.lrcLink
+            music.suffix = res.bitRate.format
+            music.duration = res.songInfo.duration.toInt()*1000
+            music.album = res.songInfo.albumName
+            music.size = res.bitRate.fileSize
+            return music
+        }
+        @JvmStatic
+        fun map(res:MusicDetailInfo,music:InternetMusicForPlay){
+            music.musicName=res.songInfo.title
+            music.singer=res.songInfo.artistName
+            music.path=res.bitRate.songLink
+            music.song_id=res.songInfo.songId
+            music.imgAddress = res.songInfo.picSmall
+            music.lrcLink = res.songInfo.lrcLink
+            music.suffix = res.bitRate.format
+            music.duration = res.songInfo.duration.toInt()*1000
+            music.album = res.songInfo.albumName
+            music.size = res.bitRate.fileSize
         }
     }
 

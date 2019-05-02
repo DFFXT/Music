@@ -2,7 +2,7 @@ package com.web.moudle.login.bean;
 
 public class RegistResponse {
     private int code;
-    private int id;
+    private Long id;
     private String nickname;
     private String pwd;
 
@@ -14,11 +14,11 @@ public class RegistResponse {
         this.code = code;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

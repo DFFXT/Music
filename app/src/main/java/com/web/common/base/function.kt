@@ -27,6 +27,7 @@ fun <T : Any> Observable<T>.get(onNext: (T) -> Unit, onError: ((Throwable) -> Un
         }
 
         override fun error(e: Throwable) {
+            e.printStackTrace()
             onError?.invoke(e)
         }
     })

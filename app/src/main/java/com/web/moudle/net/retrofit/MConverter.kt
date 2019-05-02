@@ -1,6 +1,7 @@
 package com.web.moudle.net.retrofit
 
 import com.alibaba.fastjson.JSON
+import com.google.gson.Gson
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import java.lang.reflect.Type
@@ -11,6 +12,7 @@ class MConverter<T>(val type: Type) : Converter<ResponseBody, T> {
         if (res.startsWith("(")) {
             return JSON.parseObject(res.substring(1, res.length - 1), type)
         }
+        //return Gson().fromJson(res,type)
         return JSON.parseObject(res, type)
     }
 }

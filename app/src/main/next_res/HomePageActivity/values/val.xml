@@ -13,4 +13,8 @@
     <string name="recentListen">最近听过</string>
     <string name="preferList">偏好列表</string>
     <string name="fastScan">快速扫描</string>
+    <string name="createSongSheet">创建歌单</string>
+    <string name="createSongSheetFailed">创建歌单失败</string>
+    <string name="inputSongSheetName">输入歌单名</string>
+    <string name="songSheetName">歌单名</string>
 </resources>

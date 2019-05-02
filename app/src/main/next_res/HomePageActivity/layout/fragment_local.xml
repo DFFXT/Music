@@ -1,249 +1,315 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <com.web.misc.TopBarLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
         android:background="@color/themeColor"
-        app:topBar_mainTitleText="@string/local"
-        app:topBar_mainTitleColor="@color/white"
+        android:elevation="2dp"
         app:topBar_endImage="@drawable/setting"
-        app:topBar_tint="@color/white"/>
+        app:topBar_mainTitleColor="@color/white"
+        app:topBar_mainTitleText="@string/local"
+        app:topBar_tint="@color/white" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:overScrollMode="never"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp">
-        <com.web.misc.RoundImageView
-            android:id="@+id/iv_userIcon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:iv_type="circle"
-            tools:src="@color/themeColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-        <TextView
-            android:id="@+id/tv_userName"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:textSize="@dimen/textSize_big"
-            app:layout_constraintStart_toEndOf="@id/iv_userIcon"
-            app:layout_constraintTop_toTopOf="@id/iv_userIcon"
-            app:layout_constraintBottom_toBottomOf="@id/iv_userIcon"
-            tools:text="@string/login"/>
-        <FrameLayout
-            android:id="@+id/layout_localBg"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:background="@color/themeColor"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_userIcon"
-             >
-            <TextView
-                android:id="@+id/tv_localMusic"
-                android:layout_width="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/page_local"
-                android:textColor="@color/white"
-                android:textSize="@dimen/textSize_normal"
-                />
-            <TextView
-                android:id="@+id/tv_musicNum"
-                android:layout_width="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <com.web.misc.RoundImageView
+                    android:id="@+id/iv_userIcon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:iv_type="circle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@color/themeColor" />
+
+                <TextView
+                    android:id="@+id/tv_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:textSize="@dimen/textSize_big"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_userIcon"
+                    app:layout_constraintStart_toEndOf="@id/iv_userIcon"
+                    app:layout_constraintTop_toTopOf="@id/iv_userIcon"
+                    tools:text="@string/login" />
+
+                <FrameLayout
+                    android:id="@+id/layout_localBg"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/themeColor"
+                    android:padding="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_userIcon">
+
+                    <TextView
+                        android:id="@+id/tv_localMusic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/page_local"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/textSize_normal" />
+
+                    <TextView
+                        android:id="@+id/tv_musicNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="4dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/textSize_normal"
+                        tools:text="34" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="end|bottom"
+                        android:src="@drawable/icon_video_pause"
+                        android:tint="@color/white" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@color/themeColor"
+                    android:padding="25dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_search"
+                    app:layout_constraintBottom_toBottomOf="@id/layout_localBg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/layout_localBg"
+                    app:layout_constraintTop_toTopOf="@id/layout_localBg" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <FrameLayout
+                android:id="@+id/layout_recent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="4dp"
-                tools:text="34"
-                android:textColor="@color/white"
-                android:textSize="@dimen/textSize_normal"
-                />
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/icon_video_pause"
-                android:tint="@color/white"
-                android:layout_gravity="end|bottom"/>
-        </FrameLayout>
-        <ImageView
-            android:id="@+id/iv_search"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/themeColor"
-            android:layout_gravity="end|center_vertical"
-            android:src="@drawable/icon_search"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:padding="25dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/layout_localBg"
-            app:layout_constraintBottom_toBottomOf="@id/layout_localBg"
-            app:layout_constraintStart_toEndOf="@id/layout_localBg"/>
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border_bottom_1px"
+                android:paddingStart="10dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="20dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/recent_icon"
+                    android:tint="@color/textColor_6" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="@string/recentListen"
+                    android:textColor="@color/textColor_3"
+                    android:textSize="@dimen/textSize_normal" />
 
-    <FrameLayout
-        android:id="@+id/layout_recent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="20dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/border_bottom_1px">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:tint="@color/textColor_6"
-            android:src="@drawable/recent_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:textColor="@color/textColor_3"
-            android:textSize="@dimen/textSize_normal"
-            android:text="@string/recentListen"/>
-        <TextView
-            android:id="@+id/tv_recentListen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="30dp"
-            android:textColor="@color/textColor_6"
-            android:textSize="@dimen/textSize_small"
-            tools:text="22"/>
+                <TextView
+                    android:id="@+id/tv_recentListen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@color/textColor_6"
+                    android:textSize="@dimen/textSize_small"
+                    tools:text="22" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/icon_back_black"
-            android:tint="@color/gray"
-            android:layout_gravity="end|center_vertical"
-            android:rotation="180"/>
-    </FrameLayout>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:rotation="180"
+                    android:src="@drawable/icon_back_black"
+                    android:tint="@color/gray" />
+            </FrameLayout>
 
 
-    <FrameLayout
-        android:id="@+id/layout_prefer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="20dp"
-        android:background="@drawable/border_bottom_1px">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:tint="@color/textColor_6"
-            android:src="@drawable/like_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:textColor="@color/textColor_3"
-            android:textSize="@dimen/textSize_normal"
-            android:text="@string/preferList"/>
-        <TextView
-            android:id="@+id/tv_preferNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="30dp"
-            android:textColor="@color/textColor_6"
-            android:textSize="@dimen/textSize_small"
-            tools:text="22"/>
+            <FrameLayout
+                android:id="@+id/layout_prefer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_1px"
+                android:paddingStart="10dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="20dp">
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/icon_back_black"
-            android:tint="@color/gray"
-            android:layout_gravity="end|center_vertical"
-            android:rotation="180"/>
-    </FrameLayout>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/like_icon"
+                    android:tint="@color/textColor_6" />
 
-    <FrameLayout
-        android:id="@+id/layout_download"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="20dp"
-        android:background="@drawable/border_bottom_1px">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:padding="5dp"
-            android:tint="@color/textColor_6"
-            android:src="@drawable/download"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:textColor="@color/textColor_3"
-            android:textSize="@dimen/textSize_normal"
-            android:text="@string/downloadManager"/>
-        <TextView
-            android:id="@+id/tv_downloadNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="30dp"
-            android:textColor="@color/textColor_6"
-            android:textSize="@dimen/textSize_small"
-            tools:text="22"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="@string/preferList"
+                    android:textColor="@color/textColor_3"
+                    android:textSize="@dimen/textSize_normal" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/icon_back_black"
-            android:tint="@color/gray"
-            android:layout_gravity="end|center_vertical"
-            android:rotation="180"/>
-    </FrameLayout>
-    <FrameLayout
-        android:id="@+id/layout_fastScan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="20dp">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:tint="@color/textColor_6"
-            android:src="@drawable/scan_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/textColor_3"
-            android:textSize="@dimen/textSize_normal"
-            android:text="@string/fastScan"/>
+                <TextView
+                    android:id="@+id/tv_preferNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@color/textColor_6"
+                    android:textSize="@dimen/textSize_small"
+                    tools:text="22" />
 
-    </FrameLayout>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:rotation="180"
+                    android:src="@drawable/icon_back_black"
+                    android:tint="@color/gray" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_1px"
+                android:paddingStart="10dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="20dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/download"
+                    android:tint="@color/textColor_6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="@string/downloadManager"
+                    android:textColor="@color/textColor_3"
+                    android:textSize="@dimen/textSize_normal" />
+
+                <TextView
+                    android:id="@+id/tv_downloadNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@color/textColor_6"
+                    android:textSize="@dimen/textSize_small"
+                    tools:text="22" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:rotation="180"
+                    android:src="@drawable/icon_back_black"
+                    android:tint="@color/gray" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_fastScan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="20dp"
+                android:background="@drawable/border_bottom_1px">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/scan_icon"
+                    android:tint="@color/textColor_6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="60dp"
+                    android:text="@string/fastScan"
+                    android:textColor="@color/textColor_3"
+                    android:textSize="@dimen/textSize_normal" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_createSongSheet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="20dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_add_circle"
+                    android:tint="@color/textColor_6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="60dp"
+                    android:text="@string/createSongSheet"
+                    android:textColor="@color/textColor_3"
+                    android:textSize="@dimen/textSize_normal" />
+
+            </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_songSheetlist"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
 </LinearLayout>
+

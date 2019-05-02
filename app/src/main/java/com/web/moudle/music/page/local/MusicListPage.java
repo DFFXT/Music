@@ -86,7 +86,7 @@ public class MusicListPage extends BaseMusicPage {
                 }
                 break;
                 case R.id.setAsLiske: {
-                    setAsLike(data.get(position).getId());
+                    addToList(data.get(position).getId());
                 }
                 break;
                 case R.id.detailInfo: {//**详细信息
@@ -104,7 +104,7 @@ public class MusicListPage extends BaseMusicPage {
     }
 
 
-    private void setAsLike(int... musicIds) {
+    private void addToList(int... musicIds) {
         List<SongSheet> list = SongSheetManager.INSTANCE.getSongSheetList().getSongList();
         ArrayList<String> sheetNameList = new ArrayList<>();
         for (SongSheet sheet : list) {
@@ -117,11 +117,16 @@ public class MusicListPage extends BaseMusicPage {
         alert.setList(sheetNameList);
         alert.setCreateListener(() -> {
             String name = "sheet-" + SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
-            sheetNameList.add(sheetNameList.size(), name);
-            SongSheetManager.INSTANCE.createNewSongSheet(name);
-            alert.setList(sheetNameList);
-            alert.getAdapter().notifyItemRangeInserted(sheetNameList.size() - 1, 1);
-            connect.groupChange();
+
+            SongSheetManager.INSTANCE.createNewSongSheet(name,res->{
+                if(res.getCode()==200){
+                    sheetNameList.add(sheetNameList.size(), name);
+                    alert.setList(sheetNameList);
+                    alert.getAdapter().notifyItemRangeInserted(sheetNameList.size() - 1, 1);
+                    connect.groupChange();
+                }
+                return null;
+            });
             return null;
         });
         alert.setItemClickListener((v,index) -> {
@@ -219,11 +224,11 @@ public class MusicListPage extends BaseMusicPage {
                     break;
                     case 2: {
                         List<Integer> list = adapter.getSelectList((music, index) -> music.getId());
-                        int arr[] = new int[list.size()];
+                        int[] arr = new int[list.size()];
                         for (int i = 0; i < list.size(); i++) {
                             arr[i] = list.get(i);
                         }
-                        setAsLike(arr);
+                        addToList(arr);
                     }
                     break;
                     case 3: {
@@ -386,7 +391,7 @@ public class MusicListPage extends BaseMusicPage {
 
     }
 
-    private int pos[] = new int[2];
+    private int[] pos = new int[2];
 
 
 

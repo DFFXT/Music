@@ -22,7 +22,7 @@ class BillboardAdapter(data:List<Content>):BaseAdapter<Content>(data) {
         val ctx=holder.itemView.context
         holder.bindText(R.id.tv_billboardName,item?.name)
         if(item==null)return
-        item.musicList.forEachIndexed{index,v->
+        item.content.forEachIndexed{ index, v->
             if(index>=3)return@forEachIndexed
             holder.bindText(ids[index],"${index+1}. "+v.title+" - "+v.author).setOnClickListener {
                 MusicDetailActivity.actionStart(ctx,v.song_id)

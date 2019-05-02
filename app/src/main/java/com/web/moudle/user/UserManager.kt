@@ -9,7 +9,7 @@ object UserManager {
     @JvmStatic
     fun login(user:RegistResponse){
         setLogin(true)
-        setUserId(user.id.toString())
+        setUserId(user.id)
         setUserName(user.nickname)
     }
 
@@ -34,11 +34,11 @@ object UserManager {
     }
 
     @JvmStatic
-    fun getUserId():String{
-        return SP.getString(Constant.spName, USERID,"")
+    fun getUserId():Long{
+        return SP.getLong(Constant.spName, USERID,0)
     }
     @JvmStatic
-    fun setUserId(userId:String){
+    fun setUserId(userId:Long){
         return SP.putValue(Constant.spName, USERID,userId)
     }
 

@@ -1,5 +1,6 @@
 package com.web.moudle.net.retrofit
 
+import com.alibaba.fastjson.support.retrofit.Retrofit2ConverterFactory
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody

@@ -17,8 +17,10 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
+import com.web.common.base.BaseObserver;
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.base.ChineseComparator;
 import com.web.common.base.MyApplication;
@@ -38,6 +40,9 @@ import com.web.moudle.music.player.other.PlayerConfig;
 import com.web.moudle.lockScreen.receiver.LockScreenReceiver;
 import com.web.moudle.lyrics.EqualizerActivity;
 import com.web.moudle.lyrics.bean.SoundInfo;
+import com.web.moudle.musicEntry.bean.MusicDetailInfo;
+import com.web.moudle.musicEntry.model.MusicDetailModel;
+import com.web.moudle.musicEntry.ui.MusicDetailActivity;
 import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.MyNotification;
 import com.web.moudle.preference.SP;
@@ -589,6 +594,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         }
 
 
+
+        private MusicDetailModel model;
+
         /**
          * 播放在线音乐
          *
@@ -596,9 +604,25 @@ public class MusicPlay extends MediaBrowserServiceCompat {
          */
         public void playInternet(final InternetMusicForPlay music) {
 
-            loadMusic(music);
+            if(!TextUtils.isEmpty(music.getPath())){
+                loadMusic(music);
+            }
             //**下载歌词和图片
             Single.create(emitter -> {
+                //**判断是否是从歌单传入的数据，歌单数据没有路径，只有id
+                if(TextUtils.isEmpty(music.getPath())){
+                    if(model==null)model=new MusicDetailModel();
+                    model.getMusicDetail(music.getSong_id())
+                            .subscribe(new BaseObserver<MusicDetailInfo>() {
+                                @Override
+                                public void onNext(MusicDetailInfo musicDetailInfo) {
+                                    MusicDetailActivity.map(musicDetailInfo,music);
+                                }
+                            });
+                    AndroidSchedulers.mainThread().scheduleDirect(()->loadMusic(music));
+                }
+
+
                 RecentPlayMusic recentPlayMusic=new RecentPlayMusic();
                 recentPlayMusic.setSongId(music.getSong_id());
                 recentPlayMusic.setMusicName(music.getMusicName());
@@ -647,10 +671,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         }
 
         public void playWait(int index) {
-            if (index >= 0 && index < waitMusic.size()) {
-                waitIndex = index;
-                checkMusicIndexAndLoad(waitMusic.get(index));
-            }
+            loadNextWait(index);
         }
 
         public void delete(boolean deleteFile, int groupIndex, int... childIndex) {
@@ -658,7 +679,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         }
 
         public void delete(boolean deleteFile, int groupIndex, List<Integer> childList) {
-            int list[] = new int[childList.size()];
+            int[] list = new int[childList.size()];
             for (int i = 0; i < list.length; i++) {
                 list[i] = childList.get(i);
             }
@@ -716,6 +737,8 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     private void loadNextWait(int index) {
         if(index<0){
             waitIndex++;
+        }else{
+            waitIndex=index;
         }
         if (waitMusic.size() <= waitIndex) waitIndex = 0;
         Music music=waitMusic.get(waitIndex);

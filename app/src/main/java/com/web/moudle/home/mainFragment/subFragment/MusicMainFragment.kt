@@ -22,6 +22,7 @@ import com.web.moudle.home.mainFragment.subFragment.bean.HomePageMusic
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTag
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
+import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.singerEntry.ui.SingerEntryActivityNew
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_song_sheet.*
@@ -73,7 +74,7 @@ class MusicMainFragment : BaseFragment() {
         rootView.rv_SheetList.addItemDecoration(DrawableItemDecoration(0, 0, 0, 2, drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         rootView.rv_SheetList.adapter = adapter
         adapter.itemClick={item,_->
-            SingerEntryActivityNew.actionStart(context!!,item.song_id)
+            MusicDetailActivity.actionStart(context!!,item.song_id)
         }
 
         rootView.srl_sheetList.setRefreshFooter(ClassicsFooter(context))

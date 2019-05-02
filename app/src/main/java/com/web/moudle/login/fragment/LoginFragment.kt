@@ -19,6 +19,8 @@ class LoginFragment : BaseFragment() {
     override fun initView(rootView: View) {
 
 
+        rootView.et_account.setText(UserManager.getUserId().toString())
+
         rootView.tv_login.setOnClickListener {
             vm.login(rootView.et_account.text.toString().toLong(),rootView.et_password.text.toString())
                     .get(

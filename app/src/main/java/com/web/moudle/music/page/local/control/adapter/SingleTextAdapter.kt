@@ -17,6 +17,7 @@ open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
     var selectRender:((holder:BaseViewHolder,index:Int)->Unit)?=null
     var commonRender:((holder:BaseViewHolder,index:Int)->Unit)?=null
     var itemClickListener:((View?, Int)->Unit)?=null
+    var itemLongClick:((View,Int)->Boolean)?=null
     private val padding=ViewUtil.dpToPx(10f)
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String?) {
         (holder.itemView as TextView).text = item
@@ -37,6 +38,9 @@ open class SingleTextAdapter (list:List<String>?): BaseAdapter<String>(list){
                 notifyItemChanged(position)
             }
 
+        }
+        holder.itemView.setOnLongClickListener {
+            return@setOnLongClickListener itemLongClick?.invoke(it,position)?:false
         }
     }
 

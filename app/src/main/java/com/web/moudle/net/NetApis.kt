@@ -13,6 +13,8 @@ import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItemBox
 import com.web.moudle.home.video.bean.VideoRecommendBox
 import com.web.moudle.login.bean.RegistResponse
+import com.web.moudle.music.player.bean.LikeMusicWW
+import com.web.moudle.music.player.bean.SongSheetWW
 import com.web.moudle.musicEntry.bean.CommentBox
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicSearch.bean.RowMusicData
@@ -246,6 +248,46 @@ class NetApis {
         fun register(@Query("id")account: String,@Query("pwd")password: String,@Query("nickname")nickName:String):Observable<RegistResponse>
         @GET("http://132.232.106.140/QFMusic/login")
         fun login(@Query("id") account: Long,@Query("pwd")password: String):Observable<RegistResponse>
+    }
+
+    interface UserSongSheet{
+        @GET("http://132.232.106.140/QFMusic/createPlayList")
+        fun createSongSheet(@Query("name") sheetName:String,@Query("userId") userId:Long,@Query("coverPath") coverPath:String):Observable<SongSheetWW>
+
+
+        @GET("http://132.232.106.140/QFMusic/playlist/deletePlaylist")
+        fun deleteSongSheet(@Query("userId")userId: Long,@Query("id") sheetId: Long):Observable<SongSheetWW>
+
+        @GET("http://132.232.106.140/QFMusic/findAllPlaylist")
+        fun getSongSheetList(@Query("userId") userId: Long):Observable<List<SongSheetWW>>
+
+        @GET("http://132.232.106.140/QFMusic/playlist/getPlaylist")
+        fun getSongListInfo(@Query("id") id: Long,@Query("userId") userId: Long):Observable<SongSheetWW>
+
+
+        @GET("http://132.232.106.140/QFMusic/playlist/deleteSong")
+        fun deleteMusicFromSheet(@Query("id") sheetId: Long,@Query("songId") songId: Long):Observable<SongSheetWW>
+
+        @GET("http://132.232.106.140/QFMusic/playlist/addSong")
+        fun addSongToSheet(@Query("id") sheetId:Long,@Query("songId") songId: Long,
+                           @Query("name") musicName:String,@Query("artist") artistName:String,
+                           @Query("album") albumName:String,@Query("userId")userId: Long):Observable<SongSheetWW>
+
+
+        @GET("http://132.232.106.140/QFMusic/findAllLike")
+        fun getLikeList(@Query("userId")userId: Long):Observable<LikeMusicWW>
+
+        @GET("http://132.232.106.140/QFMusic/like")
+        fun setAsLike(@Query("userId") userId: Long,@Query("songId")songId: Long):Observable<SongSheetWW>
+
+
+        @GET("http://132.232.106.140/QFMusic/dislike")
+        fun removeAsLike(@Query("userId") userId: Long,@Query("songId")songId: Long):Observable<SongSheetWW>
+
+
+        @GET("http://132.232.106.140/QFMusic/isLike")
+        fun isLikeMusic(@Query("userId") userId: Long,@Query("songId")songId: Long):Observable<LikeMusicWW>
+
     }
 
     interface Global{

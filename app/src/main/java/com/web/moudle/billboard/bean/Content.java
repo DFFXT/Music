@@ -24,7 +24,7 @@ public class Content {
     private String pic_s260;
     private String pic_s210;
     @JSONField(name = "content")
-    private List<BillBoardMusic> musicList;
+    private List<BillBoardMusic> content;
     private String color;
     private String bg_color;
     private String bg_pic;
@@ -91,11 +91,11 @@ public class Content {
          return pic_s210;
      }
 
-    public void setMusicList(List<BillBoardMusic> musicList) {
-         this.musicList = musicList;
+    public void setContent(List<BillBoardMusic> content) {
+         this.content = content;
      }
-     public List<BillBoardMusic> getMusicList() {
-         return musicList;
+     public List<BillBoardMusic> getContent() {
+         return content;
      }
 
     public void setColor(String color) {

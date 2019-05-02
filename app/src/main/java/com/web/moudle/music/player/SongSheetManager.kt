@@ -1,15 +1,24 @@
 package com.web.moudle.music.player
 
 import com.web.common.base.MyApplication
+import com.web.common.base.get
 import com.web.common.util.IOUtil
 import com.web.data.Music
 import com.web.moudle.music.player.bean.DiskObject
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.music.player.bean.SongSheetList
-import java.io.*
+import com.web.moudle.music.player.bean.SongSheetWW
+import com.web.moudle.music.player.model.WWSongSheetModel
+import com.web.moudle.user.UserManager
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.ObjectInputStream
 
 object SongSheetManager {
     private var songSheetList:SongSheetList?=null
+
+    private val model=WWSongSheetModel
 
     private var mBasePath=MyApplication.context.filesDir.absolutePath+ File.separator+"sheet"
         get(){
@@ -20,6 +29,8 @@ object SongSheetManager {
             return field
         }
     val basePath= mBasePath
+
+
     fun getSongSheetList():SongSheetList{
         try {
             if(songSheetList==null){
@@ -31,15 +42,21 @@ object SongSheetManager {
             }
         }catch (e:IOException){
             songSheetList= SongSheetList()
-            SongSheetManager.saveObject(songSheetList!!)
+            saveObject(songSheetList!!)
         }
 
         return songSheetList!!
     }
-    fun createNewSongSheet(sheetName:String){
+    fun createNewSongSheet(sheetName:String,callback:((SongSheetWW)->Unit)?=null){
         val songSheet= SongSheet(sheetName)
         getSongSheetList().addSongSheet(songSheet)
+        val songSheetWW=SongSheetWW()
+        songSheetWW.code=200
+        songSheetWW.name=sheetName
+        callback?.invoke(songSheetWW)
     }
+
+
 
     fun setAsLike(music: Music){
         music.isLike=true
@@ -54,6 +71,8 @@ object SongSheetManager {
         music.saveOrUpdate()
         SongSheetManager.getSongSheetList().save()
     }
+
+
 
     fun getSerializableObject(path:String):Any?{
         var any:Any?=null

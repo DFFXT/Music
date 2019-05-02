@@ -92,7 +92,7 @@ open class BasePopupWindow @JvmOverloads constructor (
         popupWindow.showAtLocation(parent, gravity, x, y)
         applyWindowDarkAlpha(1f, 0.5f, 300)
     }
-    fun showCenter(parent: View){
+    open fun showCenter(parent: View){
         show(parent,Gravity.CENTER,0,0)
     }
 

@@ -9,6 +9,7 @@ import com.web.common.base.BaseActivity;
 import com.web.common.constant.Apk;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
+import com.web.misc.ConfirmDialog;
 import com.web.misc.TextWithDrawable;
 import com.web.moudle.setting.about.AboutActivity;
 import com.web.moudle.setting.cache.CacheActivity;
@@ -21,6 +22,7 @@ import com.web.web.R;
 @SuppressLint("InlinedApi")
 public class SettingActivity extends BaseActivity {
 
+    private View logout;
     public int getLayoutId() {
         return R.layout.activity_setting;
     }
@@ -32,7 +34,7 @@ public class SettingActivity extends BaseActivity {
         TextWithDrawable twd_musicScan = findViewById(R.id.twd_musicScan);
         TextWithDrawable twd_lyrics = findViewById(R.id.twd_lyrics);
         TextWithDrawable twd_checkUpdate = findViewById(R.id.twd_checkUpdate);
-        TextWithDrawable twd_logout = findViewById(R.id.twd_logout);
+        logout = findViewById(R.id.twd_logout);
         twd_lockScreen.setOnClickListener(v -> LockScreenSettingActivity.Companion.actionStart(this));
         twd_musicScan.setOnClickListener(v -> SuffixSelectActivity.Companion.actionStart(SettingActivity.this));
         twd_lyrics.setOnClickListener(v -> LyricsSettingActivity.actionStart(this));
@@ -44,19 +46,38 @@ public class SettingActivity extends BaseActivity {
 
         findViewById(R.id.twd_about).setOnClickListener(v -> AboutActivity.actionStart(this));
 
-        twd_logout.setOnClickListener(v->{
-            UserManager.setLogin(false);
-            twd_logout.setVisibility(View.GONE);
+        logout.setOnClickListener(v->{
+            logout();
         });
 
         if(UserManager.isLogin()){
-            twd_logout.setVisibility(View.VISIBLE);
+            logout.setVisibility(View.VISIBLE);
         }else{
-            twd_logout.setVisibility(View.GONE);
+            logout.setVisibility(View.GONE);
         }
 
     }
 
+    private void logout(){
+        new ConfirmDialog(this)
+                .setMsg(ResUtil.getString(R.string.logout))
+                .setLeftText(ResUtil.getString(R.string.no))
+                .setRightText(ResUtil.getString(R.string.yes))
+                .setLeftListener(dialog->{
+                    dialog.dismiss();
+                    return null;
+                })
+                .setRightListener(dialog->{
+                    logout.setOnClickListener(v->{
+                        UserManager.setLogin(false);
+                        logout.setVisibility(View.GONE);
+                    });
+                    dialog.dismiss();
+                    return null;
+                })
+                .show(logout);
+
+    }
 
     public static void actionStart(Context context) {
         context.startActivity(new Intent(context, SettingActivity.class));
