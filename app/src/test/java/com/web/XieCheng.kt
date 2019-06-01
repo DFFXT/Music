@@ -1,5 +1,6 @@
 package com.web
 
+import android.graphics.Color
 import kotlinx.coroutines.*
 import org.junit.Test
 import java.lang.Exception
@@ -7,7 +8,6 @@ import java.lang.Exception
 class XieCheng {
     @Test
     fun test(){
-        f("\u70ed\u95e8")
     }
 
     fun f(x:String?="22"){

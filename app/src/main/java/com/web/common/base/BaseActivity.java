@@ -18,10 +18,12 @@ import java.util.List;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import retrofit2.http.Headers;
+
 public abstract class BaseActivity extends AppCompatActivity {
     public static String INTENT_DATA = "_mData";
+    //**返回键监听
     private List<KeyListener> keyListenerList = new ArrayList<>();
-
     protected void onCreate(Bundle b) {
         super.onCreate(b);
 
@@ -29,7 +31,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         Configuration configuration = getResources().getConfiguration();
         configuration.fontScale = Constant.LocalConfig.fontScale;
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-        setContentView(getLayoutId());
+        if(getLayoutId()!=0){
+            setContentView(getLayoutId());
+        }
         initView();
 
         if (enableSwipeToBack()) {//**向右滑可以关闭activity，需要设置activity透明

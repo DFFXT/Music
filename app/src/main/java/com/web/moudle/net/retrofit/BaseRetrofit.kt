@@ -1,6 +1,7 @@
 package com.web.moudle.net.retrofit
 
 import com.alibaba.fastjson.support.retrofit.Retrofit2ConverterFactory
+import com.web.config.GetFiles
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -52,6 +53,7 @@ open class BaseRetrofit {
 
     @Suppress("UNCHECKED_CAST")
     fun <T:Any> obtainClass(t:Class<T>):T{
+
         var cl:T?
         cl= map[t.name] as T?
         if(cl==null){

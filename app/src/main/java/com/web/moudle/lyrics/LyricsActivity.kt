@@ -290,7 +290,7 @@ class LyricsActivity : BaseActivity() {
                         FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID,File(connect!!.config.music.path)))
                 intent.type="video/*"
             }
-            startActivity(Intent.createChooser(intent,"title"))
+            startActivity(Intent.createChooser(intent,connect?.config?.music?.musicName+" - 分享"))
 
         }
 

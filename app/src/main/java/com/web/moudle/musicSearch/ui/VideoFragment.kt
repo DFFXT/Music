@@ -58,7 +58,7 @@ class VideoFragment:BaseSearchFragment() {
         adapter= SimpleVideoAdapter()
         adapter.itemClick={
             if(it!=null){//**进入mv
-                VideoEntryActivity.actionStart(context!!,it.mvId)
+                VideoEntryActivity.actionStart(context!!,it.mvId,null)
             }
         }
         rv_musicList.adapter=adapter

@@ -21,7 +21,7 @@ class SuffixSelectAdapter(private val ctx:Context,private val list:ArrayList<Sca
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:ScanMusicType?) {
         val type=list[position]
         val editTextSuffix=holder.bindText(R.id.et_suffixItem_suffix, type.scanSuffix) as EditText
-        val editTextSize=holder.bindText(R.id.et_suffixSize,"${type.minFileSize}")
+        val editTextSize=holder.bindText(R.id.et_suffixSize,"${type.minTime}")
         val selector=holder.findViewById<View>(R.id.view_suffixItem_selector)
         selector.isSelected = type.isScanable
         selector.setOnClickListener {
@@ -40,8 +40,8 @@ class SuffixSelectAdapter(private val ctx:Context,private val list:ArrayList<Sca
         editTextSize.setOnFocusChangeListener { _,hasFocus ->
             if(hasFocus)return@setOnFocusChangeListener
             val value=if(editTextSize.text.toString().isEmpty()) 0 else editTextSize.text.toString().toInt()
-            if(value!=type.minFileSize){
-                type.minFileSize=value
+            if(value!=type.minTime){
+                type.minTime=value
             }
         }
 

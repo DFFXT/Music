@@ -146,7 +146,11 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             if (connect == null){
                 connect = new Connect();
                 EqualizerActivity.saveDefaultSoundEffect(equalizer);
-                connect.setSoundEffect(EqualizerActivity.getCurrentSoundEffect());
+                List<SoundInfo> soundInfos=EqualizerActivity.getCurrentSoundEffect();
+                for(int i=0;i<soundInfos.size();i++){
+                    equalizer.setBandLevel((short) i,(short) (soundInfos.get(i).getValue()+soundInfos.get(i).getMin()));
+                }
+
             }
             return connect;
         }
@@ -336,12 +340,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             return equalizer;
         }
 
-        public void setSoundEffect(List<SoundInfo> soundEffect){
-            for(int i=0;i<soundEffect.size();i++){
-                equalizer.setBandLevel((short) i,(short) (soundEffect.get(i).getValue()+soundEffect.get(i).getMin()));
-            }
-        }
-
         public void addObserver(LifecycleOwner owner, PlayInterface play) {
             MusicPlay.this.play.addObserver(owner, play);
         }
@@ -475,10 +473,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
         }
 
-        public void changeSheet(int group,int child){
-            if(group>0&&group<musicList.size()&&child>0&&child<musicList.get(group).size()){
+        public void changeSheet(int group){
+            if(group>=0&&group<musicList.size()){
                 groupIndex=group;
-                childIndex=child;
+                childIndex=0;
             }
         }
 
@@ -486,11 +484,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             return waitMusic;
         }
 
-        public void addToWait(int group,int child) {
-            groupIndex=group;
-            childIndex=child;
-            addToWait(musicList.get(group).get(child));
-        }
         public void addToWait(Music music){
             if(config.getMusicOrigin()!=PlayerConfig.MusicOrigin.WAIT){
                 waitIndex=0;
@@ -602,13 +595,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
          *
          * @param music music
          */
-        public void playInternet(final InternetMusicForPlay music) {
+        private void playInternet(final InternetMusicForPlay music) {
 
             if(!TextUtils.isEmpty(music.getPath())){
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
                 loadMusic(music);
             }
             //**下载歌词和图片
             Single.create(emitter -> {
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.INTERNET);
                 //**判断是否是从歌单传入的数据，歌单数据没有路径，只有id
                 if(TextUtils.isEmpty(music.getPath())){
                     if(model==null)model=new MusicDetailModel();
@@ -664,10 +659,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
          *
          * @param music music
          */
-        public void playLocal(Music music) {
-            config.setMusic(music);
-            config.setMusicOrigin(PlayerConfig.MusicOrigin.STORAGE);
-            loadMusic(music);
+        public void play(Music music) {
+            if(music instanceof InternetMusicForPlay){
+                playInternet((InternetMusicForPlay) music);
+            }else{
+                config.setMusic(music);
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.STORAGE);
+                loadMusic(music);
+            }
+
         }
 
         public void playWait(int index) {

@@ -27,6 +27,7 @@ import com.web.moudle.service.FileDownloadService;
 import com.web.web.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -102,7 +103,7 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 connect = (FileDownloadService.Connect) service;
-                connect.setDownloadListener(MusicDownLoadActivity.this);
+                connect.addDownloadListener(MusicDownLoadActivity.this);
                 connect.getDownloadList();
             }
 
@@ -152,7 +153,8 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             toolsBar.addItem(1, ResUtil.getString(R.string.delete));
             toolsBar.setItemClick(id -> {
                 if (id == 1) {
-                    connect.delete(adapter.getSelectList((item, index) -> item.getInternetMusicDetail().getId()));
+                    connect.delete(adapter.getSelectList((item, index) ->
+                                    item.getInternetMusicDetail().getId()));
                     adapter.setSelect(false);
                     toolsBar.close();
                 }

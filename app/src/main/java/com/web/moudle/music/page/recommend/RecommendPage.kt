@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.alibaba.fastjson.JSON
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
+import com.web.moudle.artist.ArtistTypeActivity
 import com.web.moudle.billboard.BillBoardActivity
 import com.web.moudle.billboradDetail.NetMusicListActivity
 import com.web.moudle.music.page.BaseMusicPage
@@ -46,7 +47,7 @@ class RecommendPage : BaseMusicPage() {
         MethodChannel(flutterView, "recommend/io").setMethodCallHandler { methodCall, _ ->
             when (methodCall.method) {
                 "todayRecommend" -> {
-                    //NetMusicListActivity.actionStartRecommend(context!!, getString(R.string.todayRecommend))
+                    NetMusicListActivity.actionStartRecommend(context!!, getString(R.string.todayRecommend))
                 }
                 "billboard" -> {
                     BillBoardActivity.actionStart(context!!)
@@ -59,16 +60,16 @@ class RecommendPage : BaseMusicPage() {
                 }
                 "actionStart_NetMusicListActivity" -> {
                     val json = JSON.parseObject(methodCall.arguments.toString())
-                    //NetMusicListActivity.actionStartSingerMusic(context!!, json.getString("title"), json.getString("itemId"))
+                    NetMusicListActivity.actionStartSingerMusic(context!!, json.getString("title"), json.getString("itemId"))
                 }
                 "actionStart_Video" -> {
-                    VideoEntryActivity.actionStart(context!!, videoId = methodCall.arguments.toString())
+                    VideoEntryActivity.actionStart(context!!,methodCall.arguments.toString(),null)
                 }
                 "actionStart_MusicDetailActivity"->{
                     MusicDetailActivity.actionStart(context!!,methodCall.arguments.toString())
                 }
                 "actionsStart_AllArtistActivity"->{
-                    //AllArtistFragment.actionStart(context!!)
+                    //ArtistTypeActivity.actionStart(context!!)
                 }
 
             }

@@ -70,7 +70,7 @@ public class FileDownloadService extends Service {
     }
 
     public class Connect extends Binder {
-        public void setDownloadListener(DownloadListener downloadListener) {
+        public void addDownloadListener(DownloadListener downloadListener) {
             if (!listeners.contains(downloadListener))
                 FileDownloadService.this.listeners.add(downloadListener);
         }

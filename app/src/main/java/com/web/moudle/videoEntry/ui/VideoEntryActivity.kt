@@ -298,7 +298,7 @@ class VideoEntryActivity : BaseActivity() {
         private const val SONG_ID="songId"
         private const val VIDEO_PATH="videoPath"
         @JvmStatic
-        fun actionStart(ctx: Context, videoId: String="",songId:String="") {
+        fun actionStart(ctx: Context, videoId: String?,songId:String?) {
             val intent = Intent(ctx, VideoEntryActivity::class.java)
             intent.putExtra(INTENT_DATA, videoId)
             intent.putExtra(SONG_ID, songId)

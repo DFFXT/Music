@@ -324,7 +324,7 @@ public class MusicListPage extends BaseMusicPage {
             return null;
         });
         adapter.setAddListener((v, position) -> {
-            connect.addToWait(groupIndex,position);
+            connect.addToWait(data.get(position));
             addAnimation(v);
             return null;
         });

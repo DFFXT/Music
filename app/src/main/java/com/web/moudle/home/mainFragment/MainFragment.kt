@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.web.common.base.BaseFragment
 import com.web.common.base.BaseFragmentPagerAdapter
+import com.web.common.base.log
 import com.web.moudle.home.HomePageActivity
 import com.web.moudle.home.mainFragment.subFragment.AllArtistFragment
 import com.web.moudle.home.mainFragment.model.MainFragmentViewModel
@@ -17,7 +18,7 @@ import com.web.moudle.search.SearchActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_main.view.*
 
-class MainFragment : BaseFragment() {
+class MainFragment: BaseFragment() {
     private lateinit var vm: MainFragmentViewModel
     override fun getLayoutId(): Int = R.layout.fragment_main
     private val pageList=ArrayList<BaseFragment>()

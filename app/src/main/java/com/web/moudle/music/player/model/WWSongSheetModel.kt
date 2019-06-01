@@ -69,12 +69,20 @@ object WWSongSheetModel:BaseRetrofit() {
     }
 
     fun getLikeList(callback: (LikeMusicWW) -> Unit){
-        obtainClass(NetApis.UserSongSheet::class.java)
-                .getLikeList(UserManager.getUserId())
-                .compose(SchedulerTransform())
-                .get({
-                    callback(it)
-                })
+        if(UserManager.isLogin()){
+            obtainClass(NetApis.UserSongSheet::class.java)
+                    .getLikeList(UserManager.getUserId())
+                    .compose(SchedulerTransform())
+                    .get({
+                        callback(it)
+                    })
+        }else{
+            val res=LikeMusicWW()
+            res.code=200
+            res.ids=ArrayList()
+            callback(res)
+        }
+
     }
 
     fun setAsLike(songId: Long,callback: (SongSheetWW) -> Unit){

@@ -60,7 +60,7 @@ class InternetMusicAdapter(private val context: Context) : PagedListAdapter<Simp
         if(item.hasMV==1) {
             mv.visibility = View.VISIBLE
             mv.setOnClickListener {
-                VideoEntryActivity.actionStart(it.context,songId = item.songId)
+                VideoEntryActivity.actionStart(it.context,null,songId = item.songId)
             }
         }
         else {

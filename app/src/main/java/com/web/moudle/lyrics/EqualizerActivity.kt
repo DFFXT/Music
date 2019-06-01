@@ -79,7 +79,10 @@ class EqualizerActivity : BaseActivity() {
         val sound = savedData!![position]
         equalizerAdapter?.update(sound.soundInfoList)
         currentSelect = position
-        connect?.setSoundEffect(sound.soundInfoList)
+        for (i in sound.soundInfoList.indices) {
+            equalizer!!.setBandLevel(i.toShort(), (sound.soundInfoList[i].value + sound.soundInfoList[i].min).toShort())
+        }
+        //connect?.setSoundEffect(sound.soundInfoList)
         setCurrentSoundEffectIndex(position)
     }
 

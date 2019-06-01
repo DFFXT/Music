@@ -31,7 +31,7 @@ class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherS
             mv.visibility=View.GONE
         }else{
             mv.visibility=View.VISIBLE
-            mv.setOnClickListener { VideoEntryActivity.actionStart(it.context,songId = item.songId) }
+            mv.setOnClickListener { VideoEntryActivity.actionStart(it.context,null,songId = item.songId) }
         }
         holder.itemView.setOnClickListener {
             MusicDetailActivity.actionStart(it.context,item.songId)

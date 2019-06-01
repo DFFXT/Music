@@ -45,12 +45,13 @@ object MediaQuery {
                 while (cursor.moveToNext()) {
                     var index = cursor.getColumnIndex("_data")
                     val path = cursor.getString(index)
-                    index = cursor.getColumnIndex("_size")
-                    val size = cursor.getInt(index)
+
+                    index = cursor.getColumnIndex("duration")
+                    val duration=cursor.getInt(index)
 
                     for (type in types) {
                         if (!type.isScanable) continue
-                        if (path != null && path.toLowerCase().endsWith(type.scanSuffix.toLowerCase()) && size >= type.minFileSize) {
+                        if (path != null && path.toLowerCase().endsWith(type.scanSuffix.toLowerCase()) && duration >= type.minTime) {
 
                             hasMusic=true
                             val lastSeparatorChar = path.lastIndexOf(File.separatorChar)
@@ -63,10 +64,12 @@ object MediaQuery {
                             //**去后缀
                             val lastIndex = out[0]!!.lastIndexOf('.')
                             val music = Music(out[0]!!.substring(0, lastIndex), out[1], path)
+                            index = cursor.getColumnIndex("_size")
+                            val size = cursor.getInt(index)
+
                             music.size = size.toLong()
                             music.suffix=out[0]!!.substring(lastIndex+1)
-                            index = cursor.getColumnIndex("duration")
-                            music.duration = cursor.getInt(index)
+                            music.duration = duration
                             index = cursor.getColumnIndex("album_id")
                             music.album_id = cursor.getInt(index).toString()
                             index = cursor.getColumnIndex("album")
@@ -107,7 +110,7 @@ object MediaQuery {
             musicList.add(defGroup)
             //**获取自定义列表的歌曲
 
-            val sheet=SongSheetManager.getSongSheetList();
+            val sheet=SongSheetManager.getSongSheetList()
             val sheetList = sheet.songList
             if(sheetList.size==0){
                 sheet.addSongSheet(SongSheet(ResUtil.getString(R.string.sheet_like)))

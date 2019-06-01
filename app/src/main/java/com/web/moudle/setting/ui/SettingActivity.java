@@ -68,10 +68,8 @@ public class SettingActivity extends BaseActivity {
                     return null;
                 })
                 .setRightListener(dialog->{
-                    logout.setOnClickListener(v->{
-                        UserManager.setLogin(false);
-                        logout.setVisibility(View.GONE);
-                    });
+                    UserManager.setLogin(false);
+                    logout.setVisibility(View.GONE);
                     dialog.dismiss();
                     return null;
                 })

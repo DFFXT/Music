@@ -142,7 +142,7 @@ class MusicDetailActivity : BaseActivity() {
                             if (con.config.music == music) {
                                 con.changePlayerPlayingStatus()
                             } else {
-                                con.playInternet(music)
+                                con.play(music)
                             }
                         }
                     }

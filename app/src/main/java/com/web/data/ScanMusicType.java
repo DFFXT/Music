@@ -4,21 +4,18 @@ import org.litepal.crud.DataSupport;
 
 public class ScanMusicType extends DataSupport {
     private String scanSuffix;
-    private int minFileSize;
+    private int minTime;
     private boolean scanable=true;
 
     public ScanMusicType(){
 
     }
-    public ScanMusicType(String scanSuffix,int minFileSize,boolean scanable){
+    public ScanMusicType(String scanSuffix,int minTime,boolean scanable){
         this.scanSuffix=scanSuffix;
-        this.minFileSize=minFileSize;
+        this.minTime=minTime;
         this.scanable=scanable;
     }
 
-    public int getMinFileSize() {
-        return minFileSize;
-    }
 
     public boolean isScanable() {
         return scanable;
@@ -32,11 +29,16 @@ public class ScanMusicType extends DataSupport {
         return scanSuffix;
     }
 
-    public void setMinFileSize(int minFileSize) {
-        this.minFileSize = minFileSize;
-    }
 
     public void setScanSuffix(String scanSuffix) {
         this.scanSuffix = scanSuffix;
+    }
+
+    public int getMinTime() {
+        return minTime;
+    }
+
+    public void setMinTime(int minTime) {
+        this.minTime = minTime;
     }
 }

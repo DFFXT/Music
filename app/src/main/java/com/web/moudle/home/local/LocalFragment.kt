@@ -51,7 +51,10 @@ class LocalFragment : BaseFragment() {
             SearchActivity.actionStart(context as Activity, HomePageActivity.searchCode)
         }
         rootView.layout_prefer.setOnClickListener {
-            MySongSheetInfoActivity.actionStart(context!!,-1L)
+            if(UserManager.isLogin()){
+                MySongSheetInfoActivity.actionStart(context!!,-1L)
+            }
+
         }
 
         rootView.layout_download.setOnClickListener {
@@ -88,6 +91,11 @@ class LocalFragment : BaseFragment() {
             rootView!!.tv_musicNum?.text = it.toString()
         }
 
+        if(UserManager.isLogin()){
+            rootView?.layout_prefer?.visibility=View.VISIBLE
+        }else{
+            rootView?.layout_prefer?.visibility=View.GONE
+        }
         WWSongSheetModel.getLikeList {
             rootView!!.tv_preferNum?.text = it.ids.size.toString()
         }

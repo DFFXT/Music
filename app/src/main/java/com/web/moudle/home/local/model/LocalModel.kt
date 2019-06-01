@@ -15,8 +15,9 @@ class LocalModel {
 
     fun getMusicNum(callback: ((Int) -> Unit)) {
         GlobalScope.launch(Dispatchers.IO) {
+            val num=DataSupport.count(Music::class.java)
             withContext(Dispatchers.Main) {
-                callback(DataSupport.count(Music::class.java))
+                callback(num)
             }
         }
     }

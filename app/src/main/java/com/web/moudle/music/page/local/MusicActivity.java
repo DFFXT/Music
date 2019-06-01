@@ -195,7 +195,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         findID();
         setToolbar();
         musicListPage = new MusicListPage();
-        //pageList.add(new RecommendPage());
+        pageList.add(new RecommendPage());
         pageList.add(musicListPage);
         musicListPage.setTitle(tv_title);
         setAdapter();
@@ -237,7 +237,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                         @Override
                         public void select(View v, int position) {
                             connect.getList(position);
-                            connect.changeSheet(position, 0);
+                            connect.changeSheet(position);
                             listAlert.dismiss();
                         }
 
@@ -288,7 +288,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                 String[] out = new String[2];
                 Shortcut.getName(out, name);
                 Music music = new Music(out[0], out[1], path);
-                connect.playLocal(music);
+                connect.play(music);
             }
         }
 
@@ -391,6 +391,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                 return POSITION_NONE;
             }
         });
+        viewPager.setCurrentItem(pageList.size()-1,false);
 
     }
 

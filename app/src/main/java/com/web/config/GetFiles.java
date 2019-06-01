@@ -209,7 +209,8 @@ import androidx.annotation.WorkerThread;
 	
 	
 	
-	
+
+	public static int red=0xffff0000;
 	
 	
 	

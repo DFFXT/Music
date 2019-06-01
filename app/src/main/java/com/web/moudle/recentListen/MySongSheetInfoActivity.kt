@@ -65,7 +65,7 @@ class MySongSheetInfoActivity :BaseActivity(){
         model=ViewModelProviders.of(this)[DetailMusicViewModel::class.java]
         model!!.detailMusic.observe(this, Observer {
             if(it.code==LiveDataWrapper.CODE_OK){
-                connect?.playInternet(MusicDetailActivity.map(it.value))
+                connect?.play(MusicDetailActivity.map(it.value))
             }
         })
         topBar.setEndImageListener(View.OnClickListener {

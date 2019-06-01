@@ -1,5 +1,6 @@
 package com.web.moudle.home.mainFragment.subFragment
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,6 @@ import com.web.moudle.home.mainFragment.subFragment.bean.MusicTag
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.web.moudle.singerEntry.ui.SingerEntryActivityNew
 import com.web.web.R
 import kotlinx.android.synthetic.main.fragment_song_sheet.*
 import kotlinx.android.synthetic.main.fragment_song_sheet.view.*
@@ -42,6 +42,8 @@ class MusicMainFragment : BaseFragment() {
     private val tagAdapter = SingleTextAdapter(null)
     private lateinit var tagData: MusicTagBox
     private var currentTag = ""
+    private var currentCategoryIndex = 0//当前标签分类index
+    private var nextCategoryIndex = 0//点击的标签分类index
     private var page = 0
 
 
@@ -68,13 +70,22 @@ class MusicMainFragment : BaseFragment() {
             rootView.srl_sheetList.setNoMoreData(it.taginfo.havemore == 0)
         })
 
+        tagAdapter.selectIndex = currentCategoryIndex
+        tagAdapter.selectRender = { h, _ ->
+            (h.itemView as TextView).setTextColor(ResUtil.getColor(R.color.themeColor))
+            h.itemView.setBackgroundColor(ResUtil.getColor(R.color.gray))
+        }
+        tagAdapter.commonRender = { h, _ ->
+            (h.itemView as TextView).setTextColor(ResUtil.getColor(R.color.textColor_6))
+            h.itemView.setBackgroundColor(0)
+        }
 
         layoutManager = LinearLayoutManager(context)
         rootView.rv_SheetList.layoutManager = layoutManager
         rootView.rv_SheetList.addItemDecoration(DrawableItemDecoration(0, 0, 0, 2, drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         rootView.rv_SheetList.adapter = adapter
-        adapter.itemClick={item,_->
-            MusicDetailActivity.actionStart(context!!,item.song_id)
+        adapter.itemClick = { item, _ ->
+            MusicDetailActivity.actionStart(context!!, item.song_id)
         }
 
         rootView.srl_sheetList.setRefreshFooter(ClassicsFooter(context))
@@ -86,6 +97,7 @@ class MusicMainFragment : BaseFragment() {
 
         rootView.rv_sheetType.adapter = tagAdapter
         tagAdapter.itemClickListener = { v, index ->
+            nextCategoryIndex = index
             showPopTag(v!!, tagData.tagMap[tagData.tags[index]]!!)
         }
 
@@ -99,6 +111,11 @@ class MusicMainFragment : BaseFragment() {
     private fun showPopTag(v: View, tags: List<MusicTag>) {
         if (popWindow == null) {
             popWindow = BasePopupWindow(context!!, LayoutInflater.from(context).inflate(R.layout.layout_music_tag, null, false))
+            popWindow?.dismissCallback = {
+                tagAdapter.selectIndex = currentCategoryIndex
+                tagAdapter.notifyItemChanged(currentCategoryIndex)
+                tagAdapter.notifyItemChanged(nextCategoryIndex)
+            }
         }
         val layout = popWindow!!.rootView.flexBoxLayout_tag as ViewGroup
         val childCount = layout.childCount
@@ -110,6 +127,13 @@ class MusicMainFragment : BaseFragment() {
         }
         tags.forEachIndexed { index, it ->
             tabViewList[index].text = it.title
+            if (currentTag == tags[index].title) {
+                tabViewList[index].setBackgroundColor(ResUtil.getColor(R.color.themeColor))
+                tabViewList[index].setTextColor(Color.WHITE)
+            } else {
+                tabViewList[index].setBackgroundResource(R.drawable.border_1dp)
+                tabViewList[index].setTextColor(ResUtil.getColor(R.color.textColor_6))
+            }
             layout.addView(tabViewList[index])
         }
         popWindow?.show(v)
@@ -120,7 +144,6 @@ class MusicMainFragment : BaseFragment() {
         val tab = TextView(context)
         tab.text = tag
         tab.elevation = ViewUtil.dpToFloatPx(1f)
-        tab.setBackgroundResource(R.drawable.border_1dp)
         tab.setPadding(padding * 2, padding / 2, padding * 2, padding / 2)
         val lp = FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(padding, padding, padding, padding)
@@ -132,6 +155,7 @@ class MusicMainFragment : BaseFragment() {
             currentTag = it.text.toString()
             rootView?.srl_sheetList?.showLoading()
             vm.getTagMusic(currentTag, 0, pageSize)
+            currentCategoryIndex = nextCategoryIndex
             popWindow?.dismiss()
         }
         tabViewList.add(tab)

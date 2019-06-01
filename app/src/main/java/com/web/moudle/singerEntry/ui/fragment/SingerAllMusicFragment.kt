@@ -12,6 +12,7 @@ import com.web.misc.DrawableItemDecoration
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.home.mainFragment.subFragment.adapter.HomePageMusicAdapter
 import com.web.moudle.home.mainFragment.subFragment.bean.HomePageMusic
+import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.singerEntry.model.SingerEntryViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivityNew
@@ -51,7 +52,7 @@ class SingerAllMusicFragment:BaseFragment() {
         rootView.rv_allMusic.adapter=adapter
         adapter.update(list)
         adapter.itemClick={item,_->
-            SingerEntryActivityNew.actionStart(context!!,item.song_id)
+            MusicDetailActivity.actionStart(context!!,item.song_id)
         }
 
         rootView.srl_allMusic.setOnLoadMoreListener {
