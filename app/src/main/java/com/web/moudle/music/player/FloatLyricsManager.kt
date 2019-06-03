@@ -146,14 +146,10 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         rootView?.lv_lyrics?.setTextSize(mSize.toFloat())
     }
 
+
+
     fun open(){
-        if(!Settings.canDrawOverlays(appContext)){
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            intent.data = fromParts("package", appContext.packageName, null)
-            appContext.startActivity(intent)
-            return
-        }
+        if(!requestPermission(appContext))return
         timeImmediately=true
         if(rootView!=null)return
         init()
@@ -227,6 +223,24 @@ class FloatLyricsManager (private val appContext:Context,private val connect:Mus
         @JvmStatic
         fun setFloatWindowY(y:Int){
             SP.putValue(Constant.spName,Constant.SpKey.floatWindowY,y)
+        }
+
+        @JvmStatic
+        fun havePermission(appContext: Context):Boolean{
+            return Settings.canDrawOverlays(appContext)
+        }
+
+        @JvmStatic
+        fun requestPermission(appContext: Context):Boolean{
+            if(!Settings.canDrawOverlays(appContext)){
+                val intent = Intent()
+                intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.data = fromParts("package", appContext.packageName, null)
+                appContext.startActivity(intent)
+                return false
+            }
+            return true
         }
 
     }

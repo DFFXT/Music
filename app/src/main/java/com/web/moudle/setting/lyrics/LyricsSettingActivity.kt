@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.web.common.base.BaseActivity
-import com.web.common.base.BaseAdapter
-import com.web.common.base.BaseViewHolder
-import com.web.common.base.onSeekTo
+import com.web.common.base.*
 import com.web.common.constant.Constant
 import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
@@ -29,6 +27,18 @@ class LyricsSettingActivity : BaseActivity() {
 
     private val colorList=ResUtil.getIntArray(R.array.lyricsColorArray).asList()
     private val lyricsSample= arrayListOf<LyricsLine>()
+    private val checkListener=object :CompoundButton.OnCheckedChangeListener{
+        override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+            if(FloatLyricsManager.havePermission(baseContext)){
+                enableLyricsOverlap(baseContext,isChecked)
+            } else{
+                FloatLyricsManager.requestPermission(baseContext)
+                sw_lyricsOverlayWindow.setOnCheckedChangeListener(null)
+                sw_lyricsOverlayWindow.isChecked=false
+                sw_lyricsOverlayWindow.setOnCheckedChangeListener(this)
+            }
+        }
+    }
     init {
         ResUtil.getStringArray(R.array.lyricsSample).forEachIndexed {index,string->
             val line=LyricsLine()
@@ -38,12 +48,11 @@ class LyricsSettingActivity : BaseActivity() {
         }
     }
 
+
     override fun initView() {
         sw_lyricsOverlayWindow.isChecked= lyricsOverlap()
 
-        sw_lyricsOverlayWindow.setOnCheckedChangeListener { _, isChecked ->
-            enableLyricsOverlap(this,isChecked)
-        }
+        sw_lyricsOverlayWindow.setOnCheckedChangeListener(checkListener)
 
         sw_lyricsLock.isChecked= isFloatWindowLocked()
         sw_lyricsLock.setOnCheckedChangeListener { _, isChecked ->
@@ -190,9 +199,11 @@ class LyricsSettingActivity : BaseActivity() {
         }
 
         @JvmStatic
-        fun enableLyricsOverlap(ctx:Context,enable:Boolean){
+        fun enableLyricsOverlap(ctx:Context,enable:Boolean,forceRefresh:Boolean=true){
             SP.putValue(Constant.spName,Constant.SpKey.lyricsOverlapOpen,enable)
-            FloatLyricsManager.configChange(ctx)
+            if(forceRefresh){
+                FloatLyricsManager.configChange(ctx)
+            }
         }
 
         @JvmStatic

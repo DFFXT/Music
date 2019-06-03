@@ -10,13 +10,15 @@ import android.widget.RelativeLayout
 import androidx.annotation.IntDef
 import androidx.annotation.IntRange
 import androidx.annotation.LayoutRes
+import com.web.common.util.ResUtil
+import com.web.common.util.ViewUtil
 import com.web.web.R
 
 abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: List<T>?) : BaseAdapter<T>(list) {
 
 
     companion object {
-        const val limit: Int = 10000000
+        private const val limit: Int = 10000000
         const val TYPE_NONE_SELECTOR = 1
         const val TYPE_LEFT_SELECTOR = 2
         const val TYPE_RIGHT_SELECTOR = 3
@@ -24,6 +26,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
         @IntDef(TYPE_LEFT_SELECTOR, TYPE_NONE_SELECTOR, TYPE_RIGHT_SELECTOR)
         annotation class MultiSelectType
     }
+    private val padding=ViewUtil.dpToPx(10f)
 
     val selectSet = HashSet<Int>()
     var isSelectAll = false
@@ -61,6 +64,11 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
         val cb = holder.findViewById<View>(R.id.cb_itemMultiSelect)
         if (isSelect && getSelectType(position) != TYPE_NONE_SELECTOR) {
             cb.visibility = View.VISIBLE
+            if(getSelectType(position)== TYPE_LEFT_SELECTOR){
+                holder.itemView.setPadding(padding,0,0,0)
+            }else{
+                holder.itemView.setPadding(0,0,0,padding)
+            }
             cb.isSelected = selectSet.contains(position)
             cb.setOnClickListener {
                 it.isSelected = !it.isSelected
@@ -70,6 +78,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
             }
         } else {
             cb.visibility = View.GONE
+            holder.itemView.setPadding(0,0,0,0)
             cb.setOnClickListener(null)
         }
         onBindItemView(holder, position, item)
