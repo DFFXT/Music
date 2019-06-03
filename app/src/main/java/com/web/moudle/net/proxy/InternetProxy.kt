@@ -1,6 +1,7 @@
 package com.web.moudle.net.proxy
 
 import androidx.annotation.WorkerThread
+import com.web.common.base.log
 import com.web.common.constant.Constant
 import com.web.config.Shortcut
 import com.web.data.MusicCache
@@ -8,12 +9,14 @@ import com.web.moudle.net.proxy.bean.CacheFromTo
 import com.web.moudle.setting.cache.CacheActivity
 import org.litepal.crud.DataSupport
 import java.io.*
+import java.lang.Exception
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.URL
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 import kotlin.math.min
 
 object InternetProxy {
@@ -129,7 +132,14 @@ object InternetProxy {
         log(builder.toString())*/
         if(cacheEnable)
             streamCopyNoCloseWidthCache(connection.getInputStream(),out,from,to,musicCache)
-        else streamCopyNoClose(connection.getInputStream(),out)
+        else {
+            try {
+                streamCopyNoClose(connection.getInputStream(),out)
+            }catch (e:Exception){
+                log("传输终止")
+            }
+
+        }
     }
 
 

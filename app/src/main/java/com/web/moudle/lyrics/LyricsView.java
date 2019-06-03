@@ -179,7 +179,7 @@ public class LyricsView extends RelativeLayout {
 
     private int nextIndex = 0;
 
-    public void start() {
+    private void start() {
         if (run) return;
         run = true;
         thread = new Thread(() -> {

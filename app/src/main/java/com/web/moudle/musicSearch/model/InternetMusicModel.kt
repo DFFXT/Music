@@ -42,18 +42,13 @@ class InternetMusicModel : BaseRetrofit() {
                 .musicSearch(keyword,pageSize,page)
                 .compose(ResultTransform())
     }
-
     //**搜索歌手信息
-
     fun getArtistList(keyword:String,page:Int):Observable<SearchArtistWrapper1>{
         return obtainClass(NetApis.Music::class.java)
                 .artistSearch(keyword,pageSize,page)
                 .compose(ResultTransform())
     }
-
-    /**
-     * 获取专辑信息
-     */
+     //**获取专辑信息
     fun getAlbumList(keyword: String,page: Int):Observable<SearchAlbumWrapper1>{
         return obtainClass(NetApis.Music::class.java)
                 .albumSearch(keyword,pageSize,page)

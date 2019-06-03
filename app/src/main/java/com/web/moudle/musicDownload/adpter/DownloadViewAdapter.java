@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.web.common.base.BaseMultiSelectAdapter;
@@ -82,7 +83,7 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
                     }
                     holder.itemView.findViewById(R.id.item_parent).setOnClickListener(v->click(v,position));
                 }else{//**构建正在下载的item
-                    holder.bindText(R.id.hasDownload, ResUtil.getFileSize(music.getHasDownload())+"/");
+                    holder.bindText(R.id.hasDownload, ResUtil.getFileSize(music.getHasDownload()));
                     holder.bindText(R.id.fullSize, ResUtil.getFileSize(music.getSize()));
                     holder.bindImage(R.id.downloadStatu,status==DownloadMusic.DOWNLOAD_DOWNLOADING?R.drawable.icon_play_black :R.drawable.icon_pause_black)
                             .setOnClickListener(v-> click(v,position));
@@ -93,6 +94,7 @@ public class DownloadViewAdapter extends BaseMultiSelectAdapter<DownloadMusic> {
                     }else{
                         holder.itemView.setBackgroundResource(R.drawable.bottom_dashline_1px);
                     }
+                    ((ProgressBar)holder.findViewById(R.id.progress)).setProgress((int)(music.getHasDownload()*100/music.getSize()));
                 }
                 if(isSelect()){
                     holder.itemView.setOnClickListener(v-> toggleSelect(position));

@@ -1,5 +1,6 @@
 package com.web.moudle.musicSearch.adapter
 
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
@@ -29,7 +30,7 @@ class SimpleVideoAdapter:PagedListAdapter<SimpleVideoInfo,BaseViewHolder>(diff) 
                         ResUtil.getSize(R.dimen.textSize_min)))
 
 
-        ImageLoad.load(item.thumbnail).placeholder(R.drawable.singer_default_icon).into(holder.findViewById(R.id.iv_videoIcon))
+        ImageLoad.load(item.thumbnail).placeholder(ColorDrawable(ResUtil.getColor(R.color.gray))).into(holder.findViewById(R.id.iv_videoIcon))
         holder.itemView.setOnClickListener {
             itemClick?.invoke(item)
         }

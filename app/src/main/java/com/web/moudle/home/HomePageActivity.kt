@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
-
 import com.web.moudle.home.local.LocalFragment
 import com.web.moudle.home.mainFragment.MainFragment
 import com.web.moudle.home.video.VideoRecommendFragment
@@ -41,8 +40,6 @@ class HomePageActivity : BaseActivity(), View.OnClickListener {
 
     override fun initView() {
         init()
-
-
         layout_overAll.setOnClickListener(this)
         layout_video.setOnClickListener(this)
         layout_local.setOnClickListener(this)
@@ -63,29 +60,18 @@ class HomePageActivity : BaseActivity(), View.OnClickListener {
         when (v.id) {
             R.id.layout_overAll -> {
                 tabFocus(0)
-                if (pageList[currentFragmentIndex].isAdded) {
-                    transaction.show(pageList[currentFragmentIndex])
-                } else {
-                    transaction.add(R.id.fragment_main, pageList[currentFragmentIndex])
-                }
-
             }
             R.id.layout_video -> {
                 tabFocus(1)
-                if (pageList[currentFragmentIndex].isAdded) {
-                    transaction.show(pageList[currentFragmentIndex])
-                } else {
-                    transaction.add(R.id.fragment_main, pageList[currentFragmentIndex])
-                }
             }
             R.id.layout_local -> {
                 tabFocus(2)
-                if (pageList[currentFragmentIndex].isAdded) {
-                    transaction.show(pageList[currentFragmentIndex])
-                } else {
-                    transaction.add(R.id.fragment_main, pageList[currentFragmentIndex])
-                }
             }
+        }
+        if (pageList[currentFragmentIndex].isAdded) {
+            transaction.show(pageList[currentFragmentIndex])
+        } else {
+            transaction.add(R.id.fragment_main, pageList[currentFragmentIndex])
         }
         transaction.commit()
     }

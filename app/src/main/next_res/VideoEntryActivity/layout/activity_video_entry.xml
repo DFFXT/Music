@@ -33,7 +33,7 @@
         android:background="@color/videoControllerBg"
         app:layout_constraintStart_toStartOf="@id/vv_video"
         app:layout_constraintEnd_toEndOf="@id/vv_video"
-        app:layout_constraintBottom_toTopOf="@id/mc_videoController"
+        app:layout_constraintBottom_toBottomOf="@id/mc_videoController"
         app:layout_constraintTop_toTopOf="@id/vv_video">
 
         <ImageView

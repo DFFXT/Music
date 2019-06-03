@@ -33,6 +33,7 @@
   	    android:textSize="20sp"
   	    android:layout_toStartOf="@id/close"
   	    android:layout_alignParentStart="true"
+		tools:text="@string/app_name"
   	    />
   	<TextView
   	    android:id="@+id/hasDownload" 
@@ -40,13 +41,32 @@
   	    android:layout_height="wrap_content"
   	    android:textSize="16sp"
   	    android:layout_below="@id/musicName"
+		android:gravity="start"
+		tools:text="220kb"
+		android:minWidth="55dp"
   	    />
+	<ProgressBar
+		android:id="@+id/progress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toEndOf="@id/hasDownload"
+		android:layout_toStartOf="@id/fullSize"
+		android:layout_alignBottom="@id/hasDownload"
+		android:layout_alignTop="@id/hasDownload"
+		android:layout_marginStart="10dp"
+		android:layout_marginEnd="10dp"
+		style="?android:attr/progressBarStyleHorizontal"
+		tools:progress="40"/>
   	<TextView
   	    android:id="@+id/fullSize" 
   	    android:layout_width="wrap_content"
   	    android:layout_height="wrap_content"
   	    android:textSize="16sp"
-  	    android:layout_toEndOf="@id/hasDownload"
+  	    android:layout_toStartOf="@id/close"
   	    android:layout_alignBottom="@id/hasDownload"
+		android:minWidth="50dp"
+		android:gravity="start"
+		tools:text="100M"
   	    />
+
 </RelativeLayout>

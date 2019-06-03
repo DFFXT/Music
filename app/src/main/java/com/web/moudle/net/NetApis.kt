@@ -216,10 +216,6 @@ class NetApis {
         @GET("http://musicapi.taihe.com/v1/restserver/ting?from=webapp_music&format=json&method=baidu.ting.ugcdiy.getChanneldiy")
         fun requestSongSheetType(@Query("param") param: String, @Query("timestamp") timestamp: String, @Query("sign") sign: String): Observable<SongSheetItemBox>
 
-        companion object {
-            @JvmStatic
-            val f = arrayOfNulls<String>(0)
-        }
 
         //**获取mv列表
         @Headers("Set-Cookie: BAIDUID=C08F3FE0D20BC1C506E601E6367BFD54:FG=1",
@@ -229,50 +225,56 @@ class NetApis {
         fun getRecommendVideo(): Observable<VideoRecommendBox>
     }
 
+
+    companion object{
+        //个人服务器地址，根据具体服务器进行更改
+        const val userServerHost="http://132.232.106.140/QFMusic"
+    }
+
     interface Login {
-        @GET("http://132.232.106.140/QFMusic/register")
+        @GET("$userServerHost/register")
         fun register(@Query("id") account: String, @Query("pwd") password: String, @Query("nickname") nickName: String): Observable<RegistResponse>
 
-        @GET("http://132.232.106.140/QFMusic/login")
+        @GET("$userServerHost/login")
         fun login(@Query("id") account: Long, @Query("pwd") password: String): Observable<RegistResponse>
     }
 
     interface UserSongSheet {
-        @GET("http://132.232.106.140/QFMusic/createPlayList")
+        @GET("$userServerHost/createPlayList")
         fun createSongSheet(@Query("name") sheetName: String, @Query("userId") userId: Long, @Query("coverPath") coverPath: String): Observable<SongSheetWW>
 
 
-        @GET("http://132.232.106.140/QFMusic/playlist/deletePlaylist")
+        @GET("$userServerHost/playlist/deletePlaylist")
         fun deleteSongSheet(@Query("userId") userId: Long, @Query("id") sheetId: Long): Observable<SongSheetWW>
 
-        @GET("http://132.232.106.140/QFMusic/findAllPlaylist")
+        @GET("$userServerHost/findAllPlaylist")
         fun getSongSheetList(@Query("userId") userId: Long): Observable<List<SongSheetWW>>
 
-        @GET("http://132.232.106.140/QFMusic/playlist/getPlaylist")
+        @GET("$userServerHost/playlist/getPlaylist")
         fun getSongListInfo(@Query("id") id: Long, @Query("userId") userId: Long): Observable<SongSheetWW>
 
 
-        @GET("http://132.232.106.140/QFMusic/playlist/deleteSong")
+        @GET("$userServerHost/playlist/deleteSong")
         fun deleteMusicFromSheet(@Query("id") sheetId: Long, @Query("songId") songId: Long): Observable<SongSheetWW>
 
-        @GET("http://132.232.106.140/QFMusic/playlist/addSong")
+        @GET("$userServerHost/playlist/addSong")
         fun addSongToSheet(@Query("id") sheetId: Long, @Query("songId") songId: Long,
                            @Query("name") musicName: String, @Query("artist") artistName: String,
                            @Query("album") albumName: String, @Query("userId") userId: Long): Observable<SongSheetWW>
 
 
-        @GET("http://132.232.106.140/QFMusic/findAllLike")
+        @GET("$userServerHost/findAllLike")
         fun getLikeList(@Query("userId") userId: Long): Observable<LikeMusicWW>
 
-        @GET("http://132.232.106.140/QFMusic/like")
+        @GET("$userServerHost/like")
         fun setAsLike(@Query("userId") userId: Long, @Query("songId") songId: Long): Observable<SongSheetWW>
 
 
-        @GET("http://132.232.106.140/QFMusic/dislike")
+        @GET("$userServerHost/dislike")
         fun removeAsLike(@Query("userId") userId: Long, @Query("songId") songId: Long): Observable<SongSheetWW>
 
 
-        @GET("http://132.232.106.140/QFMusic/isLike")
+        @GET("$userServerHost/isLike")
         fun isLikeMusic(@Query("userId") userId: Long, @Query("songId") songId: Long): Observable<LikeMusicWW>
 
     }
