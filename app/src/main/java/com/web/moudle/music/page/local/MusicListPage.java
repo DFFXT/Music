@@ -3,7 +3,6 @@ package com.web.moudle.music.page.local;
 import android.animation.ValueAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.web.common.base.BaseActivity;
@@ -247,7 +246,7 @@ public class MusicListPage extends BaseMusicPage {
     public void setConnect(@NonNull MusicPlay.Connect connect) {
         if (this.connect == null) {
             this.connect = connect;
-            connect.getList(groupIndex);
+            connect.selectList(groupIndex,-1);
         }
 
     }
@@ -303,6 +302,11 @@ public class MusicListPage extends BaseMusicPage {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     public void initView(@NotNull View rootView) {
@@ -346,7 +350,7 @@ public class MusicListPage extends BaseMusicPage {
         });
         rv_musicList.setAdapter(adapter);
         if (connect != null) {
-            connect.getList(groupIndex);
+            connect.selectList(groupIndex,-1);
         }
         List<String> indexList = Arrays.asList(ResUtil.getStringArray(R.array.indexBar));
         indexBar.setVerticalGap(10);

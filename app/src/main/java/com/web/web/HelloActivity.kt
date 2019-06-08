@@ -11,7 +11,6 @@ import com.web.common.base.BaseActivity
 import com.web.common.util.PermissionManager
 import com.web.data.Music
 import com.web.data.MusicList
-import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.MusicPlay
 import com.web.common.base.PlayerObserver
 import com.web.moudle.home.HomePageActivity
@@ -46,7 +45,8 @@ class HelloActivity : BaseActivity() {
             override fun onServiceConnected(name: ComponentName?, service: IBinder) {
                 connect = (service as MusicPlay.Connect)
                 connect?.addObserver(this@HelloActivity, observer)
-                connect?.getList(0)
+                connect?.selectList(0,-1)
+                connect?.getList()
             }
         }
 

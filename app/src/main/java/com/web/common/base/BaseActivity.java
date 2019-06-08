@@ -45,8 +45,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             group.addView(layout, 0);
             layout.addView(child);
         }
-
-
     }
 
     @Override

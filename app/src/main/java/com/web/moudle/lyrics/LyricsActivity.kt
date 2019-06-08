@@ -232,7 +232,6 @@ class LyricsActivity : BaseActivity() {
                 SongSheetManager.setAsLike(m)
             }
             layout_musicControl.iv_love.isSelected=m.isLike
-            connect?.refreshList()
         }
 
         layout_musicControl.next.setOnClickListener {

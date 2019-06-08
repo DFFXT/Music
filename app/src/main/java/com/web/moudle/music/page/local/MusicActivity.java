@@ -1,7 +1,6 @@
 package com.web.moudle.music.page.local;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -236,8 +235,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                     listAlert.setListener(new LocalSheetListener() {
                         @Override
                         public void select(View v, int position) {
-                            connect.getList(position);
-                            connect.changeSheet(position);
+                            connect.selectList(position,-1);
+                            connect.getList();
                             listAlert.dismiss();
                         }
 
@@ -276,10 +275,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private void getIntentData() {
         Intent intent = getIntent();
         String action=intent.getAction();
-        if("def".equals(action)){
-
+        if(ACTION_DEF.equals(action)){
+            connect.selectList(0,-1);
+            connect.getList();
         }else if(ACTION_LIKE_SHEET.equals(action)){
-            connect.getList(1);
+            connect.selectList(1,-1);
+            connect.getList();
         }else if (intent.getData() != null) {
             String path = intent.getData().getPath();
             if (path != null) {
@@ -357,8 +358,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 connect = (MusicPlay.Connect) service;
                 connect.addObserver(MusicActivity.this, observer);
-                connect.getList(0);
-                getIntentData();//*************8获取输入数据
+                getIntentData();//*************获取输入数据
                 for (BaseMusicPage page : pageList) {
                     page.setConnect(connect);
                 }
@@ -566,9 +566,12 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     }
 
     private static String ACTION_LIKE_SHEET="like";
+    private static String ACTION_DEF="def";
 
     public static void actionStart(Context context) {
-        context.startActivity(new Intent(context, MusicActivity.class));
+        Intent intent=new Intent(context,MusicActivity.class);
+        intent.setAction(ACTION_DEF);
+        context.startActivity(intent);
     }
     public static void actionStartLike(Context context){
         Intent intent=new Intent(context,MusicActivity.class);

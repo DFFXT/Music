@@ -122,10 +122,14 @@ class LocalFragment : BaseFragment() {
                 LoginActivity.actionStart(it.context)
             }
         }
-        WWSongSheetModel.getSongSheetList{
-            sheetList.clear()
-            sheetList.addAll(it)
-            adapter.update(it)
+        if(UserManager.isLogin()){
+            WWSongSheetModel.getSongSheetList{
+                sheetList.clear()
+                sheetList.addAll(it)
+                adapter.update(it)
+            }
+        }else{
+            adapter.update(ArrayList())
         }
     }
 

@@ -1,5 +1,6 @@
 package com.web.moudle.music.player;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -57,6 +58,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -72,7 +74,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import kotlinx.coroutines.Dispatchers;
 
-public class MusicPlay extends MediaBrowserServiceCompat {
+public class MusicPlay extends Service {
     public final static String BIND = "not media bind";
     public final static String ACTION_PLAY_INTERNET_MUSIC = "com.web.web.MusicPlay.playInternetMusic";
     public final static String ACTION_PLAY_LOCAL_MUSIC = "com.web.web.MusicPlay.playLocalMusic";
@@ -94,6 +96,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     private MediaPlayer player = new MediaPlayer();
     private MyNotification notification;
     private FloatLyricsManager floatLyricsManager;
+    private RandomSystem randomSystem=new RandomSystem();
 
 
     private List<MusicList<Music>> musicList = new ArrayList<>();//**音乐列表
@@ -102,10 +105,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     //@Nullable
     //private PlayInterface play;//**界面接口
     private PlayInterfaceManager play = new PlayInterfaceManager();
-    private int groupIndex = 0, childIndex = -1;
+    private int groupIndex = -1, childIndex = -1;
     private Connect connect;
     private LockScreenReceiver lockScreenReceiver;
-    private MediaSessionCompat sessionCompat;
     private Equalizer equalizer;
 
     private PlayerConfig config = new PlayerConfig();
@@ -154,19 +156,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             }
             return connect;
         }
-        return super.onBind(arg0);
+        return null;
     }
 
-    @Nullable
-    @Override
-    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
-        return new BrowserRoot("root", null);
-    }
 
-    @Override
-    public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-        result.sendResult(new ArrayList<>());
-    }
 
     @Override
     public void onCreate() {
@@ -174,94 +167,12 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         notification = new MyNotification(this);
         ticker = new Ticker(500,0, Dispatchers.getMain(), () -> {
             play.currentTime(groupIndex, childIndex, player.getCurrentPosition());
-            sendDuring(player.getCurrentPosition());
             return null;
         });
         //**设置均衡器
         equalizer=new Equalizer(0,player.getAudioSessionId());
         equalizer.setEnabled(true);
 
-        sessionCompat = new MediaSessionCompat(this, "2");
-        sessionCompat.setCallback(new MediaSessionCompat.Callback() {
-            @Override
-            public void onPlay() {
-                connect.changePlayerPlayingStatus();
-            }
-
-            @Override
-            public void onPause() {
-                musicPause();
-            }
-
-            @Override
-            public void onSkipToNext() {
-                connect.next();
-            }
-
-            @Override
-            public void onSkipToPrevious() {
-                connect.pre();
-            }
-
-            private long preEventTime = 0;
-            private long preHookTime = 0;
-
-            @Override
-            public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-                if (System.currentTimeMillis() - preEventTime < 50) return false;
-                preEventTime = System.currentTimeMillis();
-                KeyEvent event = mediaButtonEvent.getParcelableExtra("android.intent.extra.KEY_EVENT");
-                switch (event.getKeyCode()) {
-                    case KeyEvent.KEYCODE_MEDIA_NEXT: {
-                        onSkipToNext();
-                    }
-                    break;
-                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS: {
-                        onSkipToPrevious();
-                    }
-                    break;
-                    case KeyEvent.KEYCODE_HEADSETHOOK: {
-                        if (System.currentTimeMillis() - preHookTime < 100) return false;
-                        else if (System.currentTimeMillis() - preHookTime < 800) {
-                            onSkipToNext();
-                        } else {
-                            connect.changePlayerPlayingStatus();
-                        }
-                        preHookTime = System.currentTimeMillis();
-                    }
-                    break;
-                }
-                return true;
-            }
-
-            @Override
-            public void onCommand(String command, Bundle extras, ResultReceiver cb) {
-                Bundle bundle = new Bundle();
-                switch (command) {
-                    case COMMAND_GET_CURRENT_POSITION: {
-                        if (!config.isHasInit()) return;
-                        bundle.putInt(COMMAND_SEND_SINGLE_DATA, player.getCurrentPosition());
-                        cb.send(COMMAND_RESULT_CODE_CURRENT_POSITION, bundle);
-
-                    }
-                    break;
-                    case COMMAND_GET_STATUS: {
-                        bundle.putBoolean(COMMAND_SEND_SINGLE_DATA, player.isPlaying());
-                        cb.send(COMMAND_RESULT_CODE_STATUS, bundle);
-                    }
-                    break;
-                }
-            }
-        });
-
-
-        sessionCompat.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        // setSessionToken
-        setSessionToken(sessionCompat.getSessionToken());
-        sessionCompat.setActive(true);
 
         if (!SP.INSTANCE.getBoolean(Constant.spName, Constant.SpKey.noLockScreen, false)) {
             lockScreen();
@@ -351,8 +262,14 @@ public class MusicPlay extends MediaBrowserServiceCompat {
          * 在已经初始化或调用
          * @param group g
          */
-        public void getList(int group) {
+        public void selectList(int group,int child) {
+            if(groupIndex==group){//**不用置换
+                return;
+            }
+            childIndex=child;
             groupIndex = group;
+        }
+        public void getList(){
             if (musicList.size() == 0)
                 getMusicList();
             else {
@@ -383,11 +300,15 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         private void play(int group, int child) {
             //**没有任何音乐
             if(child<0)return;
+            waitMusic.clear();
+            if(config.getMusicOrigin()!= PlayerConfig.MusicOrigin.LOCAL){
+                randomSystem.reset(1);
+                randomSystem.addIntRange(0,musicList.get(group).size());
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
+            }
             if (groupIndex != group || child != childIndex) {
                 groupIndex = group;
                 childIndex = child;
-                waitMusic.clear();
-                config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
                 loadMusic(musicList.get(groupIndex).get(childIndex));
             } else {
                 player.seekTo(0);
@@ -436,11 +357,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 break;
                 case RANDOM:{
                     if(groupIndex<0) groupIndex=0;
+                    int index=randomSystem.getRandomNumber().intValue();
                     if(config.getMusicOrigin()== PlayerConfig.MusicOrigin.WAIT){
-                        int index = new Random().nextInt(waitMusic.size());
                         loadNextWait(index);
                     }else{
-                        int index = new Random().nextInt(musicList.get(groupIndex).size());
                         connect.play(groupIndex,index);
                     }
 
@@ -473,25 +393,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
         }
 
-        public void changeSheet(int group){
-            if(group>=0&&group<musicList.size()){
-                groupIndex=group;
-                childIndex=0;
-            }
-        }
+
 
         public List<Music> getWaitMusic() {
             return waitMusic;
         }
 
         public void addToWait(Music music){
-            if(config.getMusicOrigin()!=PlayerConfig.MusicOrigin.WAIT){
-                waitIndex=0;
-                waitMusic.clear();
-                config.setMusicOrigin(PlayerConfig.MusicOrigin.WAIT);
-                waitMusic.add(music);
-                loadNextWait(0);
-            }
             if(music instanceof InternetMusicForPlay){//**添加的是网络音乐
                 for(Music m:waitMusic){
                     if(music.getSong_id().equals(m.getSong_id())){//**已经存在
@@ -504,8 +412,18 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                     if (m.getPath().equals(music.getPath())) return;
                 }
             }
-            waitMusic.add(music);
-
+            if(config.getMusicOrigin()!=PlayerConfig.MusicOrigin.WAIT){
+                waitIndex=0;
+                waitMusic.clear();
+                randomSystem.reset(2);
+                config.setMusicOrigin(PlayerConfig.MusicOrigin.WAIT);
+                waitMusic.add(music);
+                randomSystem.addNumber(0);
+                loadNextWait(0);
+            }else{
+                waitMusic.add(music);
+                randomSystem.addNumber(waitMusic.size()-1);
+            }
         }
         public void addListToWait(List<Music> ml){
             for(Music m:ml){
@@ -573,6 +491,9 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 break;
                 case ONE_ONCE: {
                     config.setPlayType(PlayerConfig.PlayType.RANDOM);
+                    randomSystem.reset(3);
+                    randomSystem.addIntRange(0,waitMusic.size());
+
                 }
                 break;
                 case RANDOM:{
@@ -582,11 +503,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             }
             play.playTypeChanged(config.getPlayType());
         }
-        public void refreshList(){
-            musicListChange();
-        }
-
-
 
         private MusicDetailModel model;
 
@@ -765,8 +681,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
     }
 
 
-    private MediaMetadataCompat.Builder metaDataBuilder = new MediaMetadataCompat.Builder();
-
     /**
      * 加载音乐
      *
@@ -796,12 +710,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             }
         }
         play.musicOriginChanged(config.getMusicOrigin());
-
-        metaDataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, music.getMusicName())
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, music.getSinger())
-                .putString(MediaMetadataCompat.METADATA_KEY_COMPOSER, music.getLyricsPath());
-
-        sessionCompat.setMetadata(metaDataBuilder.build());
     }
 
     private void musicPlay() {
@@ -817,12 +725,6 @@ public class MusicPlay extends MediaBrowserServiceCompat {
                 .setBitMap(config.getBitmap())
                 .notifyChange();
         ticker.start();
-        try {
-            sendState(PlaybackStateCompat.STATE_PLAYING);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void musicLoad() {
@@ -841,39 +743,13 @@ public class MusicPlay extends MediaBrowserServiceCompat {
         play.pause();
         notification.setPlayStatus(false)
                 .notifyChange();
-        sendState(PlaybackStateCompat.STATE_PAUSED);
     }
 
-    /**
-     * 发送播放器状态
-     *
-     * @param state state
-     */
-    private void sendState(int state) {
-        PlaybackStateCompat stateCompat = new PlaybackStateCompat.Builder()
-                .setState(state, 1, 1)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                .build();
-        sessionCompat.setPlaybackState(stateCompat);
-
-    }
 
     private Bundle bundle = new Bundle();
     public final static String MUSIC_DURING = "md";
 
-    private void sendDuring(int during) {
-        bundle.putInt(MUSIC_DURING, during);
-        PlaybackStateCompat stateCompat = new PlaybackStateCompat.Builder()
-                .setExtras(bundle)
-                .setActions(PlaybackStateCompat.ACTION_SEEK_TO)
-                .build();
-        try {
-            sessionCompat.setPlaybackState(stateCompat);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-    }
 
     /**
      * 删除音乐记录
@@ -942,6 +818,7 @@ public class MusicPlay extends MediaBrowserServiceCompat {
             break;
             case ACTION_PLAY_LOCAL_MUSIC: {
                 config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
+
                 loadMusic((Music) intent.getSerializableExtra(MusicPlay.COMMAND_SEND_SINGLE_DATA));
             }
             break;
@@ -963,6 +840,10 @@ public class MusicPlay extends MediaBrowserServiceCompat {
 
     private void musicListChange() {
         childIndex= musicList.get(groupIndex).indexOf(config.getMusic());
+        waitMusic.clear();
+        waitMusic.addAll(musicList.get(groupIndex).getAll());
+        randomSystem.reset(4);
+        randomSystem.addIntRange(0,musicList.get(groupIndex).size());
         play.musicListChange(groupIndex,childIndex, musicList);
     }
 

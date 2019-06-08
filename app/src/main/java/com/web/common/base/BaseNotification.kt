@@ -11,10 +11,12 @@ import com.web.web.R
 /**
  * 原生通知
  */
-abstract class BaseNotification(private val context: Context,id: String, name: String) {
+abstract class BaseNotification(private val context: Context,
+                                private val notificationId:Int,
+                                id: String,
+                                name: String) {
     var builder: Notification.Builder
     var clear=false
-    private var notificationId=0
 
     init {
         createChannel(id, name)

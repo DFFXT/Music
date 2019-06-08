@@ -27,7 +27,7 @@ public class MyNotification extends BaseCustomNotification {
 	private String singer=null;
 	private boolean isPlay=false;
 	public MyNotification(Context context) {
-		super(context, MyNotification.class.getName(), ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
+		super(context,0, MyNotification.class.getName(), ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
 		this.context=context;
 		init();
 	}

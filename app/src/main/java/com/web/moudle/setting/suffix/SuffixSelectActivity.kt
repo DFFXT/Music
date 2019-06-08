@@ -37,7 +37,7 @@ class SuffixSelectActivity : BaseActivity() {
         rv_suffixSelect.addItemDecoration(GapItemDecoration(bottom = ViewUtil.dpToPx(10f)))
         tv_addAndSave.setOnClickListener {
             rv_suffixSelect.adapter?.let { adapter ->
-                types.add(ScanMusicType(".", minFileSize, true))
+                types.add(ScanMusicType(".", minTime, true))
                 adapter.notifyItemInserted(types.size - 1)
                 adapter.notifyItemRangeChanged(types.size - 1, 1)
             }
@@ -77,7 +77,7 @@ class SuffixSelectActivity : BaseActivity() {
         val pattern = Pattern.compile("^\\.[0-9a-zA-Z]{1,10}[0-9a-zA-Z]*?$")!!
 
         @JvmStatic
-        val minFileSize=10240
+        val minTime=20
 
         @JvmStatic
         fun getScanType(): List<ScanMusicType> {
@@ -85,7 +85,7 @@ class SuffixSelectActivity : BaseActivity() {
             if (list.isEmpty()) {
                 val suffixList = ResUtil.getStringArray(R.array.initialSuffix)
                 suffixList.forEach {
-                    val type = ScanMusicType(it, minFileSize, true)
+                    val type = ScanMusicType(it, minTime, true)
                     list.add(type)
                 }
                 DataSupport.saveAllAsync(list)

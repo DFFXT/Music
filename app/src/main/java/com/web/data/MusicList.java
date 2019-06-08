@@ -36,6 +36,7 @@ public class MusicList<T> {
     public void addAll(List<T> list){
         music.addAll(list);
     }
+    public List<T> getAll(){return music;}
     public T remove(int index){
         return music.remove(index);
     }

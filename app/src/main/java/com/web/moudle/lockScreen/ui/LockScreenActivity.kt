@@ -7,6 +7,7 @@ import android.app.KeyguardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
@@ -27,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.request.transition.Transition
 import com.web.common.base.BaseActivity
 import com.web.common.base.BaseGlideTarget
+import com.web.common.base.PlayerObserver
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
@@ -34,8 +36,10 @@ import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
 import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
+import com.web.data.Music
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.other.PlayInterface
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lock_screen.*
@@ -43,29 +47,51 @@ import java.util.*
 
 
 class LockScreenActivity : BaseActivity() ,View.OnClickListener{
-    private lateinit var browserCompat: MediaBrowserCompat
-    private var controller:MediaControllerCompat?=null
-    private var stateCompat:PlaybackStateCompat?=null
     private val lyrics= arrayListOf<LyricsLine>()
     private val arrowBitmap = arrayOfNulls<Bitmap>(2)
     private lateinit var params: ConstraintLayout.LayoutParams
     private var marginEnd=0
-    val receiver=object :ResultReceiver(Handler(Looper.getMainLooper())){
-        override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-            if (resultData==null)return
-            when(resultCode){
-                MusicPlay.COMMAND_RESULT_CODE_CURRENT_POSITION->{//**返回进度
-                    val pos=resultData.getInt(MusicPlay.COMMAND_SEND_SINGLE_DATA,123)
-                    lyricView_lockScreen.setCurrentTimeImmediately(pos)
-                }
-                MusicPlay.COMMAND_RESULT_CODE_STATUS->{//**返回状态
-                    val play= resultData.getBoolean(MusicPlay.COMMAND_SEND_SINGLE_DATA,false)
-                    iv_lockScreen_status.setImageResource(
-                            if(play) R.drawable.icon_play_white
-                            else R.drawable.icon_pause_white
-                    )
-                }
+    private var connect:MusicPlay.Connect?=null
+    private var connection:ServiceConnection=object :ServiceConnection{
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder) {
+            connect=service as MusicPlay.Connect
+            connect?.addObserver(this@LockScreenActivity,observer)
+            connect?.getPlayerInfo(this@LockScreenActivity)
+        }
+    }
+    val observer=object :PlayerObserver(){
+        override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
+            if(music==null)return
+            tv_lockScreen_musicName.text=music.musicName
+            tv_lockScreen_singerName.text=music.singer
+            val path=music.lyricsPath
+            lyrics.clear()
+            if (Shortcut.fileExsist(path)) {//---存在歌词
+                val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(path))
+                lyrics.addAll(lyricsAnalysis.lyrics)
+            } else {//**没找到歌词
+                val line = LyricsLine()
+                line.time = 0
+                line.line = ResUtil.getString(R.string.lyrics_noLyrics)
+                lyrics.add(line)
             }
+            lyricView_lockScreen.lyrics=lyrics
+        }
+
+        override fun play() {
+            iv_lockScreen_status.setImageResource(R.drawable.icon_play_white)
+        }
+
+        override fun pause() {
+            iv_lockScreen_status.setImageResource(R.drawable.icon_pause_white)
+        }
+
+        override fun currentTime(group: Int, child: Int, time: Int) {
+            lyricView_lockScreen.setCurrentTimeImmediately(time)
         }
     }
 
@@ -76,23 +102,15 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     override fun initView() {
         ViewUtil.transparentStatusBar(window)
         loadData()
-        val mode=LockScreenSettingActivity.getMode()
-        when(mode){
+        val intent=Intent(this,MusicPlay::class.java)
+        intent.action=MusicPlay.BIND
+        bindService(intent,connection,Context.BIND_AUTO_CREATE)
+        when(LockScreenSettingActivity.getMode()){
             LockScreenSettingActivity.BG_MODE_IMAGE-> {
 
                 ImageLoad.loadAsBitmap(LockScreenSettingActivity.getBgImagePath()).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        val rs = RenderScript.create(this@LockScreenActivity)
-                        val blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
-                        val allIn=Allocation.createFromBitmap(rs, resource)
-                        val to=Bitmap.createBitmap(resource.width, resource.height,Bitmap.Config.ARGB_4444)
-                        val allOut=Allocation.createFromBitmap(rs,to)
-                        blur.setRadius(12f)
-                        blur.setInput(allIn)
-                        blur.forEach(allOut)
-                        allOut.copyTo(to)
-                        rs.destroy()
-                        rootView_lockScreenActivity.background=BitmapDrawable(resources,to)
+                        rootView_lockScreenActivity.background=BitmapDrawable(resources,ImageLoad.buildBlurBitmap(resource,10f))
                     }
                 })
             }
@@ -185,74 +203,8 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                 return true
             }
         })
-
-        browserCompat= MediaBrowserCompat(this, ComponentName(this, MusicPlay::class.java),
-                object : MediaBrowserCompat.ConnectionCallback() {
-                    override fun onConnected() {
-                        try {
-                            controller = MediaControllerCompat(this@LockScreenActivity, browserCompat.sessionToken)
-                            controller?.registerCallback(object : MediaControllerCompat.Callback() {
-                                override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-                                    stateCompat=state
-                                    when(state?.actions){//**歌曲状态改变
-                                        PlaybackStateCompat.ACTION_PLAY_PAUSE->{
-                                            if(state.state==PlaybackStateCompat.STATE_PLAYING){
-                                                iv_lockScreen_status.setImageResource(R.drawable.icon_play_white)
-                                            }else{
-                                                iv_lockScreen_status.setImageResource(R.drawable.icon_pause_white)
-                                            }
-                                        }
-                                        PlaybackStateCompat.ACTION_SEEK_TO->{
-                                            val pos=state.extras?.getInt(MusicPlay.MUSIC_DURING,0)
-                                            pos?.let {
-                                                lyricView_lockScreen.setCurrentTime(it)
-                                            }
-                                        }
-                                    }
-
-                                }
-
-                                override fun onMetadataChanged(metadata: MediaMetadataCompat?) {//**歌曲信息改变
-                                    musicSwitch(metadata)
-                                }
-                            })
-                            controller?.sendCommand(MusicPlay.COMMAND_GET_CURRENT_POSITION,null,receiver)
-                            /*iv_lockScreen_status.setImageResource(
-                                    if(controller?.playbackState?.state==PlaybackStateCompat.STATE_PLAYING)R.drawable.icon_play_white
-                                    else R.drawable.icon_pause_white
-                            )*/
-                            controller?.sendCommand(MusicPlay.COMMAND_GET_STATUS,null,receiver)
-                            musicSwitch(controller?.metadata)
-                        } catch (e: RemoteException) {
-                            e.printStackTrace()
-                        }
-
-                    }
-                    override fun onConnectionFailed() {
-                        MToast.showToast(this@LockScreenActivity,ResUtil.getString(R.string.failedConnectToPlayer))
-                    }
-                }, null)
     }
 
-    /**
-     * 音乐切换
-     */
-    private fun musicSwitch(metadata:MediaMetadataCompat?){
-        tv_lockScreen_musicName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
-        tv_lockScreen_singerName.text=metadata?.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
-        val path=metadata?.getString(MediaMetadataCompat.METADATA_KEY_COMPOSER)
-        lyrics.clear()
-        if (Shortcut.fileExsist(path)) {//---存在歌词
-            val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(path))
-            lyrics.addAll(lyricsAnalysis.lyrics)
-        } else {//**没找到歌词
-            val line = LyricsLine()
-            line.time = 0
-            line.line = ResUtil.getString(R.string.lyrics_noLyrics)
-            lyrics.add(line)
-        }
-        lyricView_lockScreen.lyrics=lyrics
-    }
 
     private fun loadData() {
         val d=ResUtil.getDrawable(R.drawable.icon_lockscreen_slide_arrow)
@@ -292,16 +244,11 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     }
     override fun onClick(v:View){
         when(v.id){
-            R.id.iv_lockScreen_pre-> controller?.transportControls?.skipToPrevious()
-            R.id.iv_lockScreen_next-> controller?.transportControls?.skipToNext()
+            R.id.iv_lockScreen_pre-> connect?.pre()
+            R.id.iv_lockScreen_next-> connect?.next()
             R.id.iv_lockScreen_status-> {
-                if(stateCompat?.state==PlaybackStateCompat.STATE_PLAYING){
-                    controller?.transportControls?.pause()
-                }else{
-                    controller?.transportControls?.play()
-                }
+                connect?.changePlayerPlayingStatus()
             }
-
         }
     }
 
@@ -311,17 +258,9 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             manager.requestDismissKeyguard(this,null)
         }
+        unbindService(connection)
     }
 
-    override fun onStart() {
-        super.onStart()
-        browserCompat.connect()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        browserCompat.disconnect()
-    }
 
     override fun finish() {
         super.finish()

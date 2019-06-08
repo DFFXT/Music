@@ -158,7 +158,7 @@ class NetApis {
     interface AllArtist {
         @GET("http://musicapi.qianqian.com/v1/restserver/ting?" +
                 "from=android&version=6.8.0.1&channel=1413b&operator=0&" +
-                "method=baidu.ting.artist.getList&format=json&order=1")
+                "method=baidu.ting.artist.selectList&format=json&order=1")
         fun getArtistList(@Query("area") area: Int, @Query("sex") sex: Int, @Query("offset") offset: Int, @Query("limit") limit: Int): Observable<ArtistBox>
     }
 

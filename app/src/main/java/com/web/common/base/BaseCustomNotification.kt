@@ -7,8 +7,12 @@ import android.widget.RemoteViews
 import androidx.annotation.LayoutRes
 
 
-abstract class BaseCustomNotification(context: Context,id: String, name: String, @LayoutRes layout: Int):BaseNotification(
-        context,id,name
+abstract class BaseCustomNotification(context: Context,
+                                      notificationId:Int,
+                                      id: String,
+                                      name: String,
+                                      @LayoutRes layout: Int):BaseNotification(
+        context,notificationId,id,name
 ) {
     val view: RemoteViews = RemoteViews(context.packageName, layout)
 

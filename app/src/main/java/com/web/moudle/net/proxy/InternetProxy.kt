@@ -41,7 +41,8 @@ object InternetProxy {
     }
     @JvmStatic
     fun proxyUrl(originUrl:String):String{
-        return if(originUrl.startsWith("http://")||originUrl.startsWith("https://"))
+        return if(CacheActivity.getCacheEnable()
+                &&(originUrl.startsWith("http://")||originUrl.startsWith("https://")))
             "http://127.0.0.1:$port/$originUrl"
         else originUrl
     }
