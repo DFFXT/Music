@@ -29,7 +29,6 @@ class DrawableItemDecoration(left:Int=0, private val top:Int=0, private val righ
                 drawable?.draw(c)
             }
         }else if(orientation==LinearLayout.HORIZONTAL){
-
             for(index in 0 until parent.childCount){
                 val lp=parent.getChildAt(index).layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
                 val left=parent.getChildAt(index).right + lp.marginEnd

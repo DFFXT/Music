@@ -1,6 +1,7 @@
 package com.web.moudle.music.page.recommend
 
 import android.graphics.PixelFormat
+import android.os.IBinder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
@@ -28,19 +29,15 @@ class RecommendPage : BaseMusicPage() {
         const val pageName = "recommendPage"
     }
 
-    override fun setConnect(connect: MusicPlay.Connect) {
+    override fun setConnect(connect: IBinder) {
 
     }
 
-    override fun getPageName(): String = pageName
 
     override fun getLayoutId(): Int = R.layout.fragment_recommend
 
 
-    override fun setTitle(textView: TextView) {
-        textView.setText(R.string.page_Internet)
-        textView.setCompoundDrawables(null, null, null, null)
-    }
+
 
     override fun initView(rootView: View) {
         flutterView = Flutter.createView(activity!!, lifecycle, "RecommendView")

@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.google.android.material.tabs.TabLayout;
 import com.web.common.base.BaseActivity;
+import com.web.common.base.BaseFragment;
+import com.web.common.base.BaseFragmentPagerAdapter;
+import com.web.common.base.BasePageChangeListener;
 import com.web.common.tool.MToast;
 import com.web.common.tool.Ticker;
 import com.web.common.util.ResUtil;
@@ -19,6 +23,7 @@ import com.web.misc.ConfirmDialog;
 import com.web.misc.GapItemDecoration;
 import com.web.misc.ToolsBar;
 import com.web.misc.TopBarLayout;
+import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
@@ -29,32 +34,27 @@ import com.web.web.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+
 import kotlinx.coroutines.Dispatchers;
 
 
-public class MusicDownLoadActivity extends BaseActivity implements FileDownloadService.DownloadListener {
-    private RecyclerView rv_download;
-    private final List<DownloadMusic> dataList = new ArrayList<>();
-    private DownloadViewAdapter adapter;
+public class MusicDownLoadActivity extends BaseActivity {
+    private ViewPager rv_download;
 
     private ServiceConnection serviceConnection;
     private FileDownloadService.Connect connect;
-    ToolsBar toolsBar;
+    private TabLayout tab;
+    private TopBarLayout topBarLayout;
+    private DownloadCompleteFragment completeFragment=new DownloadCompleteFragment();
+    private DownloadingFragment downloadingFragment=new DownloadingFragment();
+    private ArrayList<BaseDownloadFragment> fragments=new ArrayList<>();
 
-    private Ticker looper;
-    private Runnable runnable = () -> {
-        List<DownloadMusic> list = connect.getDownloadingMusic();
-        if (list.size() == 0) {
-            looper.stop();
-        }
-        for (int i = 0; i < list.size(); i++) {
-            dataList.set(i + 1, list.get(i));
-        }
-        adapter.notifyItemRangeChanged(1, list.size());
-    };
 
 
     @Override
@@ -62,38 +62,38 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         return R.layout.music_download;
     }
 
+    public TopBarLayout getTopBarLayout(){
+        return topBarLayout;
+    }
+
     @Override
     public void initView() {
-        toolsBar = new ToolsBar(this);
+        tab=findViewById(R.id.tabLayout);
         rv_download = findViewById(R.id.list);
-        rv_download.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rv_download.addItemDecoration(new GapItemDecoration(10, 0, 10, 0));
-        TopBarLayout topBarLayout=findViewById(R.id.topBar);
-        topBarLayout.setEndImageListener(v->{
-            if(dataList.size()==0)return;
-            new ConfirmDialog(this)
-                    .setMsg(ResUtil.getString(R.string.clearAllRecord))
-                    .setLeftText(ResUtil.getString(R.string.no))
-                    .setRightText(ResUtil.getString(R.string.yes))
-                    .setRightListener((dialog) -> {
-                        FileDownloadService.clearAllRecord(this);
-                        dialog.dismiss();
-                        return null;
-                    })
-                    .setLeftListener((dialog) -> {
-                        dialog.dismiss();
-                        return null;
-                    })
-                    .showCenter(v);
-        });
+        fragments.add(completeFragment);
+        fragments.add(downloadingFragment);
+        rv_download.setAdapter(new BaseFragmentPagerAdapter(getSupportFragmentManager(),fragments));
+        tab.setupWithViewPager(rv_download);
+        for(int i=0;i<fragments.size();i++){
+            Objects.requireNonNull(tab.getTabAt(i)).setText(fragments.get(i).getTitle());
+        }
+        topBarLayout=findViewById(R.id.topBar);
         connect();
         ViewUtil.transparentStatusBar(getWindow());
 
-        looper=new Ticker(500,0, Dispatchers.getMain(),()->{
-            runnable.run();
-            return null;
+        rv_download.addOnPageChangeListener(new BasePageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                for(int i=0;i<fragments.size();i++){
+                    if(i==position){
+                        fragments.get(position).onHiddenChanged(false);
+                    }else{
+                        fragments.get(position).onHiddenChanged(true);
+                    }
+                }
+            }
         });
-
+        rv_download.post(()-> fragments.get(0).onHiddenChanged(false));
 
     }
 
@@ -103,8 +103,9 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 connect = (FileDownloadService.Connect) service;
-                connect.addDownloadListener(MusicDownLoadActivity.this);
-                connect.getDownloadList();
+                for(int i=0;i<fragments.size();i++){
+                    fragments.get(i).setConnect(connect);
+                }
             }
 
             @Override
@@ -113,116 +114,12 @@ public class MusicDownLoadActivity extends BaseActivity implements FileDownloadS
         }, BIND_AUTO_CREATE);
     }
 
-    private void setAdapter() {//--设置适配器
-        adapter = new DownloadViewAdapter(MusicDownLoadActivity.this, dataList);
-        adapter.setItemClickListener((view, position) -> {
-            InternetMusicDetail detail=dataList.get(position).getInternetMusicDetail();
-            int id = detail.getId();
-            int status = dataList.get(position).getStatus();
 
-            switch (view.getId()){
-                case R.id.downloadStatu:{
-                    if (status == DownloadMusic.DOWNLOAD_DOWNLOADING) {
-                        connect.pause(id);
-                    } else {
-                        connect.start(id);
-                    }
-                }break;
-                case R.id.close:{
-                    new AlertDialog.Builder(MusicDownLoadActivity.this)
-                            .setTitle(ResUtil.getString(R.string.delete))
-                            .setMessage("\n\n")
-                            .setNegativeButton(ResUtil.getString(R.string.no), null)
-                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> connect.delete(id)).create().show();
-                }break;
-                case R.id.iv_play:{
-                    Music music=new Music(detail.getSongName(),detail.getArtistName(),detail.getPath());
-                    if(Music.exist(music)){
-                        MusicPlay.play(this,music);
-                    }else{
-                        MToast.showToast(this,R.string.fileNotFound);
-                    }
-                }break;
-                case R.id.item_parent:{
-                    MusicDetailActivity.actionStart(this,detail.getSongId());
-                }break;
-            }
-        });
-        adapter.setItemLongClickListener((v, position) -> {
-            toolsBar.removeAllItem();
-            toolsBar.addItem(1, ResUtil.getString(R.string.delete));
-            toolsBar.setItemClick(id -> {
-                if (id == 1) {
-                    connect.delete(adapter.getSelectList((item, index) ->
-                                    item.getInternetMusicDetail().getId()));
-                    adapter.setSelect(false);
-                    toolsBar.close();
-                }
-                return null;
-            });
-            toolsBar.setBackClick(() -> {
-                adapter.setSelect(false);
-                return null;
-            });
-            toolsBar.show();
-            toolsBar.setFitWindow(true);
-            return true;
-        });
-        rv_download.setAdapter(adapter);
-    }
-
-
-    @Override
-    public void progressChange(int id, long progress, long max) {
-        looper.start();
-    }
-
-    @Override
-    public void complete(InternetMusic music) {
-    }
-
-    @Override
-    public void statusChange(int id, boolean isDownload) {
-        int index = getIndex(id);
-        if (id < 0) return;
-        runOnUiThread(() -> adapter.notifyItemChanged(index));
-    }
-
-    @Override
-    public void listChanged(List<DownloadMusic> downloadMusicList, List<DownloadMusic> completeList) {
-        dataList.clear();
-        dataList.add(new DownloadMusic(null, DownloadMusic.DOWNLOAD_DOWNLOADING_HEAD));
-        dataList.addAll(downloadMusicList);
-        dataList.add(new DownloadMusic(null, DownloadMusic.DOWNLOAD_COMPLETE_HEAD));
-        dataList.addAll(completeList);
-        runOnUiThread(() -> {
-            if (adapter == null) {
-                setAdapter();
-            } else {
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-    }
-
-    private int getIndex(int id) {
-        InternetMusicDetail m;
-        for (int i = 0; i < dataList.size(); i++) {
-            m = dataList.get(i).getInternetMusicDetail();
-            if (m != null && id == m.getId()) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
     public void onDestroy() {
         super.onDestroy();
-        looper.stop();
         if (serviceConnection != null) {
             unbindService(serviceConnection);
-            if (connect != null)
-                connect.removeDownloadListener(this);
         }
     }
 

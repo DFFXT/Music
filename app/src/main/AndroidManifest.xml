@@ -30,14 +30,22 @@
         android:theme="@style/AppStyle"
         tools:ignore="UnusedAttribute"
         tools:replace="android:label">
-        <!--<activity android:name="com.web.moudle.albumEntry.ui.MusicDetailActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="870075f61a"
+            />
+        <!--<meta-data
+            android:name="BUGLY_APP_VERSION"
+            android:value="1" />
+        &lt;!&ndash; 配置APP渠道号 &ndash;&gt;
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="<APP_Channel>" />-->
+        <!-- 配置Bugly调试模式（true或者false）-->
+        <meta-data
+            android:name="BUGLY_ENABLE_DEBUG"
+            android:value="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>-->
-        
         <provider
             android:authorities="${applicationId}"
             android:grantUriPermissions="true"

@@ -18,6 +18,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.web.common.base.BaseActivity;
+import com.web.common.base.BasePageChangeListener;
 import com.web.common.constant.Apk;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
@@ -137,13 +138,13 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                     musicListPage.setData(group, child, list.get(group));
                     groupList = list;
                     groupIndex = group;
-                    getCurrentPage().setTitle(tv_title);
+                    getCurrentPage().setTitle("");
                 }
             } else {
                 musicListPage.setData(group, child, list.get(group));
                 groupList = list;
                 groupIndex = group;
-                getCurrentPage().setTitle(tv_title);
+                getCurrentPage().setTitle("");
             }
         }
 
@@ -196,7 +197,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         musicListPage = new MusicListPage();
         pageList.add(new RecommendPage());
         pageList.add(musicListPage);
-        musicListPage.setTitle(tv_title);
+        musicListPage.setTitle("");
         setAdapter();
         startService(new Intent(this, MusicPlay.class));
         setListener();
@@ -210,6 +211,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         });
     }
 
+    public TextView getTitleView(){
+        return tv_title;
+    }
+
+
     @SuppressLint("RestrictedApi")
     private void setToolbar() {
         TopBarLayout toolbar = findViewById(R.id.toolbar);
@@ -222,8 +228,8 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         tv_title = toolbar.setMainTitle(ResUtil.getString(R.string.page_local));
         tv_title.setCompoundDrawableTintMode(PorterDuff.Mode.ADD);
         tv_title.setOnClickListener(v -> {
-            switch (pageList.get(viewPager.getCurrentItem()).getPageName()) {
-                case MusicListPage.pageName: {
+            if (pageList.get(viewPager.getCurrentItem()).getTitle().equals(MusicListPage.pageName)) {
+
                     LocalSheetListAlert listAlert = new LocalSheetListAlert(MusicActivity.this, ResUtil.getString(R.string.songSheet));
                     ArrayList<String> list = new ArrayList<>();
                     for (MusicList ml : groupList) {
@@ -260,8 +266,6 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                         }
                     });
                     listAlert.show(v);
-                }
-                break;
             }
         });
     }
@@ -416,20 +420,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             public void onProgressChanged(SeekBar v, int now, boolean tf) {//--发送进度条信息
             }
         });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
+        viewPager.addOnPageChangeListener(new BasePageChangeListener(){
             @Override
             public void onPageSelected(int position) {
                 KeyboardManager.hideKeyboard(MusicActivity.this,viewPager.getWindowToken());
-                pageList.get(position).setTitle(tv_title);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                pageList.get(position).setTitle("");
             }
         });
     }

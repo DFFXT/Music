@@ -72,7 +72,7 @@ class LocalFragment : BaseFragment() {
         initData()
         rootView.rv_songSheetlist.layoutManager=GridLayoutManager(context,4)
         rootView.rv_songSheetlist.addItemDecoration(GapItemDecoration(0,10,10,10,
-                remainBottomPadding = true,remainTopPadding = true,remainEndPadding = true,remianLeftPadding = true))
+                remainBottomPadding = true,remainTopPadding = true,remainEndPadding = true,remainLeftPadding = true))
         rootView.rv_songSheetlist.adapter=adapter
         adapter.itemLongClick={_,index->
             showListPop(sheetList[index].id)

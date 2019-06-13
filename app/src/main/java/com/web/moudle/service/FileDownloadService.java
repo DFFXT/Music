@@ -43,7 +43,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FileDownloadService extends Service {
     public final static String ACTION_DOWNLOAD = "com.web.web.File.download";
-    public final static String ACTION_DELETE_ALL = "com.web.web.File.delete_all";
+    public final static String ACTION_DELETE_COMPLETE = "com.web.web.File.delete_complete";
     public final static String INTENT_SINGLE_DATA = "com.web.web.File.data";
     private Connect connect;
     private ArrayList<DownloadListener> listeners = new ArrayList<>();
@@ -209,7 +209,7 @@ public class FileDownloadService extends Service {
                     }
                 }
                 break;
-                case ACTION_DELETE_ALL: {//**删除下载历史记录
+                case ACTION_DELETE_COMPLETE: {//**删除下载历史记录
                     Runnable runnable=()->{
                         for(int i=0;i<completeList.size();i++){
                             InternetMusicDetail detail=completeList.get(i).getInternetMusicDetail();
@@ -384,9 +384,11 @@ public class FileDownloadService extends Service {
 
 
     private void listChange() {
-        for (DownloadListener listener : listeners) {
-            listener.listChanged(downloadList, completeList);
-        }
+        AndroidSchedulers.mainThread().scheduleDirect(()->{
+            for (DownloadListener listener : listeners) {
+                listener.listChanged(downloadList, completeList);
+            }
+        });
         notifyNotification();
     }
 
@@ -401,15 +403,21 @@ public class FileDownloadService extends Service {
 
     private void statusChange(DownloadMusic dm) {
         notifyNotification();
-        for (DownloadListener listener : listeners) {
-            listener.statusChange(dm.getInternetMusicDetail().getId(), dm.getStatus() == DownloadMusic.DOWNLOAD_DOWNLOADING);
-        }
+        AndroidSchedulers.mainThread().scheduleDirect(()->{
+            for (DownloadListener listener : listeners) {
+                listener.statusChange(dm.getInternetMusicDetail().getId(), dm.getStatus() == DownloadMusic.DOWNLOAD_DOWNLOADING);
+            }
+        });
+
     }
 
     private void progressChange(InternetMusicDetail music) {
-        for (DownloadListener listener : listeners) {
-            listener.progressChange(music.getId(), music.getHasDownload(), music.getSize());
-        }
+        AndroidSchedulers.mainThread().scheduleDirect(()->{
+            for (DownloadListener listener : listeners) {
+                listener.progressChange(music.getId(), music.getHasDownload(), music.getSize());
+            }
+        });
+
     }
 
     /**
@@ -477,9 +485,9 @@ public class FileDownloadService extends Service {
         context.startService(intent);
     }
 
-    public static void clearAllRecord(Context context) {
+    public static void clearCompleteRecord(Context context) {
         Intent intent = new Intent(context, FileDownloadService.class);
-        intent.setAction(FileDownloadService.ACTION_DELETE_ALL);
+        intent.setAction(FileDownloadService.ACTION_DELETE_COMPLETE);
         context.startService(intent);
     }
 }

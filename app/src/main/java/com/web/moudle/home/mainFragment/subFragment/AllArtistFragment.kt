@@ -33,7 +33,7 @@ class AllArtistFragment:BaseFragment() {
 
         rootView.rv_hotArtist.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
         val gap=ViewUtil.dpToPx(10f)
-        rootView.rv_hotArtist.addItemDecoration(GapItemDecoration(left = gap,right = gap,remianLeftPadding = true,remainEndPadding = true))
+        rootView.rv_hotArtist.addItemDecoration(GapItemDecoration(left = gap,right = gap,remainLeftPadding = true,remainEndPadding = true))
         rootView.rv_hotArtist.adapter=adapter
 
         val list=ArrayList<ArtistInfo>()

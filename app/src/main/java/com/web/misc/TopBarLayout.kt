@@ -94,6 +94,10 @@ class TopBarLayout : FrameLayout {
         this.subtitle.visibility = View.VISIBLE
     }
 
+    fun setEndText(endText:CharSequence?){
+        this.endText.text=endText
+    }
+
     fun setTint(@ColorInt color: Int) {
         val tint = ColorStateList.valueOf(color)
         startImageView.imageTintList = tint

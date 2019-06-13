@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
  * remainEndPadding 是否保留最后一个item的gap
  * remainBottomPadding 是否保留最后一个item的gap
  */
-open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,private val top:Int=0,
-                                                       private val right:Int=0,private val bottom:Int=0,
-                                                       private val remianLeftPadding:Boolean=false,
+open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0, private val top:Int=0,
+                                                       private val right:Int=0, private val bottom:Int=0,
+                                                       private val remainLeftPadding:Boolean=false,
                                                        private val remainTopPadding:Boolean=false,
                                                        private val remainEndPadding:Boolean=false,
                                                        private val remainBottomPadding:Boolean=false): RecyclerView.ItemDecoration() {
@@ -30,7 +30,7 @@ open class GapItemDecoration @JvmOverloads constructor(private val left:Int=0,pr
                 }
             }
             if(lm.orientation== RecyclerView.HORIZONTAL){
-                if(remianLeftPadding||parent.getChildAdapterPosition(view)!=0){
+                if(remainLeftPadding||parent.getChildAdapterPosition(view)!=0){
                     outRect.left=left
                 }
                 outRect.top=top

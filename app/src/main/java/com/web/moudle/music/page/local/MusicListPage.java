@@ -1,6 +1,7 @@
 package com.web.moudle.music.page.local;
 
 import android.animation.ValueAnimator;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MusicListPage extends BaseMusicPage {
-    public final static String pageName = "MusicList";
+    public final static String pageName=ResUtil.getString(R.string.page_local);
     private MusicList<Music> data;
     private RecyclerView rv_musicList;
     private IndexBar indexBar;
@@ -243,22 +244,22 @@ public class MusicListPage extends BaseMusicPage {
      * @param connect connect
      */
     @Override
-    public void setConnect(@NonNull MusicPlay.Connect connect) {
+    public void setConnect(@NonNull IBinder connect) {
         if (this.connect == null) {
-            this.connect = connect;
-            connect.selectList(groupIndex,-1);
+            this.connect = (MusicPlay.Connect)connect;
+            this.connect.selectList(groupIndex,-1);
         }
 
     }
 
     @NotNull
     @Override
-    public String getPageName() {
-        return pageName;
+    public String getTitle() {
+        return ResUtil.getString(R.string.page_local);
     }
 
     @Override
-    public void setTitle(@NotNull TextView textView) {
+    public void setTitle(@NotNull String textView) {
         String sheetName=" - ";
         if(groupIndex==0){
             sheetName+=ResUtil.getString(R.string.default_);
@@ -269,7 +270,7 @@ public class MusicListPage extends BaseMusicPage {
         String title=ResUtil.getString(R.string.page_local)+sheetName;
 
         CharSequence realTitle=ResUtil.getSpannable(title,sheetName,ResUtil.getColor(R.color.gray),ResUtil.getSize(R.dimen.textSize_min));
-        textView.setText(realTitle);
+        ((MusicActivity)getActivity()).getTitleView().setText(realTitle);
     }
 
     /**
@@ -369,7 +370,7 @@ public class MusicListPage extends BaseMusicPage {
                 char firstLetter = data.get(p).getMusicName().charAt(0);
                 char code;
                 if (PinYin.isChinese(firstLetter)) {//**判断是否是中文，只有中文才会有返回值否则返回null
-                    String res[] = PinyinHelper.toHanyuPinyinStringArray(data.get(p).getMusicName().charAt(0));
+                    String[] res = PinyinHelper.toHanyuPinyinStringArray(data.get(p).getMusicName().charAt(0));
                     if (res != null) {
                         code = res[0].toCharArray()[0];
                     } else code = '*';

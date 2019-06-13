@@ -25,6 +25,7 @@ import com.web.common.base.BaseObserver;
 import com.web.common.base.BaseSingleObserver;
 import com.web.common.base.ChineseComparator;
 import com.web.common.base.MyApplication;
+import com.web.common.base.SingleSchedulerTransform;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.tool.Ticker;
@@ -87,11 +88,7 @@ public class MusicPlay extends Service {
     public final static String ACTION_FLOAT_WINDOW_CHANGE = "ACTION_FLOAT_WINDOW_CHANGE";
     public final static String ACTION_SCAN = "ACTION_SCAN";
 
-    public final static String COMMAND_GET_CURRENT_POSITION = "getCurrentPosition";
-    public final static String COMMAND_GET_STATUS = "getStatus";
     public final static String COMMAND_SEND_SINGLE_DATA = "translateSingleData";
-    public final static int COMMAND_RESULT_CODE_CURRENT_POSITION = 1;//**result code 标识为当前播放时间
-    public final static int COMMAND_RESULT_CODE_STATUS = 2;//**result code 标识为播放状态
 
     private MediaPlayer player = new MediaPlayer();
     private MyNotification notification;
@@ -558,8 +555,7 @@ public class MusicPlay extends Service {
                     config.setBitmapPath(music.getSinger());
                 }
                 emitter.onSuccess(1);
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+            }).compose(new SingleSchedulerTransform<>())
                     .subscribe(new BaseSingleObserver<Object>() {
                         @Override
                         public void onSuccess(Object obj) {
@@ -694,7 +690,6 @@ public class MusicPlay extends Service {
         try {
             config.setPrepared(false);
             player.setDataSource(InternetProxy.proxyUrl(music.getPath()));
-            //player.setDataSource(music.getPath());
             player.prepareAsync();
         } catch (IOException e) {//***播放异常，如果是文件不存在则删除记录
             if (e instanceof FileNotFoundException) {
@@ -744,11 +739,6 @@ public class MusicPlay extends Service {
         notification.setPlayStatus(false)
                 .notifyChange();
     }
-
-
-    private Bundle bundle = new Bundle();
-    public final static String MUSIC_DURING = "md";
-
 
 
     /**

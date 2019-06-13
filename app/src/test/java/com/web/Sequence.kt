@@ -21,4 +21,9 @@ class Sequence{
         System.out.println(ChineseComparator.compare("a","b"))
         System.out.println(ChineseComparator.compare("银","龙"))
     }
+    @Test
+    fun t(){
+        var aa:ArrayList<Int>?=null
+        System.out.println(aa?.size?:0>0)
+    }
 }
