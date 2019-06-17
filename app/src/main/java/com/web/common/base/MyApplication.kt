@@ -23,9 +23,9 @@ class MyApplication : LitePalApplication(){
         configuration.fontScale = Constant.LocalConfig.fontScale
         context=applicationContext.createConfigurationContext(configuration)
 
-        //CrashReport.initCrashReport(this)
+        CrashReport.initCrashReport(this)
 
-        Thread.setDefaultUncaughtExceptionHandler(UncaughtException)
+        //Thread.setDefaultUncaughtExceptionHandler(UncaughtException)
 
 
         InternetProxy.startProxy()

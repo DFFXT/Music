@@ -16,14 +16,29 @@
         app:topBar_tint="@color/white"
         app:topBar_mainTitleColor="@color/white"
         app:topBar_startImage="@drawable/icon_back_black"/>
+    <TextView
+        android:id="@+id/tv_systemMusicEnable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topBar"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/setting_containSystemMusic"/>
+    <Switch
+        android:id="@+id/sw_enableSystemMusic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@id/tv_systemMusicEnable"
+        android:layout_marginEnd="16dp"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:paddingTop="20dp"
-        android:clipToPadding="false"
         android:overScrollMode="never"
         android:id="@+id/rv_suffixSelect"
-        android:layout_below="@id/topBar"
+        android:layout_below="@id/tv_systemMusicEnable"
         android:layout_above="@+id/tv_addAndSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

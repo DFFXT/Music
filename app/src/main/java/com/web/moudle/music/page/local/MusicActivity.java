@@ -197,7 +197,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         musicListPage = new MusicListPage();
         pageList.add(new RecommendPage());
         pageList.add(musicListPage);
-        musicListPage.setTitle("");
+
         setAdapter();
         startService(new Intent(this, MusicPlay.class));
         setListener();
@@ -208,6 +208,9 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth() / 10f);
             }
+        });
+        viewPager.post(()->{
+            getCurrentPage().setTitle("");
         });
     }
 

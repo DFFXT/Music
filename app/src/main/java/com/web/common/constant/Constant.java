@@ -36,6 +36,8 @@ public final class Constant {
         public final static String floatWindowX="floatWindowX";
         public final static String floatWindowY="floatWindowY";
 
+        public final static String enableSystemMusic="enableSystemMusic";
+
 
     }
     public static class LocalConfig{

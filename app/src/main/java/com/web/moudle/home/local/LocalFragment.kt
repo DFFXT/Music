@@ -1,12 +1,20 @@
 package com.web.moudle.home.local
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.web.common.base.BaseFragment
+import com.web.common.base.PlayerObserver
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
+import com.web.data.Music
+import com.web.data.MusicList
 import com.web.misc.GapItemDecoration
 import com.web.misc.InputDialog
 import com.web.moudle.home.HomePageActivity
@@ -33,8 +41,29 @@ class LocalFragment : BaseFragment() {
     private val sheetList=ArrayList<SongSheetWW>()
     private val adapter=SheetAdapter()
     override fun getLayoutId(): Int = R.layout.fragment_local
+    private var connect:MusicPlay.Connect?=null
+    private var observer=object :PlayerObserver(){
+        override fun musicListChange(group: Int, child: Int, list: MutableList<MusicList<Music>>?) {
+            model.getMusicNum {
+                rootView!!.tv_musicNum?.text = it.toString()
+            }
+        }
+    }
+    private val connection=object :ServiceConnection{
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder) {
+            connect=service as MusicPlay.Connect
+            connect?.addObserver(activity!!,observer)
+        }
+    }
 
     override fun initView(rootView: View) {
+        val intent=Intent(context,MusicPlay::class.java)
+        intent.action=MusicPlay.BIND
+        context?.bindService(intent,connection,Context.BIND_AUTO_CREATE)
         rootView.topBar.setEndImageListener(View.OnClickListener {
             SettingActivity.actionStart(context)
         })

@@ -29,8 +29,8 @@ class DownloadCompleteFragment : BaseDownloadFragment() {
     override fun initView(rootView: View) {
         (rootView as RecyclerView).layoutManager = LinearLayoutManager(context)
         rootView.adapter = adapter
-        rootView.addItemDecoration(DrawableItemDecoration(top = ViewUtil.dpToPx(2f), bottom = ViewUtil.dpToPx(2f),
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px)))
+        rootView.addItemDecoration(DrawableItemDecoration(bottom = 2, orientation = RecyclerView.VERTICAL,
+                drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         adapter.click = { v, position ->
             val detail = dataList!![position].internetMusicDetail
             when (v.id) {

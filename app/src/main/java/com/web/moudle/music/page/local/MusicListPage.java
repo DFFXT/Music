@@ -1,6 +1,7 @@
 package com.web.moudle.music.page.local;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -191,11 +192,10 @@ public class MusicListPage extends BaseMusicPage {
      */
     private void showMultiSelect(View v) {
         adapter.setSelect(true);
-        createToolsBar();
-        toolsBar.show();
+        showToolBar();
     }
 
-    private void createToolsBar() {
+    private void showToolBar() {
         if (toolsBar == null) {
             toolsBar = new ToolsBar((BaseActivity) Objects.requireNonNull(getActivity()));
             toolsBar.addItem(0, R.string.remove)
@@ -235,6 +235,7 @@ public class MusicListPage extends BaseMusicPage {
                 return null;
             });
         }
+        toolsBar.show();
     }
 
 
@@ -270,7 +271,11 @@ public class MusicListPage extends BaseMusicPage {
         String title=ResUtil.getString(R.string.page_local)+sheetName;
 
         CharSequence realTitle=ResUtil.getSpannable(title,sheetName,ResUtil.getColor(R.color.gray),ResUtil.getSize(R.dimen.textSize_min));
-        ((MusicActivity)getActivity()).getTitleView().setText(realTitle);
+        MusicActivity activity=((MusicActivity)getActivity());
+        if(activity!=null){
+            activity.getTitleView().setText(realTitle);
+        }
+
     }
 
     /**

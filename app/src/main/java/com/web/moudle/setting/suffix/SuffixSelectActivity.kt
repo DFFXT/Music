@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseActivity
 import com.web.common.base.log
+import com.web.common.constant.Constant
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.data.ScanMusicType
 import com.web.misc.GapItemDecoration
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
+import com.web.moudle.preference.SP
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_select_suffix.*
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +35,12 @@ class SuffixSelectActivity : BaseActivity() {
         topBar.setEndImageListener(View.OnClickListener {
             save()
         })
+        if(isEnableSystemMusic()){
+            sw_enableSystemMusic.isChecked=true
+        }
+        sw_enableSystemMusic.setOnCheckedChangeListener { _, isChecked ->
+            enableSystemMusic(isChecked)
+        }
         rv_suffixSelect.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_suffixSelect.addItemDecoration(GapItemDecoration(bottom = ViewUtil.dpToPx(10f)))
         tv_addAndSave.setOnClickListener {
@@ -91,6 +99,14 @@ class SuffixSelectActivity : BaseActivity() {
                 DataSupport.saveAllAsync(list)
             }
             return list
+        }
+
+        @JvmStatic
+        fun enableSystemMusic(enable:Boolean){
+            SP.putValue(Constant.spName,Constant.SpKey.enableSystemMusic,enable)
+        }
+        fun isEnableSystemMusic():Boolean{
+            return SP.getBoolean(Constant.spName,Constant.SpKey.enableSystemMusic,true)
         }
 
         @JvmStatic

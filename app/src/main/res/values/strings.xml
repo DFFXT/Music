@@ -82,6 +82,7 @@
 	<string name="setting_updateTitle">%1$s  正在更新</string>
 	<string name="setting_about_version">版本 %1$s</string>
 	<string name="setting_suffix_select">音乐类型</string>
+	<string name="setting_containSystemMusic">包含系统音乐</string>
 	<string name="setting_suffix_save">保存</string>
 	<string name="setting_suffix_saveSuccess">保存成功</string>
 	<string name="settings_ignoreFileSize">忽略小文件</string>

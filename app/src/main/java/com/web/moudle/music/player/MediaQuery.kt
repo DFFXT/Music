@@ -2,6 +2,7 @@ package com.web.moudle.music.player
 
 import android.content.ContentValues
 import android.content.Context
+import android.os.Environment
 import android.provider.MediaStore
 import com.web.common.base.ChineseComparator
 import com.web.common.base.MyApplication
@@ -52,6 +53,9 @@ object MediaQuery {
                     for (type in types) {
                         if (!type.isScanable) continue
                         if (path != null && path.toLowerCase().endsWith(type.scanSuffix.toLowerCase()) && duration >= type.minTime) {
+                            if(!SuffixSelectActivity.isEnableSystemMusic()&&! path.startsWith(Environment.getExternalStorageDirectory().absolutePath)){
+                                continue
+                            }
 
                             hasMusic=true
                             val lastSeparatorChar = path.lastIndexOf(File.separatorChar)
