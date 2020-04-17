@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.alibaba.fastjson.JSON
+import com.web.common.base.MyApplication
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.artist.ArtistTypeActivity
 import com.web.moudle.billboard.BillBoardActivity
@@ -18,6 +19,7 @@ import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.web.web.R
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.view.FlutterMain
 import io.flutter.view.FlutterView
 import kotlinx.android.synthetic.main.fragment_recommend.view.*
 

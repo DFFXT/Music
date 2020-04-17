@@ -29,7 +29,8 @@ class MyApplication : LitePalApplication(){
 
 
         InternetProxy.startProxy()
-        FlutterMain.startInitialization(this)
+        FlutterMain.startInitialization(context)
+        FlutterMain.ensureInitializationComplete(context,null)
         Constant.LocalConfig.initPath()
 
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
