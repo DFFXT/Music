@@ -376,6 +376,7 @@ class LyricsActivity : BaseActivity() {
 
 
 
+
     override fun onDestroy() {
         tick.stop()
         unbindService(connection)

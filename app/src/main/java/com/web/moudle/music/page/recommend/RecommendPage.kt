@@ -17,7 +17,6 @@ import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.web.web.R
-import io.flutter.facade.Flutter
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterView
 import kotlinx.android.synthetic.main.fragment_recommend.view.*
@@ -40,7 +39,7 @@ class RecommendPage : BaseMusicPage() {
 
 
     override fun initView(rootView: View) {
-        flutterView = Flutter.createView(activity!!, lifecycle, "RecommendView")
+        flutterView = FlutterView(context)
         MethodChannel(flutterView, "recommend/io").setMethodCallHandler { methodCall, _ ->
             when (methodCall.method) {
                 "todayRecommend" -> {

@@ -5,15 +5,14 @@ import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.widget.ImageView
-import com.web.common.base.log
+import androidx.appcompat.widget.AppCompatImageView
 import com.web.misc.imageDraw.IOnMeasure
 import com.web.misc.imageDraw.ImageDraw
 import com.web.web.R
 
-class RoundImageView @JvmOverloads constructor(
+open class RoundImageView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ImageView(context, attrs, defStyleAttr) {
+) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     var beforeDraw:ImageDraw?=null
     var afterDraw:ImageDraw?=null

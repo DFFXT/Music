@@ -45,4 +45,9 @@
         </attr>
         <attr name="measure" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="RippleImageView">
+        <attr name="ripple_rippleColor" format="color"/>
+        <attr name="ripple_mask" format="reference"/>
+    </declare-styleable>
 </resources>
