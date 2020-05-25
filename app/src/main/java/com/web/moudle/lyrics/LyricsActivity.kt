@@ -1,25 +1,15 @@
 package com.web.moudle.lyrics
 
-import android.animation.Animator
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Outline
 import android.graphics.drawable.BitmapDrawable
 import android.media.audiofx.Visualizer
 import android.os.IBinder
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewOutlineProvider
-import android.widget.ImageView
 import androidx.core.content.FileProvider
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.*
-import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.Ticker
 import com.web.common.util.ResUtil
@@ -31,21 +21,15 @@ import com.web.config.Shortcut
 import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
 import com.web.data.Music
-import com.web.misc.DrawableItemDecoration
 import com.web.misc.imageDraw.WaveDraw
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.MusicPlay
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.other.PlayerConfig
-import com.web.moudle.musicEntry.adapter.CommentAdapter
-import com.web.moudle.musicEntry.bean.CommentItem
-import com.web.moudle.musicEntry.model.DetailMusicViewModel
 import com.web.moudle.service.FileDownloadService
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
 import com.web.web.BuildConfig
 import com.web.web.R
-import kotlinx.android.synthetic.main.activity_music_detail.*
-import kotlinx.android.synthetic.main.fragment_comment.view.*
 import kotlinx.android.synthetic.main.music_control_big.view.*
 import kotlinx.android.synthetic.main.music_lyrics_view.*
 import kotlinx.android.synthetic.main.music_lyrics_view.rootView
@@ -86,7 +70,7 @@ class LyricsActivity : BaseActivity() {
             visualizer!!.enabled=true
         }
     }
-    private var actionStart = true
+    private var immediatelyShow = true
     private var canScroll=true
     private var rotation=0f
     private val waveDraw=WaveDraw()
@@ -103,7 +87,7 @@ class LyricsActivity : BaseActivity() {
     private var observer: PlayerObserver = object : PlayerObserver() {
 
         override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
-            actionStart = true
+            immediatelyShow = true
             val bitmap=connect?.config?.bitmap?:ResUtil.getBitmapFromResoucs(R.drawable.singer_default_icon)
             val mBitmap=bitmap.copy(bitmap.config,false)
             iv_artistIcon.setImageBitmap(bitmap)
@@ -137,9 +121,9 @@ class LyricsActivity : BaseActivity() {
         }
 
         override fun currentTime(group: Int, child: Int, time: Int) {
-            if (actionStart) {//**进入activity时需要立即同步
+            if (immediatelyShow) {//**进入activity时需要立即同步
                 lv_lyrics.setCurrentTimeImmediately(time)
-                actionStart = false
+                immediatelyShow = false
             } else {
                 lv_lyrics.setCurrentTime(time)
             }
@@ -166,6 +150,11 @@ class LyricsActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        immediatelyShow = true
+        connect?.getPlayerInfo(this)
+        super.onResume()
+    }
 
     override fun enableSwipeToBack(): Boolean =true
 
