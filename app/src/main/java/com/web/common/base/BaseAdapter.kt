@@ -1,11 +1,9 @@
 package com.web.common.base
 
-abstract class BaseAdapter<T>(var data: List<T>?=null) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
+abstract class BaseAdapter<T>(var t: List<T>?=null) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder>() {
+    var data = t?: arrayListOf()
     override fun getItemCount(): Int{
-        data?.let {
-            return it.size
-        }
-        return 0
+        return data.size
     }
 
     fun update(data:List<T>){
@@ -14,7 +12,7 @@ abstract class BaseAdapter<T>(var data: List<T>?=null) : androidx.recyclerview.w
     }
 
     final override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        onBindViewHolder(holder,position,data?.get(position))
+        onBindViewHolder(holder,position, data[position])
     }
     abstract fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:T?)
 }

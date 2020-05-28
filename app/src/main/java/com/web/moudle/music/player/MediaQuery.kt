@@ -4,10 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
-import com.web.common.base.ChineseComparator
 import com.web.common.base.MyApplication
-import com.web.common.base.log
 import com.web.common.constant.Constant
+import com.web.common.util.PinYin
 import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.data.Music
@@ -22,7 +21,6 @@ import kotlinx.coroutines.launch
 import net.sourceforge.pinyin4j.PinyinHelper
 import org.litepal.crud.DataSupport
 import java.io.File
-import java.text.Collator
 import java.util.*
 
 object MediaQuery {
@@ -111,6 +109,22 @@ object MediaQuery {
 
             val defGroup = MusicList<Music>(ResUtil.getString(R.string.default_))
             defGroup.addAll(defList)
+            for(i in 0 until defGroup.size()){
+                val firstChar = defGroup.get(i).musicName[0]
+                defGroup.get(i).firstChar = if(PinYin.isChinese(firstChar)){
+                    val res = PinyinHelper.toHanyuPinyinStringArray(firstChar)
+                    if(res!=null){
+                        res[0].toCharArray()[0]
+                    }else{
+                        '*'
+                    }
+                }else if(PinYin.isEnglish(firstChar)){
+                    firstChar
+                }else{
+                    '*'
+                }
+                defGroup.get(i).firstChar = defGroup.get(i).firstChar.toUpperCase()
+            }
             musicList.add(defGroup)
             //**获取自定义列表的歌曲
 

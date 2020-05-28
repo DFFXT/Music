@@ -48,4 +48,9 @@ object PinYin {
     fun isChinese(word:Char):Boolean{
         return word.toInt() in 0x4E00..0x9FA5
     }
+
+    @JvmStatic
+    fun isEnglish(word: Char):Boolean{
+        return word.toInt() in 'a'.toInt()..'z'.toInt() || word.toInt() in 'A'.toInt()..'Z'.toInt()
+    }
 }

@@ -3,6 +3,7 @@ package com.web.moudle.music.page.local;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.web.common.base.BaseActivity;
 import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
+import com.web.common.util.ViewExtKt;
 import com.web.common.util.ViewUtil;
 import com.web.data.Music;
 import com.web.data.MusicList;
@@ -19,6 +21,7 @@ import com.web.misc.IndexBar;
 import com.web.misc.InputItem;
 import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
+import com.web.moudle.music.page.local.control.adapter.IndexBarAdapter;
 import com.web.moudle.music.page.local.control.adapter.LocalMusicAdapter;
 import com.web.moudle.music.page.local.control.ui.SheetCreateAlert;
 import com.web.moudle.music.player.MusicPlay;
@@ -40,11 +43,13 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import kotlin.collections.CollectionsKt;
+
 public class MusicListPage extends BaseMusicPage {
-    public final static String pageName=ResUtil.getString(R.string.page_local);
+    public final static String pageName = ResUtil.getString(R.string.page_local);
     private MusicList<Music> data;
     private RecyclerView rv_musicList;
-    private IndexBar indexBar;
+    private RecyclerView indexBar;
     private LocalMusicAdapter adapter;
     private MusicPlay.Connect connect;
     private int groupIndex = 0;
@@ -111,7 +116,7 @@ public class MusicListPage extends BaseMusicPage {
         for (SongSheet sheet : list) {
             sheetNameList.add(sheet.getName());
         }
-        if(sheetNameList.size()!=0){
+        if (sheetNameList.size() != 0) {
             sheetNameList.remove(0);
         }
         SheetCreateAlert alert = new SheetCreateAlert(Objects.requireNonNull(getContext()), ResUtil.getString(R.string.songSheet));
@@ -126,9 +131,9 @@ public class MusicListPage extends BaseMusicPage {
             connect.groupChange();
             return null;
         });
-        alert.setItemClickListener((v,index) -> {
+        alert.setItemClickListener((v, index) -> {
             for (int id : musicIds) {
-                list.get(index+1).add(id);
+                list.get(index + 1).add(id);
             }
             connect.groupChange();
             SongSheetManager.INSTANCE.getSongSheetList().save();
@@ -161,7 +166,7 @@ public class MusicListPage extends BaseMusicPage {
                 adapter.notifyItemChanged(index);
                 tv_abPath.setText(music.getPath());
                 //**修改的是当前音乐需要重新load
-                if(music==connect.getConfig().getMusic()){
+                if (music == connect.getConfig().getMusic()) {
                     connect.dispatchLoad();
                 }
             }
@@ -174,7 +179,7 @@ public class MusicListPage extends BaseMusicPage {
             if (!text.equals(music.getSinger()) && music.rename(music.getMusicName(), text)) {
                 adapter.notifyItemChanged(index);
                 //**修改的是当前音乐需要重新load
-                if(music==connect.getConfig().getMusic()){
+                if (music == connect.getConfig().getMusic()) {
                     connect.dispatchLoad();
                 }
                 tv_abPath.setText(music.getPath());
@@ -247,8 +252,8 @@ public class MusicListPage extends BaseMusicPage {
     @Override
     public void setConnect(@NonNull IBinder connect) {
         if (this.connect == null) {
-            this.connect = (MusicPlay.Connect)connect;
-            this.connect.selectList(groupIndex,-1);
+            this.connect = (MusicPlay.Connect) connect;
+            this.connect.selectList(groupIndex, -1);
         }
 
     }
@@ -261,18 +266,18 @@ public class MusicListPage extends BaseMusicPage {
 
     @Override
     public void setTitle(@NotNull String textView) {
-        String sheetName=" - ";
-        if(groupIndex==0){
-            sheetName+=ResUtil.getString(R.string.default_);
-        }else{
-            sheetName+=SongSheetManager.INSTANCE.getSongSheetList().getSongList().get(groupIndex-1).getName();
+        String sheetName = " - ";
+        if (groupIndex == 0) {
+            sheetName += ResUtil.getString(R.string.default_);
+        } else {
+            sheetName += SongSheetManager.INSTANCE.getSongSheetList().getSongList().get(groupIndex - 1).getName();
         }
-        sheetName+=" ···";
-        String title=ResUtil.getString(R.string.page_local)+sheetName;
+        sheetName += " ···";
+        String title = ResUtil.getString(R.string.page_local) + sheetName;
 
-        CharSequence realTitle=ResUtil.getSpannable(title,sheetName,ResUtil.getColor(R.color.gray),ResUtil.getSize(R.dimen.textSize_min));
-        MusicActivity activity=((MusicActivity)getActivity());
-        if(activity!=null){
+        CharSequence realTitle = ResUtil.getSpannable(title, sheetName, ResUtil.getColor(R.color.gray), ResUtil.getSize(R.dimen.textSize_min));
+        MusicActivity activity = ((MusicActivity) getActivity());
+        if (activity != null) {
             activity.getTitleView().setText(realTitle);
         }
 
@@ -344,10 +349,10 @@ public class MusicListPage extends BaseMusicPage {
             return true;
         });
 
-        adapter.setToggleLike((music,index)->{
-            if(music.isLike()){
+        adapter.setToggleLike((music, index) -> {
+            if (music.isLike()) {
                 SongSheetManager.INSTANCE.removeLike(music);
-            }else{
+            } else {
                 SongSheetManager.INSTANCE.setAsLike(music);
             }
             connect.groupChange();
@@ -356,11 +361,19 @@ public class MusicListPage extends BaseMusicPage {
         });
         rv_musicList.setAdapter(adapter);
         if (connect != null) {
-            connect.selectList(groupIndex,-1);
+            connect.selectList(groupIndex, -1);
         }
-        List<String> indexList = Arrays.asList(ResUtil.getStringArray(R.array.indexBar));
-        indexBar.setVerticalGap(10);
-        indexBar.setIndexList(indexList);
+        List<Character> indexList = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            if (indexList.size() == 0) {
+                indexList.add(data.get(0).getFirstChar());
+            } else if (data.get(i).getFirstChar() != indexList.get(indexList.size() - 1)) {
+                indexList.add(data.get(i).getFirstChar());
+            }
+        }
+        IndexBarAdapter indexBarAdapter = new IndexBarAdapter();
+        indexBar.setAdapter(indexBarAdapter);
+        indexBarAdapter.update(indexList);
         rv_musicList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -372,27 +385,25 @@ public class MusicListPage extends BaseMusicPage {
                 super.onScrolled(recyclerView, dx, dy);
                 int p = layoutManager.findFirstVisibleItemPosition();
                 if (p < 0) return;
-                char firstLetter = data.get(p).getMusicName().charAt(0);
-                char code;
-                if (PinYin.isChinese(firstLetter)) {//**判断是否是中文，只有中文才会有返回值否则返回null
-                    String[] res = PinyinHelper.toHanyuPinyinStringArray(data.get(p).getMusicName().charAt(0));
-                    if (res != null) {
-                        code = res[0].toCharArray()[0];
-                    } else code = '*';
-                } else {
-                    code = firstLetter;
-                }
-
-                for (int i = 0; i < indexList.size(); i++) {
-                    if ((code + "").equalsIgnoreCase(indexList.get(i).charAt(0) + "")) {
-                        indexBar.setSelectedIndex(i);
-                        return;
-                    }
-                }
-                indexBar.setSelectedIndex(indexList.size() - 1);
+                char code = data.get(p).getFirstChar();
+                indexBarAdapter.setSelectChar(code);
             }
         });
         rv_musicList.setFocusable(true);
+        ViewExtKt.setOnItemClickListener(indexBar, (position, item) -> {
+            int index = 0;
+            for (int i = 0; i < data.size(); i++) {
+                if (data.get(i).getFirstChar() == (Character) item) {
+                    index = i;
+                    break;
+                }
+            }
+            LinearLayoutManager manager = ((LinearLayoutManager) rv_musicList.getLayoutManager());
+            if (manager != null) {
+                manager.scrollToPositionWithOffset(index, 0);
+            }
+            return null;
+        });
 
 
     }
@@ -400,10 +411,10 @@ public class MusicListPage extends BaseMusicPage {
     private int[] pos = new int[2];
 
 
-
     private ValueAnimator animator;
+
     private void addAnimation(View view) {
-        if(animator!=null){
+        if (animator != null) {
             animator.cancel();
         }
         view.getLocationOnScreen(pos);

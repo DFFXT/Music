@@ -27,6 +27,7 @@ public class Music extends DataSupport implements Cloneable,Serializable {
     private String suffix;//** "mp3"无.
     private long size;
     private boolean isLike;
+    private char firstChar;
     @Deprecated
     public Music(){}
     public Music(String musicName,String singer,String path){
@@ -214,5 +215,13 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public boolean isLike() {
         return isLike;
+    }
+
+    public char getFirstChar() {
+        return firstChar;
+    }
+
+    public void setFirstChar(char firstChar) {
+        this.firstChar = firstChar;
     }
 }
