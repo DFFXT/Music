@@ -1,4 +1,4 @@
-package com.web.common.util
+package com.web.common.util.help
 
 import android.view.GestureDetector
 import android.view.MotionEvent

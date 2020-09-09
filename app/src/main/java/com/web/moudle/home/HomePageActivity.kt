@@ -16,6 +16,7 @@ import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.moudle.search.SearchActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_home_page.*
+import me.jessyan.autosize.internal.CustomAdapt
 
 class HomePageActivity : BaseActivity(), View.OnClickListener {
 

@@ -28,7 +28,7 @@ class AllArtistFragment:BaseFragment() {
     override fun initView(rootView:View) {
         vm=ViewModelProviders.of(this)[AllArtistViewModel::class.java]
         vm.artistList.observe(this, Observer {
-            adapter.update(it.value.artist)
+            adapter.update(it.value?.artist)
         })
 
         rootView.rv_hotArtist.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)

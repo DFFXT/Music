@@ -6,8 +6,8 @@ abstract class BaseAdapter<T>(var t: List<T>?=null) : androidx.recyclerview.widg
         return data.size
     }
 
-    fun update(data:List<T>){
-        this.data=data
+    fun update(data:List<T>?){
+        this.data=data?: emptyList()
         notifyDataSetChanged()
     }
 
