@@ -38,7 +38,7 @@ class SongSheetActivity:BaseActivity() {
 
     override fun initView() {
         WindowUtil.setImmersedStatusBar(window)
-        sheetId=intent.getStringExtra(INTENT_DATA)
+        sheetId=intent.getStringExtra(INTENT_DATA)!!
         model=ViewModelProviders.of(this)[SongSheetViewModel::class.java]
         model.songSheetInfo.observe(this, Observer<BaseNetBean<SongSheetInfoBox>> {
             if(it==null||it.error_code!=22000){

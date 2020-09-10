@@ -39,7 +39,7 @@ class SingerEntryActivity : BaseActivity() {
     }
 
     private fun loadData() {
-        id = if (intent.getStringExtra(ID) == null) "2065932" else intent.getStringExtra(ID)
+        id = if (intent.getStringExtra(ID) == null) "2065932" else intent.getStringExtra(ID)!!
         model = ViewModelProviders.of(this)[SingerEntryViewModel::class.java]
         //**歌手信息观测
         model.singerInfo.observe(this, Observer<LiveDataWrapper<SingerInfo>> { data ->

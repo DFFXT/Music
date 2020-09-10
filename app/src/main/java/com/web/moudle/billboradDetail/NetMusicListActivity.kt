@@ -40,7 +40,7 @@ class NetMusicListActivity:BaseActivity() {
         WindowUtil.setImmersedStatusBar(window)
 
 
-        title=intent.getStringExtra(INTENT_DATA)
+        title=intent.getStringExtra(INTENT_DATA)!!
         model=ViewModelProviders.of(this)[NetMusicListViewModel::class.java]
         model.response.observe(this,Observer<LiveDataWrapper<BillBoardInfo>>{res->
             if(loaded) return@Observer
@@ -87,10 +87,10 @@ class NetMusicListActivity:BaseActivity() {
                 liveData=model.requestRecommend()
             }
             NetMusicType.TYPE_SINGER_ALL_MUSIC.ordinal->{
-                liveData=model.requestSingerAllMusic(intent.getStringExtra(UID))
+                liveData=model.requestSingerAllMusic(intent.getStringExtra(UID)!!)
             }
             NetMusicType.TYPE_SINGER_ALL_ALBUM.ordinal->{
-                liveData=model.requestSingerAllAlbum(intent.getStringExtra(UID))
+                liveData=model.requestSingerAllAlbum(intent.getStringExtra(UID)!!)
             }
         }
         val adapter=NetMusicListPagedAdapter(NetMusicListPagedAdapter.Diff())

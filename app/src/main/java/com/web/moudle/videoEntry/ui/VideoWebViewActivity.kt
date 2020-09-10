@@ -19,7 +19,7 @@ class VideoWebViewActivity:BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         wv_webView.webViewClient= WebViewClient()
         wv_webView.settings.javaScriptEnabled=true
-        wv_webView.loadUrl(intent.getStringExtra(INTENT_DATA))
+        wv_webView.loadUrl(intent.getStringExtra(INTENT_DATA)!!)
     }
 
 

@@ -31,7 +31,7 @@ class LocalChooserActivity:BaseActivity() {
 
     override fun initView() {
         model=ViewModelProviders.of(this)[LocalChooserViewModel::class.java]
-        action=intent.getStringExtra(ACTION)
+        action=intent.getStringExtra(ACTION)!!
         val initDir=intent.getStringExtra(INTENT_DATA)
         when(action){
             ACTION_FILE_SELECT->{

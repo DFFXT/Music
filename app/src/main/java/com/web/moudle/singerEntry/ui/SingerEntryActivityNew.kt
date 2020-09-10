@@ -32,7 +32,7 @@ class SingerEntryActivityNew : BaseActivity() {
     }
 
     private fun loadData() {
-        id = if (intent.getStringExtra(ID) == null) "2065932" else intent.getStringExtra(ID)
+        id = if (intent.getStringExtra(ID) == null) "2065932" else intent.getStringExtra(ID)!!
 
         pageList.add(SingerAllMusicFragment.getInstance(id))
         pageList.add(SingerAllAlbumFragment.getInstance(id))

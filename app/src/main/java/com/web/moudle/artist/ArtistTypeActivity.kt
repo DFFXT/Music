@@ -31,7 +31,7 @@ class ArtistTypeActivity:BaseActivity() {
         WindowUtil.setImmersedStatusBar(window)
         areaCode=intent.getIntExtra(CODE_AREA,0)
         sexCode=intent.getIntExtra(CODE_SEX,0)
-        topBar.setMainTitle(intent.getStringExtra(INTENT_DATA))
+        topBar.setMainTitle(intent.getStringExtra(INTENT_DATA)!!)
         vm=ViewModelProviders.of(this)[AllArtistViewModel::class.java]
 
         vm!!.artistList.observe(this, Observer {

@@ -28,7 +28,7 @@ class AlbumEntryActivity : BaseActivity() {
     }
 
     private fun loadData() {
-        id = intent.getStringExtra(ID)
+        id = intent.getStringExtra(ID)!!
         model = ViewModelProviders.of(this)[AlbumEntryViewModel::class.java]
         model.albumResponse.observe(this, Observer<LiveDataWrapper<AlbumResponse>> { data ->
             if (data != null) {

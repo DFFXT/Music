@@ -123,11 +123,11 @@ class CacheActivity:BaseActivity() {
         if(resultCode!= Activity.RESULT_OK)return
         when (requestCode){
             SELECT_CACHE->{
-                setCustomerCachePath(data!!.getStringExtra(INTENT_DATA))
+                setCustomerCachePath(data!!.getStringExtra(INTENT_DATA)!!)
                 cachePathChange()
             }
             SELECT_DOWNLOAD->{
-                setCustomerDownloadPath(data!!.getStringExtra(INTENT_DATA))
+                setCustomerDownloadPath(data!!.getStringExtra(INTENT_DATA)!!)
                 downloadPathChange()
             }
         }
