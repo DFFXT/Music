@@ -65,5 +65,10 @@
         app:layout_constraintTop_toTopOf="@id/tv_version"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="2018-9-9"/>
+    <com.web.misc.RoundImageView
+        android:id="@+id/round_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

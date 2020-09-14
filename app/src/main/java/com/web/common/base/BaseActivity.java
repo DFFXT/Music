@@ -15,6 +15,7 @@ import com.web.web.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 
