@@ -1,16 +1,16 @@
-package com.web.moudle.music.player
+package com.web.common.util
 
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import com.web.common.base.MyApplication
 import com.web.common.constant.Constant
-import com.web.common.util.PinYin
-import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.data.MusicList
+import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.preference.SP
 import com.web.moudle.setting.suffix.SuffixSelectActivity

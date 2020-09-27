@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.web.common.base.BaseSingleObserver;
-import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.util.IOUtil;
 import com.web.common.util.ResUtil;
@@ -17,7 +16,7 @@ import com.web.config.Shortcut;
 import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
-import com.web.moudle.music.player.MediaQuery;
+import com.web.common.util.MediaQuery;
 import com.web.moudle.music.player.MusicPlay;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.net.proxy.InternetProxy;

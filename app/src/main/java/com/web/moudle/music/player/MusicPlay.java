@@ -9,17 +9,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.os.ResultReceiver;
-import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 
 import com.web.common.base.BaseObserver;
 import com.web.common.base.BaseSingleObserver;
@@ -30,6 +23,7 @@ import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.common.tool.Ticker;
 import com.web.common.util.IOUtil;
+import com.web.common.util.MediaQuery;
 import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusicForPlay;
@@ -58,21 +52,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.media.MediaBrowserServiceCompat;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import kotlinx.coroutines.Dispatchers;
 
 public class MusicPlay extends Service {
