@@ -10,7 +10,7 @@ import java.io.File
 object MediaCreator {
     //API 30上RELATIVE_PATH只能是  Pictures/xx或者DCIM/xxx
     private const val IMAGE_PATH = "Pictures/music"
-    fun createImageUri(fileName: String): Uri {
+    fun createImageUri(fileName: String): Uri? {
         val uri = MyApplication.context.contentResolver.insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues().apply {
             val index = fileName.indexOfLast { it == ',' }
@@ -32,6 +32,6 @@ object MediaCreator {
             }
         }
         )
-        return uri!!
+        return uri
     }
 }

@@ -81,7 +81,7 @@ class LocalFragment : BaseFragment() {
         }
         rootView.layout_prefer.setOnClickListener {
             if(UserManager.isLogin()){
-                MySongSheetInfoActivity.actionStart(context!!,-1L)
+                MySongSheetInfoActivity.actionStart(requireContext(),-1L)
             }
 
         }
@@ -108,7 +108,7 @@ class LocalFragment : BaseFragment() {
             true
         }
         adapter.itemClick={_,index->
-            MySongSheetInfoActivity.actionStart(context!!,sheetList[index].id)
+            MySongSheetInfoActivity.actionStart(requireContext(),sheetList[index].id)
         }
 
     }
@@ -173,7 +173,7 @@ class LocalFragment : BaseFragment() {
                                         createSheetPop?.dismiss()
                                         initData()
                                     }else{
-                                        MToast.showToast(context!!,R.string.createSongSheetFailed)
+                                        MToast.showToast(requireContext(),R.string.createSongSheetFailed)
                                         createSheetPop?.dismiss()
                                     }
                                 }
@@ -184,7 +184,7 @@ class LocalFragment : BaseFragment() {
 
     private fun showListPop(sheetId:Long){
         if(listPop==null){
-            listPop=ListDialog(context!!)
+            listPop=ListDialog(requireContext())
                     .addItem(ResUtil.getString(R.string.delete), View.OnClickListener{
                         WWSongSheetModel.deleteSongSheet(sheetId){res->
                             if(res.code==200){

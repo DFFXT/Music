@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.web.R
@@ -22,8 +23,8 @@ object MToast {
         mToast=Toast(context)
         val view=LayoutInflater.from(context).inflate(R.layout.layout_toast,null,false) as TextView
         mToast?.view=view
-        val drawable=context.resources.getDrawable(R.drawable.icon_waring_white,context.theme)
-        drawable.bounds= Rect(0,0,ViewUtil.dpToPx(30F),ViewUtil.dpToPx(30F))
+        val drawable=ResourcesCompat.getDrawable(context.resources,R.drawable.icon_waring_white,context.theme)
+        drawable?.bounds= Rect(0,0,ViewUtil.dpToPx(30F),ViewUtil.dpToPx(30F))
         view.setCompoundDrawables(drawable,null,null,null)
         view.text=msg
         mToast?.setGravity(Gravity.TOP,0,ViewUtil.dpToPx(60f))

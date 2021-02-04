@@ -3,12 +3,8 @@ package com.web.common.util
 import android.graphics.Color
 import android.view.View
 import android.view.Window
-import com.web.common.base.MyApplication
 import android.view.WindowManager
-import android.app.Activity
-
-
-
+import com.web.common.base.MyApplication
 
 
 object WindowUtil {
@@ -33,7 +29,7 @@ object WindowUtil {
      * 设置是否全屏
      */
     @JvmStatic
-    fun setFullScreen(window: Window,full:Boolean){
+    fun setFullScreen(window: Window, full: Boolean){
         val lp = window.attributes
         if (!full) {//设置为非全屏
             lp.flags = lp.flags and WindowManager.LayoutParams.FLAG_FULLSCREEN.inv()

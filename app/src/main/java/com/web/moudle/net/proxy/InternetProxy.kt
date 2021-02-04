@@ -20,7 +20,7 @@ import kotlin.math.log
 import kotlin.math.min
 
 object InternetProxy {
-    private const val port=9999
+    private const val port=2999
     private val pool=ThreadPoolExecutor(10,10,1,TimeUnit.SECONDS,LinkedBlockingDeque())
 
     private var run=true

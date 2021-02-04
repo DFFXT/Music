@@ -2,8 +2,9 @@ package com.web.common.base
 
 import android.view.ViewGroup
 import androidx.annotation.NonNull
+import androidx.fragment.app.FragmentPagerAdapter
 
-class BaseFragmentPagerAdapter(private val fm: androidx.fragment.app.FragmentManager, private val mList: List<androidx.fragment.app.Fragment>) : androidx.fragment.app.FragmentPagerAdapter(fm) {
+class BaseFragmentPagerAdapter(private val fm: androidx.fragment.app.FragmentManager, private val mList: List<androidx.fragment.app.Fragment>) : androidx.fragment.app.FragmentPagerAdapter(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 
     override fun getCount(): Int =mList.size

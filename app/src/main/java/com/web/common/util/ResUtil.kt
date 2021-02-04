@@ -11,6 +11,7 @@ import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.TextAppearanceSpan
 import androidx.annotation.*
+import androidx.core.content.res.ResourcesCompat
 import com.web.common.base.MyApplication
 import com.web.web.R
 import org.litepal.LitePalApplication
@@ -88,11 +89,11 @@ object ResUtil {
 
     @JvmStatic
     fun getDrawable(@DrawableRes drawableId: Int):Drawable{
-        return MyApplication.context.resources.getDrawable(drawableId,MyApplication.context.theme)
+        return ResourcesCompat.getDrawable(MyApplication.context.resources,R.drawable.icon_waring_white,MyApplication.context.theme)!!
     }
     @JvmStatic
     fun getBitmapFromDrawable(drawable: Drawable):Bitmap{
-        val bitmap=Bitmap.createBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight,Bitmap.Config.ARGB_4444)
+        val bitmap=Bitmap.createBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight,Bitmap.Config.ARGB_8888)
         val canvas=Canvas(bitmap)
         //********必须设置bounds
         drawable.setBounds(0,0,canvas.width,canvas.height)

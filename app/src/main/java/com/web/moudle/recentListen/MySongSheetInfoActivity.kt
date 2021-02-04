@@ -68,11 +68,11 @@ class MySongSheetInfoActivity :BaseActivity(){
                 connect?.play(MusicDetailActivity.map(it.value))
             }
         })
-        topBar.setEndImageListener(View.OnClickListener {
+        topBar.setEndImageListener {
             connect?.addListToWait(list.map {
                 map(it.internetMusicDetail)
-            })
-        })
+            }, false)
+        }
         adapter= DownloadViewAdapter(this,null)
         rv_recentList.layoutManager=LinearLayoutManager(this)
         rv_recentList.adapter=adapter

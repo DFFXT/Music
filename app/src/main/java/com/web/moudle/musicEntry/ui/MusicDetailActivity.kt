@@ -245,7 +245,7 @@ class MusicDetailActivity : BaseActivity() {
                     listPop?.dismiss()
                 })
                 .addItem(ResUtil.getString(R.string.musicDetailActivity_addToWait), View.OnClickListener {
-                    connection?.addToWait(music)
+                    connection?.addToWait(music, true)
                     listPop?.dismiss()
                 })
                 .addItem(ResUtil.getString(R.string.musicDetailActivity_addToSheet), View.OnClickListener {

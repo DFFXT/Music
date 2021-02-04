@@ -55,7 +55,7 @@ class RecentListenActivity :BaseActivity(){
         topBar.setEndImageListener(View.OnClickListener {
             connect?.addListToWait(list.map {
                 map(it.internetMusicDetail)
-            })
+            }, false)
         })
         adapter= DownloadViewAdapter(this,null)
         rv_recentList.layoutManager=LinearLayoutManager(this)

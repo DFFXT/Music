@@ -25,7 +25,7 @@ object ImageLoad {
     }
     @JvmStatic
     fun buildBlurBitmap(bitmap: Bitmap,@FloatRange(from = 0.0,to = 25.0) radius:Float):Bitmap{
-        val out=Bitmap.createBitmap(bitmap.width,bitmap.height,Bitmap.Config.ARGB_4444)
+        val out=Bitmap.createBitmap(bitmap.width,bitmap.height,Bitmap.Config.ARGB_8888)
         val rs=RenderScript.create(MyApplication.context)
         val scriptIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
         val inAllocation=Allocation.createFromBitmap(rs,bitmap)

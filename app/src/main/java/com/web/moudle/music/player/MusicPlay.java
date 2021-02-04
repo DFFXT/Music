@@ -61,6 +61,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import kotlin.collections.CollectionsKt;
 import kotlinx.coroutines.Dispatchers;
 
 public class MusicPlay extends Service {
@@ -384,17 +385,19 @@ public class MusicPlay extends Service {
             return waitMusic;
         }
 
-        public void addToWait(Music music){
+        /**
+         * 添加到待播放列表
+         * @param music m
+         * @param repeat 是否允许重复添加
+         */
+        public void addToWait(Music music, Boolean repeat){
             if(music instanceof InternetMusicForPlay){//**添加的是网络音乐
-                for(Music m:waitMusic){
-                    if(music.getSong_id().equals(m.getSong_id())){//**已经存在
-                        return;
-                    }
+                if (!repeat && CollectionsKt.indexOfFirst(waitMusic, m -> music.getSong_id().equals(m.getSong_id())) <0){
+                    return;
                 }
-            }
-            else {
-                for (Music m : waitMusic) {
-                    if (m.getPath().equals(music.getPath())) return;
+            } else {
+                if (!repeat && CollectionsKt.indexOfFirst(waitMusic, m -> m.getPath().equals(music.getPath())) < 0){
+                    return;
                 }
             }
             if(config.getMusicOrigin()!=PlayerConfig.MusicOrigin.WAIT){
@@ -410,9 +413,9 @@ public class MusicPlay extends Service {
                 randomSystem.addNumber(waitMusic.size()-1);
             }
         }
-        public void addListToWait(List<Music> ml){
+        public void addListToWait(List<Music> ml, boolean repeat){
             for(Music m:ml){
-                addToWait(m);
+                addToWait(m, repeat);
             }
         }
 

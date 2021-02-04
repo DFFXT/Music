@@ -49,7 +49,6 @@ public class MusicListPage extends BaseMusicPage {
     public final static String pageName = ResUtil.getString(R.string.page_local);
     private MusicList<Music> data;
     private RecyclerView rv_musicList;
-    private RecyclerView indexBar;
     private LocalMusicAdapter adapter;
     private MusicPlay.Connect connect;
     private int groupIndex = 0;
@@ -63,7 +62,7 @@ public class MusicListPage extends BaseMusicPage {
      * @param position p
      */
     private void defaultGroupChildLongClick(View view, int position) {
-        PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
+        PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.inflate(R.menu.default_child_long_click);
         popupMenu.show();
 
@@ -119,7 +118,7 @@ public class MusicListPage extends BaseMusicPage {
         if (sheetNameList.size() != 0) {
             sheetNameList.remove(0);
         }
-        SheetCreateAlert alert = new SheetCreateAlert(Objects.requireNonNull(getContext()), ResUtil.getString(R.string.songSheet));
+        SheetCreateAlert alert = new SheetCreateAlert(requireContext(), ResUtil.getString(R.string.songSheet));
         alert.setList(sheetNameList);
         alert.setCreateListener(() -> {
             String name = "sheet-" + SongSheetManager.INSTANCE.getSongSheetList().getSongList().size();
@@ -202,7 +201,7 @@ public class MusicListPage extends BaseMusicPage {
 
     private void showToolBar() {
         if (toolsBar == null) {
-            toolsBar = new ToolsBar((BaseActivity) Objects.requireNonNull(getActivity()));
+            toolsBar = new ToolsBar((BaseActivity) requireActivity());
             toolsBar.addItem(0, R.string.remove)
                     .addItem(1, R.string.deleteOrigin)
                     .addItem(2, R.string.addToGroup)
@@ -323,7 +322,7 @@ public class MusicListPage extends BaseMusicPage {
     public void initView(@NotNull View rootView) {
         iv_add = rootView.findViewById(R.id.iv_add);
         rv_musicList = rootView.findViewById(R.id.musicExpandableList);
-        indexBar = rootView.findViewById(R.id.indexBar_musicList);
+        RecyclerView indexBar = rootView.findViewById(R.id.indexBar_musicList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), RecyclerView.VERTICAL, false);
         rv_musicList.setLayoutManager(layoutManager);
         rv_musicList.addItemDecoration(new DrawableItemDecoration(0, 0, 0, 2, RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider)));
@@ -339,7 +338,7 @@ public class MusicListPage extends BaseMusicPage {
             return null;
         });
         adapter.setAddListener((v, position) -> {
-            connect.addToWait(data.get(position));
+            connect.addToWait(data.get(position),true);
             addAnimation(v);
             return null;
         });

@@ -144,7 +144,6 @@ object IOUtil{
     @JvmStatic
     @WorkerThread
     fun streamToBuilder(inputStream: InputStream){
-        val builder=StringBuilder()
         inputStream.use {input->
             BufferedInputStream(input).use {bis->
                 bis.readBytes()

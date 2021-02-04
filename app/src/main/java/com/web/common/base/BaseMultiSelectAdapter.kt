@@ -34,7 +34,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
             if (field != value) {
                 field = value
                 if (field) {
-                    data?.let {
+                    data.let {
                         for (i in it.indices) {
                             selectSet.add(i)
                         }
@@ -147,7 +147,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
     fun <M:Any> getSelectList(interceptor:((T,Int)->M)): List<M> {
         val list = ArrayList<M>()
         selectSet.forEach {
-            list.add(interceptor.invoke(data!![it],it))
+            list.add(interceptor.invoke(data[it],it))
         }
         return list
     }
