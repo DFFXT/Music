@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.web.common.base.BaseMultiSelectAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
+import com.web.data.IgnoreMusic
 import com.web.data.Music
 import com.web.web.R
 
@@ -38,11 +40,22 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
     }
 
     override fun onBindItemView(holder: BaseViewHolder, position: Int, item: Music?) {
-        val tvMusicName=holder.bindText(R.id.musicName, item?.musicName)
-        val tvSingerName=holder.bindText(R.id.singerName, item?.singer+if(item!!.album!=null) " - "+item.album else "")
+        item?:return
+        val tvMusicName=holder.bindText(R.id.musicName, item.musicName)
+        val tvSingerName=holder.bindText(R.id.singerName, item.singer+if(item.album!=null) " - "+item.album else "")
         val ivLike=holder.findViewById<ImageView>(R.id.iv_love)
+        val tvDuration = holder.findViewById<TextView>(R.id.tv_musicDuration)
+        if (IgnoreMusic.isIgnoreMusic(item)){
+            tvMusicName.setTextColor(ResUtil.getColor(R.color.textColor_9))
+            tvSingerName.setTextColor(ResUtil.getColor(R.color.textColor_9))
+            tvDuration.setTextColor(ResUtil.getColor(R.color.textColor_9))
+        }else{
+            tvMusicName.setTextColor(ResUtil.getColor(R.color.textColor_3))
+            tvSingerName.setTextColor(ResUtil.getColor(R.color.textColor_3))
+            tvDuration.setTextColor(ResUtil.getColor(R.color.textColor_3))
+        }
         ivLike.isSelected=item.isLike
-        holder.bindText(R.id.tv_musicDuration,ResUtil.timeFormat("mm:ss",item.duration.toLong()))
+        tvDuration.text = ResUtil.timeFormat("mm:ss",item.duration.toLong())
         ivLike.setOnClickListener {
             if(isSelect){
                 toggleSelect(position)

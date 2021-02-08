@@ -89,7 +89,7 @@ public class MusicListPage extends BaseMusicPage {
                 }else{
                     IgnoreMusic.createIgnoreMusic(music).saveOrUpdate();
                 }
-
+                adapter.notifyItemChanged(position);
             } else if (id == R.id.detailInfo) {//**详细信息
                 showDetail(data.get(position), position);
             } else if (id == R.id.multiSelect) {//**多选
