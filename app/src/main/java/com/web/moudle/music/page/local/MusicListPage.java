@@ -1,23 +1,25 @@
 package com.web.moudle.music.page.local;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.web.common.base.BaseActivity;
-import com.web.common.util.PinYin;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
 import com.web.common.util.help.ViewExtKt;
+import com.web.data.IgnoreMusic;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.misc.BasePopupWindow;
 import com.web.misc.DrawableItemDecoration;
-import com.web.misc.IndexBar;
 import com.web.misc.InputItem;
 import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
@@ -29,21 +31,10 @@ import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.web.R;
 
-import net.sourceforge.pinyin4j.PinyinHelper;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import kotlin.collections.CollectionsKt;
 
 public class MusicListPage extends BaseMusicPage {
     public final static String pageName = ResUtil.getString(R.string.page_local);
@@ -64,45 +55,46 @@ public class MusicListPage extends BaseMusicPage {
     private void defaultGroupChildLongClick(View view, int position) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.inflate(R.menu.default_child_long_click);
+        Music music = connect.getMusic(groupIndex,position);
+        if (IgnoreMusic.isIgnoreMusic(music)){
+            popupMenu.getMenu().findItem(R.id.ignore).setTitle(R.string.autoPlayDisableCancel);
+        }else{
+            popupMenu.getMenu().findItem(R.id.ignore).setTitle(R.string.autoPlayDisable);
+        }
         popupMenu.show();
 
         popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.musicPlay: {//**播放
-                    this.connect.musicSelect(groupIndex, position);
+            int id = item.getItemId();
+            if (id == R.id.musicPlay) {//**播放
+                this.connect.musicSelect(groupIndex, position);
+            } else if (id == R.id.delete) {//**删除
+                connect.delete(false, groupIndex, position);
+            } else if (id == R.id.deleteOrigin) {//**完全删除
+                if (groupIndex == 0) {//**group 0 才可以删除源文件
+                    new android.app.AlertDialog.Builder(getContext())
+                            .setTitle(ResUtil.getString(R.string.deleteOrigin))
+                            .setMessage(data.get(position).getPath())
+                            .setNegativeButton(ResUtil.getString(R.string.no), null)
+                            .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> {
+                                connect.delete(true, groupIndex, position);
+                            })
+                            .create()
+                            .show();
                 }
-                break;
-                case R.id.delete: {//**删除
-                    connect.delete(false, groupIndex, position);
+            } else if (id == R.id.setAsLiske) {//喜欢
+                addToList(data.get(position).getId());
+            }else if (id == R.id.ignore){ //禁止自动播放
+                if (IgnoreMusic.isIgnoreMusic(music)){
+                    IgnoreMusic.createIgnoreMusic(music).delete();
+                }else{
+                    IgnoreMusic.createIgnoreMusic(music).saveOrUpdate();
                 }
-                break;
-                case R.id.deleteOrigin: {//**完全删除
-                    if (groupIndex == 0) {//**group 0 才可以删除源文件
-                        new android.app.AlertDialog.Builder(getContext())
-                                .setTitle(ResUtil.getString(R.string.deleteOrigin))
-                                .setMessage(data.get(position).getPath())
-                                .setNegativeButton(ResUtil.getString(R.string.no), null)
-                                .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> {
-                                    connect.delete(true, groupIndex, position);
-                                })
-                                .create()
-                                .show();
-                    }
-                }
-                break;
-                case R.id.setAsLiske: {
-                    addToList(data.get(position).getId());
-                }
-                break;
-                case R.id.detailInfo: {//**详细信息
-                    showDetail(data.get(position), position);
-                }
-                break;
-                case R.id.multiSelect: {//**多选
-                    showMultiSelect(view);
-                    adapter.select(position);
-                }
-                break;
+
+            } else if (id == R.id.detailInfo) {//**详细信息
+                showDetail(data.get(position), position);
+            } else if (id == R.id.multiSelect) {//**多选
+                showMultiSelect(view);
+                adapter.select(position);
             }
             return false;
         });
@@ -293,7 +285,7 @@ public class MusicListPage extends BaseMusicPage {
         if (adapter != null) {
             adapter.setIndex(child);
             adapter.notifyItemChanged(child);
-            adapter.update(data.getMusicList());
+            adapter.update(data);
         }
 
     }
@@ -327,7 +319,7 @@ public class MusicListPage extends BaseMusicPage {
         rv_musicList.setLayoutManager(layoutManager);
         rv_musicList.addItemDecoration(new DrawableItemDecoration(0, 0, 0, 2, RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider)));
         if (data != null) {
-            adapter = new LocalMusicAdapter(rootView.getContext(), data.getMusicList());
+            adapter = new LocalMusicAdapter(rootView.getContext(), data);
         } else {
             adapter = new LocalMusicAdapter(rootView.getContext(), null);
         }
@@ -338,7 +330,7 @@ public class MusicListPage extends BaseMusicPage {
             return null;
         });
         adapter.setAddListener((v, position) -> {
-            connect.addToWait(data.get(position),true);
+            connect.addToWait(data.get(position), true);
             addAnimation(v);
             return null;
         });

@@ -18,13 +18,18 @@
         android:id="@+id/setAsLiske"
         android:title="@string/setAsLike"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/detailInfo"
-        android:title="@string/detailInfo"
-        app:showAsAction="always"/>
+
+    <item android:id="@+id/ignore"
+        android:title="@string/autoPlayDisable"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/multiSelect"
         android:title="@string/multiSelect"
         app:showAsAction="always"
         />
+
+    <item
+        android:id="@+id/detailInfo"
+        android:title="@string/detailInfo"
+        app:showAsAction="always"/>
 </menu>

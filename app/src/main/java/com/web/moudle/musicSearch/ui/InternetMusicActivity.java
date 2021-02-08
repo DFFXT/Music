@@ -116,6 +116,7 @@ public class InternetMusicActivity extends BaseActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) return;
         if (data == null) return;
         if (requestCode == RESULT_CODE_SEARCH) {

@@ -109,9 +109,9 @@ object MediaQuery {
 
             val defGroup = MusicList<Music>(ResUtil.getString(R.string.default_))
             defGroup.addAll(defList)
-            for(i in 0 until defGroup.size()){
-                val firstChar = defGroup.get(i).musicName[0]
-                defGroup.get(i).firstChar = if(PinYin.isChinese(firstChar)){
+            for(i in 0 until defGroup.size){
+                val firstChar = defGroup[i].musicName[0]
+                defGroup[i].firstChar = if(PinYin.isChinese(firstChar)){
                     val res = PinyinHelper.toHanyuPinyinStringArray(firstChar)
                     if(res!=null){
                         res[0].toCharArray()[0]
@@ -123,7 +123,7 @@ object MediaQuery {
                 }else{
                     '*'
                 }
-                defGroup.get(i).firstChar = defGroup.get(i).firstChar.toUpperCase()
+                defGroup[i].firstChar = defGroup[i].firstChar.toUpperCase()
             }
             musicList.add(defGroup)
             //**获取自定义列表的歌曲

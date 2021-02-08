@@ -26,6 +26,7 @@ import com.web.common.util.IOUtil;
 import com.web.common.util.MediaQuery;
 import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
+import com.web.data.IgnoreMusic;
 import com.web.data.InternetMusicForPlay;
 import com.web.data.Music;
 import com.web.data.MusicList;
@@ -79,27 +80,27 @@ public class MusicPlay extends Service {
 
     public final static String COMMAND_SEND_SINGLE_DATA = "translateSingleData";
 
-    private MediaPlayer player = new MediaPlayer();
+    private final MediaPlayer player = new MediaPlayer();
     private MyNotification notification;
     private FloatLyricsManager floatLyricsManager;
-    private RandomSystem randomSystem=new RandomSystem();
+    private final RandomSystem randomSystem=new RandomSystem();
 
 
-    private List<MusicList<Music>> musicList = new ArrayList<>();//**音乐列表
-    private List<Music> waitMusic = new ArrayList<>();//***等待播放的音乐
+    private final List<MusicList<Music>> musicList = new ArrayList<>();//**音乐列表
+    private final List<Music> waitMusic = new ArrayList<>();//***等待播放的音乐
     private int waitIndex = 0;
     //@Nullable
     //private PlayInterface play;//**界面接口
-    private PlayInterfaceManager play = new PlayInterfaceManager();
+    private final PlayInterfaceManager play = new PlayInterfaceManager();
     private int groupIndex = -1, childIndex = -1;
     private Connect connect;
     private LockScreenReceiver lockScreenReceiver;
     private Equalizer equalizer;
 
-    private PlayerConfig config = new PlayerConfig();
+    private final PlayerConfig config = new PlayerConfig();
     private Ticker ticker;
     //********耳塞插拔广播接收
-    private BroadcastReceiver headsetReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver headsetReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!config.isHasInit()) return;
@@ -111,7 +112,7 @@ public class MusicPlay extends Service {
         }
     };
     //*******来电监听器
-    private PhoneStateListener phoneStateListener = new PhoneStateListener() {
+    private final PhoneStateListener phoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String phoneNumber) {
             if (!config.isHasInit()) return;
@@ -289,7 +290,8 @@ public class MusicPlay extends Service {
             waitMusic.clear();
             if(config.getMusicOrigin()!= PlayerConfig.MusicOrigin.LOCAL){
                 randomSystem.reset(1);
-                randomSystem.addIntRange(0,musicList.get(group).size());
+                addIntRangeWithFilter(9,musicList.get(group).size(),musicList.get(group));
+                //randomSystem.addIntRange(0,musicList.get(group).size());
                 config.setMusicOrigin(PlayerConfig.MusicOrigin.LOCAL);
             }
             if (groupIndex != group || child != childIndex) {
@@ -480,8 +482,8 @@ public class MusicPlay extends Service {
                 case ONE_ONCE: {
                     config.setPlayType(PlayerConfig.PlayType.RANDOM);
                     randomSystem.reset(3);
-                    randomSystem.addIntRange(0,waitMusic.size());
-
+                    addIntRangeWithFilter(0,waitMusic.size(),waitMusic);
+                    //randomSystem.addIntRange(0, waitMusic.size());
                 }
                 break;
                 case RANDOM:{
@@ -491,6 +493,7 @@ public class MusicPlay extends Service {
             }
             play.playTypeChanged(config.getPlayType());
         }
+
 
         private MusicDetailModel model;
 
@@ -521,21 +524,7 @@ public class MusicPlay extends Service {
                     AndroidSchedulers.mainThread().scheduleDirect(()->loadMusic(music));
                 }
 
-
-                RecentPlayMusic recentPlayMusic=new RecentPlayMusic();
-                recentPlayMusic.setSongId(music.getSong_id());
-                recentPlayMusic.setMusicName(music.getMusicName());
-                recentPlayMusic.setArtist(music.getSinger());
-                recentPlayMusic.setDuration(music.getDuration());
-                recentPlayMusic.setAlbumName(music.getAlbum());
-                recentPlayMusic.setAlbumId(music.getAlbum_id());
-
-                //**可以尝试设置为本地路径
-                recentPlayMusic.setImageLink(music.getImgAddress());
-                recentPlayMusic.setLrcLink(music.getLrcLink());
-
-                recentPlayMusic.setPath(music.getPath());
-                recentPlayMusic.saveOrUpdate();
+                InternetMusicForPlay.toRecentPlayMusic(music).saveOrUpdate();
 
 
                 if (!Shortcut.fileExsist(music.getLyricsPath())) {
@@ -581,6 +570,10 @@ public class MusicPlay extends Service {
             MusicPlay.this.deleteMusic(deleteFile, groupIndex, childIndex);
         }
 
+        public Music getMusic(int group,int index){
+            return musicList.get(group).get(index);
+        }
+
         public void delete(boolean deleteFile, int groupIndex, List<Integer> childList) {
             int[] list = new int[childList.size()];
             for (int i = 0; i < list.length; i++) {
@@ -620,7 +613,16 @@ public class MusicPlay extends Service {
         int index;
         if (childIndex + 1 >= musicList.get(groupIndex).size()) index = 0;
         else index = childIndex + 1;
-        return index;
+        int tempIndex = index;
+        if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.LOCAL){
+            MusicList<Music> list = musicList.get(groupIndex);
+            tempIndex = CollectionsExtKt.findIndexFirst(list,index,list.size(),(m,i)-> !IgnoreMusic.isIgnoreMusic(musicList.get(groupIndex).get(i)));
+            if (tempIndex == -1){
+                tempIndex = CollectionsExtKt.findIndexFirst(list,0,index - 1,(m,i)-> !IgnoreMusic.isIgnoreMusic(musicList.get(groupIndex).get(i)));
+            }
+
+        }
+        return tempIndex;
     }
 
     /**
@@ -628,9 +630,23 @@ public class MusicPlay extends Service {
      * @return 没有音乐则返回-1 有则返回下标
      */
     private int preIndex() {
-        if(musicList.get(groupIndex).size()==0)return -1;
-        if (childIndex - 1 < 0) return Math.max(musicList.get(groupIndex).size() - 1, 0);
-        else return childIndex - 1;
+        if(musicList.get(groupIndex).size()==0) return -1;
+        int index;
+        if (childIndex - 1 < 0){
+            index = Math.max(musicList.get(groupIndex).size() - 1, 0);
+        } else{
+            index = childIndex - 1;
+        }
+        int tempIndex = index;
+        if (config.getMusicOrigin() == PlayerConfig.MusicOrigin.LOCAL){
+            MusicList<Music> list = musicList.get(groupIndex);
+            tempIndex = CollectionsExtKt.findIndexLast(list, 0, index,(m,i)-> !IgnoreMusic.isIgnoreMusic(musicList.get(groupIndex).get(i)));
+            if (tempIndex == -1){
+                tempIndex = CollectionsExtKt.findIndexLast(list,index+1, list.size(),(m,i)-> !IgnoreMusic.isIgnoreMusic(musicList.get(groupIndex).get(i)));
+            }
+
+        }
+        return tempIndex;
     }
 
     /**
@@ -818,13 +834,21 @@ public class MusicPlay extends Service {
 		 */
     }
 
+    private void addIntRangeWithFilter(int from,int length,List<Music> list){
+        for (int i = from;i<length+from;i++){
+            if (!IgnoreMusic.isIgnoreMusic(list.get(i))){
+                randomSystem.addNumber(i);
+            }
+        }
+    }
 
     private void musicListChange() {
         childIndex= musicList.get(groupIndex).indexOf(config.getMusic());
         waitMusic.clear();
-        waitMusic.addAll(musicList.get(groupIndex).getAll());
+        waitMusic.addAll(musicList.get(groupIndex));
         randomSystem.reset(4);
-        randomSystem.addIntRange(0,musicList.get(groupIndex).size());
+        addIntRangeWithFilter(0,musicList.get(groupIndex).size(),musicList.get(groupIndex));
+        //randomSystem.addIntRange(0,musicList.get(groupIndex).size());
         play.musicListChange(groupIndex,childIndex, musicList);
     }
 
@@ -857,8 +881,8 @@ public class MusicPlay extends Service {
         waitIndex = 0;
     }
 
-    private Lock gettingMusicLock = new ReentrantLock();
-    private Lock scanningMusicLock = new ReentrantLock();
+    private final Lock gettingMusicLock = new ReentrantLock();
+    private final Lock scanningMusicLock = new ReentrantLock();
 
     /**
      * 获取本地列表
@@ -882,7 +906,7 @@ public class MusicPlay extends Service {
     }
     private void sort(){
         for (MusicList<Music> ml : musicList) {
-            Collections.sort(ml.getMusicList(), (m1, m2) -> ChineseComparator.INSTANCE.compare(m1.getMusicName(),m2.getMusicName()));
+            Collections.sort(ml, (m1, m2) -> ChineseComparator.INSTANCE.compare(m1.getMusicName(),m2.getMusicName()));
         }
     }
 

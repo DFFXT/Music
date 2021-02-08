@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<litepal >
+<litepal>
     <dbname value="Music"/>
-    <version value="24"/>
+    <version value="30"/>
     <list>
         <mapping class="com.web.data.Music"/>
+        <mapping class="com.web.data.IgnoreMusic"/>
         <mapping class="com.web.data.ScanMusicType"/>
         <mapping class="com.web.data.InternetMusic"/>
         <mapping class="com.web.data.InternetMusicDetail"/>

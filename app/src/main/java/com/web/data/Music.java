@@ -7,6 +7,7 @@ import com.web.config.Shortcut;
 import com.web.common.util.MediaQuery;
 import com.web.web.R;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;

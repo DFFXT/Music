@@ -12,6 +12,8 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * 网络搜索
  */
@@ -42,6 +44,7 @@ public class InternetViewModel extends ViewModel {
     public LiveData<PagedList<SimpleMusicInfo>> getMusicList() {
         if (pagedListLiveData == null)
             pagedListLiveData = new LivePagedListBuilder<>(new DataSource.Factory<String, SimpleMusicInfo>() {
+                @NotNull
                 @Override
                 public DataSource<String, SimpleMusicInfo> create() {
                     return dataSource;
