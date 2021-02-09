@@ -12,9 +12,9 @@ object ChineseComparator:Comparator<String> {
     const val chinese = "[\\u4e00-\\u9fa5+]"
     const val code = "[a-zA-Z]"
     override fun compare(o1: String?, o2: String?): Int {
-        if(o1==null&&o2==null)return 0
-        if(o1==null)return -1
-        if(o2==null)return 1
+        if(o1.isNullOrEmpty()&&o2.isNullOrEmpty())return 0
+        if(o1.isNullOrEmpty())return -1
+        if(o2.isNullOrEmpty())return 1
         var res:Int
         for(i in 0 until min(o1.length,o2.length)){
             res=mCompare(o1.substring(i,i+1),o2.substring(i,i+1))
@@ -29,10 +29,10 @@ object ChineseComparator:Comparator<String> {
             var c1 = n1
             var c2 = n2
             if (n1.matches(chinese.toRegex())) {//**中文
-                c1 = PinyinHelper.toHanyuPinyinStringArray(n1[0])[0]
+                c1 = PinyinHelper.toHanyuPinyinStringArray(n1[0]).getOrElse(0) { "*" }
             }
             if (n2.matches(chinese.toRegex())) {
-                c2 = PinyinHelper.toHanyuPinyinStringArray(n2[0])[0]
+                c2 = PinyinHelper.toHanyuPinyinStringArray(n2[0]).getOrElse(0) { "*" }
             }
             return Collator.getInstance(Locale.CHINA).compare(c1, c2)
         } else if (valid1) {

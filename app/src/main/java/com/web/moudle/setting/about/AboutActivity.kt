@@ -5,9 +5,7 @@ import android.content.Intent
 import com.web.common.base.BaseActivity
 import com.web.common.bean.Version
 import com.web.common.constant.Apk
-import com.web.common.constant.Constant
 import com.web.common.util.ResUtil
-import com.web.misc.imageDraw.DynamicImageDraw
 import com.web.misc.imageDraw.SnowDraw
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_about.*
@@ -26,7 +24,6 @@ class AboutActivity:BaseActivity() {
                 tv_updateTime.text=v?.publishTime
             }
         }
-        iv_icon.afterDraw=DynamicImageDraw()
         round_test.afterDraw = SnowDraw()
     }
 

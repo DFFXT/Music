@@ -53,8 +53,8 @@ open class RoundImageView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        beforeDraw?.onCreate()
-        afterDraw?.onCreate()
+        beforeDraw?.onCreate(this)
+        afterDraw?.onCreate(this)
     }
 
 

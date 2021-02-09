@@ -9,7 +9,6 @@ import kotlinx.coroutines.channels.ticker
  */
 class Ticker(private val delay: Long,private val initialDelay:Long=0, private val dispatcher: CoroutineDispatcher = Dispatchers.Default, private val callBack: (() -> Unit))  {
     private var ticker: ReceiveChannel<Unit>? = null
-    @ObsoleteCoroutinesApi
     fun start() {
         if (ticker!=null) return
         GlobalScope.launch(Dispatchers.Default) {

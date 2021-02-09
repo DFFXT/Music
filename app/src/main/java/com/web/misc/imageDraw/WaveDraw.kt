@@ -53,7 +53,7 @@ class WaveDraw:ImageDraw {
         return height- (dh*(v+128f)).pow(0.7f)- minH
     }
 
-    override fun onCreate() {
+    override fun onCreate(v: View) {
         paint.color=ResUtil.getColor(R.color.themeColor)
         paint.alpha=100
     }
