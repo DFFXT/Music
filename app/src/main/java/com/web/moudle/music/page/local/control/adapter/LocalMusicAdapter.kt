@@ -45,15 +45,7 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
         val tvSingerName=holder.bindText(R.id.singerName, item.singer+if(item.album!=null) " - "+item.album else "")
         val ivLike=holder.findViewById<ImageView>(R.id.iv_love)
         val tvDuration = holder.findViewById<TextView>(R.id.tv_musicDuration)
-        if (IgnoreMusic.isIgnoreMusic(item)){
-            tvMusicName.setTextColor(ResUtil.getColor(R.color.textColor_9))
-            tvSingerName.setTextColor(ResUtil.getColor(R.color.textColor_9))
-            tvDuration.setTextColor(ResUtil.getColor(R.color.textColor_9))
-        }else{
-            tvMusicName.setTextColor(ResUtil.getColor(R.color.textColor_3))
-            tvSingerName.setTextColor(ResUtil.getColor(R.color.textColor_3))
-            tvDuration.setTextColor(ResUtil.getColor(R.color.textColor_3))
-        }
+
         ivLike.isSelected=item.isLike
         tvDuration.text = ResUtil.timeFormat("mm:ss",item.duration.toLong())
         ivLike.setOnClickListener {
@@ -85,12 +77,21 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
             }
             return@setOnLongClickListener false
         }
-        if(index==position){
-            tvMusicName.setTextColor(ResUtil.getColor(R.color.themeColor))
-            tvSingerName.setTextColor(ResUtil.getColor(R.color.themeColor))
-        }else{
-            tvMusicName.setTextColor(Color.BLACK)
-            tvSingerName.setTextColor(Color.BLACK)
+        when {
+            index==position -> {
+                tvMusicName.setTextColor(ResUtil.getColor(R.color.themeColor))
+                tvSingerName.setTextColor(ResUtil.getColor(R.color.themeColor))
+            }
+            IgnoreMusic.isIgnoreMusic(item) -> {
+                tvMusicName.setTextColor(ResUtil.getColor(R.color.textColor_9))
+                tvSingerName.setTextColor(ResUtil.getColor(R.color.textColor_9))
+                tvDuration.setTextColor(ResUtil.getColor(R.color.textColor_9))
+            }
+            else -> {
+                tvMusicName.setTextColor(ResUtil.getColor(R.color.textColor_3))
+                tvSingerName.setTextColor(ResUtil.getColor(R.color.textColor_3))
+                tvDuration.setTextColor(ResUtil.getColor(R.color.textColor_3))
+            }
         }
     }
 

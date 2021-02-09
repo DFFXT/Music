@@ -37,14 +37,6 @@ class MainFragment: BaseFragment() {
         pageList.add(BillBoardFragment())
         pageList.add(SongSheetFragment())
         pageList.add(AllArtistFragment())
-        val d = ResUtil.getDrawable(R.drawable.icon_pre_white_fill)
-        /*d.setTint(ResUtil.getColor(R.color.black))
-        val b = ResUtil.getBitmapFromDrawable(d)
-        val uri = MediaCreator.createImageUri("pre.png")
-        val out = MyApplication.context.contentResolver.openOutputStream(uri)
-        b.compress(Bitmap.CompressFormat.PNG,100,out)
-        out?.flush()
-        out!!.close()*/
 
     }
 
