@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
-import com.web.common.util.ViewUtil
 import com.web.data.Music
 import com.web.misc.ConfirmDialog
 import com.web.misc.DrawableItemDecoration
-import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicDownload.adpter.CompleteAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
@@ -37,13 +37,13 @@ class DownloadCompleteFragment : BaseDownloadFragment() {
                 R.id.iv_play -> {
                     val music = Music(detail.songName, detail.artistName, detail.path)
                     if (Music.exist(music)) {
-                        MusicPlay.play(context, music)
+                        ActionControlPlug.play(requireContext(), music)
                     } else {
-                        MToast.showToast(context!!, R.string.fileNotFound)
+                        MToast.showToast(requireContext(), R.string.fileNotFound)
                     }
                 }
                 R.id.item_parent -> {
-                    MusicDetailActivity.actionStart(context!!, detail.songId)
+                    MusicDetailActivity.actionStart(requireContext(), detail.songId)
                 }
             }
         }
@@ -73,7 +73,7 @@ class DownloadCompleteFragment : BaseDownloadFragment() {
         topBarLayout.setEndText(ResUtil.getString(R.string.clearGroup))
         topBarLayout.setEndImageListener(View.OnClickListener { v ->
             if (dialog == null) {
-                dialog = ConfirmDialog(context!!)
+                dialog = ConfirmDialog(requireContext())
                         .setMsg(ResUtil.getString(R.string.clearAllRecord))
                         .setLeftText(ResUtil.getString(R.string.no))
                         .setRightText(ResUtil.getString(R.string.yes))

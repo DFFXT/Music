@@ -1,7 +1,7 @@
 package com.web.moudle.preference
 
 import com.tencent.mmkv.MMKV
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 import com.web.common.util.IOUtil
 import com.web.moudle.music.player.bean.DiskObject
 
@@ -58,7 +58,7 @@ object SP {
         val sp=getKV(name)
         return sp.getInt(key,defValue)
     }
-    fun getString(name: String,key: String,defValue: String=""):String{
+    fun getString(name: String,key: String,defValue: String?=null):String{
         val sp=getKV(name)
         return sp.getString(key,defValue)!!
     }

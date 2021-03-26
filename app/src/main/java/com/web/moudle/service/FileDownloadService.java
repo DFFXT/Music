@@ -17,7 +17,8 @@ import com.web.data.InternetMusic;
 import com.web.data.InternetMusicDetail;
 import com.web.data.Music;
 import com.web.common.util.MediaQuery;
-import com.web.moudle.music.player.MusicPlay;
+import com.web.moudle.music.player.NewPlayer;
+import com.web.moudle.music.player.plug.ActionControlPlug;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.DownloadNotification;
@@ -427,7 +428,7 @@ public class FileDownloadService extends Service {
         downloadList.remove(dm);
         completeList.add(0, dm);
         listChange();
-        MusicPlay.musicDownloadComplete(this,dm.getInternetMusicDetail().getPath());
+        ActionControlPlug.musicDownloadComplete(this,dm.getInternetMusicDetail().getPath());
 
         //***添加进媒体库
         Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

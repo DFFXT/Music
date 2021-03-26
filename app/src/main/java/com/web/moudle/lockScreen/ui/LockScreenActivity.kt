@@ -12,14 +12,6 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.os.*
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -30,7 +22,6 @@ import com.web.common.base.BaseActivity
 import com.web.common.base.BaseGlideTarget
 import com.web.common.base.PlayerObserver
 import com.web.common.imageLoader.glide.ImageLoad
-import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.config.GetFiles
@@ -38,8 +29,9 @@ import com.web.config.LyricsAnalysis
 import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.moudle.lyrics.bean.LyricsLine
-import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.music.player.other.PlayInterface
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
+import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lock_screen.*
@@ -51,20 +43,20 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     private val arrowBitmap = arrayOfNulls<Bitmap>(2)
     private lateinit var params: ConstraintLayout.LayoutParams
     private var marginEnd=0
-    private var connect:MusicPlay.Connect?=null
+    private var connect: PlayerConnection?=null
     private var connection:ServiceConnection=object :ServiceConnection{
         override fun onServiceDisconnected(name: ComponentName?) {
 
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder) {
-            connect=service as MusicPlay.Connect
+            connect=service as PlayerConnection
             connect?.addObserver(this@LockScreenActivity,observer)
             connect?.getPlayerInfo(this@LockScreenActivity)
         }
     }
     val observer=object :PlayerObserver(){
-        override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
+        override fun onLoad(music: Music?, maxTime: Int) {
             if(music==null)return
             tv_lockScreen_musicName.text=music.musicName
             tv_lockScreen_singerName.text=music.singer
@@ -82,16 +74,16 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
             lyricView_lockScreen.lyrics=lyrics
         }
 
-        override fun play() {
+        override fun onPlay() {
             iv_lockScreen_status.setImageResource(R.drawable.icon_play_white)
         }
 
-        override fun pause() {
+        override fun onPause() {
             iv_lockScreen_status.setImageResource(R.drawable.icon_pause_white)
         }
 
-        override fun currentTime(group: Int, child: Int, time: Int) {
-            lyricView_lockScreen.setCurrentTimeImmediately(time)
+        override fun onCurrentTime(duration: Int, maxTime: Int) {
+            lyricView_lockScreen.setCurrentTimeImmediately(duration)
         }
     }
 
@@ -102,8 +94,8 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     override fun initView() {
         ViewUtil.transparentStatusBar(window)
         loadData()
-        val intent=Intent(this,MusicPlay::class.java)
-        intent.action=MusicPlay.BIND
+        val intent=Intent(this, NewPlayer::class.java)
+        intent.action= ActionControlPlug.BIND
         bindService(intent,connection,Context.BIND_AUTO_CREATE)
         when(LockScreenSettingActivity.getMode()){
             LockScreenSettingActivity.BG_MODE_IMAGE-> {
@@ -245,7 +237,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     override fun onClick(v:View){
         when(v.id){
             R.id.iv_lockScreen_pre-> connect?.pre()
-            R.id.iv_lockScreen_next-> connect?.next()
+            R.id.iv_lockScreen_next-> connect?.next(false)
             R.id.iv_lockScreen_status-> {
                 connect?.changePlayerPlayingStatus()
             }

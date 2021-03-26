@@ -3,7 +3,6 @@ package com.web.common.util
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.text.Spannable
@@ -12,9 +11,8 @@ import android.text.TextUtils
 import android.text.style.TextAppearanceSpan
 import androidx.annotation.*
 import androidx.core.content.res.ResourcesCompat
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 import com.web.web.R
-import org.litepal.LitePalApplication
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -78,7 +76,7 @@ object ResUtil {
     }
     @JvmStatic
     fun getColor(@ColorRes colorId:Int):Int{
-        return MyApplication.context.resources.getColor(colorId,MyApplication.context.theme)
+        return MyApplication.context.resources.getColor(colorId, MyApplication.context.theme)
     }
 
     @JvmStatic
@@ -89,7 +87,7 @@ object ResUtil {
 
     @JvmStatic
     fun getDrawable(@DrawableRes drawableId: Int):Drawable{
-        return ResourcesCompat.getDrawable(MyApplication.context.resources,R.drawable.icon_waring_white,MyApplication.context.theme)!!
+        return ResourcesCompat.getDrawable(MyApplication.context.resources,R.drawable.icon_waring_white, MyApplication.context.theme)!!
     }
     @JvmStatic
     fun getBitmapFromDrawable(drawable: Drawable):Bitmap{

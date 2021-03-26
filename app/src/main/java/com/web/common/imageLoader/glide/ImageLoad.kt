@@ -10,7 +10,7 @@ import androidx.annotation.FloatRange
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 
 object ImageLoad {
     @JvmStatic

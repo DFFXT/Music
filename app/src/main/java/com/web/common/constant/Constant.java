@@ -9,36 +9,10 @@ import java.io.File;
 
 public final class Constant {
     public final static String spName="appConfig";
-    public class SpKey{
-        public final static String clearAll="clearAll";
-        public final static String noNeedScan="noNeedScan";
-        public final static String lockScreenBgColor="lockScreenBgColor";
-        public final static String lockScreenBgImagePath="lockScreenBgImagePath";
-        public final static String lockScreenBgMode="lockScreenBgMode";
-        public final static String noLockScreen="noLockScreen";
-
-        public final static String currentSoundEffect="currentSoundEffect";
-
+    @Deprecated
+    public static class SpKey{
         public final static String currentVersion="currentVersion";
         public final static String latestVersion="latestVersion";
-
-        public final static String cacheEnable="cacheEnable";
-        public final static String customerCachePath="customerCachePath";
-        public final static String customerDownloadPath="customerDownloadPath";
-
-        public final static String lyricsColor="lyricsColor";
-        public final static String lyricsFocusColor="lyricsFocusColor";
-        public final static String lyricsSize="lyricsSize";
-        public final static String lyricsOverlapOpen="lyricsOverlapOpen";
-        public final static String isFloatWindowLocked="isFloatWindowLocked";
-
-
-        public final static String floatWindowX="floatWindowX";
-        public final static String floatWindowY="floatWindowY";
-
-        public final static String enableSystemMusic="enableSystemMusic";
-
-
     }
     public static class LocalConfig{
 
@@ -51,7 +25,7 @@ public final class Constant {
         public static String musicCachePath=cachePath+"cache/";
         public static String singerIconPath =cachePath+"singer/";
         public static String krcPath=cachePath+"lyrics/";
-        private static String[] invalidChar=new String[]{
+        private static final String[] invalidChar=new String[]{
                 "/","\\","?","|","<",">",":","*","\""
         };
 

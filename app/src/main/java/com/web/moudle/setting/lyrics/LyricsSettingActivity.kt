@@ -10,15 +10,13 @@ import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.*
-import com.web.common.constant.Constant
+import com.web.common.constant.AppConfig
 import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.lyrics.bean.LyricsLine
-import com.web.moudle.music.player.FloatLyricsManager
-import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.preference.SP
+import com.web.moudle.music.player.other.FloatLyricsManager
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_lyrics_setting.*
 
@@ -168,52 +166,42 @@ class LyricsSettingActivity : BaseActivity() {
 
 
         @JvmStatic
-        fun getLyricsColor():Int{
-            return SP.getInt(Constant.spName,Constant.SpKey.lyricsColor,ResUtil.getColor(R.color.themeColor))
-        }
+        fun getLyricsColor():Int = AppConfig.lyricsColor
         @JvmStatic
-        fun getLyricsFocusColor():Int{
-            return SP.getInt(Constant.spName,Constant.SpKey.lyricsFocusColor,ResUtil.getColor(R.color.colorAccent))
-        }
+        fun getLyricsFocusColor():Int = AppConfig.lyricsFocusColor
         @JvmStatic
-        fun getLyricsSize():Int{
-            return SP.getInt(Constant.spName,Constant.SpKey.lyricsSize,ResUtil.getSize(R.dimen.textSize_normal))
-        }
+        fun getLyricsSize():Int = AppConfig.lyricsSize
 
         @JvmStatic
-        fun lyricsOverlap():Boolean{
-            return SP.getBoolean(Constant.spName,Constant.SpKey.lyricsOverlapOpen,false)
-        }
+        fun lyricsOverlap():Boolean = AppConfig.lyricsOverlapOpen
 
         @JvmStatic
         fun setLyricsColor(@ColorInt color:Int){
-            SP.putValue(Constant.spName,Constant.SpKey.lyricsColor,color)
+            AppConfig.lyricsColor = color
         }
         @JvmStatic
         fun setLyricsFocusColor(@ColorInt color:Int){
-            SP.putValue(Constant.spName,Constant.SpKey.lyricsFocusColor,color)
+            AppConfig.lyricsFocusColor = color
         }
         @JvmStatic
         fun setLyricsSize(size:Int){
-            SP.putValue(Constant.spName,Constant.SpKey.lyricsSize,size)
+            AppConfig.lyricsSize = size
         }
 
         @JvmStatic
         fun enableLyricsOverlap(ctx:Context,enable:Boolean,forceRefresh:Boolean=true){
-            SP.putValue(Constant.spName,Constant.SpKey.lyricsOverlapOpen,enable)
+            AppConfig.lyricsOverlapOpen = enable
             if(forceRefresh){
                 FloatLyricsManager.configChange(ctx)
             }
         }
 
         @JvmStatic
-        fun isFloatWindowLocked():Boolean{
-            return SP.getBoolean(Constant.spName,Constant.SpKey.isFloatWindowLocked,false)
-        }
+        fun isFloatWindowLocked():Boolean = AppConfig.isFloatWindowLocked
 
         @JvmStatic
         fun setFloatWindowLocked(ctx:Context,locked:Boolean){
-            SP.putValue(Constant.spName,Constant.SpKey.isFloatWindowLocked,locked)
+            AppConfig.isFloatWindowLocked = locked
             FloatLyricsManager.configChange(ctx)
         }
 

@@ -2,17 +2,15 @@ package com.web.common.util
 
 import android.content.ContentValues
 import android.content.Context
-import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import com.web.common.base.MyApplication
-import com.web.common.constant.Constant
+import com.web.app.MyApplication
+import com.web.common.constant.AppConfig
 import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.data.MusicList
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.bean.SongSheet
-import com.web.moudle.preference.SP
 import com.web.moudle.setting.suffix.SuffixSelectActivity
 import com.web.web.R
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +28,7 @@ object MediaQuery {
     @JvmStatic
     fun scanMedia(ctx: Context, callback: (isOk: Boolean) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            SP.putValue(Constant.spName, Constant.SpKey.noNeedScan, true)
+            AppConfig.noNeedScan = true
             var hasMusic=false
             ctx.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null).use { cursor ->
                 if (cursor == null) {
@@ -148,11 +146,6 @@ object MediaQuery {
                 callback(musicList)
             }
         }
-    }
-
-    @JvmStatic
-    fun needScan():Boolean{
-        return !SP.getBoolean(Constant.spName,Constant.SpKey.noNeedScan,false)
     }
 
 

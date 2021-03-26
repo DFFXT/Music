@@ -8,21 +8,23 @@ import kotlin.math.min
 /**
  * 字符串比较器
  */
-object ChineseComparator:Comparator<String> {
+object ChineseComparator : Comparator<String> {
     const val chinese = "[\\u4e00-\\u9fa5+]"
     const val code = "[a-zA-Z]"
     override fun compare(o1: String?, o2: String?): Int {
-        if(o1.isNullOrEmpty()&&o2.isNullOrEmpty())return 0
-        if(o1.isNullOrEmpty())return -1
-        if(o2.isNullOrEmpty())return 1
-        var res:Int
-        for(i in 0 until min(o1.length,o2.length)){
-            res=mCompare(o1.substring(i,i+1),o2.substring(i,i+1))
-            if(res!=0)return res
+        if (o1.isNullOrEmpty() && o2.isNullOrEmpty()) return 0
+        if (o1.isNullOrEmpty()) return -1
+        if (o2.isNullOrEmpty()) return 1
+        var res: Int
+        for (i in 0 until min(o1.length, o2.length)) {
+            res = mCompare(o1.substring(i, i + 1), o2.substring(i, i + 1))
+            if (res != 0) return res
         }
-        return o1.length-o2.length
+        return o1.length - o2.length
     }
-    private fun mCompare(n1:String,n2:String):Int{
+
+    private fun mCompare(n1: String, n2: String): Int {
+        if (n1.isEmpty() || n2.isEmpty()) return 0
         val valid1 = n1.matches("$chinese|$code".toRegex())//**是否是中英文
         val valid2 = n2.matches("$chinese|$code".toRegex())
         if (valid1 && valid2) {//***中英文

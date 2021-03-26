@@ -1,6 +1,5 @@
 package com.web.moudle.musicDownload.ui;
 
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,39 +8,17 @@ import android.os.IBinder;
 
 import com.google.android.material.tabs.TabLayout;
 import com.web.common.base.BaseActivity;
-import com.web.common.base.BaseFragment;
 import com.web.common.base.BaseFragmentPagerAdapter;
 import com.web.common.base.BasePageChangeListener;
-import com.web.common.tool.MToast;
-import com.web.common.tool.Ticker;
-import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
-import com.web.data.InternetMusic;
-import com.web.data.InternetMusicDetail;
-import com.web.data.Music;
-import com.web.misc.ConfirmDialog;
-import com.web.misc.GapItemDecoration;
-import com.web.misc.ToolsBar;
 import com.web.misc.TopBarLayout;
-import com.web.moudle.music.page.BaseMusicPage;
-import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
-import com.web.moudle.musicDownload.bean.DownloadMusic;
-import com.web.moudle.musicEntry.ui.MusicDetailActivity;
 import com.web.moudle.service.FileDownloadService;
 import com.web.web.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
-
-import kotlinx.coroutines.Dispatchers;
 
 
 public class MusicDownLoadActivity extends BaseActivity {

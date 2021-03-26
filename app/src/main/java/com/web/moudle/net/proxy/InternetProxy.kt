@@ -2,6 +2,7 @@ package com.web.moudle.net.proxy
 
 import androidx.annotation.WorkerThread
 import com.web.common.base.log
+import com.web.common.constant.AppConfig
 import com.web.common.constant.Constant
 import com.web.config.Shortcut
 import com.web.data.MusicCache
@@ -25,7 +26,6 @@ object InternetProxy {
 
     private var run=true
 
-    var cacheEnable=CacheActivity.getCacheEnable()
 
     fun stopProxy(){
         run=false
@@ -131,7 +131,7 @@ object InternetProxy {
 
         out.write(builder.toString().toByteArray())
         log(builder.toString())*/
-        if(cacheEnable)
+        if(AppConfig.cacheEnable)
             streamCopyNoCloseWidthCache(connection.getInputStream(),out,from,to,musicCache)
         else {
             try {

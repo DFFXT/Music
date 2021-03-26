@@ -20,7 +20,8 @@ import com.web.data.Music
 import com.web.misc.BasePopupWindow
 import com.web.misc.DrawableItemDecoration
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
-import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.musicSearch.bean.next.SearchMusicWrapper1
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.model.InternetMusicModel
@@ -31,7 +32,7 @@ import kotlinx.android.synthetic.main.layout_pop_lyris_plug.view.*
 import kotlinx.coroutines.*
 import java.lang.Exception
 
-class LyricsSearchPlug(ctx:FragmentActivity,connect: MusicPlay.Connect):BasePopupWindow(ctx,
+class LyricsSearchPlug(ctx:FragmentActivity,connect: PlayerConnection):BasePopupWindow(ctx,
         LayoutInflater.from(ctx).inflate(R.layout.layout_pop_lyris_plug,null,false),
         (ViewUtil.screenWidth()*0.8f).toInt(),
         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -84,7 +85,7 @@ class LyricsSearchPlug(ctx:FragmentActivity,connect: MusicPlay.Connect):BasePopu
             GlobalScope.launch(Dispatchers.Main) {
                 try {
                     job.await()
-                    connect.dispatchLoad()
+                    connect.getPlayerInfo(null)
                 }catch (e:Exception){
                     e.printStackTrace()
                     MToast.showToast(ctx,R.string.downloadFailed)

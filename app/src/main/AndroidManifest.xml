@@ -21,7 +21,7 @@
 
 
     <application
-        android:name="com.web.common.base.MyApplication"
+        android:name="com.web.app.MyApplication"
         android:networkSecurityConfig="@xml/net_security"
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -104,7 +104,7 @@
         </activity>
         <activity android:name=".Alarm_Activity" />
 
-        <service android:name="com.web.moudle.music.player.MusicPlay" />
+        <service android:name="com.web.moudle.music.player.NewPlayer" />
         <service android:name="com.web.moudle.service.FileDownloadService" />
         <service android:name="com.web.moudle.service.UpdateService" />
 

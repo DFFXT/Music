@@ -14,9 +14,13 @@ class Ticker(private val delay: Long,private val initialDelay:Long=0, private va
         GlobalScope.launch(Dispatchers.Default) {
             ticker = ticker(delay, initialDelay)
             launch(dispatcher) {
-                for (i in ticker!!) {
-                    callBack()
+                ticker?.let {
+                    for (i in it) {
+                        callBack()
+                        if (ticker == null) return@let
+                    }
                 }
+
             }
         }
     }

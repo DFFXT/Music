@@ -22,9 +22,11 @@ import com.web.moudle.home.local.adapter.SheetAdapter
 import com.web.moudle.home.local.model.LocalModel
 import com.web.moudle.login.LoginActivity
 import com.web.moudle.music.page.local.MusicActivity
-import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.bean.SongSheetWW
 import com.web.moudle.music.player.model.WWSongSheetModel
+import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity
 import com.web.moudle.recentListen.MySongSheetInfoActivity
 import com.web.moudle.recentListen.RecentListenActivity
@@ -41,9 +43,9 @@ class LocalFragment : BaseFragment() {
     private val sheetList=ArrayList<SongSheetWW>()
     private val adapter=SheetAdapter()
     override fun getLayoutId(): Int = R.layout.fragment_local
-    private var connect:MusicPlay.Connect?=null
+    private var connect: PlayerConnection?=null
     private var observer=object :PlayerObserver(){
-        override fun musicListChange(group: Int, child: Int, list: MutableList<MusicList<Music>>?) {
+        override fun onMusicListChange(list: MutableList<Music>?) {
             model.getMusicNum {
                 rootView!!.tv_musicNum?.text = it.toString()
             }
@@ -55,14 +57,14 @@ class LocalFragment : BaseFragment() {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder) {
-            connect=service as MusicPlay.Connect
+            connect=service as PlayerConnection
             connect?.addObserver(activity!!,observer)
         }
     }
 
     override fun initView(rootView: View) {
-        val intent=Intent(context,MusicPlay::class.java)
-        intent.action=MusicPlay.BIND
+        val intent=Intent(context, NewPlayer::class.java)
+        intent.action= ActionControlPlug.BIND
         context?.bindService(intent,connection,Context.BIND_AUTO_CREATE)
         rootView.topBar.setEndImageListener(View.OnClickListener {
             SettingActivity.actionStart(context)
@@ -91,7 +93,7 @@ class LocalFragment : BaseFragment() {
         }
 
         rootView.layout_fastScan.setOnClickListener {
-            MusicPlay.scan(context)
+            ActionControlPlug.scan(requireContext())
         }
 
         rootView.layout_createSongSheet.setOnClickListener {

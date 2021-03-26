@@ -1,13 +1,12 @@
 package com.web.data;
 
-import com.web.common.base.MyApplication;
+import com.web.app.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.config.Shortcut;
 import com.web.common.util.MediaQuery;
 import com.web.web.R;
 
-import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;

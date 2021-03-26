@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 import java.io.File
 
 object MediaCreator {

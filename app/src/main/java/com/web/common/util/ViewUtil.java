@@ -1,24 +1,18 @@
 package com.web.common.util;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 
-import com.web.common.base.MyApplication;
-
-import org.litepal.LitePalApplication;
+import com.web.app.MyApplication;
 
 import androidx.annotation.DrawableRes;
 

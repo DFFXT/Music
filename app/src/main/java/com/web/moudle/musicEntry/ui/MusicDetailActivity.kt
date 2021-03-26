@@ -21,7 +21,6 @@ import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
-import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
 import com.web.data.InternetMusicDetail
 import com.web.data.InternetMusicForPlay
@@ -30,9 +29,10 @@ import com.web.misc.DrawableItemDecoration
 import com.web.moudle.home.local.ListDialog
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.moudle.music.page.local.control.ui.SelectorListAlert
-import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.music.player.bean.SongSheetWW
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.model.WWSongSheetModel
+import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicEntry.adapter.CommentAdapter
 import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.service.FileDownloadService
@@ -46,7 +46,7 @@ import kotlinx.android.synthetic.main.music_navigator_control.*
 class MusicDetailActivity : BaseActivity() {
     private lateinit var id: String
     private lateinit var model: DetailMusicViewModel
-    private var connection: MusicPlay.Connect? = null
+    private var connection: PlayerConnection? = null
     private var serviceConnection: ServiceConnection? = null
 
     private var commentPage=0
@@ -102,34 +102,34 @@ class MusicDetailActivity : BaseActivity() {
                     var theSameMusic = false
                     //**播放器观测者
                     val observer = object : PlayerObserver() {
-                        override fun play() {
+                        override fun onPlay() {
                             if (theSameMusic)
                                 iv_playIconSwitch.setImageResource(R.drawable.icon_play_white)
                         }
 
-                        override fun pause() {
+                        override fun onPause() {
                             iv_playIconSwitch.setImageResource(R.drawable.icon_pause_white)
                         }
 
-                        override fun load(groupIndex: Int, childIndex: Int, m: Music?, maxTime: Int) {
+                        override fun onLoad(m: Music?, maxTime: Int) {
                             if (m!=null&&musicEqual(music,m)) {
                                 theSameMusic = true
-                                play()
+                                onPlay()
                             } else {
                                 theSameMusic = false
-                                pause()
+                                onPause()
                             }
                         }
                     }
 
-                    val intent = Intent(this@MusicDetailActivity, MusicPlay::class.java)
-                    intent.action = MusicPlay.BIND
+                    val intent = Intent(this@MusicDetailActivity, NewPlayer::class.java)
+                    intent.action = ActionControlPlug.BIND
                     serviceConnection = object : ServiceConnection {
                         override fun onServiceDisconnected(name: ComponentName?) {
                         }
 
                         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                            connection = service as MusicPlay.Connect
+                            connection = service as PlayerConnection
                             connection!!.addObserver(this@MusicDetailActivity, observer)
                             connection!!.getPlayerInfo(this@MusicDetailActivity)
                         }
@@ -245,7 +245,7 @@ class MusicDetailActivity : BaseActivity() {
                     listPop?.dismiss()
                 })
                 .addItem(ResUtil.getString(R.string.musicDetailActivity_addToWait), View.OnClickListener {
-                    connection?.addToWait(music, true)
+                    connection?.addWaitMusic(music, true)
                     listPop?.dismiss()
                 })
                 .addItem(ResUtil.getString(R.string.musicDetailActivity_addToSheet), View.OnClickListener {

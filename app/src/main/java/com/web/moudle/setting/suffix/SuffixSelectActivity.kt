@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.web.common.base.BaseActivity
 import com.web.common.base.log
+import com.web.common.constant.AppConfig
 import com.web.common.constant.Constant
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
@@ -103,11 +104,9 @@ class SuffixSelectActivity : BaseActivity() {
 
         @JvmStatic
         fun enableSystemMusic(enable:Boolean){
-            SP.putValue(Constant.spName,Constant.SpKey.enableSystemMusic,enable)
+            AppConfig.enableSystemMusic = enable
         }
-        fun isEnableSystemMusic():Boolean{
-            return SP.getBoolean(Constant.spName,Constant.SpKey.enableSystemMusic,true)
-        }
+        fun isEnableSystemMusic():Boolean = AppConfig.enableSystemMusic
 
         @JvmStatic
         fun actionStart(context: Context) {

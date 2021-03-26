@@ -11,9 +11,12 @@ import com.web.common.base.BaseActivity
 import com.web.common.util.PermissionManager
 import com.web.data.Music
 import com.web.data.MusicList
-import com.web.moudle.music.player.MusicPlay
 import com.web.common.base.PlayerObserver
 import com.web.moudle.home.HomePageActivity
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
+import com.web.moudle.music.player.other.PlayerConfig
+import com.web.moudle.music.player.plug.ActionControlPlug
 
 /**
  * logo界面
@@ -24,14 +27,14 @@ import com.web.moudle.home.HomePageActivity
 class HelloActivity : BaseActivity() {
     private val code = 0x999
     override fun getLayoutId(): Int = R.layout.activity_hello
-    private var connect: MusicPlay.Connect? = null
-    var connection: ServiceConnection? = null
+    private var connect: PlayerConnection? = null
+    private lateinit var connection: ServiceConnection
 
 
     private val observer = object : PlayerObserver() {
-        override fun musicListChange(group: Int,child:Int,list: MutableList<MusicList<Music>>?) {
-            connect?.removeObserver(this@HelloActivity)
-           // MusicActivity.actionStartForResult(this@HelloActivity, code)
+        override fun onMusicListChange(list: MutableList<Music>?) {
+            connect?.removeObserver(this@HelloActivity,null)
+            // MusicActivity.actionStartForResult(this@HelloActivity, code)
             HomePageActivity.actionStart(this@HelloActivity)
         }
     }
@@ -43,23 +46,17 @@ class HelloActivity : BaseActivity() {
             }
 
             override fun onServiceConnected(name: ComponentName?, service: IBinder) {
-                connect = (service as MusicPlay.Connect)
+                connect = (service as PlayerConnection)
                 connect?.addObserver(this@HelloActivity, observer)
-                connect?.selectList(0,-1)
-                connect?.getList()
+
             }
         }
 
 
 
         if(PermissionManager.requestAllPermission(this@HelloActivity)){
-            bind()
+            NewPlayer.bind(this, connection)
         }
-    }
-    private fun bind(){
-        val intent = Intent(this, MusicPlay::class.java)
-        intent.action = MusicPlay.BIND
-        bindService(intent, connection!!, Context.BIND_AUTO_CREATE)
     }
 
 
@@ -79,11 +76,11 @@ class HelloActivity : BaseActivity() {
                 finish()
             }
         }
-        bind()
+        NewPlayer.bind(this, connection)
     }
 
     override fun onDestroy() {
-        unbindService(connection!!)
+        unbindService(connection)
         super.onDestroy()
     }
 }

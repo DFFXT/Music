@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 
 
 object WindowUtil {

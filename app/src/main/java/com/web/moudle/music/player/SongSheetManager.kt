@@ -1,6 +1,6 @@
 package com.web.moudle.music.player
 
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 import com.web.common.util.IOUtil
 import com.web.data.Music
 import com.web.moudle.music.player.bean.DiskObject
@@ -10,11 +10,11 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
-
+@Deprecated("")
 object SongSheetManager {
     private var songSheetList:SongSheetList?=null
 
-    private var mBasePath=MyApplication.context.filesDir.absolutePath+ File.separator+"sheet"
+    private var mBasePath= MyApplication.context.filesDir.absolutePath+ File.separator+"sheet"
         get(){
             val file= File(field)
             if(!file.exists()){

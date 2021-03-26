@@ -23,9 +23,11 @@ import com.web.data.InternetMusicForPlay
 import com.web.data.Music
 import com.web.misc.imageDraw.WaveDraw
 import com.web.moudle.lyrics.bean.LyricsLine
-import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.other.PlayerConfig
+import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.service.FileDownloadService
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
 import com.web.web.BuildConfig
@@ -40,7 +42,7 @@ import java.io.File
 
 @ObsoleteCoroutinesApi
 class LyricsActivity : BaseActivity() {
-    private var connect: MusicPlay.Connect? = null
+    private var connect: PlayerConnection? = null
     private var visualizer:Visualizer?=null
     private val list = ArrayList<LyricsLine>()
     private var lyricsPlug:LyricsSearchPlug?=null
@@ -51,12 +53,12 @@ class LyricsActivity : BaseActivity() {
         }
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            connect = service as MusicPlay.Connect
+            connect = service as PlayerConnection
             connect?.addObserver(this@LyricsActivity, observer)
             connect?.getPlayerInfo(this@LyricsActivity)
 
 
-            visualizer=Visualizer(connect?.mediaPlayId!!)
+            visualizer=Visualizer(connect?.getMediaSessionId()!!)
             visualizer!!.captureSize = Visualizer.getCaptureSizeRange()[0]
             visualizer!!.scalingMode = Visualizer.SCALING_MODE_NORMALIZED
             visualizer!!.setDataCaptureListener(object :Visualizer.OnDataCaptureListener{
@@ -86,7 +88,8 @@ class LyricsActivity : BaseActivity() {
     }
     private var observer: PlayerObserver = object : PlayerObserver() {
 
-        override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
+
+        override fun onLoad(music: Music?, maxTime: Int) {
             immediatelyShow = true
             val bitmap=connect?.config?.bitmap?:ResUtil.getBitmapFromResoucs(R.drawable.singer_default_icon)
             val mBitmap=bitmap.copy(bitmap.config,false)
@@ -101,36 +104,35 @@ class LyricsActivity : BaseActivity() {
                 layout_musicControl.card_love.alpha=1f
                 layout_musicControl.card_love.cardElevation=ViewUtil.dpToPx(2f).toFloat()
             }
-            if(music!!.song_id!=""){
+            if(!music?.song_id.isNullOrEmpty()){
                 card_comment.visibility=View.VISIBLE
             }else{
                 card_comment.visibility=View.GONE
             }
             loadLyrics(music)
-            play()
+            onPlay()
         }
 
-        override fun play() {
+        override fun onPlay() {
             layout_musicControl.iv_play.setImageResource(R.drawable.icon_play_white)
             tick.start()
         }
 
-        override fun pause() {
+        override fun onPause() {
             layout_musicControl.iv_play.setImageResource(R.drawable.icon_pause_white_fill)
             tick.stop()
         }
 
-        override fun currentTime(group: Int, child: Int, time: Int) {
+        override fun onCurrentTime(duration: Int, maxTime: Int) {
             if (immediatelyShow) {//**进入activity时需要立即同步
-                lv_lyrics.setCurrentTimeImmediately(time)
+                lv_lyrics.setCurrentTimeImmediately(duration)
                 immediatelyShow = false
             } else {
-                lv_lyrics.setCurrentTime(time)
+                lv_lyrics.setCurrentTime(duration)
             }
-
         }
 
-        override fun playTypeChanged(playType: PlayerConfig.PlayType?) {
+        override fun onPlayTypeChanged(playType: PlayerConfig.PlayType?) {
             layout_musicControl.iv_playType.setImageResource(when(playType){
                 PlayerConfig.PlayType.ALL_LOOP->R.drawable.music_type_all_loop
                 PlayerConfig.PlayType.ONE_LOOP->R.drawable.music_type_one_loop
@@ -141,7 +143,7 @@ class LyricsActivity : BaseActivity() {
             })
         }
 
-        override fun musicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
+        override fun onMusicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
             if(origin== PlayerConfig.MusicOrigin.INTERNET){
                 card_download.visibility=View.VISIBLE
             }else{
@@ -210,7 +212,7 @@ class LyricsActivity : BaseActivity() {
 
 
         layout_musicControl.iv_playType.setOnClickListener {
-            connect?.changePlayType()
+            connect?.changePlayType(connect!!.config.playType.next())
         }
         layout_musicControl.iv_love.setOnClickListener {
             val m= connect?.config?.music ?: return@setOnClickListener
@@ -224,7 +226,7 @@ class LyricsActivity : BaseActivity() {
         }
 
         layout_musicControl.next.setOnClickListener {
-            connect?.next()
+            connect?.next(false)
         }
         layout_musicControl.iv_play.setOnClickListener {
             connect?.changePlayerPlayingStatus()
@@ -272,10 +274,10 @@ class LyricsActivity : BaseActivity() {
             val music=connect!!.config.music
             if(connect!!.config.musicOrigin== PlayerConfig.MusicOrigin.INTERNET){
                 intent.type="text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT,music.path)
+                intent.putExtra(Intent.EXTRA_TEXT,music!!.path)
             }else{
                 intent.putExtra(Intent.EXTRA_STREAM,
-                        FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID,File(connect!!.config.music.path)))
+                        FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID,File(connect!!.config.music!!.path)))
                 intent.type="video/*"
             }
             startActivity(Intent.createChooser(intent,connect?.config?.music?.musicName+" - 分享"))
@@ -287,14 +289,14 @@ class LyricsActivity : BaseActivity() {
             if(lyricsPlug==null){
                 lyricsPlug= LyricsSearchPlug(this,connect!!)
             }
-            lyricsPlug?.showCenter(rootView,connect!!.config.music)
+            lyricsPlug?.showCenter(rootView,connect!!.config.music!!)
         }
 
 
 
 
-        intent = Intent(this, MusicPlay::class.java)
-        intent.action = MusicPlay.BIND
+        intent = Intent(this, NewPlayer::class.java)
+        intent.action = ActionControlPlug.BIND
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
 

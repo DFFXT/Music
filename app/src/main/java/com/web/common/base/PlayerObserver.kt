@@ -6,35 +6,19 @@ import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.music.player.other.PlayInterface
 
 open class PlayerObserver: PlayInterface {
-    override fun play() {
+    override fun onPlay() {
 
     }
 
-    override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
+    override fun onPlayTypeChanged(playType: PlayerConfig.PlayType?) {
 
     }
 
-    override fun pause() {
+    override fun onMusicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
 
     }
 
-    override fun currentTime(group: Int, child: Int, time: Int) {
-
-    }
-
-    override fun musicListChange(group: Int,child: Int,list: MutableList<MusicList<Music>>?) {
-
-    }
-
-    override fun playTypeChanged(playType: PlayerConfig.PlayType?) {
-
-    }
-
-    override fun musicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
-
-    }
-
-    override fun bufferingUpdate(percent: Int) {
+    override fun onBufferingUpdate(percent: Int) {
 
     }
 }

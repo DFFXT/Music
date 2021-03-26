@@ -18,14 +18,14 @@ import com.web.common.base.BaseActivity
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseGlideTarget
 import com.web.common.base.BaseViewHolder
-import com.web.common.constant.Constant
+import com.web.common.constant.AppConfig
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
-import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.preference.SP
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.plug.LockScreenPlug
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_setting_lockscreen.*
 import java.io.File
@@ -35,7 +35,7 @@ import java.io.FileOutputStream
 class LockScreenSettingActivity : BaseActivity() {
     private val colorList = arrayListOf<Int>()
 
-    private var mColor = SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor, ResUtil.getColor(R.color.themeColor))
+    private var mColor = AppConfig.lockScreenBgColor
 
     init {
         colorList.add(ResUtil.getColor(R.color.themeColor))
@@ -67,9 +67,7 @@ class LockScreenSettingActivity : BaseActivity() {
         switchLockScreenMode(getMode())
         sw_s_lock_switch.setOnCheckedChangeListener { _, res ->
             setNoLockScreen(!res)
-            val intent = Intent(this@LockScreenSettingActivity, MusicPlay::class.java)
-            intent.action = MusicPlay.ACTION_LOCKSCREEN
-            startService(intent)
+            LockScreenPlug.lockScreen(this)
         }
         sw_s_lock_switch.isChecked = !getNoLockScreen()
         rv_s_lock_colorList.adapter = object : BaseAdapter<Int>(colorList) {
@@ -139,7 +137,7 @@ class LockScreenSettingActivity : BaseActivity() {
      * 颜色选择
      */
     private fun colorPick() {
-        val colorPickerDialog = ColorPickerDialog(this, SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor))
+        val colorPickerDialog = ColorPickerDialog(this, AppConfig.lockScreenBgColor)
         val array = IntArray(5)
         array[0] = Color.WHITE
         array[1] = Color.BLUE
@@ -219,37 +217,29 @@ class LockScreenSettingActivity : BaseActivity() {
         }
 
         @JvmStatic
-        fun getNoLockScreen(): Boolean {
-            return SP.getBoolean(Constant.spName, Constant.SpKey.noLockScreen)
-        }
+        fun getNoLockScreen(): Boolean = AppConfig.noLockScreen
         @JvmStatic
         fun setNoLockScreen(noLock: Boolean) {
-            SP.putValue(Constant.spName, Constant.SpKey.noLockScreen, noLock)
+            AppConfig.noLockScreen = noLock
         }
         @JvmStatic
-        fun getMode(): String {
-            return SP.getString(Constant.spName, Constant.SpKey.lockScreenBgMode, BG_MODE_COLOR)
-        }
+        fun getMode(): String = AppConfig.lockScreenBgMode
         @JvmStatic
         fun setMode(mode: String) {
-            SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgMode, mode)
+            AppConfig.lockScreenBgMode = mode
         }
         @JvmStatic
         fun setBgColor(color: Int) {
-            SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgColor, color)
+            AppConfig.lockScreenBgColor = color
         }
         @JvmStatic
-        fun getBgColor(): Int {
-            return SP.getInt(Constant.spName, Constant.SpKey.lockScreenBgColor, ResUtil.getColor(R.color.themeColor))
-        }
+        fun getBgColor(): Int = AppConfig.lockScreenBgColor
         @JvmStatic
         fun setBgImagePath(path: String) {
-            SP.putValue(Constant.spName, Constant.SpKey.lockScreenBgImagePath, path)
+            AppConfig.lockScreenBgImagePath = path
         }
         @JvmStatic
-        fun getBgImagePath(): String {
-            return SP.getString(Constant.spName, Constant.SpKey.lockScreenBgImagePath)
-        }
+        fun getBgImagePath(): String = AppConfig.lockScreenBgImagePath?:""
     }
 
 

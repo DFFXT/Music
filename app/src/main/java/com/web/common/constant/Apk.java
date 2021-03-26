@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.view.View;
 
-import com.web.common.base.MyApplication;
+import com.web.app.MyApplication;
 import com.web.common.bean.Version;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;

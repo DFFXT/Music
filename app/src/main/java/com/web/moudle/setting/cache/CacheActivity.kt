@@ -5,15 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import com.web.common.base.BaseActivity
-import com.web.common.constant.Constant
+import com.web.common.constant.AppConfig
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.data.MusicCache
 import com.web.misc.ConfirmDialog
-import com.web.moudle.music.player.MusicPlay
-import com.web.moudle.net.proxy.InternetProxy
-import com.web.moudle.preference.SP
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.chooser.LocalChooserActivity
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_cache.*
@@ -61,9 +60,7 @@ class CacheActivity:BaseActivity() {
         //**清空音乐信息
         twd_clearAllMusic.setOnClickListener { v ->
             buildConfirm(v,ResUtil.getString(R.string.setting_clearAllMusicAlert)){
-                val intent = Intent(this, MusicPlay::class.java)
-                intent.action = MusicPlay.ACTION_ClEAR_ALL_MUSIC
-                startService(intent)
+                ActionControlPlug.clear(this)
             }
         }
         twd_selectCachePath.setOnClickListener {
@@ -145,32 +142,25 @@ class CacheActivity:BaseActivity() {
         }
 
         @JvmStatic
-        fun getCacheEnable():Boolean{
-            return SP.getBoolean(Constant.spName,Constant.SpKey.cacheEnable,false)
-        }
+        fun getCacheEnable():Boolean = AppConfig.cacheEnable
         @JvmStatic
         fun setCacheEnable(enable:Boolean){
-            InternetProxy.cacheEnable=enable
-            SP.putValue(Constant.spName,Constant.SpKey.cacheEnable,enable)
+          AppConfig.cacheEnable = enable
         }
 
         @JvmStatic
-        fun getCustomerCachePath():String{
-            return SP.getString(Constant.spName,Constant.SpKey.customerCachePath,Constant.LocalConfig.musicCachePath)
-        }
+        fun getCustomerCachePath():String = AppConfig.customerCachePath
         @JvmStatic
         fun setCustomerCachePath(path:String){
-            SP.putValue(Constant.spName,Constant.SpKey.customerCachePath,path)
+            AppConfig.customerCachePath = path
         }
 
         @JvmStatic
-        fun getCustomerDownloadPath():String{
-            return SP.getString(Constant.spName,Constant.SpKey.customerDownloadPath,Constant.LocalConfig.musicDownloadPath)
-        }
+        fun getCustomerDownloadPath():String = AppConfig.customerDownloadPath
 
         @JvmStatic
         fun setCustomerDownloadPath(path:String){
-            SP.putValue(Constant.spName,Constant.SpKey.customerDownloadPath,path)
+            AppConfig.customerDownloadPath = path
         }
 
         @JvmStatic

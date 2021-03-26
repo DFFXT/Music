@@ -8,13 +8,14 @@ import com.web.data.MusicList
 import kotlin.collections.HashMap
 
 class PlayInterfaceManager: PlayInterface {
-    private val observerList=HashMap<LifecycleOwner?,PlayInterface>()
+    private val observerList=HashMap<LifecycleOwner?,ArrayList<PlayInterface>>()
     fun removeObserver(owner: LifecycleOwner?){
         observerList.remove(owner)
     }
     fun addObserver(owner:LifecycleOwner?,observer: PlayInterface){
-        if(!this.observerList.containsKey(owner)){
-            observerList[owner] = observer
+        this.observerList[owner] = this.observerList[owner]?: ArrayList()
+        if(!this.observerList[owner]!!.contains(observer)){
+            observerList[owner]!!.add(observer)
         }
 
 
@@ -29,71 +30,73 @@ class PlayInterfaceManager: PlayInterface {
         })
     }
     fun play(owner: LifecycleOwner?){
-        observerList[owner]?.play()
+        observerList[owner]?.forEach {
+            it.onPlay()
+        }
     }
-    override fun play() {
+    override fun onPlay() {
         observerList.forEach {
-            it.value.play()
+            it.value.forEach { it.onPlay() }
         }
     }
 
     fun load(owner: LifecycleOwner?,groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
-        observerList[owner]?.load(groupIndex,childIndex,music,maxTime)
+        //observerList[owner]?.onLoad(groupIndex,childIndex,music,maxTime)
     }
-    override fun load(groupIndex: Int, childIndex: Int, music: Music?, maxTime: Int) {
+    override fun onLoad(music: Music?, maxTime: Int) {
         observerList.forEach {
-            it.value.load(groupIndex,childIndex,music,maxTime)
+            it.value.forEach { it.onLoad(music,maxTime) }
         }
     }
     fun pause(owner: LifecycleOwner?){
-        observerList[owner]?.pause()
+        observerList[owner]?.forEach { it.onPause() }
     }
-    override fun pause() {
+    override fun onPause() {
         observerList.forEach {
-            it.value.pause()
+            it.value.forEach { it.onPause() }
         }
     }
     fun currentTime(owner: LifecycleOwner?,group: Int, child: Int, time: Int){
-        observerList[owner]?.currentTime(group, child, time)
+        //observerList[owner]?.onCurrentTime(group, child, time)
     }
-    override fun currentTime(group: Int, child: Int, time: Int) {
+    override fun onCurrentTime(duration:Int, maxTime:Int) {
         observerList.forEach {
-            it.value.currentTime(group, child, time)
+            it.value.forEach { it.onCurrentTime(duration,maxTime) }
         }
     }
-    fun musicListChange(owner: LifecycleOwner?,group: Int,child: Int, list: MutableList<MusicList<Music>>?){
-        observerList[owner]?.musicListChange(group,child, list)
+    fun onMusicListChange(owner: LifecycleOwner?, list: List<Music>?){
+        observerList[owner]?.forEach { it.onMusicListChange(list) }
     }
 
-    override fun musicListChange(group: Int,child: Int, list: MutableList<MusicList<Music>>?) {
+    override fun onMusicListChange(list: MutableList<Music>?) {
         observerList.forEach {
-            it.value.musicListChange(group,child, list)
+            it.value.forEach { it.onMusicListChange(list) }
         }
     }
 
     fun playTypeChanged(owner: LifecycleOwner?,playType: PlayerConfig.PlayType?){
-        observerList[owner]?.playTypeChanged(playType)
+        observerList[owner]?.forEach { it.onPlayTypeChanged(playType) }
     }
-    override fun playTypeChanged(playType: PlayerConfig.PlayType?) {
+    override fun onPlayTypeChanged(playType: PlayerConfig.PlayType?) {
         observerList.forEach {
-            it.value.playTypeChanged(playType)
+            it.value.forEach { it.onPlayTypeChanged(playType) }
         }
     }
 
     fun musicOriginChanged(owner: LifecycleOwner?,origin: PlayerConfig.MusicOrigin?) {
-        observerList[owner]?.musicOriginChanged(origin)
+        observerList[owner]?.forEach { it.onMusicOriginChanged(origin) }
     }
-    override fun musicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
+    override fun onMusicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
         observerList.forEach {
-            it.value.musicOriginChanged(origin)
+            it.value.forEach { it.onMusicOriginChanged(origin) }
         }
     }
     fun bufferingUpdate(owner: LifecycleOwner?,percent: Int) {
-        observerList[owner]?.bufferingUpdate(percent)
+        observerList[owner]?.forEach { it.onBufferingUpdate(percent) }
     }
-    override fun bufferingUpdate(percent: Int) {
+    override fun onBufferingUpdate(percent: Int) {
         observerList.forEach {
-            it.value.bufferingUpdate(percent)
+            it.value.forEach { it.onBufferingUpdate(percent) }
         }
     }
 }

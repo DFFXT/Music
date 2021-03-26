@@ -1,24 +1,17 @@
 package com.web.config;
 
-import android.content.Context;
-import android.os.Message;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-
-import com.web.common.constant.Constant;
-import com.web.data.InternetMusicDetail;
-import com.web.data.Music;
-import com.web.moudle.music.player.MusicPlay;
-import com.web.moudle.setting.cache.CacheActivity;
-
-import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Size;
 
+import com.web.common.constant.Constant;
+import com.web.data.InternetMusicDetail;
+import com.web.moudle.setting.cache.CacheActivity;
+
+import java.io.File;
+
 public class Shortcut {
-    public static MusicPlay.Connect connect;
     public static boolean fileExsist(String path){
         if(TextUtils.isEmpty(path))return false;
         File file=new File(path);

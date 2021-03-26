@@ -13,7 +13,7 @@ import android.widget.SeekBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.web.common.base.BaseActivity
-import com.web.common.base.MyApplication
+import com.web.app.MyApplication
 import com.web.common.base.errorClickLinsten
 import com.web.common.base.showError
 import com.web.common.tool.MToast
@@ -177,8 +177,8 @@ class VideoEntryActivity : BaseActivity() {
      * 视频大小切换
      */
     private fun sizeChanged(){
-        val width=MyApplication.context.resources.displayMetrics.widthPixels
-        val height=MyApplication.context.resources.displayMetrics.heightPixels
+        val width= MyApplication.context.resources.displayMetrics.widthPixels
+        val height= MyApplication.context.resources.displayMetrics.heightPixels
         var vvW: Float
         val vvH: Float
         if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE){//**横屏

@@ -16,7 +16,8 @@ import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.DrawableItemDecoration
 import com.web.misc.imageDraw.MinSizeOnMeasure
-import com.web.moudle.music.player.MusicPlay
+import com.web.moudle.music.player.NewPlayer
+import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.musicEntry.adapter.CommentAdapter
 import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
@@ -27,7 +28,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class CommentDialog (private val ctx:FragmentActivity,private val connect: MusicPlay.Connect){
+class CommentDialog (private val ctx:FragmentActivity,private val connect: PlayerConnection){
     private var dialog:BottomSheetDialog?=null
 
     private var songId=""
@@ -50,11 +51,11 @@ class CommentDialog (private val ctx:FragmentActivity,private val connect: Music
 
 
 
-        if(songId!=connect.config!!.music.song_id){
+        if(songId!=connect.config.music?.song_id){
             page=0
             commentList.clear()
             adapter.notifyDataSetChanged()
-            songId=connect.config!!.music.song_id
+            songId=connect.config.music!!.song_id
             model?.getComment(songId,page,pageSize)
             GlobalScope.launch(Dispatchers.Main) {
                 delay(100)
