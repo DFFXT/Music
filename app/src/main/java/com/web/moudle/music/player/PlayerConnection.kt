@@ -34,7 +34,8 @@ class PlayerConnection(private val ctx: Context,
         player.setOnBufferingUpdateListener { p: MediaPlayer?, percent: Int -> playInterfaceManager.onBufferingUpdate(percent) }
         player.setOnPreparedListener {
             config.isPrepared = true
-            ActionControlPlug.floatWindowChange(ctx)
+            //ActionControlPlug.floatWindowChange(ctx)
+
             if (player.autoPlay){
                 player.start()
                 playInterfaceManager.onPlay()

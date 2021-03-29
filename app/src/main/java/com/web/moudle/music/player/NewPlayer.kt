@@ -31,13 +31,15 @@ class NewPlayer : Service() {
     override fun onCreate() {
         super.onCreate()
         //插件加载
+        val floatWindowPlug = FloatWindowPlug(control)
         val playTypePlug = PlayTypePlug(control, player, musicDataSource)
         plugDispatcher.add(LockScreenPlug(this))
         plugDispatcher.add(HeadSetPlug(control))
         plugDispatcher.add(PhoneStatePlug(control))
         plugDispatcher.add(ActionControlPlug(control, player, playTypePlug, musicDispatcher, musicDataSource))
-        plugDispatcher.add(FloatWindowPlug(control))
+        plugDispatcher.add(floatWindowPlug)
         plugDispatcher.add(equalizerPlug)
+        musicDispatcher.addObserver(null, floatWindowPlug)
         musicDispatcher.addObserver(null, NotificationPlug(this, player.config))
         musicDispatcher.addObserver(null, musicDataSource)
         TickerPlug(musicDispatcher, player).let {
