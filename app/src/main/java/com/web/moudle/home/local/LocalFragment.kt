@@ -58,7 +58,7 @@ class LocalFragment : BaseFragment() {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder) {
             connect=service as PlayerConnection
-            connect?.addObserver(activity!!,observer)
+            connect?.addObserver(this@LocalFragment, observer)
         }
     }
 
@@ -66,9 +66,9 @@ class LocalFragment : BaseFragment() {
         val intent=Intent(context, NewPlayer::class.java)
         intent.action= ActionControlPlug.BIND
         context?.bindService(intent,connection,Context.BIND_AUTO_CREATE)
-        rootView.topBar.setEndImageListener(View.OnClickListener {
+        rootView.topBar.setEndImageListener {
             SettingActivity.actionStart(context)
-        })
+        }
 
         rootView.layout_localBg.setOnClickListener {
             MusicActivity.actionStart(context)

@@ -29,10 +29,9 @@ import java.util.concurrent.locks.ReentrantLock
 
 class ActionControlPlug(private val control: PlayerConnection,
                         private val player: CorePlayer,
-                        private val playTypePlug: PlayTypePlug,
                         private val playInterfaceManager: PlayInterfaceManager,
                         private val dataSource: MusicDataSource) : IntentReceiver {
-
+    private val playTypePlug = PlayTypePlug(control, player, dataSource)
     override fun dispatch(intent: Intent) {
         when (intent.action) {
             ACTION_NEXT ->

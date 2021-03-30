@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import androidx.lifecycle.LifecycleOwner
 import com.web.moudle.music.player.other.MusicDataSource
 import com.web.moudle.music.player.other.PlayInterfaceManager
 import com.web.moudle.music.player.plug.*
@@ -18,7 +17,6 @@ class NewPlayer : Service() {
     private val musicDispatcher = PlayInterfaceManager()
     private val player = CorePlayer(musicDispatcher)
     private val musicDataSource = MusicDataSource(player.config)
-    private val plugDispatcher = PlugDispatcher()
     private val equalizerPlug = EqualizerPlug(player)
     private val control: PlayerConnection by lazy {
         GlobalScope.launch(Dispatchers.IO) {
@@ -30,28 +28,21 @@ class NewPlayer : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        //插件加载
-        val floatWindowPlug = FloatWindowPlug(control)
-        val playTypePlug = PlayTypePlug(control, player, musicDataSource)
-        plugDispatcher.add(LockScreenPlug(this))
-        plugDispatcher.add(HeadSetPlug(control))
-        plugDispatcher.add(PhoneStatePlug(control))
-        plugDispatcher.add(ActionControlPlug(control, player, playTypePlug, musicDispatcher, musicDataSource))
-        plugDispatcher.add(floatWindowPlug)
-        plugDispatcher.add(equalizerPlug)
-        musicDispatcher.addObserver(null, floatWindowPlug)
-        musicDispatcher.addObserver(null, NotificationPlug(this, player.config))
-        musicDispatcher.addObserver(null, musicDataSource)
-        TickerPlug(musicDispatcher, player).let {
-            plugDispatcher.add(it)
-            musicDispatcher.addObserver(null, it)
-        }
-        plugDispatcher.onCreate()
+        musicDispatcher.add(null, LockScreenPlug(this))
+        musicDispatcher.add(null, HeadSetPlug(control))
+        musicDispatcher.add(null, PhoneStatePlug(control))
+        musicDispatcher.add(null, ActionControlPlug(control, player, musicDispatcher, musicDataSource))
+        musicDispatcher.add(null, FloatWindowPlug(control))
+        musicDispatcher.add(null, equalizerPlug)
+        musicDispatcher.add(null, NotificationPlug(this, player.config))
+        musicDispatcher.add(null, musicDataSource)
+        musicDispatcher.add(null, TickerPlug(musicDispatcher, player))
+        musicDispatcher.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent != null){
-            plugDispatcher.dispatch(intent)
+        if (intent != null) {
+            musicDispatcher.dispatch(intent)
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -62,7 +53,7 @@ class NewPlayer : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        plugDispatcher.onDestroy()
+        musicDispatcher.onDestroy()
     }
 
     companion object {
