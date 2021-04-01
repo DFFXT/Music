@@ -232,8 +232,8 @@ fun View.showContent(){
  */
 fun String.isStrictEmpty():Boolean{
     val string=toString()
-    for (i in 0 until string.length) {
-        if (string[i] != ' ') return false
+    for (element in string) {
+        if (element != ' ') return false
     }
     return true
 }

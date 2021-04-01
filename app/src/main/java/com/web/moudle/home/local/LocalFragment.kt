@@ -14,7 +14,6 @@ import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.data.Music
-import com.web.data.MusicList
 import com.web.misc.GapItemDecoration
 import com.web.misc.InputDialog
 import com.web.moudle.home.HomePageActivity

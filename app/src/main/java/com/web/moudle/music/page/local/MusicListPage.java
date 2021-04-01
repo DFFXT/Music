@@ -323,7 +323,7 @@ public class MusicListPage extends BaseMusicPage {
             return null;
         });
         adapter.setAddListener((v, position) -> {
-            connect.play(position, PlayerConfig.MusicOrigin.WAIT);
+            connect.addWait(position);
             addAnimation(v);
             return null;
         });
