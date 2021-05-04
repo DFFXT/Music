@@ -10,7 +10,6 @@ interface IMusicControl {
     fun play()
     fun play(index: Int,origin: PlayerConfig.MusicOrigin)
     fun play(music: Music)
-    fun addWait(index: Int)
     fun next(auto:Boolean)
     fun pre()
     fun getCurrentMusic():Music?

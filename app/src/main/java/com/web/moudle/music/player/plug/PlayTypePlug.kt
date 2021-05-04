@@ -20,9 +20,6 @@ class PlayTypePlug(private val control: IMusicControl,
     val randomSystem = RandomSystem()
     private val config = player.config
 
-    override fun addWait(index: Int) {
-        TODO("Not yet implemented")
-    }
     override fun play(index: Int, origin: PlayerConfig.MusicOrigin) {
         TODO("Not yet implemented")
     }

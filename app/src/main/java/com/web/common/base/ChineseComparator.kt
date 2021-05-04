@@ -31,10 +31,10 @@ object ChineseComparator : Comparator<String> {
             var c1 = n1
             var c2 = n2
             if (n1.matches(chinese.toRegex())) {//**中文
-                c1 = PinyinHelper.toHanyuPinyinStringArray(n1[0])?.getOrElse(0) { "*" }?:"*"
+                c1 = PinyinHelper.toHanyuPinyinStringArray(n1[0]).getOrElse(0) { "*" }
             }
             if (n2.matches(chinese.toRegex())) {
-                c2 = PinyinHelper.toHanyuPinyinStringArray(n2[0])?.getOrElse(0) { "*" }?:"*"
+                c2 = PinyinHelper.toHanyuPinyinStringArray(n2[0]).getOrElse(0) { "*" }
             }
             return Collator.getInstance(Locale.CHINA).compare(c1, c2)
         } else if (valid1) {

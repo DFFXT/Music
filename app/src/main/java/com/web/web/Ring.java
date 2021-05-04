@@ -14,6 +14,7 @@ import android.os.Bundle;
 public class Ring extends Activity{
 	public void onCreate(Bundle b){
 		super.onCreate(b);
+		int a;
 		setContentView(R.layout.ring);
 
 	}

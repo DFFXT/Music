@@ -98,20 +98,15 @@ class PlayerConnection(private val ctx: Context,
     }
 
     override fun play(index: Int, origin: PlayerConfig.MusicOrigin) {
-        if (origin == PlayerConfig.MusicOrigin.WAIT){
-            dataSource.setIndex(index)
-        }else{
-            dataSource.addMusic(dataSource.localList[index], origin)
+        if (config.musicOrigin != origin){
+            config.musicOrigin = origin
+            playInterfaceManager.onMusicOriginChanged(config.musicOrigin)
         }
+        dataSource.addMusic(dataSource.localList[index], origin)
         dataSource.getCurrentMusic()?.let {
-            loadMusic(it, true)
-        }
-    }
-
-    override fun addWait(index: Int) {
-        dataSource.addMusic(dataSource.localList[index], PlayerConfig.MusicOrigin.WAIT)
-        if (dataSource.size == 1){
-            loadMusic(music = dataSource[0], play = true)
+            if (origin != PlayerConfig.MusicOrigin.WAIT || dataSource.size == 1){
+                loadMusic(it, true)
+            }
         }
     }
 

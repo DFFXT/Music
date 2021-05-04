@@ -23,9 +23,6 @@ class MusicDataSource(private val config: PlayerConfig):MutableList<Music> by Ar
         //todo 由于接口问题目前不支持在线音乐了
     }
     fun addMusic(music: Music, origin: PlayerConfig.MusicOrigin){
-        if (config.musicOrigin != origin){
-            config.musicOrigin = origin
-        }
         when(origin){
             PlayerConfig.MusicOrigin.WAIT ->{
                 add(music)
@@ -42,10 +39,6 @@ class MusicDataSource(private val config: PlayerConfig):MutableList<Music> by Ar
                 setInternetMusic(music)
             }
         }
-    }
-
-    fun setIndex(index: Int){
-        this.index = index;
     }
 
     fun getCurrentMusic():Music? = getOrNull(index)
