@@ -154,7 +154,6 @@ class PlayerConnection(private val ctx: Context,
     fun loadMusic(music: Music, play:Boolean) {
         config.isHasInit = true
         config.setMusic(music)
-        config.setBitmapPath(music.singer)
         player.reset()
         try {
             config.isPrepared = false

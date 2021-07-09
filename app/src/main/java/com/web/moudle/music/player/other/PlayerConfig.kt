@@ -2,6 +2,7 @@ package com.web.moudle.music.player.other
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.mpatric.mp3agic.Mp3File
 import com.web.config.GetFiles
 import com.web.data.Music
 import java.io.File
@@ -26,18 +27,37 @@ class PlayerConfig(private val playInterfaceManager: PlayInterfaceManager) {
         if (this.music !== music) {
             this.music = music
             bitmap = null
+            setBitmapPath(music?.singer)
         }
     }
 
-    fun setBitmapPath(singerName: String) {
+    private fun setBitmapPath(singerName: String?) {
         try {
             val file = File(GetFiles.singerPath + singerName + ".png")
             if (file.exists() && file.isFile) { //---存在图片
                 val fis = FileInputStream(file)
                 bitmap = BitmapFactory.decodeStream(fis)
+            }else{
+                tryGetBitmap()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+    private fun tryGetBitmap(){
+        music?.let {
+            try {
+                val mp3 = Mp3File(it.path)
+                if (mp3.hasId3v2Tag()){
+                    val img = mp3.id3v2Tag.albumImage
+                    if (img != null){
+                        bitmap = BitmapFactory.decodeByteArray(img,0,img.size)
+                    }
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+
         }
     }
 

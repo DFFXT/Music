@@ -9,6 +9,7 @@ import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.View
 import androidx.core.content.FileProvider
+import com.mpatric.mp3agic.Mp3File
 import com.web.common.base.*
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.Ticker
@@ -39,6 +40,7 @@ import kotlinx.android.synthetic.main.music_lyrics_view.topBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.File
+import kotlin.Exception
 
 @ObsoleteCoroutinesApi
 class LyricsActivity : BaseActivity() {
@@ -352,15 +354,26 @@ class LyricsActivity : BaseActivity() {
         if (Shortcut.fileExsist(music.lyricsPath)) {//---存在歌词
             val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(music.lyricsPath))
             list.addAll(lyricsAnalysis.lyrics)
-            iv_searchLyrics.visibility=View.GONE
         } else {//**没找到歌词
-            /*val line = LyricsLine()
-            line.time = 0
-            line.line = ResUtil.getString(R.string.lyrics_noLyrics)
-            list.add(line)*/
+            try {
+                val mp3 = Mp3File(music.path)
+                if (mp3.hasId3v2Tag()){
+                    val lyrics = mp3.id3v2Tag.lyrics
+                    if (!lyrics.isNullOrEmpty()){
+                        val lyricsAnalysis = LyricsAnalysis(lyrics)
+                        list.addAll(lyricsAnalysis.lyrics)
+                    }
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+
+        }
+        if (list.isNotEmpty()){
+            iv_searchLyrics.visibility=View.GONE
+        }else{
             iv_searchLyrics.visibility=View.VISIBLE
         }
-
         lv_lyrics!!.lyrics = list
     }
 
