@@ -41,7 +41,7 @@ import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.interf.ListSelectListener;
 import com.web.moudle.music.page.local.control.ui.SelectorListAlert;
 import com.web.moudle.music.player.NewPlayer;
-import com.web.moudle.music.player.PlayerConnection;
+import com.web.moudle.music.player.other.IMusicControl;
 import com.web.moudle.music.player.other.PlayerConfig;
 import com.web.moudle.music.player.plug.ActionControlPlug;
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
@@ -69,7 +69,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private ViewPager viewPager;
 
     private MusicListPage musicListPage;
-    private PlayerConnection connect;
+    private IMusicControl connect;
     private final List<BaseMusicPage> pageList = new ArrayList<>();
 
     private SelectorListAlert listAlert;
@@ -86,10 +86,10 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
                 songName.setText(music.getMusicName());
                 singer.setText(music.getSinger());
             }
-            if (connect.getConfig().getBitmap() == null) {
+            if (PlayerConfig.INSTANCE.getBitmap() == null) {
                 iv_singerIcon.setImageResource(R.drawable.singer_default_icon);
             } else {
-                iv_singerIcon.setImageBitmap(connect.getConfig().getBitmap());
+                iv_singerIcon.setImageBitmap(PlayerConfig.INSTANCE.getBitmap());
             }
             musicListPage.loadMusic(connect.getDataSource().getLocalIndex());
         }
@@ -97,7 +97,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onPlay() {
             pause.setImageResource(R.drawable.icon_play_black);
-            if (listAlert != null && connect.getConfig().getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {
+            if (listAlert != null && PlayerConfig.INSTANCE.getMusicOrigin() == PlayerConfig.MusicOrigin.WAIT) {
                 listAlert.setIndex(connect.getDataSource().getIndex());
             }
         }
@@ -284,7 +284,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
 
         View v = findViewById(R.id.musicControlBox);
         v.findViewById(R.id.iv_singerIcon).setOnClickListener(view -> {
-            if (connect.getConfig().getMusic() != null){
+            if (PlayerConfig.INSTANCE.getMusic() != null){
                 LyricsActivity.actionStart(this);
             }
 
@@ -339,11 +339,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         bindService(intent, serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                connect = (PlayerConnection) service;
+                connect = (IMusicControl) service;
                 connect.addObserver(MusicActivity.this, observer);
                 getIntentData();//*************获取输入数据
                 for (BaseMusicPage page : pageList) {
-                    page.setConnect(connect);
+                    page.setConnect(service);
                 }
                 connect.getPlayerInfo(MusicActivity.this);//**获取播放器状态
             }
@@ -429,7 +429,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             }
             break;
             case R.id.musicplay_type: {
-                connect.changePlayType(connect.getConfig().getPlayType().next());
+                connect.changePlayType(PlayerConfig.INSTANCE.getPlayType().next());
             }
             break;
             case R.id.subSettingBox:
@@ -446,7 +446,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             }
             break;
             case R.id.musicOrigin: {
-                if (connect.getConfig().getMusicOrigin() != PlayerConfig.MusicOrigin.WAIT) return;
+                if (PlayerConfig.INSTANCE.getMusicOrigin() != PlayerConfig.MusicOrigin.WAIT) return;
                 if (listAlert == null) {
                     listAlert = new SelectorListAlert(this, ResUtil.getString(R.string.playList));
                 }

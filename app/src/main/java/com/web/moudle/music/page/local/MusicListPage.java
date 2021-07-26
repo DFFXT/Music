@@ -26,11 +26,8 @@ import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.adapter.IndexBarAdapter;
 import com.web.moudle.music.page.local.control.adapter.LocalMusicAdapter;
-import com.web.moudle.music.page.local.control.ui.SheetCreateAlert;
-import com.web.moudle.music.player.NewPlayer;
-import com.web.moudle.music.player.PlayerConnection;
-import com.web.moudle.music.player.SongSheetManager;
-import com.web.moudle.music.player.bean.SongSheet;
+import com.web.moudle.music.page.local.control.ui.LocalMusicDetailWindow;
+import com.web.moudle.music.player.other.IMusicControl;
 import com.web.moudle.music.player.other.PlayerConfig;
 import com.web.moudle.music.player.plug.ActionControlPlug;
 import com.web.web.R;
@@ -44,7 +41,7 @@ public class MusicListPage extends BaseMusicPage {
     private final ArrayList<Music> data = new ArrayList<>();
     private RecyclerView rv_musicList;
     private LocalMusicAdapter adapter;
-    private PlayerConnection connect;
+    private IMusicControl connect;
     private ToolsBar toolsBar;
     private View iv_add;
 
@@ -142,44 +139,21 @@ public class MusicListPage extends BaseMusicPage {
      * @param music music
      */
     private void showDetail(Music music, int index) {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_music_detail, null);
-        BasePopupWindow popupWindow = new BasePopupWindow(rv_musicList.getContext(), v);
-
-        TextView tv_abPath = v.findViewById(R.id.tv_abPath);
-        tv_abPath.setText(music.getPath());
-
-        ((TextView) v.findViewById(R.id.tv_duration)).setText(ResUtil.timeFormat("mm:ss", music.getDuration()));
-        ((TextView) v.findViewById(R.id.tv_size)).setText(ResUtil.getFileSize(music.getSize()));
-
-        InputItem ii_name = v.findViewById(R.id.layout_musicName);
-        ii_name.setText(music.getMusicName());
-        ii_name.setListenerSave(text -> {
-            if (!text.equals(music.getMusicName()) && music.rename(text, music.getSinger())) {
-                adapter.notifyItemChanged(index);
-                tv_abPath.setText(music.getPath());
-                //**修改的是当前音乐需要重新load
-                if (music == connect.getConfig().getMusic()) {
-                    connect.getPlayerInfo(null);
-                }
+        new LocalMusicDetailWindow(music, ()->{
+            adapter.notifyItemChanged(index);
+            //**修改的是当前音乐需要重新load
+            if (music == PlayerConfig.INSTANCE.getMusic()) {
+                connect.getPlayerInfo(null);
             }
-            return music.getMusicName();
-        });
-
-        InputItem ii_artist = v.findViewById(R.id.layout_artistName);
-        ii_artist.setText(music.getSinger());
-        ii_artist.setListenerSave(text -> {
-            if (!text.equals(music.getSinger()) && music.rename(music.getMusicName(), text)) {
-                adapter.notifyItemChanged(index);
-                //**修改的是当前音乐需要重新load
-                if (music == connect.getConfig().getMusic()) {
-                    connect.getPlayerInfo(null);
-                }
-                tv_abPath.setText(music.getPath());
+            return null;
+        }, ()->{
+            adapter.notifyItemChanged(index);
+            //**修改的是当前音乐需要重新load
+            if (music == PlayerConfig.INSTANCE.getMusic()) {
+                connect.getPlayerInfo(null);
             }
-            return music.getSinger();
-        });
-        popupWindow.show(rv_musicList);
-
+            return null;
+        }).show(getParentFragmentManager(), null);
     }
 
     /**
@@ -241,7 +215,7 @@ public class MusicListPage extends BaseMusicPage {
     @Override
     public void setConnect(@NonNull IBinder connect) {
         if (this.connect == null) {
-            this.connect = (PlayerConnection) connect;
+            this.connect = (IMusicControl) connect;
         }
 
     }

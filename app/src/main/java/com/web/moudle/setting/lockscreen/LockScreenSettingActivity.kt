@@ -81,7 +81,7 @@ class LockScreenSettingActivity : BaseActivity() {
                 return BaseViewHolder(v)
             }
 
-            override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Int?) {
+            override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Int) {
                 (holder.itemView as ImageView).setImageDrawable(ColorDrawable(item!!))
                 holder.itemView.setOnClickListener {
                     view_s_lock_colorSelected.setImageDrawable(ColorDrawable(colorList[position]))

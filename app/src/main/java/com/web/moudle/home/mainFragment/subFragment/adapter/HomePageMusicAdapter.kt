@@ -14,7 +14,7 @@ import com.web.web.R
 
 class HomePageMusicAdapter:BaseAdapter<HomePageMusic>() {
     var itemClick:((item:HomePageMusic,index:Int)->Unit)?=null
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: HomePageMusic?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: HomePageMusic) {
         if(item==null)return
         holder.bindImage(R.id.iv_musicIcon,R.drawable.def_song_sheet_icon,item.pic_big)
         holder.bindText(R.id.tv_musicName,item.title)

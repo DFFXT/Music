@@ -9,7 +9,7 @@ import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.web.R
 
 class SongSheetInnerAdapter():BaseAdapter<SongSheetItem>() {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SongSheetItem?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SongSheetItem) {
         if(item==null)return
         holder.bindImage(R.id.iv_sheetIcon,R.drawable.def_song_sheet_icon,item.list_pic_small)
         holder.bindText(R.id.tv_sheetName,item.title)

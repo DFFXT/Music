@@ -19,7 +19,7 @@ open class SingleTextAdapter(list: List<String>?) : BaseAdapter<String>(list) {
     var itemClickListener: ((View?, Int) -> Unit)? = null
     var itemLongClick: ((View, Int) -> Boolean)? = null
     private val padding = ViewUtil.dpToPx(10f)
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String) {
         (holder.itemView as TextView).text = item
         if (position == selectIndex) {
             selectRender?.invoke(holder, position)

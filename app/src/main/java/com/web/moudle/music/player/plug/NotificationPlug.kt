@@ -6,7 +6,8 @@ import com.web.moudle.music.player.other.PlayInterface
 import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.notification.MusicNotification
 
-class NotificationPlug(service: Service, private val config: PlayerConfig) : PlayInterface {
+class NotificationPlug(service: Service) : PlayInterface {
+    private val config = PlayerConfig
     private val notification by lazy { MusicNotification(service) }
     override fun onPlay() {
         notification.setPlayStatus(true)
@@ -14,9 +15,9 @@ class NotificationPlug(service: Service, private val config: PlayerConfig) : Pla
     }
 
     override fun onLoad(music: Music?, maxTime: Int) {
-        if (music == null){
+        if (music == null) {
             notification.cancel()
-        }else{
+        } else {
             notification.setName(music.musicName)
             notification.setSinger(music.singer)
             notification.setBitMap(config.bitmap)
@@ -28,10 +29,10 @@ class NotificationPlug(service: Service, private val config: PlayerConfig) : Pla
         notification.setPlayStatus(false)
         notifyChange()
     }
-    private fun notifyChange(){
-        if (config.music == null){
+    private fun notifyChange() {
+        if (config.music == null) {
             notification.cancel()
-        }else{
+        } else {
             notification.notifyChange()
         }
     }

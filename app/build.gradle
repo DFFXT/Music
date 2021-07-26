@@ -104,6 +104,7 @@ dependencies {
     implementation 'me.jessyan:autosize:1.2.1'
     implementation 'com.github.DFFXT:PreferenceUtils:1.2'
     implementation 'com.mpatric:mp3agic:0.9.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.14.2'
 }
 
 repositories {

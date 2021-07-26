@@ -12,7 +12,7 @@ import com.web.web.R
 
 class IndexBarAdapter : BaseAdapter<Char>() {
     private var index = -1
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Char?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Char) {
         val tv = holder.findViewById<TextView>(R.id.tv_title)
         tv.text = item.toString()
         if (position == index) {

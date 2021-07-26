@@ -25,7 +25,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="@string/setting_containSystemMusic"/>
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sw_enableSystemMusic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

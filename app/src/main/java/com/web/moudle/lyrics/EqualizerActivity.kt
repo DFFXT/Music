@@ -22,7 +22,7 @@ import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.moudle.music.player.NewPlayer
-import com.web.moudle.music.player.PlayerConnection
+import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.web.R
 import kotlinx.android.synthetic.main.activity_equalizer.*
@@ -31,7 +31,7 @@ import kotlin.math.min
 
 class EqualizerActivity : BaseActivity() {
     private var serviceConnection: ServiceConnection? = null
-    private var connect: PlayerConnection? = null
+    private var connect: IMusicControl? = null
     private var equalizer: Equalizer? = null
     private var max: Short = 0
     private var min: Short = 0
@@ -47,8 +47,8 @@ class EqualizerActivity : BaseActivity() {
             override fun onServiceDisconnected(name: ComponentName?) {}
 
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
-                connect = service as PlayerConnection
-                equalizer = connect!!.equalizer
+                connect = service as IMusicControl
+                equalizer = connect!!.getEqualizer()
                 min = equalizer!!.bandLevelRange[0]
                 max = equalizer!!.bandLevelRange[1]
 

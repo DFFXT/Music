@@ -2,21 +2,17 @@ package com.web.web
 
 import android.app.Activity
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import com.web.common.base.BaseActivity
+import com.web.common.base.PlayerObserver
 import com.web.common.util.PermissionManager
 import com.web.data.Music
-import com.web.data.MusicList
-import com.web.common.base.PlayerObserver
 import com.web.moudle.home.HomePageActivity
 import com.web.moudle.music.player.NewPlayer
-import com.web.moudle.music.player.PlayerConnection
-import com.web.moudle.music.player.other.PlayerConfig
-import com.web.moudle.music.player.plug.ActionControlPlug
+import com.web.moudle.music.player.other.IMusicControl
 
 /**
  * logo界面
@@ -27,13 +23,12 @@ import com.web.moudle.music.player.plug.ActionControlPlug
 class HelloActivity : BaseActivity() {
     private val code = 0x999
     override fun getLayoutId(): Int = R.layout.activity_hello
-    private var connect: PlayerConnection? = null
+    private var connect: IMusicControl? = null
     private lateinit var connection: ServiceConnection
-
 
     private val observer = object : PlayerObserver() {
         override fun onMusicListChange(list: MutableList<Music>?) {
-            connect?.removeObserver(this@HelloActivity,null)
+            connect?.removeObserver(this@HelloActivity, null)
             // MusicActivity.actionStartForResult(this@HelloActivity, code)
             HomePageActivity.actionStart(this@HelloActivity)
         }
@@ -42,26 +37,21 @@ class HelloActivity : BaseActivity() {
     override fun initView() {
         connection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
-
             }
 
             override fun onServiceConnected(name: ComponentName?, service: IBinder) {
-                connect = (service as PlayerConnection)
+                connect = (service as IMusicControl)
                 connect?.addObserver(this@HelloActivity, observer)
-
             }
         }
 
-
-
-        if(PermissionManager.requestAllPermission(this@HelloActivity)){
+        if (PermissionManager.requestAllPermission(this@HelloActivity)) {
             NewPlayer.bind(this, connection)
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode,resultCode,data)
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == code) {
                 finish()

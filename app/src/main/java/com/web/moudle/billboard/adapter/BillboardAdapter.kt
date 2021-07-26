@@ -18,7 +18,7 @@ class BillboardAdapter(data:List<Content>):BaseAdapter<Content>(data) {
     private val ids= arrayListOf(R.id.tv_no1,R.id.tv_no2,R.id.tv_no3)
     private val ivIds= arrayListOf(R.id.iv_top1,R.id.iv_top2,R.id.iv_top3)
     @SuppressLint("CheckResult")
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Content?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Content) {
         val ctx=holder.itemView.context
         holder.bindText(R.id.tv_billboardName,item?.name)
         if(item==null)return

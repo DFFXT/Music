@@ -22,9 +22,9 @@ import com.web.moudle.home.local.model.LocalModel
 import com.web.moudle.login.LoginActivity
 import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.NewPlayer
-import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.bean.SongSheetWW
 import com.web.moudle.music.player.model.WWSongSheetModel
+import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity
 import com.web.moudle.recentListen.MySongSheetInfoActivity
@@ -42,7 +42,7 @@ class LocalFragment : BaseFragment() {
     private val sheetList=ArrayList<SongSheetWW>()
     private val adapter=SheetAdapter()
     override fun getLayoutId(): Int = R.layout.fragment_local
-    private var connect: PlayerConnection?=null
+    private var connect: IMusicControl?=null
     private var observer=object :PlayerObserver(){
         override fun onMusicListChange(list: MutableList<Music>?) {
             model.getMusicNum {
@@ -56,7 +56,7 @@ class LocalFragment : BaseFragment() {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder) {
-            connect=service as PlayerConnection
+            connect=service as IMusicControl
             connect?.addObserver(this@LocalFragment, observer)
         }
     }

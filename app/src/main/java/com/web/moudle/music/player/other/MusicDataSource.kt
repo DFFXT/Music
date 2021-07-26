@@ -5,68 +5,67 @@ import com.web.data.IgnoreMusic
 import com.web.data.Music
 import com.web.moudle.music.player.findIndexFirst
 import com.web.moudle.music.player.findIndexLast
-import com.web.web.Index
 import kotlin.collections.ArrayList
 
-class MusicDataSource(private val config: PlayerConfig):MutableList<Music> by ArrayList() ,PlayInterface{
-    var localList = ArrayList<Music>()//原始数据
+class MusicDataSource : MutableList<Music> by ArrayList(), PlayInterface {
+    private val config = PlayerConfig
+    var localList = ArrayList<Music>() // 原始数据
     var index = -1
         private set
     val localIndex
         get() = localList.indexOf(this.getOrNull(index))
-    private fun setStorageMusic(music: Music){
+    private fun setStorageMusic(music: Music) {
         clear()
         add(music)
         index = 0
     }
-    private fun setInternetMusic(music: Music){
-        //todo 由于接口问题目前不支持在线音乐了
+    private fun setInternetMusic(music: Music) {
+        // todo 由于接口问题目前不支持在线音乐了
     }
-    fun addMusic(music: Music, origin: PlayerConfig.MusicOrigin){
-        if (config.musicOrigin != origin){
+    fun addMusic(music: Music, origin: PlayerConfig.MusicOrigin) {
+        if (config.musicOrigin != origin) {
             config.musicOrigin = origin
         }
-        when(origin){
-            PlayerConfig.MusicOrigin.WAIT ->{
+        when (origin) {
+            PlayerConfig.MusicOrigin.WAIT -> {
                 add(music)
             }
-            PlayerConfig.MusicOrigin.STORAGE->{
+            PlayerConfig.MusicOrigin.STORAGE -> {
                 setStorageMusic(music)
             }
-            PlayerConfig.MusicOrigin.LOCAL->{
-                //无操作
+            PlayerConfig.MusicOrigin.LOCAL -> {
+                // 无操作
                 changeToLocal()
                 index = localList.indexOf(music)
             }
-            PlayerConfig.MusicOrigin.INTERNET->{
+            PlayerConfig.MusicOrigin.INTERNET -> {
                 setInternetMusic(music)
             }
         }
     }
 
-    fun setIndex(index: Int){
-        this.index = index;
+    fun setIndex(index: Int) {
+        this.index = index
     }
 
-    fun getCurrentMusic():Music? = getOrNull(index)
+    fun getCurrentMusic(): Music? = getOrNull(index)
 
-    fun sort(){
+    fun sort() {
         localList.sortWith { m1: Music, m2: Music -> ChineseComparator.compare(m1.musicName, m2.musicName) }
     }
 
-    fun remove(index: Int){
+    fun remove(index: Int) {
         if (index < 0 || index > this.size) return
-        if (index < this.size) { //**移除播放之前的
+        if (index < this.size) { // **移除播放之前的
             this.index--
             this.removeAt(index)
-        } else if (index > this.index && index < this.size) { //**移除之后播放的
+        } else if (index > this.index && index < this.size) { // **移除之后播放的
             this.removeAt(index)
-        } else if (index == this.index) { //**移除正在播放的
+        } else if (index == this.index) { // **移除正在播放的
             this.index--
             this.removeAt(index)
         }
     }
-
 
     /**
      * 获取上一曲
@@ -89,7 +88,6 @@ class MusicDataSource(private val config: PlayerConfig):MutableList<Music> by Ar
         return tempIndex
     }
 
-
     /**
      * 获取下一首
      * @return 如果有音乐则返回下标，如果没有则返回-1
@@ -107,34 +105,32 @@ class MusicDataSource(private val config: PlayerConfig):MutableList<Music> by Ar
         return tempIndex
     }
 
-    fun changeToLocal(){
+    fun changeToLocal() {
         index = localIndex
         clear()
         addAll(localList)
     }
 
-
-    fun reset(){
+    fun reset() {
         index = -1
     }
 
     override fun onMusicOriginChanged(origin: PlayerConfig.MusicOrigin) {
-        when(origin){
-            PlayerConfig.MusicOrigin.LOCAL->{
+        when (origin) {
+            PlayerConfig.MusicOrigin.LOCAL -> {
                 index = localIndex
                 clear()
                 addAll(localList)
             }
-            PlayerConfig.MusicOrigin.WAIT ->{
+            PlayerConfig.MusicOrigin.WAIT -> {
                 index = 0
                 clear()
             }
-            PlayerConfig.MusicOrigin.STORAGE ->{
+            PlayerConfig.MusicOrigin.STORAGE -> {
                 index = 0
                 clear()
             }
-            PlayerConfig.MusicOrigin.INTERNET->{
-
+            PlayerConfig.MusicOrigin.INTERNET -> {
             }
         }
     }

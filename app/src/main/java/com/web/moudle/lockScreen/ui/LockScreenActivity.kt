@@ -30,7 +30,7 @@ import com.web.config.Shortcut
 import com.web.data.Music
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.NewPlayer
-import com.web.moudle.music.player.PlayerConnection
+import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.web.web.R
@@ -43,14 +43,14 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     private val arrowBitmap = arrayOfNulls<Bitmap>(2)
     private lateinit var params: ConstraintLayout.LayoutParams
     private var marginEnd=0
-    private var connect: PlayerConnection?=null
+    private var connect: IMusicControl?=null
     private var connection:ServiceConnection=object :ServiceConnection{
         override fun onServiceDisconnected(name: ComponentName?) {
 
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder) {
-            connect=service as PlayerConnection
+            connect=service as IMusicControl
             connect?.addObserver(this@LockScreenActivity,observer)
             connect?.getPlayerInfo(this@LockScreenActivity)
         }

@@ -1,9 +1,8 @@
 package com.web.moudle.music.page.local.control.interf
 
-import com.web.moudle.music.player.NewPlayer
-import com.web.moudle.music.player.PlayerConnection
+import com.web.moudle.music.player.other.IMusicControl
 
 interface IPage {
-    fun setConnect(connect: PlayerConnection)
-    fun getPageName():String
+    fun setConnect(connect: IMusicControl)
+    fun getPageName(): String
 }

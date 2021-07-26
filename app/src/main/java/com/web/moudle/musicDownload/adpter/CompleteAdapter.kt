@@ -13,7 +13,7 @@ class CompleteAdapter:BaseAdapter<DownloadMusic>() {
 
     var click:((View,Int)->Unit)?=null
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: DownloadMusic?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: DownloadMusic) {
         if(item==null)return
         val music=item.internetMusicDetail
         if (!Shortcut.isStrictEmpty(music.albumName)) {

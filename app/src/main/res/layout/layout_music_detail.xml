@@ -58,6 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/tv_abPathLabel"
         android:layout_alignStart="@id/layout_musicName"
+        android:textIsSelectable="true"
         tools:text="File:///0/sd/xx.mp3"/>
     <TextView
         android:id="@+id/tv_durationLabel"

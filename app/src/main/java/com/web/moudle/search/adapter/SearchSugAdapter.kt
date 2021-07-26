@@ -33,7 +33,7 @@ class SearchSugAdapter(searchSug: List<SearchResItem>) : BaseAdapter<SearchResIt
     }
 
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:SearchResItem?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int,item:SearchResItem) {
         if(item==null)return
         when (item.type) {
             SearchResItem.SearchItemType_Music -> {//**歌曲

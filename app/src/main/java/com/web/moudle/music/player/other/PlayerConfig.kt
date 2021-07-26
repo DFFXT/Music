@@ -8,14 +8,14 @@ import com.web.data.Music
 import java.io.File
 import java.io.FileInputStream
 
-class PlayerConfig(private val playInterfaceManager: PlayInterfaceManager) {
-    //***播放模式
+object PlayerConfig {
+    // ***播放模式
     var playType = PlayType.ALL_LOOP
     var musicOrigin = MusicOrigin.LOCAL
         set(value) {
-            if (field != value){
+            if (field != value) {
                 field = value
-                playInterfaceManager.onMusicOriginChanged(value)
+                // playInterfaceManager.onMusicOriginChanged(value)
             }
         }
     var music: Music? = null
@@ -34,30 +34,29 @@ class PlayerConfig(private val playInterfaceManager: PlayInterfaceManager) {
     private fun setBitmapPath(singerName: String?) {
         try {
             val file = File(GetFiles.singerPath + singerName + ".png")
-            if (file.exists() && file.isFile) { //---存在图片
+            if (file.exists() && file.isFile) { // ---存在图片
                 val fis = FileInputStream(file)
                 bitmap = BitmapFactory.decodeStream(fis)
-            }else{
+            } else {
                 tryGetBitmap()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-    private fun tryGetBitmap(){
+    private fun tryGetBitmap() {
         music?.let {
             try {
                 val mp3 = Mp3File(it.path)
-                if (mp3.hasId3v2Tag()){
+                if (mp3.hasId3v2Tag()) {
                     val img = mp3.id3v2Tag.albumImage
-                    if (img != null){
-                        bitmap = BitmapFactory.decodeByteArray(img,0,img.size)
+                    if (img != null) {
+                        bitmap = BitmapFactory.decodeByteArray(img, 0, img.size)
                     }
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
     }
 
@@ -65,15 +64,13 @@ class PlayerConfig(private val playInterfaceManager: PlayInterfaceManager) {
         ONE_LOOP, ALL_LOOP, ALL_ONCE, ONE_ONCE, RANDOM;
 
         operator fun next(): PlayType {
-            var type: PlayType? = null
-            type = when (this) {
+            return when (this) {
                 ALL_LOOP -> ALL_ONCE
                 ALL_ONCE -> ONE_LOOP
                 ONE_LOOP -> ONE_ONCE
                 ONE_ONCE -> RANDOM
                 RANDOM -> ALL_LOOP
             }
-            return type
         }
     }
 

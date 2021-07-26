@@ -39,7 +39,7 @@ class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSel
         return LayoutInflater.from(ctx).inflate(R.layout.music_local_item_qiuck,parent,false)
     }
 
-    override fun onBindItemView(holder: BaseViewHolder, position: Int, item: Music?) {
+    override fun onBindItemView(holder: BaseViewHolder, position: Int, item: Music) {
         item?:return
         val tvMusicName=holder.bindText(R.id.musicName, item.musicName)
         val tvSingerName=holder.bindText(R.id.singerName, item.singer+if(item.album!=null) " - "+item.album else "")
