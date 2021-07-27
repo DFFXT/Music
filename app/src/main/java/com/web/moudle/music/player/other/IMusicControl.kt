@@ -12,6 +12,10 @@ interface IMusicControl {
     fun play(index: Int, origin: PlayerConfig.MusicOrigin)
     fun play(music: Music)
     fun addWait(index: Int)
+
+    /**
+     * @param auto 区分手动点击还是播放结束自动下一首，true: 自动下一首
+     */
     fun next(auto: Boolean)
     fun pre()
     fun getCurrentMusic(): Music?
@@ -27,6 +31,4 @@ interface IMusicControl {
     fun loadMusic(music: Music, autoPlay: Boolean)
     fun getMediaSessionId(): Int
     fun getEqualizer(): Equalizer
-    // fun delete(deleteFile:Boolean, vararg index: Int)
-    // fun play(music: Music)
 }

@@ -8,8 +8,8 @@ import com.web.moudle.music.player.core.IExoPlayer
 import com.web.moudle.music.player.core.IPlayer
 import com.web.moudle.music.player.other.PlayInterfaceManager
 import com.web.moudle.music.player.other.PlayerConfig
-
-class CorePlayer(playInterfaceManager: PlayInterfaceManager) : MediaPlayer() {
+@Deprecated("ExoPlayer instead")
+class CorePlayer : MediaPlayer() {
     var autoPlay = false
         private set
     val config = PlayerConfig
@@ -28,7 +28,6 @@ class ExoPlayer : IExoPlayer {
     override fun getExoPlayer(): BasePlayer = mPlayer
 
     override fun seekTo(microSecond: Long) {
-        mPlayer.audioSessionId
         mPlayer.seekTo(microSecond)
         // mPlayer.setSeekParameters(SeekParameters(microSecond, microSecond))
     }
@@ -54,9 +53,7 @@ class ExoPlayer : IExoPlayer {
 
     override fun isPlaying(): Boolean = mPlayer.isPlaying
 
-    override fun reset() {
-
-    }
+    override fun reset() {}
 
     override fun getCurrentDuration(): Long = mPlayer.currentPosition
     override fun getDuration(): Long = mPlayer.duration

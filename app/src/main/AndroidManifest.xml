@@ -150,12 +150,10 @@
         <activity android:name="com.web.moudle.setting.lyrics.LyricsSettingActivity" />
         <activity android:name="com.web.moudle.artist.ArtistTypeActivity" />
         <activity android:name="com.web.moudle.home.HomePageActivity"
-            android:screenOrientation="portrait"
             android:configChanges="keyboard|orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name="com.web.moudle.recentListen.RecentListenActivity" />
         <activity android:name="com.web.moudle.singerEntry.ui.SingerEntryActivityNew" />
         <activity android:name="com.web.moudle.login.LoginActivity"
-            android:screenOrientation="portrait"
             android:configChanges="keyboard|orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name="com.web.moudle.recentListen.MySongSheetInfoActivity" />
 

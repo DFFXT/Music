@@ -20,6 +20,7 @@ import com.web.data.IgnoreMusic;
 import com.web.data.Music;
 import com.web.data.MusicList;
 import com.web.misc.BasePopupWindow;
+import com.web.misc.ConfirmDialog;
 import com.web.misc.DrawableItemDecoration;
 import com.web.misc.InputItem;
 import com.web.misc.ToolsBar;
@@ -69,15 +70,20 @@ public class MusicListPage extends BaseMusicPage {
             } else if (id == R.id.delete) {//**删除
                 ActionControlPlug.delete(requireContext(), connect.getDataSource().getLocalList().get(position),false);
             } else if (id == R.id.deleteOrigin) {//**完全删除
-                new android.app.AlertDialog.Builder(getContext())
-                        .setTitle(ResUtil.getString(R.string.deleteOrigin))
-                        .setMessage(data.get(position).getPath())
-                        .setNegativeButton(ResUtil.getString(R.string.no), null)
-                        .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> {
-                            ActionControlPlug.delete(requireContext(), connect.getDataSource().getLocalList().get(position), true);
+                new ConfirmDialog(view.getContext())
+                        .setMsg("删除源？（"+music.getMusicName()+"）")
+                        .setLeftText(ResUtil.getString(R.string.no))
+                        .setRightText(ResUtil.getString(R.string.yes))
+                        .setLeftListener(dialog->{
+                            dialog.dismiss();
+                            return null;
                         })
-                        .create()
-                        .show();
+                        .setRightListener(dialog->{
+                            dialog.dismiss();
+                            ActionControlPlug.delete(requireContext(), connect.getDataSource().getLocalList().get(position), true);
+                            return null;
+                        })
+                        .show(view);
             } else if (id == R.id.setAsLiske) {//喜欢
                 MToast.showToast(requireContext(),"不再支持");
                 //addToList(data.get(position).getId());
