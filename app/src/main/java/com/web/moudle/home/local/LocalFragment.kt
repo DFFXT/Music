@@ -70,7 +70,7 @@ class LocalFragment : BaseFragment() {
         }
 
         rootView.layout_localBg.setOnClickListener {
-            MusicActivity.actionStart(context)
+            MusicActivity.actionStart(it.context)
         }
 
         rootView.layout_recent.setOnClickListener {

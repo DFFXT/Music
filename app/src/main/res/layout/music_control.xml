@@ -34,6 +34,8 @@
         app:layout_constraintTop_toBottomOf="@id/view_line"
         app:layout_constraintEnd_toStartOf="@id/tv_duration"
         style="@android:style/Widget.Holo.SeekBar"
+        android:thumbTint="@color/themeColor"
+        android:thumb="@drawable/icon_seekbar_dot_pressed"
         />
 
     <TextView

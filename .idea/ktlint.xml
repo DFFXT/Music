@@ -2,6 +2,10 @@
 <project version="4">
   <component name="KtlintProjectConfiguration">
     <treatAsErrors>false</treatAsErrors>
-    <editorConfigPath>D:\Android\project</editorConfigPath>
+    <disabledRules>
+      <list>
+        <option value="no-wildcard-imports" />
+      </list>
+    </disabledRules>
   </component>
 </project>

@@ -115,6 +115,7 @@ class ActionControlPlug(
             if (index >= 0) {
                 PlayerConfig.setMusic(dataSource[index])
                 dataSource.addMusic(dataSource[index], PlayerConfig.MusicOrigin.LOCAL)
+                control.loadMusic(dataSource[index], false)
             }
         }
         playTypePlug.randomSystem.reset(4)

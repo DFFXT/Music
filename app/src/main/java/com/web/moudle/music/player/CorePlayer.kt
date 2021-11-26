@@ -2,12 +2,15 @@ package com.web.moudle.music.player
 
 import android.media.MediaPlayer
 import android.net.Uri
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.BasePlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.upstream.*
 import com.web.app.MyApplication
 import com.web.moudle.music.player.core.IExoPlayer
-import com.web.moudle.music.player.core.IPlayer
-import com.web.moudle.music.player.other.PlayInterfaceManager
 import com.web.moudle.music.player.other.PlayerConfig
+
 @Deprecated("ExoPlayer instead")
 class CorePlayer : MediaPlayer() {
     var autoPlay = false
@@ -21,15 +24,17 @@ class CorePlayer : MediaPlayer() {
 }
 
 class ExoPlayer : IExoPlayer {
-    var autoPlay = false
     private val mPlayer = SimpleExoPlayer.Builder(MyApplication.context)
+        /*.setMediaSourceFactory(
+            DefaultMediaSourceFactory(DefaultDataSourceFactory(MyApplication.context, object :DataSource.Factory))
+        )*/
         .build()
 
     override fun getExoPlayer(): BasePlayer = mPlayer
 
     override fun seekTo(microSecond: Long) {
         mPlayer.seekTo(microSecond)
-        // mPlayer.setSeekParameters(SeekParameters(microSecond, microSecond))
+
     }
 
     override fun pause() {
@@ -41,14 +46,16 @@ class ExoPlayer : IExoPlayer {
     }
 
     override fun load(source: String, autoPlay: Boolean) {
-        this.autoPlay = autoPlay
+        mPlayer.setPlaybackSpeed(1f)
+        mPlayer.playWhenReady = autoPlay
         mPlayer.setMediaItem(MediaItem.fromUri(source))
         mPlayer.prepare()
     }
 
     override fun load(uri: Uri, autoPlay: Boolean) {
-        this.autoPlay = autoPlay
+        mPlayer.playWhenReady = autoPlay
         mPlayer.setMediaItem(MediaItem.fromUri(uri))
+        mPlayer.prepare()
     }
 
     override fun isPlaying(): Boolean = mPlayer.isPlaying

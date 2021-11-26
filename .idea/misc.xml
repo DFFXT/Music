@@ -5,6 +5,16 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android/project/Music/app/src/main/next_res/Video/layout/exo_video_detail_activity.xml" value="0.10190217391304347" />
+        <entry key="..\:/Android/project/Music/app/src/main/res/layout/music_control.xml" value="0.4343629343629344" />
+        <entry key="..\:/Android/project/Music/app/src/main/res/layout/restruct_music_layout.xml" value="0.17135416666666667" />
+        <entry key="..\:/Android/project/Music/app/src/main/res/layout/restructmusiclayout.xml" value="0.17135416666666667" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
