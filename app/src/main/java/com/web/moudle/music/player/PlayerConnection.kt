@@ -76,7 +76,7 @@ class PlayerConnection(private val ctx: Context,
     }
 
     override fun removeObserver(lifecycleOwner: LifecycleOwner?, playerObserver: PlayerObserver?) {
-        playInterfaceManager.removeObserver(lifecycleOwner)
+        playInterfaceManager.removeObserver(lifecycleOwner, playerObserver)
     }
 
     override fun getPlayerInfo(lifecycleOwner: LifecycleOwner?) {

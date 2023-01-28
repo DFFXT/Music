@@ -39,6 +39,9 @@ public class Apk {
             Version currentV=Version.readCurrentVersion();
             if(currentV==null){
                 SettingViewModel.INSTANCE.requestVersion((res)->{
+                    if (res == null) {
+                        return null;
+                    }
                     if(res.getVersionCode()>Apk.getVersionCode()){
                         AndroidSchedulers.mainThread().scheduleDirect(()-> considerUpdate(activity,v,res));
                     }

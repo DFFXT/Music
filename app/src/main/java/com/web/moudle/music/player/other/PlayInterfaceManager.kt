@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.web.common.base.PlayerObserver
 import com.web.data.Music
 import com.web.moudle.music.player.plugInterface.IntentReceiver
 import com.web.moudle.music.player.plugInterface.Plug
@@ -12,8 +13,12 @@ import com.web.moudle.music.player.plugInterface.ServiceLifeCycle
 class PlayInterfaceManager : IntentReceiver, PlayInterface, ServiceLifeCycle {
     private val observerList = HashMap<LifecycleOwner?, ArrayList<PlayInterface>>()
     private val dispatchers = ArrayList<Plug>()
-    fun removeObserver(owner: LifecycleOwner?) {
-        observerList.remove(owner)
+    fun removeObserver(owner: LifecycleOwner?, playerObserver: PlayerObserver?) {
+        if (playerObserver != null) {
+            observerList[owner]?.remove(playerObserver)
+        } else {
+            observerList.remove(owner)
+        }
     }
 
     fun add(owner: LifecycleOwner?, observer: Any) {

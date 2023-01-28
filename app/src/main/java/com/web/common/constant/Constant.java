@@ -18,8 +18,8 @@ public final class Constant {
 
         //**全局字体缩放比例
         public static float fontScale=0.85f;
-
-        public static String rootPath= Environment.getExternalStorageDirectory().toString()+"/0/";
+        // 默认机身储存
+        public static String rootPath= "/storage/emulated/0/0/";
         public static String cachePath=rootPath+"cache/";
         public static String musicDownloadPath=cachePath+"download/";
         public static String musicCachePath=cachePath+"cache/";

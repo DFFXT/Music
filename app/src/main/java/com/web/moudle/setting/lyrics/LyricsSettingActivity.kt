@@ -160,7 +160,7 @@ class LyricsSettingActivity : BaseActivity() {
         @JvmStatic
         fun actionStart(ctx:Context){
             val intent=Intent(ctx,LyricsSettingActivity::class.java)
-            intent.flags=Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags=Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             ctx.startActivity(intent)
         }
 

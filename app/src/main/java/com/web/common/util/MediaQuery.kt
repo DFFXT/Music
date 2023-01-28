@@ -48,7 +48,8 @@ object MediaQuery {
 
                     for (type in types) {
                         if (!type.isScanable) continue
-                        if (path != null && path.toLowerCase().endsWith(type.scanSuffix.toLowerCase()) && duration >= type.minTime) {
+                        if (path != null && path.lowercase().endsWith(type.scanSuffix.lowercase()) && duration >= type.minTime) {
+                            // todo 是否是系统目录判断错误
                             if(!SuffixSelectActivity.isEnableSystemMusic()&&! path.startsWith(Environment.getExternalStorageDirectory().absolutePath)){
                                 continue
                             }
