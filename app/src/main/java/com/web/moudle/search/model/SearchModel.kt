@@ -64,7 +64,7 @@ class SearchModel:BaseRetrofit() {
         }
     }
     private fun combineHistory():List<SearchResItem>{
-        val history=DataSupport.findAll(SearchResItem::class.java)
+        val history=DataSupport.findAll<SearchResItem>(SearchResItem::class.java)
         val list=LinkedList<SearchResItem>()
         if(history.size!=0){
             list.add(0,SearchResItem(ResUtil.getString(R.string.searchView_history),"","",SearchResItem.SearchItemType_Head))

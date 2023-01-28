@@ -83,7 +83,7 @@ class RecentListenActivity :BaseActivity(){
     }
     private fun reload(){
         GlobalScope.launch(Dispatchers.IO) {
-            val mList=DataSupport.findAll(RecentPlayMusic::class.java)
+            val mList=DataSupport.findAll<RecentPlayMusic>(RecentPlayMusic::class.java)
             list=mList.map {
                 DownloadMusic(map(it),DownloadMusic.DOWNLOAD_COMPLETE)
             }

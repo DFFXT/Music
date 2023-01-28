@@ -47,7 +47,7 @@ class CacheActivity:BaseActivity() {
         //**清空缓存
         twd_clearCache.setOnClickListener {
             buildConfirm(it,ResUtil.getString(R.string.setting_clearCacheTip)){
-                val cacheList=DataSupport.findAll(MusicCache::class.java)
+                val cacheList=DataSupport.findAll<MusicCache>(MusicCache::class.java)
                 cacheList.forEach {cacheMusic->
                     Shortcut.fileDelete(cacheMusic.cachePath)
                 }
@@ -167,7 +167,7 @@ class CacheActivity:BaseActivity() {
         fun getCacheSize(callback:((size:Long)->Unit)){
             GlobalScope.launch {
                 var size=0L
-                val cacheList=DataSupport.findAll(MusicCache::class.java)
+                val cacheList=DataSupport.findAll<MusicCache>(MusicCache::class.java)
                 cacheList.forEach {cache->
                     val sizeList=MusicCache.calculateCacheRange(cache)
                     sizeList.forEach {

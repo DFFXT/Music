@@ -168,7 +168,7 @@ class EqualizerActivity : BaseActivity() {
 
         @JvmStatic
         fun getCurrentSoundEffect(): List<SoundInfo> {
-            val savedData = DataSupport.findAll(SoundSettingList::class.java, true)
+            val savedData = DataSupport.findAll<SoundSettingList>(SoundSettingList::class.java, true)
             val index = getCurrentSoundEffectIndex()
             if (index >= savedData.size) {
                 setCurrentSoundEffectIndex(0)
@@ -182,7 +182,7 @@ class EqualizerActivity : BaseActivity() {
          */
         @JvmStatic
         fun createDefaultSoundSetList(title: String, equalizer: Equalizer): SoundSettingList {
-            val sound = DataSupport.findFirst(SoundSettingList::class.java, true)
+            val sound = DataSupport.findFirst<SoundSettingList?>(SoundSettingList::class.java, true)
 
             val min = equalizer.bandLevelRange[0]
             val max = equalizer.bandLevelRange[1]

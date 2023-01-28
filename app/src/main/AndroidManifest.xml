@@ -64,7 +64,8 @@
         <activity
             android:name="com.web.moudle.music.page.local.MusicActivity"
             android:label="@string/outerMusicLabel"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.SEARCH" />
@@ -79,7 +80,8 @@
             android:theme="@style/FullscreenTheme"
             android:name=".HelloActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:label="${APP_NAME}">
+            android:label="${APP_NAME}"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -90,7 +92,8 @@
             android:name=".Browser"
             android:configChanges="orientation|screenSize"
             android:label="@string/webview_choose"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

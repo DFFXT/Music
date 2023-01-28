@@ -2,6 +2,7 @@ package com.web.moudle.music.player.plug
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.annotation.UiThread
 import com.web.app.MyApplication
 import com.web.common.constant.AppConfig
@@ -178,7 +179,11 @@ class ActionControlPlug(private val control: PlayerConnection,
         fun scan(context: Context) {
             val intent = Intent(context, NewPlayer::class.java)
             intent.action = ACTION_SCAN
-            context.startService(intent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
         }
         @JvmStatic
         fun delete(context: Context, music: Music, deleteFile: Boolean) {
@@ -186,7 +191,11 @@ class ActionControlPlug(private val control: PlayerConnection,
             intent.action = ACTION_DELETE
             intent.putExtra(COMMAND_SEND_SINGLE_DATA, music)
             intent.putExtra(EXTRA1, deleteFile)
-            context.startService(intent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
         }
 
         /**

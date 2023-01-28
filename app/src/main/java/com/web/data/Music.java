@@ -14,7 +14,10 @@ import java.io.Serializable;
 
 import androidx.annotation.Nullable;
 
+
+
 public class Music extends DataSupport implements Cloneable,Serializable {
+
     private int id;
     private String musicName;
     private String singer;

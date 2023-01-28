@@ -44,6 +44,7 @@ public class InternetMusic extends DataSupport implements Serializable {
     @interface MusicQuality{ }
     private @MusicQuality int type=TYPE_NORMAL;
 
+
     public InternetMusic(){}
     public InternetMusic(String musicName, String singerName, String hash){
         this.musicName=musicName;

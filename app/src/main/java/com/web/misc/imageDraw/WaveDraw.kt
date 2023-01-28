@@ -32,7 +32,7 @@ class WaveDraw:ImageDraw {
                     }
 
                 }
-                field[i/jump]= Math.hypot(v1, v2).toByte()
+                field[i/jump]= Math.hypot(v1, v2).toInt().toByte()
             }
             v?.invalidate()
         }

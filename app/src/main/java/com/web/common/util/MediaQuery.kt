@@ -103,7 +103,7 @@ object MediaQuery {
         GlobalScope.launch (Dispatchers.IO){
             val musicList: ArrayList<MusicList<Music>> = arrayListOf()
             //**获取默认列表的歌曲
-            val defList = DataSupport.findAll(Music::class.java)
+            val defList = DataSupport.findAll<Music>(Music::class.java)
 
             val defGroup = MusicList<Music>(ResUtil.getString(R.string.default_))
             defGroup.addAll(defList)

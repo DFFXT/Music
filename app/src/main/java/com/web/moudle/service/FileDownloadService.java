@@ -25,6 +25,7 @@ import com.web.moudle.notification.DownloadNotification;
 import com.web.web.R;
 
 import org.jetbrains.annotations.NotNull;
+import org.litepal.Operator;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
@@ -459,7 +460,7 @@ public class FileDownloadService extends Service {
     public static void addTask(Context context, InternetMusicDetail music) {
         String originMusicName = music.getSongName();
         for (int i = 1; i < 10; i++) {//***音乐查重
-            Music localMusic = DataSupport.where("path=?", Shortcut.createPath(music)).findFirst(Music.class);
+            Music localMusic = Operator.where("path=?", Shortcut.createPath(music)).findFirst(Music.class);
             if (localMusic != null) {
                 File file = new File(Shortcut.createPath(music));
                 if (file.exists() && file.isFile()) {//**存在记录，有文件

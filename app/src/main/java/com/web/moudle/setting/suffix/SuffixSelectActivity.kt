@@ -90,7 +90,7 @@ class SuffixSelectActivity : BaseActivity() {
 
         @JvmStatic
         fun getScanType(): List<ScanMusicType> {
-            val list = DataSupport.findAll(ScanMusicType::class.java)
+            val list = DataSupport.findAll<ScanMusicType>(ScanMusicType::class.java)
             if (list.isEmpty()) {
                 val suffixList = ResUtil.getStringArray(R.array.initialSuffix)
                 suffixList.forEach {
