@@ -14,19 +14,22 @@ import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.other.MusicDataSource
 import com.web.moudle.music.player.other.PlayInterfaceManager
 import com.web.moudle.music.player.other.PlayerConfig
-import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.music.player.plug.PlayTypePlug
 import com.web.moudle.net.proxy.InternetProxy
 import com.music.m.R
 import java.io.FileNotFoundException
 import java.io.IOException
 
-class PlayerConnection(private val ctx: Context,
-                       private val player: CorePlayer,
-                       private val playInterfaceManager: PlayInterfaceManager,
-                       private val dataSource: MusicDataSource,
-                       val equalizer: Equalizer) : Binder(), IMusicControl {
-    private val playTypePlug: PlayTypePlug = PlayTypePlug(this, player, dataSource)
+@Deprecated("use exoPlayerConnection")
+class PlayerConnection(
+    private val ctx: Context,
+    private val player: CorePlayer,
+    private val playInterfaceManager: PlayInterfaceManager,
+    private val dataSource: MusicDataSource,
+    private val equalizer: Equalizer
+) : Binder(), IMusicControl {
+    //private val playTypePlug: PlayTypePlug = PlayTypePlug(this, player, dataSource)
+    private lateinit var playTypePlug: PlayTypePlug
     val config = player.config
 
     init {
@@ -34,9 +37,9 @@ class PlayerConnection(private val ctx: Context,
         player.setOnBufferingUpdateListener { p: MediaPlayer?, percent: Int -> playInterfaceManager.onBufferingUpdate(percent) }
         player.setOnPreparedListener {
             config.isPrepared = true
-            //ActionControlPlug.floatWindowChange(ctx)
+            // ActionControlPlug.floatWindowChange(ctx)
 
-            if (player.autoPlay){
+            if (player.autoPlay) {
                 player.start()
                 playInterfaceManager.onPlay()
             }
@@ -49,10 +52,9 @@ class PlayerConnection(private val ctx: Context,
         }
     }
 
-    fun getMediaSessionId() = player.audioSessionId
-    fun addWaitMusic(music: Music, repeat: Boolean) {
-        dataSource.addMusic(music, PlayerConfig.MusicOrigin.WAIT)
-    }
+    override fun getEqualizer(): Equalizer = equalizer
+
+    override fun getMediaSessionId() = player.audioSessionId
 
     override fun changePlayerPlayingStatus() {
         if (player.isPlaying) {
@@ -98,15 +100,20 @@ class PlayerConnection(private val ctx: Context,
     }
 
     override fun play(index: Int, origin: PlayerConfig.MusicOrigin) {
-        if (config.musicOrigin != origin){
-            config.musicOrigin = origin
-            playInterfaceManager.onMusicOriginChanged(config.musicOrigin)
+        if (origin == PlayerConfig.MusicOrigin.WAIT) {
+            dataSource.setIndex(index)
+        } else {
+            dataSource.addMusic(dataSource.localList[index], origin)
         }
-        dataSource.addMusic(dataSource.localList[index], origin)
         dataSource.getCurrentMusic()?.let {
-            if (origin != PlayerConfig.MusicOrigin.WAIT || dataSource.size == 1){
-                loadMusic(it, true)
-            }
+            loadMusic(it, true)
+        }
+    }
+
+    override fun addWait(index: Int) {
+        dataSource.addMusic(dataSource.localList[index], PlayerConfig.MusicOrigin.WAIT)
+        if (dataSource.size == 1) {
+            loadMusic(music = dataSource[0], autoPlay = true)
         }
     }
 
@@ -135,29 +142,28 @@ class PlayerConnection(private val ctx: Context,
 
     override fun remove(index: Int) {
         if (index < 0 || index > dataSource.size) return
-        if (index == 0 && dataSource.size == 1) { //***移除最后一个
+        if (index == 0 && dataSource.size == 1) { // ***移除最后一个
             dataSource.remove(index)
             next(false)
-        }else if (index != dataSource.index) { //**移除播放之前的
+        } else if (index != dataSource.index) { // **移除播放之前的
             dataSource.remove(index)
-        }else if (index == dataSource.index) { //**移除正在播放的
+        } else if (index == dataSource.index) { // **移除正在播放的
             dataSource.remove(index)
             next(false)
         }
     }
 
-    fun loadMusic(music: Music, play:Boolean) {
+    override fun loadMusic(music: Music, autoPlay: Boolean) {
         config.isHasInit = true
         config.setMusic(music)
-        config.setBitmapPath(music.singer)
         player.reset()
         try {
             config.isPrepared = false
-            player.setDataSource(InternetProxy.proxyUrl(music.path), play)
+            player.setDataSource(InternetProxy.proxyUrl(music.path), autoPlay)
             player.prepareAsync()
             AppConfig.lastMusic = music.path
             playInterfaceManager.onLoad(music, music.duration)
-        } catch (e: IOException) { //***播放异常，如果是文件不存在则删除记录
+        } catch (e: IOException) { // ***播放异常，如果是文件不存在则删除记录
             if (e is FileNotFoundException) {
                 MToast.showToast(ctx, ResUtil.getString(R.string.fileNotFound))
             }
@@ -167,7 +173,7 @@ class PlayerConnection(private val ctx: Context,
                 next(true)
             }
         }
-        //playInterfaceManager.onMusicOriginChanged(config.musicOrigin)
+        // playInterfaceManager.onMusicOriginChanged(config.musicOrigin)
     }
 
     private fun disPatchMusicInfo(owner: LifecycleOwner?) {
@@ -180,5 +186,4 @@ class PlayerConnection(private val ctx: Context,
         playInterfaceManager.musicOriginChanged(owner, config.musicOrigin)
         playInterfaceManager.playTypeChanged(owner, config.playType)
     }
-
 }

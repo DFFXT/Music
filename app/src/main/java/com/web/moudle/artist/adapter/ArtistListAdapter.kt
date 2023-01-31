@@ -9,7 +9,7 @@ import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.music.m.R
 
 class ArtistListAdapter(data:List<ArtistInfo>):BaseAdapter<ArtistInfo>(data) {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistInfo?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistInfo) {
         if (item==null)return
         holder.bindImage(R.id.iv_artistIcon,item.avatar_big)
         holder.bindText(R.id.tv_artistName,item.name)

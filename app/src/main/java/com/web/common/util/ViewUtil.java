@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import com.web.app.MyApplication;
 
 import androidx.annotation.DrawableRes;
+import androidx.core.content.res.ResourcesCompat;
 
 public class ViewUtil {
     private static int width=-1,height=-1;
@@ -43,7 +44,7 @@ public class ViewUtil {
         paint.getTextBounds(str,0,str.length(),rect);
     }
     public static Drawable getDrawable(@DrawableRes int id){
-        return MyApplication.getContext().getResources().getDrawable(id,MyApplication.getContext().getTheme());
+        return ResourcesCompat.getDrawable(MyApplication.context.getResources(), id, MyApplication.getContext().getTheme());
     }
     public static void transparentStatusBar(Window window){
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

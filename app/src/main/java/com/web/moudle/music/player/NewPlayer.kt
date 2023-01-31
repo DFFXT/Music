@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.other.MusicDataSource
 import com.web.moudle.music.player.other.PlayInterfaceManager
+import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.music.player.plug.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -15,15 +17,16 @@ import kotlinx.coroutines.launch
 
 class NewPlayer : Service() {
     private val musicDispatcher = PlayInterfaceManager()
-    private val player = CorePlayer(musicDispatcher)
-    private val musicDataSource = MusicDataSource(player.config)
+    private val player = ExoPlayer()
+    private val musicDataSource = MusicDataSource()
     private val equalizerPlug = EqualizerPlug(player)
-    private val control: PlayerConnection by lazy {
+    private val control: IMusicControl by lazy {
         GlobalScope.launch(Dispatchers.IO) {
             delay(50)
             ActionControlPlug.scan(this@NewPlayer)
         }
-        PlayerConnection(this, player, musicDispatcher, musicDataSource, equalizerPlug.equalizer)
+        //PlayerConnection(this, player, musicDispatcher, musicDataSource, equalizerPlug.equalizer)
+        ExoPlayerConnection(this, player, musicDispatcher, musicDataSource, equalizerPlug.equalizer)
     }
 
     override fun onCreate() {
@@ -34,7 +37,7 @@ class NewPlayer : Service() {
         musicDispatcher.add(null, ActionControlPlug(control, player, musicDispatcher, musicDataSource))
         musicDispatcher.add(null, FloatWindowPlug(control))
         musicDispatcher.add(null, equalizerPlug)
-        musicDispatcher.add(null, NotificationPlug(this, player.config))
+        musicDispatcher.add(null, NotificationPlug(this))
         musicDispatcher.add(null, musicDataSource)
         musicDispatcher.add(null, TickerPlug(musicDispatcher, player))
         musicDispatcher.onCreate()
@@ -48,7 +51,7 @@ class NewPlayer : Service() {
     }
 
     override fun onBind(arg0: Intent): IBinder {
-        return control
+        return control as IBinder
     }
 
     override fun onDestroy() {
@@ -64,6 +67,4 @@ class NewPlayer : Service() {
             ctx.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
     }
-
-
 }

@@ -1,10 +1,7 @@
 package com.web.moudle.music.page.local;
 
 import android.animation.ValueAnimator;
-import android.os.IBinder;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -18,19 +15,13 @@ import com.web.common.util.ViewUtil;
 import com.web.common.util.help.ViewExtKt;
 import com.web.data.IgnoreMusic;
 import com.web.data.Music;
-import com.web.data.MusicList;
-import com.web.misc.BasePopupWindow;
+import com.web.misc.ConfirmDialog;
 import com.web.misc.DrawableItemDecoration;
-import com.web.misc.InputItem;
 import com.web.misc.ToolsBar;
 import com.web.moudle.music.page.BaseMusicPage;
 import com.web.moudle.music.page.local.control.adapter.IndexBarAdapter;
 import com.web.moudle.music.page.local.control.adapter.LocalMusicAdapter;
-import com.web.moudle.music.page.local.control.ui.SheetCreateAlert;
-import com.web.moudle.music.player.NewPlayer;
-import com.web.moudle.music.player.PlayerConnection;
-import com.web.moudle.music.player.SongSheetManager;
-import com.web.moudle.music.player.bean.SongSheet;
+import com.web.moudle.music.page.local.control.ui.LocalMusicDetailWindow;
 import com.web.moudle.music.player.other.PlayerConfig;
 import com.web.moudle.music.player.plug.ActionControlPlug;
 import com.music.m.R;
@@ -44,7 +35,6 @@ public class MusicListPage extends BaseMusicPage {
     private final ArrayList<Music> data = new ArrayList<>();
     private RecyclerView rv_musicList;
     private LocalMusicAdapter adapter;
-    private PlayerConnection connect;
     private ToolsBar toolsBar;
     private View iv_add;
 
@@ -57,7 +47,7 @@ public class MusicListPage extends BaseMusicPage {
     private void defaultGroupChildLongClick(View view, int position) {
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         popupMenu.inflate(R.menu.default_child_long_click);
-        Music music = connect.getMusic(position);
+        Music music = getConnect().getMusic(position);
         if (IgnoreMusic.isIgnoreMusic(music)){
             popupMenu.getMenu().findItem(R.id.ignore).setTitle(R.string.autoPlayDisableCancel);
         }else{
@@ -68,19 +58,24 @@ public class MusicListPage extends BaseMusicPage {
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.musicPlay) {//**播放
-                this.connect.play(position, PlayerConfig.MusicOrigin.LOCAL);
+                this.getConnect().play(position, PlayerConfig.MusicOrigin.LOCAL);
             } else if (id == R.id.delete) {//**删除
-                ActionControlPlug.delete(requireContext(), connect.getDataSource().getLocalList().get(position),false);
+                ActionControlPlug.delete(requireContext(), getConnect().getDataSource().getLocalList().get(position),false);
             } else if (id == R.id.deleteOrigin) {//**完全删除
-                new android.app.AlertDialog.Builder(getContext())
-                        .setTitle(ResUtil.getString(R.string.deleteOrigin))
-                        .setMessage(data.get(position).getPath())
-                        .setNegativeButton(ResUtil.getString(R.string.no), null)
-                        .setPositiveButton(ResUtil.getString(R.string.yes), (dialog, witch) -> {
-                            ActionControlPlug.delete(requireContext(), connect.getDataSource().getLocalList().get(position), true);
+                new ConfirmDialog(view.getContext())
+                        .setMsg("删除源？（"+music.getMusicName()+"）")
+                        .setLeftText(ResUtil.getString(R.string.no))
+                        .setRightText(ResUtil.getString(R.string.yes))
+                        .setLeftListener(dialog->{
+                            dialog.dismiss();
+                            return null;
                         })
-                        .create()
-                        .show();
+                        .setRightListener(dialog->{
+                            dialog.dismiss();
+                            ActionControlPlug.delete(requireContext(), getConnect().getDataSource().getLocalList().get(position), true);
+                            return null;
+                        })
+                        .show(view);
             } else if (id == R.id.setAsLiske) {//喜欢
                 MToast.showToast(requireContext(),"不再支持");
                 //addToList(data.get(position).getId());
@@ -142,44 +137,21 @@ public class MusicListPage extends BaseMusicPage {
      * @param music music
      */
     private void showDetail(Music music, int index) {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_music_detail, null);
-        BasePopupWindow popupWindow = new BasePopupWindow(rv_musicList.getContext(), v);
-
-        TextView tv_abPath = v.findViewById(R.id.tv_abPath);
-        tv_abPath.setText(music.getPath());
-
-        ((TextView) v.findViewById(R.id.tv_duration)).setText(ResUtil.timeFormat("mm:ss", music.getDuration()));
-        ((TextView) v.findViewById(R.id.tv_size)).setText(ResUtil.getFileSize(music.getSize()));
-
-        InputItem ii_name = v.findViewById(R.id.layout_musicName);
-        ii_name.setText(music.getMusicName());
-        ii_name.setListenerSave(text -> {
-            if (!text.equals(music.getMusicName()) && music.rename(text, music.getSinger())) {
-                adapter.notifyItemChanged(index);
-                tv_abPath.setText(music.getPath());
-                //**修改的是当前音乐需要重新load
-                if (music == connect.getConfig().getMusic()) {
-                    connect.getPlayerInfo(null);
-                }
+        new LocalMusicDetailWindow(music, ()->{
+            adapter.notifyItemChanged(index);
+            //**修改的是当前音乐需要重新load
+            if (music == PlayerConfig.INSTANCE.getMusic()) {
+                getConnect().getPlayerInfo(null);
             }
-            return music.getMusicName();
-        });
-
-        InputItem ii_artist = v.findViewById(R.id.layout_artistName);
-        ii_artist.setText(music.getSinger());
-        ii_artist.setListenerSave(text -> {
-            if (!text.equals(music.getSinger()) && music.rename(music.getMusicName(), text)) {
-                adapter.notifyItemChanged(index);
-                //**修改的是当前音乐需要重新load
-                if (music == connect.getConfig().getMusic()) {
-                    connect.getPlayerInfo(null);
-                }
-                tv_abPath.setText(music.getPath());
+            return null;
+        }, ()->{
+            adapter.notifyItemChanged(index);
+            //**修改的是当前音乐需要重新load
+            if (music == PlayerConfig.INSTANCE.getMusic()) {
+                getConnect().getPlayerInfo(null);
             }
-            return music.getSinger();
-        });
-        popupWindow.show(rv_musicList);
-
+            return null;
+        }).show(getParentFragmentManager(), null);
     }
 
     /**
@@ -230,20 +202,6 @@ public class MusicListPage extends BaseMusicPage {
             });
         }
         toolsBar.show();
-    }
-
-
-    /**
-     * 设置连接接口
-     *
-     * @param connect connect
-     */
-    @Override
-    public void setConnect(@NonNull IBinder connect) {
-        if (this.connect == null) {
-            this.connect = (PlayerConnection) connect;
-        }
-
     }
 
     @NotNull
@@ -319,11 +277,11 @@ public class MusicListPage extends BaseMusicPage {
         adapter.setSelect(false);
 
         adapter.setItemClickListener((v, position) -> {
-            connect.play(position, PlayerConfig.MusicOrigin.LOCAL);
+            getConnect().play(position, PlayerConfig.MusicOrigin.LOCAL);
             return null;
         });
         adapter.setAddListener((v, position) -> {
-            connect.play(position, PlayerConfig.MusicOrigin.WAIT);
+            getConnect().addWait(position);
             addAnimation(v);
             return null;
         });
@@ -390,11 +348,11 @@ public class MusicListPage extends BaseMusicPage {
             return null;
         });
 
-        connect.getPlayerInfo(requireActivity());
+        getConnect().getPlayerInfo(requireActivity());
 
     }
 
-    private int[] pos = new int[2];
+    private final int[] pos = new int[2];
 
 
     private ValueAnimator animator;

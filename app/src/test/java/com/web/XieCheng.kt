@@ -1,17 +1,12 @@
 package com.web
 
-import android.graphics.Color
-import kotlinx.coroutines.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.junit.Test
-import java.lang.Exception
 
 class XieCheng {
     @Test
-    fun test(){
+    fun test() {
+        val f = Gson().fromJson<List<String> >("[\"dd\"]", object : TypeToken<List<String>>() {}.type)
     }
-
-    fun f(x:String?="22"){
-        System.out.println(x)
-    }
-
 }

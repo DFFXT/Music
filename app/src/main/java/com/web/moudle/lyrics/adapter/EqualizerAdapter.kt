@@ -12,7 +12,7 @@ import com.music.m.R
 class EqualizerAdapter(data:List<SoundInfo>?=null):BaseAdapter<SoundInfo>(data) {
     var canSeekable=true
     var seekToListener:((index:Short, to:Short)->Unit)?=null
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SoundInfo?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SoundInfo) {
         holder.bindText(R.id.tv_title,item!!.title)
         val bar=holder.findViewById<SeekBar>(R.id.seekBar)
         bar.max= item.max-item.min

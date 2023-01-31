@@ -21,9 +21,9 @@ import com.web.data.RecentPlayMusic
 import com.web.misc.ConfirmDialog
 import com.web.misc.ToolsBar
 import com.web.moudle.music.player.NewPlayer
-import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.bean.MusicWW
 import com.web.moudle.music.player.model.WWSongSheetModel
+import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
@@ -51,14 +51,14 @@ class MySongSheetInfoActivity :BaseActivity(){
 
     override fun getLayoutId(): Int = R.layout.activity_recent_listen
 
-    private var connect: PlayerConnection?=null
+    private var connect: IMusicControl?=null
 
     private val connection=object:ServiceConnection{
         override fun onServiceDisconnected(name: ComponentName?) {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            connect= service as PlayerConnection
+            connect= service as IMusicControl
         }
     }
 

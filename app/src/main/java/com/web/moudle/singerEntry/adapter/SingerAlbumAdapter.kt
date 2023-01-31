@@ -11,7 +11,7 @@ import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.music.m.R
 
 class SingerAlbumAdapter(private val ctx:Context, list:ArrayList<SimpleAlbumInfo>): BaseAdapter<SimpleAlbumInfo>(list) {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SimpleAlbumInfo?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SimpleAlbumInfo) {
         holder.bindText(R.id.tv_musicName,item?.albumName)
         holder.itemView.setOnClickListener {
             AlbumEntryActivity.actionStart(it.context,item!!.albumId)

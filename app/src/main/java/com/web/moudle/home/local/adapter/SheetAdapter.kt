@@ -11,7 +11,7 @@ import com.music.m.R
 class SheetAdapter:BaseAdapter<SongSheetWW>() {
     var itemLongClick:((View,Int)->Boolean)?=null
     var itemClick:((View,Int)->Unit)?=null
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SongSheetWW?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SongSheetWW) {
         if(item==null)return
         holder.bindText(R.id.tv_title,item.name)
         holder.bindText(R.id.tv_musicCount,"共"+item.musicCount.toString()+"首")

@@ -14,7 +14,7 @@ import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.music.m.R
 
 class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherSong>?):BaseAdapter<OtherSong>(list) {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: OtherSong?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: OtherSong) {
         if(item==null)return
         holder.bindText(R.id.tv_albumName,item.title)
         holder.bindText(R.id.tv_duration,ResUtil.timeFormat("mm:ss",item.duration.toLong()*1000))

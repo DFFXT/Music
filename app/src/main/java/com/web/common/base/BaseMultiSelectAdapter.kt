@@ -15,7 +15,6 @@ import com.web.common.util.ViewUtil
 
 abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: List<T>?) : BaseAdapter<T>(list) {
 
-
     companion object {
         private const val limit: Int = 10000000
         const val TYPE_NONE_SELECTOR = 1
@@ -25,7 +24,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
         @IntDef(TYPE_LEFT_SELECTOR, TYPE_NONE_SELECTOR, TYPE_RIGHT_SELECTOR)
         annotation class MultiSelectType
     }
-    private val padding=ViewUtil.dpToPx(10f)
+    private val padding = ViewUtil.dpToPx(10f)
 
     val selectSet = HashSet<Int>()
     var isSelectAll = false
@@ -59,14 +58,14 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
     /**
      * 数据绑定、此处控制checkBox显示和隐藏
      */
-    final override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: T?) {
+    final override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: T) {
         val cb = holder.findViewById<View>(R.id.cb_itemMultiSelect)
         if (isSelect && getSelectType(position) != TYPE_NONE_SELECTOR) {
             cb.visibility = View.VISIBLE
-            if(getSelectType(position)== TYPE_LEFT_SELECTOR){
-                holder.itemView.setPadding(padding,0,0,0)
-            }else{
-                holder.itemView.setPadding(0,0,0,padding)
+            if (getSelectType(position) == TYPE_LEFT_SELECTOR) {
+                holder.itemView.setPadding(padding, 0, 0, 0)
+            } else {
+                holder.itemView.setPadding(0, 0, 0, padding)
             }
             cb.isSelected = selectSet.contains(position)
             cb.setOnClickListener {
@@ -77,7 +76,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
             }
         } else {
             cb.visibility = View.GONE
-            holder.itemView.setPadding(0,0,0,0)
+            holder.itemView.setPadding(0, 0, 0, 0)
             cb.setOnClickListener(null)
         }
         onBindItemView(holder, position, item)
@@ -98,7 +97,6 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
                 BaseViewHolder(createParent(R.layout.item_multi_select_right_root_view, parent, viewType))
             }
         }
-
     }
 
     private fun createParent(@LayoutRes layout: Int, parent: ViewGroup, viewType: Int): ViewGroup {
@@ -108,7 +106,6 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
         if (lp == null) {
             lp = LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         }
-
 
         if (viewType / limit == TYPE_LEFT_SELECTOR) {
             lp = lp as LinearLayout.LayoutParams
@@ -143,10 +140,10 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
         }
     }
 
-    fun <M:Any> getSelectList(interceptor:((T,Int)->M)): List<M> {
+    fun <M : Any> getSelectList(interceptor: ((T, Int) -> M)): List<M> {
         val list = ArrayList<M>()
         selectSet.forEach {
-            list.add(interceptor.invoke(data[it],it))
+            list.add(interceptor.invoke(data[it], it))
         }
         return list
     }
@@ -156,7 +153,7 @@ abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: 
     }
 
     abstract fun onCreateItemView(parent: ViewGroup, viewType: Int): View
-    abstract fun onBindItemView(holder: BaseViewHolder, position: Int, item: T?)
+    abstract fun onBindItemView(holder: BaseViewHolder, position: Int, item: T)
     /**
      *
      */

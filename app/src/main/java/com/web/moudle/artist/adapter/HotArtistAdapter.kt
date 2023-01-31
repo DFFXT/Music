@@ -10,7 +10,7 @@ import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.music.m.R
 
 class HotArtistAdapter:BaseAdapter<ArtistInfo>() {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistInfo?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistInfo) {
         if (item==null)return
         holder.bindImage(R.id.iv_artistIcon,R.drawable.singer_default_icon,item.avatar_big)
         if(item.ting_uid!=null){

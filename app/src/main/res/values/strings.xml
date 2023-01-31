@@ -96,6 +96,8 @@
 	<string name="setting_clearCacheTip">是否清空缓存，该操作会删除所有缓存音乐！</string>
 	<string name="setting_cacheHasCleared">共清空%1$s条记录</string>
 
+	<string name="setting_ignore_path">填入要忽略的文件夹</string>
+
 	<string name="select">选择</string>
 	<string name="chooser_fileSelect">文件选择</string>
 	<string name="chooser_dirSelect">文件夹选择</string>

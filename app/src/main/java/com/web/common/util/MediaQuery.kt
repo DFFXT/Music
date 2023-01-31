@@ -13,6 +13,7 @@ import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.setting.suffix.SuffixSelectActivity
 import com.music.m.R
+import com.web.moudle.setting.suffix.sp.IgnorePath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,8 +30,8 @@ object MediaQuery {
     fun scanMedia(ctx: Context, callback: (isOk: Boolean) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             AppConfig.noNeedScan = true
-            var hasMusic=false
-            ctx.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null).use { cursor ->
+            var hasMusic = false
+            ctx.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null,null, null).use { cursor ->
                 if (cursor == null) {
                     launch(Dispatchers.Main) {
                         callback(false)
@@ -39,12 +40,19 @@ object MediaQuery {
                 }
                 val types = SuffixSelectActivity.getScanType()
                 val out = arrayOfNulls<String>(2)
+                val ignorePathList = IgnorePath().ignorePathList.filter { !it.disabled }
+                DataSupport.deleteAll(Music::class.java)
                 while (cursor.moveToNext()) {
-                    var index = cursor.getColumnIndex("_data")
+                    var index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA)
                     val path = cursor.getString(index)
+                    val filterResult = ignorePathList.find { path.startsWith(it.path, true) }
+                    // 过滤结果，结果不为空，需要跳过
+                    if (filterResult != null) {
+                        continue
+                    }
 
-                    index = cursor.getColumnIndex("duration")
-                    val duration=cursor.getInt(index)
+                    index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
+                    val duration = cursor.getInt(index)
 
                     for (type in types) {
                         if (!type.isScanable) continue
@@ -54,46 +62,46 @@ object MediaQuery {
                                 continue
                             }
 
-                            hasMusic=true
+                            hasMusic = true
                             val lastSeparatorChar = path.lastIndexOf(File.separatorChar)
-                            //**文件名包含后缀
+                            // **文件名包含后缀
                             var fileName: String = path
                             if (lastSeparatorChar >= 0) {
                                 fileName = path.substring(lastSeparatorChar + 1)
                             }
                             Shortcut.getName(out, fileName)
-                            //**去后缀
+                            // **去后缀
                             val lastIndex = out[0]!!.lastIndexOf('.')
                             val music = Music(out[0]!!.substring(0, lastIndex), out[1], path)
-                            index = cursor.getColumnIndex("_size")
+                            index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.SIZE)
                             val size = cursor.getInt(index)
 
                             music.size = size.toLong()
-                            music.suffix=out[0]!!.substring(lastIndex+1)
+                            music.suffix = out[0]!!.substring(lastIndex + 1)
                             music.duration = duration
-                            index = cursor.getColumnIndex("album_id")
+                            index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID)
                             music.album_id = cursor.getInt(index).toString()
-                            index = cursor.getColumnIndex("album")
+                            index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
                             music.album = cursor.getString(index)
+                            music.save()
 
-                            val m = DataSupport.where("path=?", music.path).findFirst(Music::class.java)
+                            /*val m = DataSupport.where("path=?", music.path).findFirst(Music::class.java)
                             if (m == null) {
                                 music.save()
-                            } else {//***更新保持groupID不变
+                            } else { // ***更新保持groupID不变
                                 music.groupId = m.groupId
                                 music.id = m.id
                                 music.update(m.id.toLong())
-                            }
+                            }*/
                             break
                         }
                     }
                 }
             }
-            launch (Dispatchers.Main){
+            launch(Dispatchers.Main) {
                 callback(hasMusic)
             }
         }
-
     }
 
     /**
@@ -101,35 +109,35 @@ object MediaQuery {
      */
     @JvmStatic
     fun getLocalList(callback: (ArrayList<MusicList<Music>>) -> Unit) {
-        GlobalScope.launch (Dispatchers.IO){
+        GlobalScope.launch(Dispatchers.IO) {
             val musicList: ArrayList<MusicList<Music>> = arrayListOf()
             //**获取默认列表的歌曲
             val defList = DataSupport.findAll<Music>(Music::class.java)
 
             val defGroup = MusicList<Music>(ResUtil.getString(R.string.default_))
             defGroup.addAll(defList)
-            for(i in 0 until defGroup.size){
+            for (i in 0 until defGroup.size) {
                 val firstChar = defGroup[i].musicName[0]
-                defGroup[i].firstChar = if(PinYin.isChinese(firstChar)){
+                defGroup[i].firstChar = if (PinYin.isChinese(firstChar)) {
                     val res = PinyinHelper.toHanyuPinyinStringArray(firstChar)
-                    if(res!=null){
+                    if (res != null) {
                         res[0].toCharArray()[0]
-                    }else{
+                    } else {
                         '*'
                     }
-                }else if(PinYin.isEnglish(firstChar)){
+                } else if (PinYin.isEnglish(firstChar)) {
                     firstChar
-                }else{
+                } else {
                     '*'
                 }
                 defGroup[i].firstChar = defGroup[i].firstChar.toUpperCase()
             }
             musicList.add(defGroup)
-            //**获取自定义列表的歌曲
+            // **获取自定义列表的歌曲
 
-            val sheet=SongSheetManager.getSongSheetList()
+            val sheet = SongSheetManager.getSongSheetList()
             val sheetList = sheet.songList
-            if(sheetList.size==0){
+            if (sheetList.size == 0) {
                 sheet.addSongSheet(SongSheet(ResUtil.getString(R.string.sheet_like)))
             }
             for (songSheet in sheetList) {
@@ -149,29 +157,26 @@ object MediaQuery {
         }
     }
 
-
     /**
      * 删除音乐，并更新歌单
      */
     @JvmStatic
-    fun deleteMusic(ctx: Context,music: Music,group:Int,deleteFile:Boolean){
-        if (deleteFile) {//******删除源文件并更新媒体库
+    fun deleteMusic(ctx: Context, music: Music, group: Int, deleteFile: Boolean) {
+        if (deleteFile) { // ******删除源文件并更新媒体库
             deleteCacheMusic(music)
             ctx.contentResolver.delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "_data=?", arrayOf<String>(music.path))
         }
 
-
-        if (group == 0 || deleteFile) {//**影响group 0,在默认歌单里面删除或者删除源文件
+        if (group == 0 || deleteFile) { // **影响group 0,在默认歌单里面删除或者删除源文件
             val list = SongSheetManager.getSongSheetList().songList
             for (songSheet in list) {
                 songSheet.remove(music.id)
             }
             music.delete()
-        }
-        else {
-            SongSheetManager.getSongSheetList().songList[group-1].remove(music.id)
-            if(group==1){//**喜爱歌单删除
-                music.isLike=false
+        } else {
+            SongSheetManager.getSongSheetList().songList[group - 1].remove(music.id)
+            if (group == 1) { // **喜爱歌单删除
+                music.isLike = false
                 music.saveOrUpdate()
             }
             SongSheetManager.getSongSheetList().save()
@@ -182,23 +187,21 @@ object MediaQuery {
      * 修改音乐信息 path
      */
     @JvmStatic
-    fun updateMusic(oldMusic: Music,newMusic:Music){
-        val values=ContentValues()
-        values.put("_data",newMusic.path)
-        MyApplication.context.contentResolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,values,"_data=?", arrayOf(oldMusic.path))
+    fun updateMusic(oldMusic: Music, newMusic: Music) {
+        val values = ContentValues()
+        values.put("_data", newMusic.path)
+        MyApplication.context.contentResolver.update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, "_data=?", arrayOf(oldMusic.path))
     }
 
     /**
      * 删除音乐相关文件
      */
     @JvmStatic
-    fun deleteCacheMusic(music: Music){
+    fun deleteCacheMusic(music: Music) {
         var file = File(music.path)
         file.delete()
         file = File(music.lyricsPath)
         file.delete()
         music.delete()
     }
-
-
 }

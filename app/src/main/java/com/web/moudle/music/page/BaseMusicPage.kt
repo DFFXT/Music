@@ -1,8 +1,11 @@
 package com.web.moudle.music.page
 
-import android.os.IBinder
 import com.web.common.base.BaseFragment
+import com.web.moudle.music.page.local.control.interf.IMusicController
+import com.web.moudle.music.player.other.IMusicControl
 
-abstract class BaseMusicPage:BaseFragment() {
-    abstract fun setConnect(connect: IBinder)
+abstract class BaseMusicPage : BaseFragment() {
+    open fun getConnect(): IMusicControl {
+        return (activity as IMusicController).getMusicControl()
+    }
 }

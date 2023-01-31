@@ -14,7 +14,7 @@ import com.web.moudle.songSheetEntry.bean.Songlist
 import com.music.m.R
 
 class SongSheetListAdapter(private val ctx:Context,list:List<Songlist>): BaseAdapter<Songlist>(list) {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Songlist?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Songlist) {
         if(item==null)return
         val iv:ImageView=holder.findViewById(R.id.iv_musicIcon)
         ImageLoad.load(item.pic_s130).into(iv)

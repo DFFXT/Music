@@ -12,7 +12,7 @@ import com.music.m.R
 
 class ArtistTypeAdapter(data:List<ArtistType>):BaseAdapter<ArtistType>(data) {
     val padding= ViewUtil.dpToPx(30f)
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistType?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistType) {
         if (item==null)return
         holder.itemView.setPadding(0,padding,0,padding)
         holder.bindText(R.id.textView,item.typeName)

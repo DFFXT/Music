@@ -9,7 +9,7 @@ import com.web.moudle.musicEntry.bean.CommentItem
 import com.music.m.R
 
 class CommentAdapter(data:List<CommentItem>):BaseAdapter<CommentItem>(data) {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: CommentItem?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: CommentItem) {
         if(item==null)return
         holder.bindImage(R.id.iv_author,R.drawable.def_user_icon,item.author.userpic_small)
         holder.bindText(R.id.tv_author,item.author.username)

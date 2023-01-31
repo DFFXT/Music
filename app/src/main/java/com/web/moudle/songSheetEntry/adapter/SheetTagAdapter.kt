@@ -14,7 +14,7 @@ class SheetTagAdapter(private val ctx: Context, list: List<String>?) : BaseAdapt
             ResUtil.getColor(R.color.pink),
             ResUtil.getColor(R.color.lightBlue),
             ResUtil.getColor(R.color.colorAccent))
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: String) {
         holder.bindText(R.id.tv_tagName, item)
         val drawable = GradientDrawable()
         drawable.cornerRadius=8f

@@ -11,7 +11,7 @@ import com.web.moudle.videoEntry.ui.VideoEntryActivity
 import com.music.m.R
 
 class VideoRecommendAdapter:BaseAdapter<FeedData>() {
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: FeedData?) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: FeedData) {
         if(item==null)return
         if(item.feed_id==null){
             holder.bindImage(R.id.iv_videoIcon,ColorDrawable(ResUtil.getColor(R.color.gray)))
