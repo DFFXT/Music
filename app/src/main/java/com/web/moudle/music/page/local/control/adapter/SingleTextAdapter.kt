@@ -7,7 +7,7 @@ import android.widget.TextView
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.util.ViewUtil
-import com.web.web.R
+import com.music.m.R
 
 /**
  * 仅仅是单一text展示，没有其他功能

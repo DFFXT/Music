@@ -10,6 +10,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import com.music.m.R;
+
 
 public class Ring extends Activity{
 	public void onCreate(Bundle b){

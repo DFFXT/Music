@@ -6,7 +6,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItem
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
-import com.web.web.R
+import com.music.m.R
 
 class SongSheetInnerAdapter():BaseAdapter<SongSheetItem>() {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SongSheetItem?) {

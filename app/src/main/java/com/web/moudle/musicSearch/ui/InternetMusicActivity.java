@@ -14,7 +14,7 @@ import com.web.common.base.BaseFragmentPagerAdapter;
 import com.web.common.util.ResUtil;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.search.SearchActivity;
-import com.web.web.R;
+import com.music.m.R;
 
 import java.util.ArrayList;
 import java.util.Objects;

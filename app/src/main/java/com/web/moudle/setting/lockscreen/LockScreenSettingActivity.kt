@@ -26,7 +26,7 @@ import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.plug.LockScreenPlug
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_setting_lockscreen.*
 import java.io.File
 import java.io.FileInputStream

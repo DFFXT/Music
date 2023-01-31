@@ -16,7 +16,7 @@ import com.web.misc.ConfirmDialog
 import com.web.moudle.search.adapter.SearchSugAdapter
 import com.web.moudle.search.bean.SearchResItem
 import com.web.moudle.search.model.SearchViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_search.*
 import org.litepal.crud.DataSupport
 

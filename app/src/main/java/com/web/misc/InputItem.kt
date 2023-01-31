@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.web.common.util.KeyboardManager
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.item_edit.view.*
 
 /**

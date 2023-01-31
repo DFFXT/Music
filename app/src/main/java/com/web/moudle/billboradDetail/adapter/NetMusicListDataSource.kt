@@ -14,7 +14,7 @@ import com.web.moudle.billboradDetail.model.NetMusicListModel
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.net.retrofit.ResultTransform
-import com.web.web.R
+import com.music.m.R
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

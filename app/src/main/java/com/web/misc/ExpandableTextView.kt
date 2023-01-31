@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
-import com.web.web.R
+import com.music.m.R
 import kotlin.math.max
 import kotlin.math.min
 

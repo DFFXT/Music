@@ -11,7 +11,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseTextWatcher
 import com.web.common.base.BaseViewHolder
 import com.web.data.ScanMusicType
-import com.web.web.R
+import com.music.m.R
 
 class SuffixSelectAdapter(private val ctx:Context,private val list:ArrayList<ScanMusicType>): BaseAdapter<ScanMusicType>(list) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

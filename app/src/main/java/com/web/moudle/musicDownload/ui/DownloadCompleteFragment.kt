@@ -14,7 +14,7 @@ import com.web.moudle.musicDownload.adpter.CompleteAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.service.FileDownloadService
-import com.web.web.R
+import com.music.m.R
 
 class DownloadCompleteFragment : BaseDownloadFragment() {
 

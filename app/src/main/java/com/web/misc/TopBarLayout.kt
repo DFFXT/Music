@@ -14,7 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import com.web.web.R
+import com.music.m.R
 
 class TopBarLayout : FrameLayout {
     private val view: View = LayoutInflater.from(context).inflate(R.layout.layout_topar, this, false)

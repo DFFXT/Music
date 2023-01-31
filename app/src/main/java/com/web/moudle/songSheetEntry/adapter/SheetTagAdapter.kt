@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
-import com.web.web.R
+import com.music.m.R
 
 class SheetTagAdapter(private val ctx: Context, list: List<String>?) : BaseAdapter<String>(list) {
     private val tagColor= arrayOf(ResUtil.getColor(R.color.tag_color1),

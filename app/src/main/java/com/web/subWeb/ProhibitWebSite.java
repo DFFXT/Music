@@ -9,7 +9,7 @@ import java.util.Map;
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter;
 import com.web.moudle.service.FileDownloadService;
 import com.web.config.GetFiles;
-import com.web.web.R;
+import com.music.m.R;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

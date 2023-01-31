@@ -8,7 +8,7 @@ import com.web.common.util.ResUtil
 import com.web.moudle.artist.bean.ArtistBox
 import com.web.moudle.artist.bean.ArtistType
 import com.web.moudle.net.retrofit.SchedulerTransform
-import com.web.web.R
+import com.music.m.R
 
 class AllArtistViewModel:ViewModel() {
     private val model=ArtistModel()

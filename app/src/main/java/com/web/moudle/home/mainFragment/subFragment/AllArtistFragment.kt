@@ -14,7 +14,7 @@ import com.web.moudle.artist.adapter.ArtistTypeAdapter
 import com.web.moudle.artist.adapter.HotArtistAdapter
 import com.web.moudle.artist.bean.ArtistInfo
 import com.web.moudle.artist.model.AllArtistViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_all_artist.view.*
 
 class AllArtistFragment:BaseFragment() {

@@ -24,7 +24,7 @@ import com.web.moudle.home.mainFragment.subFragment.bean.MusicTag
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_song_sheet.*
 import kotlinx.android.synthetic.main.fragment_song_sheet.view.*
 import kotlinx.android.synthetic.main.layout_music_tag.view.*

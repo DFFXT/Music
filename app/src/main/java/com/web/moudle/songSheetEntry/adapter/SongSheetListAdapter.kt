@@ -11,7 +11,7 @@ import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.songSheetEntry.bean.Songlist
-import com.web.web.R
+import com.music.m.R
 
 class SongSheetListAdapter(private val ctx:Context,list:List<Songlist>): BaseAdapter<Songlist>(list) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Songlist?) {

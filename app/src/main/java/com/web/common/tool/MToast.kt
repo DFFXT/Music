@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
-import com.web.web.R
+import com.music.m.R
 
 object MToast {
     @JvmStatic

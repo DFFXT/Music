@@ -1,7 +1,7 @@
 package com.web.common.util
 
 import android.util.Log
-import com.web.web.R
+import com.music.m.R
 
 object UncaughtException:Thread.UncaughtExceptionHandler {
     override fun uncaughtException(t: Thread?, e: Throwable?) {

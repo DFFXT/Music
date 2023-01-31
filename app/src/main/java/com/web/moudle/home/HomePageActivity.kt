@@ -14,7 +14,7 @@ import com.web.moudle.home.mainFragment.MainFragment
 import com.web.moudle.home.video.VideoRecommendFragment
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.moudle.search.SearchActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_home_page.*
 import me.jessyan.autosize.internal.CustomAdapt
 

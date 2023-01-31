@@ -33,7 +33,7 @@ import com.web.moudle.music.player.SongSheetManager;
 import com.web.moudle.music.player.bean.SongSheet;
 import com.web.moudle.music.player.other.PlayerConfig;
 import com.web.moudle.music.player.plug.ActionControlPlug;
-import com.web.web.R;
+import com.music.m.R;
 
 import org.jetbrains.annotations.NotNull;
 

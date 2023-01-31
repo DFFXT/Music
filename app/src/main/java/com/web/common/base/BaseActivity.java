@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.web.common.constant.Constant;
 import com.web.misc.SwipeFrameLayout;
-import com.web.web.R;
+import com.music.m.R;
 
 import java.util.ArrayList;
 import java.util.List;

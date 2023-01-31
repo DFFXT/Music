@@ -2,21 +2,18 @@ package com.web.web
 
 import android.app.Activity
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
+import com.music.m.R
 import com.web.common.base.BaseActivity
+import com.web.common.base.PlayerObserver
 import com.web.common.util.PermissionManager
 import com.web.data.Music
-import com.web.data.MusicList
-import com.web.common.base.PlayerObserver
 import com.web.moudle.home.HomePageActivity
 import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.PlayerConnection
-import com.web.moudle.music.player.other.PlayerConfig
-import com.web.moudle.music.player.plug.ActionControlPlug
 
 /**
  * logo界面

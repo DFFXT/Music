@@ -12,7 +12,7 @@ import com.web.data.MusicList
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.setting.suffix.SuffixSelectActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

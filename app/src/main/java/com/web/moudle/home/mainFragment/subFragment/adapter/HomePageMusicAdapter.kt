@@ -10,7 +10,7 @@ import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItem
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
-import com.web.web.R
+import com.music.m.R
 
 class HomePageMusicAdapter:BaseAdapter<HomePageMusic>() {
     var itemClick:((item:HomePageMusic,index:Int)->Unit)?=null

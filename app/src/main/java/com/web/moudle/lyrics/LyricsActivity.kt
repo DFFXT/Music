@@ -9,6 +9,7 @@ import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.View
 import androidx.core.content.FileProvider
+import com.music.m.BuildConfig
 import com.web.common.base.*
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.Ticker
@@ -30,8 +31,8 @@ import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.service.FileDownloadService
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
-import com.web.web.BuildConfig
-import com.web.web.R
+
+import com.music.m.R
 import kotlinx.android.synthetic.main.music_control_big.view.*
 import kotlinx.android.synthetic.main.music_lyrics_view.*
 import kotlinx.android.synthetic.main.music_lyrics_view.rootView
@@ -277,7 +278,7 @@ class LyricsActivity : BaseActivity() {
                 intent.putExtra(Intent.EXTRA_TEXT,music!!.path)
             }else{
                 intent.putExtra(Intent.EXTRA_STREAM,
-                        FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID,File(connect!!.config.music!!.path)))
+                        FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID,File(connect!!.config.music!!.path)))
                 intent.type="video/*"
             }
             startActivity(Intent.createChooser(intent,connect?.config?.music?.musicName+" - 分享"))

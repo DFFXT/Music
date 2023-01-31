@@ -13,7 +13,7 @@ import com.bumptech.glide.request.transition.Transition
 
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.ViewUtil
-import com.web.web.R
+import com.music.m.R
 import io.reactivex.Observable
 import kotlin.math.max
 

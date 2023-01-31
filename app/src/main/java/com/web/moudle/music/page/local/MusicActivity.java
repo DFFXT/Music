@@ -48,7 +48,7 @@ import com.web.moudle.musicDownload.ui.MusicDownLoadActivity;
 import com.web.moudle.musicSearch.ui.InternetMusicActivity;
 import com.web.moudle.search.SearchActivity;
 import com.web.moudle.setting.ui.SettingActivity;
-import com.web.web.R;
+import com.music.m.R;
 
 import org.jetbrains.annotations.NotNull;
 

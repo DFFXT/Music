@@ -38,7 +38,7 @@ import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.service.FileDownloadService
 import com.web.moudle.musicEntry.bean.MusicDetailInfo
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_music_detail.*
 import kotlinx.android.synthetic.main.activity_music_detail.rootView
 import kotlinx.android.synthetic.main.music_navigator_control.*

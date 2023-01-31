@@ -11,7 +11,7 @@ import com.web.common.util.ResUtil
 import com.web.moudle.albumEntry.bean.OtherSong
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
-import com.web.web.R
+import com.music.m.R
 
 class AlbumListAdapter(private val ctx:Context,private val list:ArrayList<OtherSong>?):BaseAdapter<OtherSong>(list) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: OtherSong?) {

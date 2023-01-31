@@ -21,7 +21,7 @@ import com.web.moudle.songSheetEntry.adapter.SongSheetListAdapter
 import com.web.moudle.songSheetEntry.bean.SongSheetInfoBox
 import com.web.moudle.songSheetEntry.bean.Songlist
 import com.web.moudle.songSheetEntry.model.SongSheetViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_song_sheet_entry.*
 import java.text.SimpleDateFormat
 import java.util.*

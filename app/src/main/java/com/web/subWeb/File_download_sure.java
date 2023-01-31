@@ -2,7 +2,7 @@ package com.web.subWeb;
 
 import com.web.moudle.service.FileDownloadService;
 import com.web.config.GetFiles;
-import com.web.web.R;
+import com.music.m.R;
 
 import android.app.Activity;
 import android.content.Intent;

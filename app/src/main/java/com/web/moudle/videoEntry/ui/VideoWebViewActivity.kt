@@ -7,7 +7,7 @@ import android.view.WindowManager
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.web.common.base.BaseActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_video_web_view.*
 
 class VideoWebViewActivity:BaseActivity() {

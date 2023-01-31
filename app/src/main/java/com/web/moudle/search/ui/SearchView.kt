@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.layout_search.view.*
 
 /**

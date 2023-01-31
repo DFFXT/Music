@@ -7,7 +7,7 @@ import com.web.common.bean.Version
 import com.web.common.constant.Apk
 import com.web.common.util.ResUtil
 import com.web.misc.imageDraw.SnowDraw
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

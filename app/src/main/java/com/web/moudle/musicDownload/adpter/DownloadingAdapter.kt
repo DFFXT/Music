@@ -9,7 +9,7 @@ import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.moudle.musicDownload.bean.DownloadMusic
-import com.web.web.R
+import com.music.m.R
 
 class DownloadingAdapter:BaseAdapter<DownloadMusic>() {
 

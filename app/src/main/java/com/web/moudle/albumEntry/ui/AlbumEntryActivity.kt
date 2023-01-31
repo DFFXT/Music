@@ -17,7 +17,7 @@ import com.web.misc.ExpandableTextView
 import com.web.moudle.albumEntry.adapter.AlbumListAdapter
 import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.albumEntry.model.AlbumEntryViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_album_entry.*
 
 class AlbumEntryActivity : BaseActivity() {

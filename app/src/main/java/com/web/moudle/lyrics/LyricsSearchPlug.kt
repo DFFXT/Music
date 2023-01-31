@@ -26,7 +26,7 @@ import com.web.moudle.musicSearch.bean.next.SearchMusicWrapper1
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.model.InternetMusicModel
 import com.web.moudle.net.retrofit.SchedulerTransform
-import com.web.web.R
+import com.music.m.R
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.layout_pop_lyris_plug.view.*
 import kotlinx.coroutines.*

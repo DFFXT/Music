@@ -32,7 +32,7 @@ import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.SchedulerTransform
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_recent_listen.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

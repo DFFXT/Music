@@ -23,7 +23,7 @@ import com.web.moudle.musicSearch.bean.next.next.next.SimpleSongSheet
 import com.web.moudle.musicSearch.viewModel.SheetViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
 class SheetFragment:BaseSearchFragment() {

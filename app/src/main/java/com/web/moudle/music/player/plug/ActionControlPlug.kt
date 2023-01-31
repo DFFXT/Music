@@ -22,7 +22,7 @@ import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.other.PlayInterfaceManager
 import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.music.player.plugInterface.IntentReceiver
-import com.web.web.R
+import com.music.m.R
 import org.litepal.crud.DataSupport
 import java.util.*
 import java.util.concurrent.locks.Lock

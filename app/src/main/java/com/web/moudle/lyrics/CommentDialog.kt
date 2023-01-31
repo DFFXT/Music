@@ -21,7 +21,7 @@ import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.musicEntry.adapter.CommentAdapter
 import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_comment.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

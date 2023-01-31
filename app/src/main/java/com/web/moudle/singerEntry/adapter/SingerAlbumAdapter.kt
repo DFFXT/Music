@@ -8,7 +8,7 @@ import com.web.common.base.BaseViewHolder
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
-import com.web.web.R
+import com.music.m.R
 
 class SingerAlbumAdapter(private val ctx:Context, list:ArrayList<SimpleAlbumInfo>): BaseAdapter<SimpleAlbumInfo>(list) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: SimpleAlbumInfo?) {

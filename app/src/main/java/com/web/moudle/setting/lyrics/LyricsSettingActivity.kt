@@ -17,7 +17,7 @@ import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.other.FloatLyricsManager
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_lyrics_setting.*
 
 class LyricsSettingActivity : BaseActivity() {

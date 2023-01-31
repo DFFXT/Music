@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import androidx.core.content.FileProvider
+import com.music.m.BuildConfig
 import com.web.common.base.BaseActivity
 import com.web.common.base.log
 import com.web.common.bean.Version
@@ -14,8 +15,7 @@ import com.web.common.constant.Constant
 import com.web.common.util.IOUtil
 import com.web.common.util.ResUtil
 import com.web.moudle.notification.FileDownloadNotification
-import com.web.web.BuildConfig
-import com.web.web.R
+import com.music.m.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay

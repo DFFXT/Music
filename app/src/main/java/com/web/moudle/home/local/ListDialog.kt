@@ -12,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.BasePopupWindow
-import com.web.web.R
+import com.music.m.R
 
 class ListDialog(private val ctx:Context):BottomSheetDialog(ctx) {
     private val textList=ArrayList<String>()

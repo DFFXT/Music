@@ -8,7 +8,7 @@ import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
 import com.web.moudle.home.video.bean.FeedData
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
-import com.web.web.R
+import com.music.m.R
 
 class VideoRecommendAdapter:BaseAdapter<FeedData>() {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: FeedData?) {

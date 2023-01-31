@@ -2,7 +2,7 @@ package com.web.config;
 
 import java.util.ArrayList;
 
-import com.web.web.R;
+import com.music.m.R;
 
 import android.content.Context;
 import android.util.SparseArray;

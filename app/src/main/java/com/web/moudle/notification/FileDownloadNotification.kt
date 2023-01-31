@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.RemoteViews
 import com.web.common.base.BaseCustomNotification
 import com.web.common.util.ResUtil
-import com.web.web.R
+import com.music.m.R
 
 class FileDownloadNotification(ctx:Context):BaseCustomNotification(ctx,2,"downloadFile",ResUtil.getString(R.string.setting_update), R.layout.layout_download_progress) {
 

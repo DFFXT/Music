@@ -11,7 +11,7 @@ import com.web.misc.GapItemDecoration
 import com.web.moudle.home.video.adapter.VideoRecommendAdapter
 import com.web.moudle.home.video.bean.FeedData
 import com.web.moudle.home.video.model.VideoRecommendViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_video.view.*
 
 class VideoRecommendFragment:BaseFragment() {

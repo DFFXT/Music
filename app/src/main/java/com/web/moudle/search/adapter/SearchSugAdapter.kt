@@ -13,7 +13,7 @@ import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.search.bean.SearchResItem
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.songSheetEntry.ui.SongSheetActivity
-import com.web.web.R
+import com.music.m.R
 
 class SearchSugAdapter(searchSug: List<SearchResItem>) : BaseAdapter<SearchResItem>(searchSug) {
     var search:((keyword:String)->Unit)?=null

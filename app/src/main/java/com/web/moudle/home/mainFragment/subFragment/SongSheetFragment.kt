@@ -14,7 +14,7 @@ import com.web.moudle.home.mainFragment.model.MainFragmentViewModel
 import com.web.moudle.home.mainFragment.subFragment.adapter.SongSheetInnerAdapter
 import com.web.moudle.home.mainFragment.subFragment.bean.SongSheetItem
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_song_sheet.view.*
 
 class SongSheetFragment : BaseFragment() {

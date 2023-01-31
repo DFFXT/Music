@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import com.web.common.util.ResUtil
 import com.web.misc.ColorPicker
-import com.web.web.R
+import com.music.m.R
 
 class ColorPickerDialog(context:Context,currentColor:Int) {
     private var dialog:AlertDialog?=null

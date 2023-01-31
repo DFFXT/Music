@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.music.m.R;
 import com.web.config.WebConfig;
 import com.web.subWeb.File_download_sure;
 import com.web.subWeb.ProhibitWebSite;
@@ -240,7 +241,7 @@ public class Browser extends Activity implements OnClickListener{
 				config.put("imgMode", true);
 				noImage.setImageResource(R.drawable.showimg);
 			}
-		}else if(Id==R.id.B_Home){//--home键
+		}else if(Id== R.id.B_Home){//--home键
 			if(web.canGoBack()){
 				web.loadUrl("https://m.baidu.com/");
 				searchInput.setText(web.getUrl());

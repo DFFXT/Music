@@ -10,7 +10,7 @@ import com.web.misc.ConfirmDialog
 import com.web.misc.DrawableItemDecoration
 import com.web.moudle.musicDownload.adpter.DownloadingAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
-import com.web.web.R
+import com.music.m.R
 import kotlinx.coroutines.Dispatchers
 
 

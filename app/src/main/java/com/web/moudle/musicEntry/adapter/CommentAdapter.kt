@@ -6,7 +6,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
 import com.web.moudle.musicEntry.bean.CommentItem
-import com.web.web.R
+import com.music.m.R
 
 class CommentAdapter(data:List<CommentItem>):BaseAdapter<CommentItem>(data) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: CommentItem?) {

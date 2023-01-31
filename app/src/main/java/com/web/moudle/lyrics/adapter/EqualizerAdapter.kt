@@ -7,7 +7,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.base.onSeekTo
 import com.web.moudle.lyrics.bean.SoundInfo
-import com.web.web.R
+import com.music.m.R
 
 class EqualizerAdapter(data:List<SoundInfo>?=null):BaseAdapter<SoundInfo>(data) {
     var canSeekable=true

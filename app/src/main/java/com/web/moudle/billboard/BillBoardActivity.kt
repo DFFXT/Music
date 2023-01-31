@@ -14,7 +14,7 @@ import com.web.misc.GapItemDecoration
 import com.web.moudle.billboard.adapter.BillboardAdapter
 import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.billboard.viewmodel.RecommendViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_billboard.*
 
 class BillBoardActivity:BaseActivity() {

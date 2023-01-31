@@ -17,7 +17,7 @@ import com.web.moudle.setting.lockscreen.LockScreenSettingActivity;
 import com.web.moudle.setting.lyrics.LyricsSettingActivity;
 import com.web.moudle.setting.suffix.SuffixSelectActivity;
 import com.web.moudle.user.UserManager;
-import com.web.web.R;
+import com.music.m.R;
 
 @SuppressLint("InlinedApi")
 public class SettingActivity extends BaseActivity {

@@ -5,7 +5,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
-import com.web.web.R
+import com.music.m.R
 
 
 class SelectorListAlert(context: Context, title: String) : BaseListPopWindow<String>(

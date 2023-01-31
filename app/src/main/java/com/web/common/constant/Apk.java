@@ -12,7 +12,7 @@ import com.web.misc.ConfirmDialog;
 import com.web.misc.LoadingWindow;
 import com.web.moudle.service.UpdateService;
 import com.web.moudle.setting.model.SettingViewModel;
-import com.web.web.R;
+import com.music.m.R;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

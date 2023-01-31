@@ -12,7 +12,7 @@ import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
 import com.web.data.IgnoreMusic
 import com.web.data.Music
-import com.web.web.R
+import com.music.m.R
 
 
 class LocalMusicAdapter(private val ctx:Context,list:List<Music>?): BaseMultiSelectAdapter<Music>(ctx,list) {

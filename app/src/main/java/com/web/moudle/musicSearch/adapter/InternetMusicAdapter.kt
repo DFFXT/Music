@@ -17,7 +17,7 @@ import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
 import com.web.moudle.videoEntry.ui.VideoEntryActivity
-import com.web.web.R
+import com.music.m.R
 
 class InternetMusicAdapter(private val context: Context) : PagedListAdapter<SimpleMusicInfo, BaseViewHolder>(diff) {
     var listener: OnItemClickListener?=null

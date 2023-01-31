@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.web.common.util.ResUtil
-import com.web.web.R
+import com.music.m.R
 
 class IndexBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) :
         View(context, attrs, defStyleAttr, defStyleRes) {

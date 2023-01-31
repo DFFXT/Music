@@ -3,7 +3,7 @@ package com.web.config;
 import java.util.List;
 import java.util.Map;
 
-import com.web.web.R;
+import com.music.m.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

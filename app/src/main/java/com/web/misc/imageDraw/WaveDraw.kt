@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.view.View
 import com.web.common.base.log
 import com.web.common.util.ResUtil
-import com.web.web.R
+import com.music.m.R
 import kotlin.math.pow
 
 /**

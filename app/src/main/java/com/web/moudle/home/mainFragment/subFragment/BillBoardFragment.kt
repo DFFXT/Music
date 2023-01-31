@@ -12,7 +12,7 @@ import com.web.common.util.ResUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.billboard.adapter.BillboardAdapter
 import com.web.moudle.home.mainFragment.model.MainFragmentViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_billboard.view.*
 
 class BillBoardFragment:BaseFragment() {

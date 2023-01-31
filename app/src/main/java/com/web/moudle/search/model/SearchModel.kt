@@ -6,7 +6,7 @@ import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.DataTransform
 import com.web.moudle.net.retrofit.SchedulerTransform
 import com.web.moudle.search.bean.SearchResItem
-import com.web.web.R
+import com.music.m.R
 import io.reactivex.Observable
 import org.litepal.crud.DataSupport
 import java.util.*

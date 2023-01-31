@@ -21,7 +21,7 @@ import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicSearch.adapter.SimpleAlbumAdapter
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.web.moudle.musicSearch.viewModel.AlbumViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_music_search.*
 
 class AlbumFragment:BaseSearchFragment() {

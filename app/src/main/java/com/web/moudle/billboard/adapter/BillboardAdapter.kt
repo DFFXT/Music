@@ -12,7 +12,7 @@ import com.web.common.util.ResUtil
 import com.web.moudle.billboard.bean.Content
 import com.web.moudle.billboradDetail.NetMusicListActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.web.web.R
+import com.music.m.R
 
 class BillboardAdapter(data:List<Content>):BaseAdapter<Content>(data) {
     private val ids= arrayListOf(R.id.tv_no1,R.id.tv_no2,R.id.tv_no3)

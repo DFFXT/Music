@@ -14,7 +14,7 @@ import com.web.misc.ConfirmDialog
 import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.chooser.LocalChooserActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_cache.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

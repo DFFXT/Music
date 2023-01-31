@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.common.util.ResUtil
-import com.web.web.R
+import com.music.m.R
 
 class IndexBarAdapter : BaseAdapter<Char>() {
     private var index = -1

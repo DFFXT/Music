@@ -11,7 +11,7 @@ import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.layout_action_tools.view.*
 
 /**

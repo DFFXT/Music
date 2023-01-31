@@ -8,7 +8,7 @@ import com.web.common.util.ViewUtil
 import com.web.moudle.artist.ArtistTypeActivity
 import com.web.moudle.artist.bean.ArtistInfo
 import com.web.moudle.artist.bean.ArtistType
-import com.web.web.R
+import com.music.m.R
 
 class ArtistTypeAdapter(data:List<ArtistType>):BaseAdapter<ArtistType>(data) {
     val padding= ViewUtil.dpToPx(30f)

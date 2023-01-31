@@ -22,7 +22,7 @@ import com.web.moudle.billboradDetail.adapter.NetMusicListPagedAdapter
 import com.web.moudle.billboradDetail.bean.BillBoardInfo
 import com.web.moudle.billboradDetail.model.NetMusicListViewModel
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_net_music_list.*
 
 class NetMusicListActivity:BaseActivity() {

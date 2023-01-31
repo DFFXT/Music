@@ -14,6 +14,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.music.m.R;
 import com.web.common.base.BaseActivity;
 import com.web.moudle.music.page.local.MusicActivity;
 import com.web.moudle.net.NetApis;

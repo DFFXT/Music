@@ -13,7 +13,7 @@ import com.web.common.base.BasePageChangeListener;
 import com.web.common.util.ViewUtil;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.service.FileDownloadService;
-import com.web.web.R;
+import com.music.m.R;
 
 import java.util.ArrayList;
 import java.util.Objects;

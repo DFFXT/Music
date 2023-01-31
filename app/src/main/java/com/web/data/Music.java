@@ -5,7 +5,7 @@ import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
 import com.web.config.Shortcut;
 import com.web.common.util.MediaQuery;
-import com.web.web.R;
+import com.music.m.R;
 
 import org.litepal.crud.DataSupport;
 

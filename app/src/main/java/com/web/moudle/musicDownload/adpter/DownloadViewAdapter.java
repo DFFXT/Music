@@ -13,7 +13,7 @@ import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.data.InternetMusicDetail;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
-import com.web.web.R;
+import com.music.m.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -14,7 +14,7 @@ import com.web.common.util.ViewUtil;
 import com.web.misc.InputItem;
 import com.web.moudle.music.page.local.control.interf.LocalSheetListener;
 import com.web.moudle.music.page.local.control.interf.RemoveItemListener;
-import com.web.web.R;
+import com.music.m.R;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import com.web.common.tool.MToast
 import com.web.moudle.login.model.LoginModel
 import com.web.moudle.user.User
 import com.web.moudle.user.UserManager
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_login.view.*
 
 class LoginFragment : BaseFragment() {

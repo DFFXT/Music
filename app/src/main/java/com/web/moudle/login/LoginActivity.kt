@@ -10,7 +10,7 @@ import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.moudle.login.fragment.LoginFragment
 import com.web.moudle.login.fragment.RegisterFragment
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity() {

@@ -5,7 +5,7 @@ import android.view.View
 import com.web.common.base.BaseAdapter
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.layout_create_select_sheet.view.*
 
 /**

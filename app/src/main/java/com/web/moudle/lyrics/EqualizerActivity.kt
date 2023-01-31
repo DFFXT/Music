@@ -24,7 +24,7 @@ import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.plug.ActionControlPlug
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_equalizer.*
 import org.litepal.crud.DataSupport
 import kotlin.math.min

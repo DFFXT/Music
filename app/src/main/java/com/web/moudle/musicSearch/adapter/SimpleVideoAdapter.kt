@@ -10,7 +10,7 @@ import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.ResUtil
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleVideoInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
-import com.web.web.R
+import com.music.m.R
 
 class SimpleVideoAdapter:PagedListAdapter<SimpleVideoInfo,BaseViewHolder>(diff) {
     var itemClick:((SimpleVideoInfo?)->Unit)?=null

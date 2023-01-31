@@ -4,7 +4,7 @@ import androidx.annotation.CallSuper
 import com.web.app.MyApplication
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
-import com.web.web.R
+import com.music.m.R
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

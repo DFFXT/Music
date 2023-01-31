@@ -12,7 +12,7 @@ import android.text.style.TextAppearanceSpan
 import androidx.annotation.*
 import androidx.core.content.res.ResourcesCompat
 import com.web.app.MyApplication
-import com.web.web.R
+import com.music.m.R
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*

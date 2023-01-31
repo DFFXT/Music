@@ -12,7 +12,7 @@ import com.web.common.util.WindowUtil
 import com.web.moudle.artist.adapter.ArtistListAdapter
 import com.web.moudle.artist.bean.ArtistInfo
 import com.web.moudle.artist.model.AllArtistViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_artist_type.*
 
 class ArtistTypeActivity:BaseActivity() {

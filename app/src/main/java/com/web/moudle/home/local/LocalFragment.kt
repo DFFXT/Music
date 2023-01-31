@@ -33,7 +33,7 @@ import com.web.moudle.recentListen.RecentListenActivity
 import com.web.moudle.search.SearchActivity
 import com.web.moudle.setting.ui.SettingActivity
 import com.web.moudle.user.UserManager
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_local.view.*
 
 class LocalFragment : BaseFragment() {

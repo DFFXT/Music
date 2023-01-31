@@ -16,7 +16,7 @@ import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
-import com.web.web.R
+import com.music.m.R
 
 class NetMusicListPagedAdapter(diff:DiffUtil.ItemCallback<SimpleMusicInfo>):PagedListAdapter<SimpleMusicInfo,BaseViewHolder>(diff) {
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): BaseViewHolder {

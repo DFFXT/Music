@@ -22,7 +22,7 @@ import com.web.moudle.music.player.plug.ActionControlPlug;
 import com.web.moudle.musicDownload.bean.DownloadMusic;
 import com.web.moudle.net.proxy.InternetProxy;
 import com.web.moudle.notification.DownloadNotification;
-import com.web.web.R;
+import com.music.m.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.litepal.Operator;

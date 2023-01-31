@@ -17,7 +17,7 @@ import com.web.data.ScanMusicType
 import com.web.misc.GapItemDecoration
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
 import com.web.moudle.preference.SP
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_select_suffix.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

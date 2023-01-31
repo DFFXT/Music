@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.web.common.util.ViewUtil
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.layout_confirm.view.*
 
 

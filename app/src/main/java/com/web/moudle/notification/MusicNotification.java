@@ -13,7 +13,7 @@ import com.web.moudle.music.page.local.MusicActivity;
 import com.web.moudle.music.player.NewPlayer;
 import com.web.moudle.music.player.plug.ActionControlPlug;
 import com.web.moudle.setting.lyrics.LyricsSettingActivity;
-import com.web.web.R;
+import com.music.m.R;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -33,7 +33,7 @@ import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.PlayerConnection
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_lock_screen.*
 import java.util.*
 

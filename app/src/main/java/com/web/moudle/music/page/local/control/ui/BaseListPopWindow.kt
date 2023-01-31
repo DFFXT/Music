@@ -14,7 +14,7 @@ import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.moudle.music.page.local.control.interf.RemoveItemListener
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.layout_title_list.view.*
 
 

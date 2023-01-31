@@ -10,9 +10,8 @@ import android.widget.RelativeLayout
 import androidx.annotation.IntDef
 import androidx.annotation.IntRange
 import androidx.annotation.LayoutRes
-import com.web.common.util.ResUtil
+import com.music.m.R
 import com.web.common.util.ViewUtil
-import com.web.web.R
 
 abstract class BaseMultiSelectAdapter<T : Any?>(private val ctx: Context, list: List<T>?) : BaseAdapter<T>(list) {
 

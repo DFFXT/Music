@@ -14,7 +14,7 @@ import com.web.moudle.home.mainFragment.subFragment.BillBoardFragment
 import com.web.moudle.home.mainFragment.subFragment.MusicMainFragment
 import com.web.moudle.home.mainFragment.subFragment.SongSheetFragment
 import com.web.moudle.search.SearchActivity
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.fragment_main.view.*
 
 class MainFragment: BaseFragment() {

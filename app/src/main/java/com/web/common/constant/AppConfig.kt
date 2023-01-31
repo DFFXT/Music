@@ -6,7 +6,7 @@ import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.moudle.preference.SP
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
-import com.web.web.R
+import com.music.m.R
 
 /**
  * app 配置

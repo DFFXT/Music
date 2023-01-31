@@ -3,7 +3,7 @@ package com.web.misc
 import android.content.Context
 import android.view.LayoutInflater
 import com.web.common.util.ViewUtil
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.layout_input.view.*
 
 class InputDialog (ctx:Context):BasePopupWindow(

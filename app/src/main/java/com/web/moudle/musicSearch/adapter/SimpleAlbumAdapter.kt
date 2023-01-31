@@ -9,7 +9,7 @@ import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.ResUtil
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
-import com.web.web.R
+import com.music.m.R
 
 class SimpleAlbumAdapter:PagedListAdapter<SimpleAlbumInfo,BaseViewHolder>(diff) {
     var itemClick:((SimpleAlbumInfo?)->Unit)?=null

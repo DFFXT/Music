@@ -16,7 +16,7 @@ import com.web.misc.DrawableItemDecoration
 import com.web.moudle.setting.chooser.adapter.LocalChooserAdapter
 import com.web.moudle.setting.chooser.bean.LocalItem
 import com.web.moudle.setting.chooser.model.LocalChooserViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_local_chooser.*
 import java.io.File
 

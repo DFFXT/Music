@@ -15,7 +15,7 @@ import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.model.SingerEntryViewModel
 import com.web.moudle.singerEntry.ui.fragment.SingerAllAlbumFragment
 import com.web.moudle.singerEntry.ui.fragment.SingerAllMusicFragment
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_singer_entry_new.*
 
 class SingerEntryActivityNew : BaseActivity() {

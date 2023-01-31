@@ -22,7 +22,7 @@ import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.moudle.videoEntry.bean.VideoInfoBox
 import com.web.moudle.videoEntry.model.VideoViewModel
-import com.web.web.R
+import com.music.m.R
 import kotlinx.android.synthetic.main.activity_video_entry.*
 import kotlinx.android.synthetic.main.layout_video_control.view.*
 import kotlinx.coroutines.Dispatchers

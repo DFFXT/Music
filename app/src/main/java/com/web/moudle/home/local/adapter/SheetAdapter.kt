@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.moudle.music.player.bean.SongSheetWW
-import com.web.web.R
+import com.music.m.R
 
 class SheetAdapter:BaseAdapter<SongSheetWW>() {
     var itemLongClick:((View,Int)->Boolean)?=null

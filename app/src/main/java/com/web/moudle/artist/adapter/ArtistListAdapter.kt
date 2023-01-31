@@ -6,7 +6,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
 import com.web.moudle.artist.bean.ArtistInfo
 import com.web.moudle.singerEntry.ui.SingerEntryActivity
-import com.web.web.R
+import com.music.m.R
 
 class ArtistListAdapter(data:List<ArtistInfo>):BaseAdapter<ArtistInfo>(data) {
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: ArtistInfo?) {

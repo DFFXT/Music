@@ -24,6 +24,8 @@ import java.util.Calendar;
 
 import androidx.core.app.NotificationCompat;
 
+import com.music.m.R;
+
 @SuppressLint("SimpleDateFormat") public class Alarm_Activity extends Activity{
 	Intent intent;
 	PendingIntent pendingIntent;

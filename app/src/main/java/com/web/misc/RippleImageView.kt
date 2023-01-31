@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
-import com.web.web.R
+import com.music.m.R
 
 class RippleImageView : RoundImageView {
 

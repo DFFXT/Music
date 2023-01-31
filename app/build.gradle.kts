@@ -5,8 +5,9 @@ plugins {
     id("kotlin-kapt")
 }
 android {
-    namespace = "com.web.web"
-    compileSdkVersion = "android-31"
+    namespace = "com.music.m"
+    compileSdk = 31
+    // compileSdkVersion = "android-31"
     // buildToolsVersion "30.0.3"
 
     defaultConfig {

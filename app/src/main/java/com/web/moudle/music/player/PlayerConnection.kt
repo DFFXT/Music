@@ -17,7 +17,7 @@ import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.music.player.plug.PlayTypePlug
 import com.web.moudle.net.proxy.InternetProxy
-import com.web.web.R
+import com.music.m.R
 import java.io.FileNotFoundException
 import java.io.IOException
 

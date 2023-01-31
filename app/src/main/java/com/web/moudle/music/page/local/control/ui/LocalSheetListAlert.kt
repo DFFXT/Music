@@ -6,7 +6,7 @@ import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.LocalSheetAdapter
 import com.web.moudle.music.page.local.control.interf.LocalSheetListener
-import com.web.web.R
+import com.music.m.R
 
 
 class LocalSheetListAlert(context: Context, title: String) : BaseListPopWindow<String>(
