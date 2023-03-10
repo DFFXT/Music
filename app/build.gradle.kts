@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.com.amazonaws.PredefinedClientConfigurations.defaultConfig
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -56,6 +58,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    viewBinding.enable = true
 
     compileOptions {
         targetCompatibility(1.8)
@@ -67,6 +70,9 @@ android {
             val file: Array<File> = File(projectDir.path + "/src/main/next_res").listFiles()
             this.srcDirs(file)
         }
+    }
+    buildOutputs.all {
+        System.out.println("->"+this.outputFile.absolutePath)
     }
 }
 
@@ -104,6 +110,10 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:3.2.33")
     implementation("me.jessyan:autosize:1.2.1")
     implementation("com.github.DFFXT:PreferenceUtils:1.2")
+
+    implementation("com.mpatric:mp3agic:0.9.1")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.14.2")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.14.2")
 
     /* def room_version = "2.4.3"
 

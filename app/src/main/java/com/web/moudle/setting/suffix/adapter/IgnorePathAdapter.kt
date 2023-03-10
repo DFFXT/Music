@@ -8,7 +8,7 @@ import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseTextWatcher
 import com.web.common.base.BaseViewHolder
 import com.web.moudle.setting.suffix.sp.IgnorePath
-import com.web.web.R
+import com.music.m.R
 
 /**
  * 路径忽略adapter

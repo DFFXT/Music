@@ -77,7 +77,7 @@
         </activity>
         <activity
             android:theme="@style/FullscreenTheme"
-            android:name=".HelloActivity"
+            android:name="com.web.web.HelloActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:label="${APP_NAME}"
             android:exported="true">
@@ -88,7 +88,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Browser"
+            android:name="com.web.web.Browser"
             android:configChanges="orientation|screenSize"
             android:label="@string/webview_choose"
             android:windowSoftInputMode="adjustPan"
@@ -104,7 +104,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Alarm_Activity" />
+        <activity android:name="com.web.web.Alarm_Activity" />
 
         <service android:name="com.web.moudle.music.player.NewPlayer" />
         <service android:name="com.web.moudle.service.FileDownloadService" />
@@ -116,7 +116,7 @@
             android:name="com.web.subWeb.File_download_sure"
             android:theme="@style/ActivityTransparent" />
         <activity android:name="com.web.subWeb.ProhibitWebSite" />
-        <activity android:name=".Computer" />
+        <activity android:name="com.web.web.Computer" />
         <activity android:name="com.web.subWeb.VideoPlay" />
         <activity
             android:name="com.web.moudle.lockScreen.ui.LockScreenActivity"

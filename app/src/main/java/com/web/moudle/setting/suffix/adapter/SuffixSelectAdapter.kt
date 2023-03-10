@@ -15,7 +15,7 @@ import com.web.common.base.log
 import com.web.common.tool.MToast
 import com.web.data.ScanMusicType
 import com.web.moudle.setting.suffix.SuffixSelectActivity
-import com.web.web.R
+import com.music.m.R
 import org.litepal.crud.DataSupport
 
 /**

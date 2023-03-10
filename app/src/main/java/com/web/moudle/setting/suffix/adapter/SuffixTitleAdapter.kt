@@ -3,7 +3,7 @@ package com.web.moudle.setting.suffix.adapter
 import android.view.ViewGroup
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseViewHolder
-import com.web.web.R
+import com.music.m.R
 
 /**
  * 标题item

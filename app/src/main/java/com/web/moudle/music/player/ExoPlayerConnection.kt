@@ -1,8 +1,10 @@
 package com.web.moudle.music.player
 
+import android.content.ContentUris
 import android.content.Context
 import android.media.audiofx.Equalizer
 import android.os.Binder
+import android.provider.MediaStore
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.exoplayer2.Player
 import com.web.common.base.PlayerObserver
@@ -17,7 +19,7 @@ import com.web.moudle.music.player.other.PlayInterfaceManager
 import com.web.moudle.music.player.other.PlayerConfig
 import com.web.moudle.music.player.plug.PlayTypePlug
 import com.web.moudle.net.proxy.InternetProxy
-import com.web.web.R
+import com.music.m.R
 import java.io.FileNotFoundException
 import java.io.IOException
 
@@ -67,7 +69,7 @@ class ExoPlayerConnection(
     }
 
     override fun removeObserver(lifecycleOwner: LifecycleOwner?, playerObserver: PlayerObserver?) {
-        playInterfaceManager.removeObserver(lifecycleOwner)
+        playInterfaceManager.removeObserver(lifecycleOwner, playerObserver)
     }
 
     override fun getPlayerInfo(lifecycleOwner: LifecycleOwner?) {
@@ -148,7 +150,11 @@ class ExoPlayerConnection(
         player.reset()
         try {
             config.isPrepared = false
-            player.load(InternetProxy.proxyUrl(music.path), autoPlay)
+            if (music.localUriId == 0L) {
+                player.load(InternetProxy.proxyUrl(music.path), autoPlay)
+            } else {
+                player.load(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, music.localUriId), autoPlay)
+            }
             // player.setDataSource(InternetProxy.proxyUrl(music.path), autoPlay)
             // player.prepareAsync()
             AppConfig.lastMusic = music.path

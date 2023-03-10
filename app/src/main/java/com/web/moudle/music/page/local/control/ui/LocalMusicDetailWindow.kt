@@ -11,7 +11,7 @@ import com.web.common.util.ResUtil.getFileSize
 import com.web.common.util.ResUtil.timeFormat
 import com.web.data.Music
 import com.web.misc.InputItem
-import com.web.web.R
+import com.music.m.R
 
 /**
  * 歌曲详情弹窗

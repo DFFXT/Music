@@ -51,8 +51,8 @@ import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.moudle.search.SearchActivity
 import com.web.moudle.search.SearchActivity.Companion.actionStart
 import com.web.moudle.setting.ui.SettingActivity
-import com.web.web.R
-import com.web.web.databinding.RestructMusicLayoutBinding
+import com.music.m.R
+import com.music.m.databinding.RestructMusicLayoutBinding
 import java.io.File
 import java.util.*
 
@@ -149,6 +149,7 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
                     MusicOrigin.STORAGE -> {
                         tv_musicOrigin!!.text = "STORAGE"
                     }
+                    else -> {}
                 }
             }
         }
@@ -452,6 +453,7 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
             PlayType.RANDOM -> {
                 musicPlayType.setImageResource(R.drawable.random_icon)
             }
+            else -> {}
         }
     }
 

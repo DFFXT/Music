@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 public class Music extends DataSupport implements Cloneable,Serializable {
 
     private int id;
+
+    private long localUriId;
     private String musicName;
     private String singer;
     private String path;
@@ -226,5 +228,13 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public void setFirstChar(char firstChar) {
         this.firstChar = firstChar;
+    }
+
+    public long getLocalUriId() {
+        return localUriId;
+    }
+
+    public void setLocalUriId(long localUriId) {
+        this.localUriId = localUriId;
     }
 }

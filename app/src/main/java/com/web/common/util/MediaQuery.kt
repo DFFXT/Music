@@ -75,7 +75,8 @@ object MediaQuery {
                             val music = Music(out[0]!!.substring(0, lastIndex), out[1], path)
                             index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.SIZE)
                             val size = cursor.getInt(index)
-
+                            index = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+                            music.localUriId = cursor.getLong(index)
                             music.size = size.toLong()
                             music.suffix = out[0]!!.substring(lastIndex + 1)
                             music.duration = duration
