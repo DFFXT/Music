@@ -51,10 +51,11 @@ class IgnorePathAdapter : BaseAdapter<IgnorePath.IgnoreItem>(), IAdapterAnimatio
     }
 
     override fun insert(position: Int) {
-        val list = mIgnorePath.ignorePathList
+        val list = ArrayList(data)
         list.add(IgnorePath.IgnoreItem("", false))
+        data = list
         notifyItemInserted(list.size - 1)
-        notifyItemRangeChanged(list.size - 1, 1)
+        //notifyItemRangeChanged(list.size - 1, 1)
     }
 
     /**
