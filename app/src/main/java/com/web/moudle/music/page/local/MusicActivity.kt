@@ -115,7 +115,7 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         }
 
         override fun onCurrentTime(duration: Int, maxTime: Int) {
-            if (mBinding.musicControlBox.bar.isPressed) {
+            if (!mBinding.musicControlBox.bar.isPressed) {
                 mBinding.musicControlBox.bar.progress = duration
                 tv_currentTime!!.text = timeFormat("mm:ss", duration.toLong())
             }
