@@ -155,6 +155,10 @@ class ExoPlayerConnection(
             } else {
                 player.load(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, music.localUriId), autoPlay)
             }
+            // 触发状态变化，默认状态立即变化，即使如果播放网络音乐会缓冲一段时间
+            if (autoPlay) {
+                playInterfaceManager.onPlay()
+            }
             // player.setDataSource(InternetProxy.proxyUrl(music.path), autoPlay)
             // player.prepareAsync()
             AppConfig.lastMusic = music.path
