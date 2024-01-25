@@ -4,6 +4,9 @@ import android.app.Application
 import com.fxffxt.preferen.Config
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.skin.skincore.SkinManager
+import com.skin.skincore.provider.DefaultProviderFactory
+import com.skin.skincore.provider.ResourceProviderFactory
 import com.tencent.bugly.crashreport.CrashReport
 import com.web.common.constant.Constant
 import com.web.moudle.net.proxy.InternetProxy
@@ -30,6 +33,8 @@ class MyApplication : LitePalApplication() {
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
             ClassicsFooter(context)
         }
+
+        SkinManager.init(this, 0, DefaultProviderFactory())
     }
     companion object {
         lateinit var context: Application
