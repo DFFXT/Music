@@ -8,14 +8,14 @@ plugins {
 }
 android {
     namespace = "com.music.m"
-    compileSdk = 31
+    compileSdk = 34
     // compileSdkVersion = "android-31"
     // buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId = "com.music.m"
         minSdk = 23
-        targetSdk = 31
+        targetSdk = 34
         // testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {

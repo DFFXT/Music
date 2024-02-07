@@ -5,7 +5,7 @@ import com.web.moudle.music.page.local.control.interf.IMusicController
 import com.web.moudle.music.player.other.IMusicControl
 
 abstract class BaseMusicPage : BaseFragment() {
-    open fun getConnect(): IMusicControl {
+    open fun getConnect(): IMusicControl? {
         return (activity as IMusicController).getMusicControl()
     }
 }

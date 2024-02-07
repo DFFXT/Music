@@ -31,8 +31,7 @@ class ColorPicker @JvmOverloads constructor(context: Context?, attrs: AttributeS
         bitmap= Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_4444)
         canvas= Canvas(bitmap!!)
     }
-    override fun onDraw(c: Canvas?) {
-        if(c==null)return
+    override fun onDraw(c: Canvas) {
         paint.shader=gradient
         canvas?.drawRect(0f,0f,width.toFloat(),height.toFloat(),paint)
         c.drawBitmap(bitmap!!,0f,0f,null)

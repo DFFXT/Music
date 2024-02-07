@@ -32,8 +32,8 @@ public class WebConfig {
 		WebSettings set=web.getSettings();
         set.setDefaultTextEncodingName("utf-8");
         set.setJavaScriptEnabled(true);
-        set.setAppCacheEnabled(false);
-        set.setAppCachePath(GetFiles.cachePath);
+        // set.setAppCacheEnabled(false);
+        // set.setAppCachePath(GetFiles.cachePath);
         set.setDomStorageEnabled(true); 
         set.setAllowFileAccess(true);
         set.setSupportZoom(true); 

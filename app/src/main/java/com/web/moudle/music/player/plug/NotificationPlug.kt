@@ -4,11 +4,16 @@ import android.app.Service
 import com.web.data.Music
 import com.web.moudle.music.player.other.PlayInterface
 import com.web.moudle.music.player.other.PlayerConfig
+import com.web.moudle.music.player.plugInterface.ServiceLifeCycle
 import com.web.moudle.notification.MusicNotification
 
-class NotificationPlug(service: Service) : PlayInterface {
+class NotificationPlug(service: Service) : PlayInterface,ServiceLifeCycle {
     private val config = PlayerConfig
     private val notification by lazy { MusicNotification(service) }
+
+    override fun onCreate() {
+
+    }
     override fun onPlay() {
         notification.setPlayStatus(true)
         notifyChange()
@@ -35,5 +40,9 @@ class NotificationPlug(service: Service) : PlayInterface {
         } else {
             notification.notifyChange()
         }
+    }
+
+    override fun onDestroy() {
+
     }
 }

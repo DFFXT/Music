@@ -181,6 +181,8 @@ class ExoPlayerConnection(
         playInterfaceManager.onLoad(getCurrentMusic(), getCurrentMusic()?.duration ?: 0)
         if (!player.isPlaying()) {
             playInterfaceManager.pause(owner)
+        } else {
+            playInterfaceManager.play(owner)
         }
         playInterfaceManager.onCurrentTime(player.getCurrentDuration().toInt(), player.getDuration().toInt())
         playInterfaceManager.musicOriginChanged(owner, config.musicOrigin)

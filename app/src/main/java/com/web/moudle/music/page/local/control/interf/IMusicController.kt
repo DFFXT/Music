@@ -11,5 +11,5 @@ interface IMusicController {
     /**
      * 获取播放器接口
      */
-    fun getMusicControl(): IMusicControl
+    fun getMusicControl(): IMusicControl?
 }

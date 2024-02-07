@@ -365,8 +365,8 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         })
     }
 
-    override fun getMusicControl(): IMusicControl {
-        return connect!!
+    override fun getMusicControl(): IMusicControl? {
+        return connect
     }
 
     override fun onClick(v: View) { // --点击事件

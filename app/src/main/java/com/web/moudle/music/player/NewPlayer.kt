@@ -1,10 +1,15 @@
 package com.web.moudle.music.player
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.IBinder
+import com.music.m.R
 import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.other.MusicDataSource
 import com.web.moudle.music.player.other.PlayInterfaceManager
@@ -33,6 +38,8 @@ class NewPlayer : Service() {
         super.onCreate()
         musicDispatcher.add(null, LockScreenPlug(this))
         musicDispatcher.add(null, HeadSetPlug(control))
+        musicDispatcher.add(null, MediaSessionServerPlug(control))
+        musicDispatcher.add(null, MediaSessionServerPlug(control))
         musicDispatcher.add(null, PhoneStatePlug(control))
         musicDispatcher.add(null, ActionControlPlug(control, player, musicDispatcher, musicDataSource))
         musicDispatcher.add(null, FloatWindowPlug(control))
@@ -40,6 +47,7 @@ class NewPlayer : Service() {
         musicDispatcher.add(null, NotificationPlug(this))
         musicDispatcher.add(null, musicDataSource)
         musicDispatcher.add(null, TickerPlug(musicDispatcher, player))
+        musicDispatcher.add(null, AudioFocusPlug(control))
         musicDispatcher.onCreate()
     }
 

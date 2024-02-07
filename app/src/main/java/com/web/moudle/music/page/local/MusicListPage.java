@@ -348,7 +348,7 @@ public class MusicListPage extends BaseMusicPage {
             return null;
         });
 
-        getConnect().getPlayerInfo(requireActivity());
+        // getConnect().getPlayerInfo(requireActivity());
 
     }
 
