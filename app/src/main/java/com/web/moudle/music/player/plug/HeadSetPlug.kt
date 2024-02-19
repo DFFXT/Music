@@ -17,7 +17,8 @@ class HeadSetPlug(control: IMusicControl) : ServiceLifeCycle {
             if (intent.getIntExtra("state", 0) == 0) {
                 control.pause()
             } else {
-                control.play()
+                // 不能插上耳机就进行播放
+                // control.play()
             }
         }
     }

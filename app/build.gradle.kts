@@ -114,8 +114,8 @@ dependencies {
     implementation("com.mpatric:mp3agic:0.9.1")
     implementation("com.google.android.exoplayer:exoplayer-core:2.14.2")
     implementation("com.google.android.exoplayer:exoplayer-ui:2.14.2")
-    implementation("com.github.DFFXT.SkinSwitch:SkinCore:0.21.8")
-    debugImplementation("com.github.DFFXT.SkinSwitch:ViewDebug:0.21.8")
+    implementation("com.github.DFFXT.SkinSwitch:SkinCore:0.22.6")
+    debugImplementation("com.github.DFFXT.SkinSwitch:ViewDebug:0.22.6")
 
     /* def room_version = "2.4.3"
 

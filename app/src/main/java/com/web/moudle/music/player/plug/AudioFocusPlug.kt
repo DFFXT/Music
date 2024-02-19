@@ -16,24 +16,23 @@ import com.web.moudle.music.player.plugInterface.ServiceLifeCycle
 class AudioFocusPlug(private val control: IMusicControl) : ServiceLifeCycle, PlayInterface {
     private var isGain = false
     private val audioManager = MyApplication.context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    private val l = object : AudioManager.OnAudioFocusChangeListener {
-        private var lossType: Int? = null
-        override fun onAudioFocusChange(focusChange: Int) {
-            when (focusChange) {
-                AudioManager.AUDIOFOCUS_GAIN -> {
-                    isGain = true
-                    if (lossType == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || lossType == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                        control.play()
-                    }
-                }
+    private var lossType: Int? = null
 
-                AudioManager.AUDIOFOCUS_LOSS,
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK,
-                -> {
-                    control.pause()
-                    lossType = focusChange
+    private val l = AudioManager.OnAudioFocusChangeListener { focusChange ->
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                isGain = true
+                if (lossType == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || lossType == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                    control.play()
                 }
+            }
+
+            AudioManager.AUDIOFOCUS_LOSS,
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK,
+            -> {
+                control.pause()
+                lossType = focusChange
             }
         }
     }
@@ -64,6 +63,11 @@ class AudioFocusPlug(private val control: IMusicControl) : ServiceLifeCycle, Pla
         }
     }
 
+    override fun onPause() {
+        // 暂停后释放音频焦点，否则会恢复
+        releaseAudioFocus()
+    }
+
     private fun releaseAudioFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             (request as? AudioFocusRequest)?.let { audioManager.abandonAudioFocusRequest(it) }
@@ -71,6 +75,7 @@ class AudioFocusPlug(private val control: IMusicControl) : ServiceLifeCycle, Pla
             audioManager.abandonAudioFocus(l)
         }
         isGain = false
+        lossType = null
     }
 
     override fun onDestroy() {

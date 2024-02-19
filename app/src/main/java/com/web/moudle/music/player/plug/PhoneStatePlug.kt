@@ -18,7 +18,8 @@ class PhoneStatePlug(control: IMusicControl) : ServiceLifeCycle {
                     control.pause()
                 }
                 TelephonyManager.CALL_STATE_IDLE -> {
-                    control.play()
+                    // 不能电话一关闭就立即播放
+                    // control.play()
                 }
             }
         }

@@ -13,6 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven("https://jitpack.io")
+        // mavenLocal()
     }
 }
 include(":app")
