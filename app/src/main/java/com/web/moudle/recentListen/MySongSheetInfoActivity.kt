@@ -8,7 +8,9 @@ import android.os.IBinder
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivityRecentListenBinding
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.base.get
 import com.web.common.base.showContent
 import com.web.common.base.showLoading
@@ -32,171 +34,164 @@ import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.net.NetApis
 import com.web.moudle.net.retrofit.BaseRetrofit
 import com.web.moudle.net.retrofit.SchedulerTransform
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_recent_listen.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.litepal.crud.DataSupport
 
-class MySongSheetInfoActivity :BaseActivity(){
+class MySongSheetInfoActivity : BaseViewBindingActivity<ActivityRecentListenBinding>() {
 
 
-    private lateinit var adapter:DownloadViewAdapter
-    private lateinit var list:List<DownloadMusic>
-    private var sheetId: Long=0
-    private var model:DetailMusicViewModel?=null
-    private var toolsBar : ToolsBar?=null
+    private lateinit var adapter: DownloadViewAdapter
+    private lateinit var list: List<DownloadMusic>
+    private var sheetId: Long = 0
+    private var model: DetailMusicViewModel? = null
+    private var toolsBar: ToolsBar? = null
 
     override fun getLayoutId(): Int = R.layout.activity_recent_listen
 
-    private var connect: IMusicControl?=null
+    private var connect: IMusicControl? = null
 
-    private val connection=object:ServiceConnection{
+    private val connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            connect= service as IMusicControl
+            connect = service as IMusicControl
         }
     }
 
     override fun initView() {
-        sheetId=intent.getLongExtra(INTENT_DATA,0)
-        model=ViewModelProviders.of(this)[DetailMusicViewModel::class.java]
+        sheetId = intent.getLongExtra(INTENT_DATA, 0)
+        model = ViewModelProviders.of(this)[DetailMusicViewModel::class.java]
         model!!.detailMusic.observe(this, Observer {
-            if(it.code==LiveDataWrapper.CODE_OK){
+            if (it.code == LiveDataWrapper.CODE_OK) {
                 connect?.play(MusicDetailActivity.map(it.value))
             }
         })
-        topBar.setEndImageListener {
+        binding.topBar.setEndImageListener {
             /*connect?.addListToWait(list.map {
-                map(it.internetMusicDetail)
-            }, false)*/
-            MToast.showToast(this,"不支持？")
+            map(it.internetMusicDetail)
+        }, false)*/
+            MToast.showToast(this, "不支持？")
         }
-        adapter= DownloadViewAdapter(this,null)
-        rv_recentList.layoutManager=LinearLayoutManager(this)
-        rv_recentList.adapter=adapter
-
+        adapter = DownloadViewAdapter(this, null)
+        binding.rvRecentList.layoutManager = LinearLayoutManager(this)
+        binding.rvRecentList.adapter = adapter
 
         adapter.setItemClickListener { v, position ->
-            if(v.id==R.id.iv_play){
+            if (v.id == R.id.iv_play) {
                 model?.getDetail(list[position].internetMusicDetail.songId)
-            }else{
-                MusicDetailActivity.actionStart(this,list[position].internetMusicDetail.songId)
+            } else {
+                MusicDetailActivity.actionStart(this, list[position].internetMusicDetail.songId)
             }
-
         }
         adapter.setItemLongClickListener { _, _ ->
             initToolsBar()
             toolsBar?.show()
             true
         }
-        rootView.showLoading(true)
+        binding.rootView.showLoading(true)
         reload()
-        val intent=Intent(this, NewPlayer::class.java)
-        intent.action= ActionControlPlug.BIND
-        bindService(intent,connection,Context.BIND_AUTO_CREATE)
+        val intent = Intent(this, NewPlayer::class.java)
+        intent.action = ActionControlPlug.BIND
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
-    private fun reload(){
 
-        if(sheetId!=-1L){
-            WWSongSheetModel.getSongSheetInfo(sheetId){
-                if(it.code==200){
-                    topBar.setMainTitle(it.name)
-                    list=it.songs.map {ww->
-                        val de= map(ww)
-                        DownloadMusic(de,DownloadMusic.DOWNLOAD_COMPLETE)
+    private fun reload() {
+        if (sheetId != -1L) {
+            WWSongSheetModel.getSongSheetInfo(sheetId) {
+                if (it.code == 200) {
+                    binding.topBar.setMainTitle(it.name)
+                    list = it.songs.map { ww ->
+                        val de = map(ww)
+                        DownloadMusic(de, DownloadMusic.DOWNLOAD_COMPLETE)
                     }
                     adapter.update(list)
-                    rootView.showContent()
+                    binding.rootView.showContent()
                 }
             }
-        }else{//**喜爱歌曲
+        } else { // **喜爱歌曲
             WWSongSheetModel.getLikeList {
-                if(it.code==200){
-                    topBar.setMainTitle(ResUtil.getString(R.string.sheet_like))
+                if (it.code == 200) {
+                    binding.topBar.setMainTitle(ResUtil.getString(R.string.sheet_like))
                     findLikeList(it.ids)
                 }
             }
-
         }
     }
 
-    private fun findLikeList(ids:List<Long>){
-        var idStr=""
+    private fun findLikeList(ids: List<Long>) {
+        var idStr = ""
         ids.forEach {
-            idStr+= ",$it"
+            idStr += ",$it"
         }
-        if(idStr.length>1){
-            idStr=idStr.substring(1)
+        if (idStr.length > 1) {
+            idStr = idStr.substring(1)
         }
         BaseRetrofit().obtainClass(NetApis.Music::class.java)
-                .musicInfo(idStr)
-                .compose(SchedulerTransform())
-                .get({res->
-                    list=res.data.songList.map {
-                        DownloadMusic(it,DownloadMusic.DOWNLOAD_COMPLETE)
-                    }
-                    adapter.update(list)
-                    rootView.showContent()
-                })
+            .musicInfo(idStr)
+            .compose(SchedulerTransform())
+            .get({ res ->
+                list = res.data.songList.map {
+                    DownloadMusic(it, DownloadMusic.DOWNLOAD_COMPLETE)
+                }
+                adapter.update(list)
+                binding.rootView.showContent()
+            })
     }
 
-
-
-    private fun initToolsBar(){
-        if(toolsBar==null){
-            toolsBar= ToolsBar(this)
-            toolsBar!!.addItem(1,R.string.delete)
-            toolsBar!!.addItem(2,R.string.selectAll)
-            toolsBar!!.itemClick={id->
-                if(id==1){
+    private fun initToolsBar() {
+        if (toolsBar == null) {
+            toolsBar = ToolsBar(this)
+            toolsBar!!.addItem(1, R.string.delete)
+            toolsBar!!.addItem(2, R.string.selectAll)
+            toolsBar!!.itemClick = { id ->
+                if (id == 1) {
                     deleteRecords()
                     toolsBar?.close()
-                }else if(id==2){
-                    adapter.isSelectAll=!adapter.isSelectAll
+                } else if (id == 2) {
+                    adapter.isSelectAll = !adapter.isSelectAll
                 }
             }
-            toolsBar!!.backClick={
-                adapter.isSelect=false
+            toolsBar!!.backClick = {
+                adapter.isSelect = false
             }
         }
     }
 
-    private var dialog:ConfirmDialog?=null
-    private fun confirmDelete(){
-        if(dialog==null){
-            dialog=ConfirmDialog(this)
-                    .setMsg(ResUtil.getString(R.string.weatherDeleteAllRecord))
-                    .setLeftText(ResUtil.getString(R.string.no))
-                    .setRightText(ResUtil.getString(R.string.yes))
-                    .setLeftListener {
-                        it.dismiss()
-                    }
-                    .setRightListener {
-                        deleteAll()
-                        it.dismiss()
-                    }
-        }
-        dialog?.showCenter(topBar)
+    private var dialog: ConfirmDialog? = null
 
+    private fun confirmDelete() {
+        if (dialog == null) {
+            dialog = ConfirmDialog(this)
+                .setMsg(ResUtil.getString(R.string.weatherDeleteAllRecord))
+                .setLeftText(ResUtil.getString(R.string.no))
+                .setRightText(ResUtil.getString(R.string.yes))
+                .setLeftListener {
+                    it.dismiss()
+                }
+                .setRightListener {
+                    deleteAll()
+                    it.dismiss()
+                }
+        }
+        dialog?.showCenter(binding.topBar)
     }
 
-    private fun deleteRecords(){
-        val list=adapter.getSelectList { downloadMusic, _ ->  downloadMusic.internetMusicDetail.songId}
-        if(list.isNotEmpty()){
-            if(sheetId==-1L){//**喜爱歌单删除
-                WWSongSheetModel.removeAsLike(list[0].toLong()){
-                    if(it){
+    private fun deleteRecords() {
+        val list = adapter.getSelectList { downloadMusic, _ -> downloadMusic.internetMusicDetail.songId }
+        if (list.isNotEmpty()) {
+            if (sheetId == -1L) {//**喜爱歌单删除
+                WWSongSheetModel.removeAsLike(list[0].toLong()) {
+                    if (it) {
                         reload()
                     }
                 }
-            }else{
-                WWSongSheetModel.deleteFromSheet(sheetId,list[0].toLong()){
-                    if(it.code==200){
+            } else {
+                WWSongSheetModel.deleteFromSheet(sheetId, list[0].toLong()) {
+                    if (it.code == 200) {
                         reload()
                     }
                 }
@@ -205,43 +200,42 @@ class MySongSheetInfoActivity :BaseActivity(){
         }
 
     }
-    private fun deleteAll(){
+
+    private fun deleteAll() {
         GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 DataSupport.deleteAll(RecentPlayMusic::class.java)
             }
             reload()
         }
     }
 
-    private fun map(item:InternetMusicDetail):InternetMusicForPlay{
-        val res= InternetMusicForPlay(item.songName,item.artistName,item.songLink)
+    private fun map(item: InternetMusicDetail): InternetMusicForPlay {
+        val res = InternetMusicForPlay(item.songName, item.artistName, item.songLink)
 
-        res.imgAddress=item.singerIconSmall
-        res.lrcLink=item.lrcLink
-        res.song_id=item.songId
-        res.album=item.albumName
-        res.album_id=item.albumId
-        res.duration=item.duration
+        res.imgAddress = item.singerIconSmall
+        res.lrcLink = item.lrcLink
+        res.song_id = item.songId
+        res.album = item.albumName
+        res.album_id = item.albumId
+        res.duration = item.duration
 
         return res
     }
 
-
-
-    private fun map(item:MusicWW):InternetMusicDetail{
+    private fun map(item: MusicWW): InternetMusicDetail {
         return InternetMusicDetail(
-                songId = item.songId.toString(),
-                albumId = "",
-                albumName = item.album,
-                artistName = item.artist,
-                duration = 0,
-                format = "",
-                lrcLink = "",
-                singerIconSmall = "",
-                size = 0,
-                songLink = "",
-                songName = item.name
+            songId = item.songId.toString(),
+            albumId = "",
+            albumName = item.album,
+            artistName = item.artist,
+            duration = 0,
+            format = "",
+            lrcLink = "",
+            singerIconSmall = "",
+            size = 0,
+            songLink = "",
+            songName = item.name
         )
     }
 
@@ -250,11 +244,11 @@ class MySongSheetInfoActivity :BaseActivity(){
         super.onDestroy()
     }
 
-    companion object{
+    companion object {
         @JvmStatic
-        fun actionStart(ctx:Context,sheetId:Long){
-            val intent=Intent(ctx,MySongSheetInfoActivity::class.java)
-            intent.putExtra(INTENT_DATA,sheetId)
+        fun actionStart(ctx: Context, sheetId: Long) {
+            val intent = Intent(ctx, MySongSheetInfoActivity::class.java)
+            intent.putExtra(INTENT_DATA, sheetId)
             ctx.startActivity(intent)
         }
     }

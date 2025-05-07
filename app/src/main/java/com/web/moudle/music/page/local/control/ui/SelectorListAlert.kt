@@ -6,9 +6,10 @@ import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.music.m.R
+import com.music.m.databinding.LayoutTitleListBinding
 
 
-class SelectorListAlert(context: Context, title: String) : BaseListPopWindow<String>(
+class SelectorListAlert(context: Context, title: String) : BaseListPopWindow<String, LayoutTitleListBinding>(
         context,
         title,
         R.layout.layout_title_list,

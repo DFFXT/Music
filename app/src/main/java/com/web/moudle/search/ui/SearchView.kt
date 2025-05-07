@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.music.m.R
-import kotlinx.android.synthetic.main.layout_search.view.*
 
 /**
  * 搜索框
@@ -59,7 +58,7 @@ class SearchView @JvmOverloads constructor(
             }
             return@setOnKeyListener false
         }
-        iv_delete.setOnClickListener {
+        findViewById<View>(R.id.iv_delete).setOnClickListener {
             editText.text = null
         }
 

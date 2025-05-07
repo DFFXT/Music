@@ -3,24 +3,26 @@ package com.web.moudle.albumEntry.ui
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.web.common.base.*
+import com.music.m.R
+import com.music.m.databinding.ActivityAlbumEntryBinding
+import com.web.common.base.BaseActivity2
+import com.web.common.base.bitmapColorSet
+import com.web.common.base.errorClickLinsten
+import com.web.common.base.showContent
+import com.web.common.base.showError
+import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.util.WindowUtil
 import com.web.misc.DrawableItemDecoration
-import com.web.misc.ExpandableTextView
 import com.web.moudle.albumEntry.adapter.AlbumListAdapter
 import com.web.moudle.albumEntry.bean.AlbumResponse
 import com.web.moudle.albumEntry.model.AlbumEntryViewModel
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_album_entry.*
 
-class AlbumEntryActivity : BaseActivity() {
+class AlbumEntryActivity : BaseActivity2<ActivityAlbumEntryBinding>() {
     private lateinit var id: String
     private lateinit var model: AlbumEntryViewModel
     override fun getLayoutId(): Int {
@@ -34,21 +36,21 @@ class AlbumEntryActivity : BaseActivity() {
             if (data != null) {
                 if (data.code == LiveDataWrapper.CODE_OK) {
                     val res = data.value
-                    tv_musicName.text = res.albumInfo.albumName
-                    tv_mainSinger.text = res.albumInfo.artistName
-                    tv_styles.text=res.albumInfo.styles
-                    tv_publishTime.text = res.albumInfo.publishTime
-                    tv_publishCompany.text = res.albumInfo.publishCompany
-                    tv_listenTimes.text =res.albumInfo.listenNum
-                    ex_introduction.text=res.albumInfo.info
-                    bitmapColorSet(res.albumInfo.pic500,iv_bigImage_detailMusicActivity,collapseToolbarLayout)
-                    rv_albumList.adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
-                    rootView.showContent()
+                    binding.tvMusicName.text = res.albumInfo.albumName
+                    binding.tvMainSinger.text = res.albumInfo.artistName
+                    binding.tvStyles.text=res.albumInfo.styles
+                    binding.tvPublishTime.text = res.albumInfo.publishTime
+                    binding.tvPublishCompany.text = res.albumInfo.publishCompany
+                    binding.tvListenTimes.text =res.albumInfo.listenNum
+                    binding.exIntroduction.text=res.albumInfo.info
+                    bitmapColorSet(res.albumInfo.pic500,binding.ivBigImageDetailMusicActivity,binding.collapseToolbarLayout)
+                    binding.rvAlbumList.adapter=AlbumListAdapter(this@AlbumEntryActivity,res.otherSong)
+                    binding.rootView.showContent()
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
-                    rootView.showError()
-                    rootView.errorClickLinsten = View.OnClickListener {
+                    binding.rootView.showError()
+                    binding.rootView.errorClickLinsten = View.OnClickListener {
                         model.getAlbumInfo(id)
-                        rootView.showLoading()
+                        binding.rootView.showLoading()
                     }
                 }
 
@@ -63,19 +65,19 @@ class AlbumEntryActivity : BaseActivity() {
                     builder.append(it.line)
                     builder.append("\n")
                 }
-                ex_introduction.text=builder.toString()
+                binding.exIntroduction.text=builder.toString()
             }
         })
         model.getAlbumInfo(id)
     }
 
     override fun initView() {
-        rootView.showLoading(true)
+        binding.rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
 
         val manager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        rv_albumList.layoutManager=manager
-        rv_albumList.addItemDecoration(DrawableItemDecoration(orientation = RecyclerView.VERTICAL,bottom = 2,drawable = getDrawable(R.drawable.recycler_divider)!!))
+        binding.rvAlbumList.layoutManager=manager
+        binding.rvAlbumList.addItemDecoration(DrawableItemDecoration(orientation = RecyclerView.VERTICAL,bottom = 2,drawable = getDrawable(R.drawable.recycler_divider)!!))
         loadData()
     }
 

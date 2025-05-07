@@ -44,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         initView();
 
         if (enableSwipeToBack()) {//**向右滑可以关闭activity，需要设置activity透明
-            ViewGroup group = (ViewGroup) getWindow().getDecorView().findViewById(R.id.action_bar_root).getParent();
+            ViewGroup group = (ViewGroup) getWindow().getDecorView().findViewById(androidx.appcompat.R.id.action_bar_root).getParent();
             SwipeFrameLayout layout = new SwipeFrameLayout(this);
             View child = group.getChildAt(0);
             child.setBackgroundColor(Color.WHITE);

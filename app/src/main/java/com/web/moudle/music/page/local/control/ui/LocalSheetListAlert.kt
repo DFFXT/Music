@@ -7,9 +7,10 @@ import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.LocalSheetAdapter
 import com.web.moudle.music.page.local.control.interf.LocalSheetListener
 import com.music.m.R
+import com.music.m.databinding.LayoutTitleListBinding
 
 
-class LocalSheetListAlert(context: Context, title: String) : BaseListPopWindow<String>(
+class LocalSheetListAlert(context: Context, title: String) : BaseListPopWindow<String, LayoutTitleListBinding>(
         context,
         title,
         R.layout.layout_title_list,

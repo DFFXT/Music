@@ -6,9 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
-abstract class BaseFragment : Fragment(){
+abstract class BaseFragment<T: ViewBinding> : Fragment(){
     //**fragment的title，一般用于tabLayout
+
+    protected lateinit var binding: T
+    private fun viewBindingInit(view: View): View {
+        var isBreak = false
+        var type = this.javaClass.genericSuperclass
+        while (!isBreak) {
+            if (type is ParameterizedType) {
+                type.actualTypeArguments.forEach {
+                    val cls = it as Class<*>
+                    if (ViewBinding::class.java.isAssignableFrom(cls)) {
+                        val method = cls.getDeclaredMethod("bind", View::class.java)
+                        binding = method.invoke(null, view) as T
+                        isBreak = true
+                        return@forEach
+                    }
+                }
+            }
+            type = type.javaClass.genericSuperclass
+        }
+
+        return binding.root
+    }
+
     open var title=""
     private var created=false
     var rootView:View?=null
@@ -19,7 +45,7 @@ abstract class BaseFragment : Fragment(){
         }else{
             this.rootView=getLayoutView()
         }
-
+        viewBindingInit(rootView!!)
         initView(rootView!!)
         return this.rootView
     }

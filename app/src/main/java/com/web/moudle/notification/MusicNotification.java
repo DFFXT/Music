@@ -35,19 +35,19 @@ public class MusicNotification extends BaseCustomNotification {
 	private void init() {
 		//--设置点击事件
 		//--PendingIntent 的flag必须不一样
-		PendingIntent pNext=PendingIntent.getService(context, 1, makeIntent(ActionControlPlug.ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pNext=PendingIntent.getService(context, 1, makeIntent(ActionControlPlug.ACTION_NEXT), PendingIntent.FLAG_MUTABLE);
 		getView().setOnClickPendingIntent(R.id.next, pNext);
 
-		PendingIntent pPre=PendingIntent.getService(context, 2, makeIntent(ActionControlPlug.ACTION_PRE), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pPre=PendingIntent.getService(context, 2, makeIntent(ActionControlPlug.ACTION_PRE), PendingIntent.FLAG_MUTABLE);
 		getView().setOnClickPendingIntent(R.id.pre, pPre);
 
-		PendingIntent pPause=PendingIntent.getService(context, 3,makeIntent(ActionControlPlug.ACTION_STATUS_CHANGE), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pPause=PendingIntent.getService(context, 3,makeIntent(ActionControlPlug.ACTION_STATUS_CHANGE), PendingIntent.FLAG_MUTABLE);
 		getView().setOnClickPendingIntent(R.id.pause, pPause);
 
 		//--进入歌词界面
 		Intent enterIntent=new Intent(context, LyricsActivity.class).
 				addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent enter=PendingIntent.getActivity(context, 0, enterIntent, PendingIntent.FLAG_MUTABLE);
 		getView().setOnClickPendingIntent(R.id.music_icon, enter);
 
 
@@ -55,14 +55,14 @@ public class MusicNotification extends BaseCustomNotification {
 		//**今日歌词设置页面
 		Intent settingIntent=new Intent(context, LyricsSettingActivity.class)
 				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pendingIntent=PendingIntent.getActivity(context,0,settingIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent=PendingIntent.getActivity(context,0,settingIntent,PendingIntent.FLAG_MUTABLE);
 		getView().setOnClickPendingIntent(R.id.tv_lyricsSetting,pendingIntent);
 
 
 		//**进入本地列表
 		Intent localIntent=new Intent(context, MusicActivity.class)
 				.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent localIntentP=PendingIntent.getActivity(context,0,localIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent localIntentP=PendingIntent.getActivity(context,0,localIntent,PendingIntent.FLAG_MUTABLE);
 		getView().setOnClickPendingIntent(R.id.rootView,localIntentP);
 
 	}

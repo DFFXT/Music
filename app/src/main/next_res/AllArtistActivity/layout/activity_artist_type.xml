@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:topBar_mainTitleText="@string/hotArtist"
         />
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/srl_artist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -31,6 +31,6 @@
             android:id="@+id/rv_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

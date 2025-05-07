@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -41,7 +41,7 @@
             android:layerType="software"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 
 </LinearLayout>

@@ -2,9 +2,10 @@ package com.web.moudle.musicSearch.ui
 
 import android.os.Bundle
 import android.view.View
+import com.music.m.databinding.FragmentMusicSearchBinding
 import com.web.common.base.BaseFragment
 
-abstract class BaseSearchFragment:BaseFragment() {
+abstract class BaseSearchFragment:BaseFragment<FragmentMusicSearchBinding>() {
     var searchCallBack:((Int)->Unit)?=null
     var keyword:String?=null
     abstract fun search(keyword:String?)

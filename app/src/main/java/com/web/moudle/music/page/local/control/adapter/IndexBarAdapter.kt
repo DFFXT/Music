@@ -42,7 +42,7 @@ class IndexBarAdapter : BaseAdapter<Char>() {
         if (char == null) {
             setSelectedIndex(data.size - 1)
         } else {
-            val newIndex = data.indexOf(char.toUpperCase())
+            val newIndex = data.indexOf(char.uppercaseChar())
             if (newIndex < 0) {
                 setSelectedIndex(data.size - 1)
             } else {

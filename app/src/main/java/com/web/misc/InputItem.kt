@@ -7,9 +7,8 @@ import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.web.common.util.KeyboardManager
 import com.music.m.R
-import kotlinx.android.synthetic.main.item_edit.view.*
+import com.web.common.util.KeyboardManager
 
 /**
  * 输入框，
@@ -27,9 +26,9 @@ class InputItem @JvmOverloads constructor(ctx: Context, attrs: AttributeSet? = n
     var listenerSave: ((text: String) -> String)? = null
     var listenSelect: ((isSelect: Boolean) -> Unit)? = null
     init {
-        inputBox = mRootView.et_name
+        inputBox = mRootView.findViewById(R.id.et_name)
         inputBox.isFocusableInTouchMode = false
-        clickButton = mRootView.iv_changeStatus
+        clickButton = mRootView.findViewById(R.id.iv_changeStatus)
         clickButton.setOnClickListener {
             it.isSelected = !it.isSelected
             listenSelect?.invoke(it.isSelected)

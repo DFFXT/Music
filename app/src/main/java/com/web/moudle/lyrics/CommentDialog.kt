@@ -21,7 +21,7 @@ import com.web.moudle.musicEntry.adapter.CommentAdapter
 import com.web.moudle.musicEntry.bean.CommentItem
 import com.web.moudle.musicEntry.model.DetailMusicViewModel
 import com.music.m.R
-import kotlinx.android.synthetic.main.fragment_comment.view.*
+import com.music.m.databinding.FragmentCommentBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -37,12 +37,14 @@ class CommentDialog(private val ctx: FragmentActivity) {
     private val commentList = ArrayList<CommentItem>()
     private val adapter = CommentAdapter(commentList)
     private var rootView: View? = null
+    private lateinit var binding: FragmentCommentBinding
 
     private fun init() {
         if (dialog != null) return
         dialog = BottomSheetDialog(ctx)
         rootView = LayoutInflater.from(ctx).inflate(R.layout.fragment_comment, null, false)
-        rootView!!.rv_comment.measureListener = MinSizeOnMeasure(0, (ViewUtil.screenHeight() * 0.7).toInt())
+        binding = FragmentCommentBinding.bind(rootView!!)
+        binding.rvComment.measureListener = MinSizeOnMeasure(0, (ViewUtil.screenHeight() * 0.7).toInt())
         dialog?.setContentView(rootView!!)
 
         model = ViewModelProviders.of(ctx)[DetailMusicViewModel::class.java]
@@ -55,18 +57,18 @@ class CommentDialog(private val ctx: FragmentActivity) {
             model?.getComment(songId, page, pageSize)
             GlobalScope.launch(Dispatchers.Main) {
                 delay(100)
-                rootView!!.rv_comment.showLoading()
+                binding.rvComment.showLoading()
             }
         }
 
         model?.comment?.observe(
             ctx,
             Observer {
-                if (it == null)return@Observer
+                if (it == null) return@Observer
                 when (it.code) {
                     LiveDataWrapper.CODE_OK -> {
                         page++
-                        rootView?.tv_commentNum?.text = ResUtil.getString(R.string.commentNum, it.value.commentlist_last_nums)
+                        binding.tvCommentNum.text = ResUtil.getString(R.string.commentNum, it.value.commentlist_last_nums)
                         if (it.value.commentlist_hot != null) {
                             commentList.addAll(it.value.commentlist_hot)
                         }
@@ -74,34 +76,37 @@ class CommentDialog(private val ctx: FragmentActivity) {
                             commentList.addAll(it.value.commentlist_last)
                         }
                         adapter.notifyDataSetChanged()
-                        rootView?.rv_comment?.showContent()
+                        binding.rvComment.showContent()
                     }
                     LiveDataWrapper.CODE_NO_DATA -> {
-                        rootView?.tv_commentNum?.text = ctx.getString(R.string.commentNum, "0")
-                        rootView?.rv_comment?.showError(ctx.getString(R.string.noData))
+                        binding.tvCommentNum.text = ctx.getString(R.string.commentNum, "0")
+                        binding.rvComment.showError(ctx.getString(R.string.noData))
                     }
                     LiveDataWrapper.CODE_ERROR -> {
-                        rootView?.rv_comment?.showError()
+                        binding.rvComment.showError()
                     }
                 }
             }
         )
-        rootView!!.rv_comment.layoutManager = LinearLayoutManager(rootView!!.context)
-        rootView!!.rv_comment.adapter = adapter
-        rootView!!.rv_comment.addItemDecoration(
+        binding.rvComment.layoutManager = LinearLayoutManager(rootView!!.context)
+        binding.rvComment.adapter = adapter
+        binding.rvComment.addItemDecoration(
             DrawableItemDecoration(
                 ViewUtil.dpToPx(10f), 0, ViewUtil.dpToPx(10f), 2,
                 RecyclerView.VERTICAL, ctx.getDrawable(R.drawable.recycler_divider)
             )
         )
     }
+
     fun show() {
         init()
         dialog?.show()
     }
+
     fun dismiss() {
         dialog?.dismiss()
     }
+
     fun destory() {
         dialog = null
     }

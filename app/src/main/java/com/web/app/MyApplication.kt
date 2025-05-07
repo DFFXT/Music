@@ -2,11 +2,10 @@ package com.web.app
 
 import android.app.Application
 import com.fxffxt.preferen.Config
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.skin.skincore.SkinManager
 import com.skin.skincore.provider.DefaultProviderFactory
-import com.skin.skincore.provider.ResourceProviderFactory
 import com.tencent.bugly.crashreport.CrashReport
 import com.web.common.constant.Constant
 import com.web.moudle.net.proxy.InternetProxy

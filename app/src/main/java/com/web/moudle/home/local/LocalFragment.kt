@@ -8,13 +8,14 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
+import com.music.m.R
+import com.music.m.databinding.FragmentLocalBinding
 import com.web.common.base.BaseFragment
 import com.web.common.base.PlayerObserver
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.data.Music
-import com.web.data.MusicList
 import com.web.misc.GapItemDecoration
 import com.web.misc.InputDialog
 import com.web.moudle.home.HomePageActivity
@@ -33,10 +34,8 @@ import com.web.moudle.recentListen.RecentListenActivity
 import com.web.moudle.search.SearchActivity
 import com.web.moudle.setting.ui.SettingActivity
 import com.web.moudle.user.UserManager
-import com.music.m.R
-import kotlinx.android.synthetic.main.fragment_local.view.*
 
-class LocalFragment : BaseFragment() {
+class LocalFragment : BaseFragment<FragmentLocalBinding>() {
     private val model = LocalModel()
     private var createSheetPop:InputDialog?=null
     private var listPop:ListDialog?=null
@@ -47,7 +46,7 @@ class LocalFragment : BaseFragment() {
     private var observer=object :PlayerObserver(){
         override fun onMusicListChange(list: MutableList<Music>?) {
             model.getMusicNum {
-                rootView!!.tv_musicNum?.text = it.toString()
+                binding.tvMusicNum.text = it.toString()
             }
         }
     }
@@ -63,138 +62,132 @@ class LocalFragment : BaseFragment() {
     }
 
     override fun initView(rootView: View) {
-        val intent=Intent(context, NewPlayer::class.java)
-        intent.action= ActionControlPlug.BIND
-        context?.bindService(intent,connection,Context.BIND_AUTO_CREATE)
-        rootView.topBar.setEndImageListener {
+        val intent = Intent(context, NewPlayer::class.java)
+        intent.action = ActionControlPlug.BIND
+        context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        binding.topBar.setEndImageListener {
             SettingActivity.actionStart(context)
         }
 
-        rootView.layout_localBg.setOnClickListener {
+        binding.layoutLocalBg.setOnClickListener {
             MusicActivity.actionStart(it.context)
         }
 
-        rootView.layout_recent.setOnClickListener {
+        binding.layoutRecent.setOnClickListener {
             RecentListenActivity.actionStart(it.context)
         }
 
-        rootView.iv_search.setOnClickListener {
+        binding.ivSearch.setOnClickListener {
             SearchActivity.actionStart(context as Activity, HomePageActivity.searchCode)
         }
-        rootView.layout_prefer.setOnClickListener {
-            if(UserManager.isLogin()){
-                MySongSheetInfoActivity.actionStart(requireContext(),-1L)
+        binding.layoutPrefer.setOnClickListener {
+            if (UserManager.isLogin()) {
+                MySongSheetInfoActivity.actionStart(requireContext(), -1L)
             }
-
         }
 
-        rootView.layout_download.setOnClickListener {
+        binding.layoutDownload.setOnClickListener {
             MusicDownLoadActivity.actionStart(it.context)
         }
 
-        rootView.layout_fastScan.setOnClickListener {
+        binding.layoutFastScan.setOnClickListener {
             ActionControlPlug.scan(requireContext())
         }
 
-        rootView.layout_createSongSheet.setOnClickListener {
+        binding.layoutCreateSongSheet.setOnClickListener {
             showCreatePop()
         }
 
         initData()
-        rootView.rv_songSheetlist.layoutManager=GridLayoutManager(context,4)
-        rootView.rv_songSheetlist.addItemDecoration(GapItemDecoration(0,10,10,10,
-                remainBottomPadding = true,remainTopPadding = true,remainEndPadding = true,remainLeftPadding = true))
-        rootView.rv_songSheetlist.adapter=adapter
-        adapter.itemLongClick={_,index->
+        binding.rvSongSheetlist.layoutManager = GridLayoutManager(context, 4)
+        binding.rvSongSheetlist.addItemDecoration(GapItemDecoration(0, 10, 10, 10,
+            remainBottomPadding = true, remainTopPadding = true, remainEndPadding = true, remainLeftPadding = true
+        ))
+        binding.rvSongSheetlist.adapter = adapter
+        adapter.itemLongClick = { _, index ->
             showListPop(sheetList[index].id)
             true
         }
-        adapter.itemClick={_,index->
-            MySongSheetInfoActivity.actionStart(requireContext(),sheetList[index].id)
+        adapter.itemClick = { _, index ->
+            MySongSheetInfoActivity.actionStart(requireContext(), sheetList[index].id)
         }
-
     }
 
-
-
-    private fun initData(){
+    private fun initData() {
         model.getMusicNum {
-            rootView!!.tv_musicNum?.text = it.toString()
+            binding.tvMusicNum?.text = it.toString()
         }
 
-        if(UserManager.isLogin()){
-            rootView?.layout_prefer?.visibility=View.VISIBLE
-        }else{
-            rootView?.layout_prefer?.visibility=View.GONE
+        if (UserManager.isLogin()) {
+            binding.layoutPrefer.visibility = View.VISIBLE
+        } else {
+            binding.layoutPrefer.visibility = View.GONE
         }
         WWSongSheetModel.getLikeList {
-            rootView!!.tv_preferNum?.text = it.ids.size.toString()
+            binding.tvPreferNum?.text = it.ids.size.toString()
         }
-        /*model.getPreferNum {
-
-        }*/
 
         model.getDownloadNum {
-            rootView!!.tv_downloadNum.text = it.toString()
+            binding.tvDownloadNum.text = it.toString()
         }
 
         model.getRecentMusicNum {
-            rootView!!.tv_recentListen.text = it.toString()
+            binding.tvRecentListen.text = it.toString()
         }
 
-        if(UserManager.isLogin()){
-            ImageLoad.load("").placeholder(R.drawable.def_user_icon).into(rootView!!.iv_userIcon)
-            rootView!!.tv_userName.text=UserManager.getUserName()
-            rootView!!.iv_userIcon.setOnClickListener(null)
-        }else{
-            rootView!!.iv_userIcon.setImageResource(R.drawable.def_user_icon)
-            rootView!!.tv_userName.text=ResUtil.getString(R.string.login)
-            rootView!!.iv_userIcon.setOnClickListener {
+        if (UserManager.isLogin()) {
+            ImageLoad.load("").placeholder(R.drawable.def_user_icon).into(binding.ivUserIcon)
+            binding.tvUserName.text = UserManager.getUserName()
+            binding.ivUserIcon.setOnClickListener(null)
+        } else {
+            binding.ivUserIcon.setImageResource(R.drawable.def_user_icon)
+            binding.tvUserName.text = ResUtil.getString(R.string.login)
+            binding.ivUserIcon.setOnClickListener {
                 LoginActivity.actionStart(it.context)
             }
         }
-        if(UserManager.isLogin()){
-            WWSongSheetModel.getSongSheetList{
+        if (UserManager.isLogin()) {
+            WWSongSheetModel.getSongSheetList {
                 sheetList.clear()
                 sheetList.addAll(it)
                 adapter.update(it)
             }
-        }else{
+        } else {
             adapter.update(ArrayList())
         }
     }
 
-    private fun showCreatePop(){
-        if(createSheetPop==null){
-            createSheetPop=InputDialog(rootView!!.context)
-                    .setTitle(ResUtil.getString(R.string.inputSongSheetName))
-                    .setHint(ResUtil.getString(R.string.songSheetName))
-                    .setConfirmListener {input->
-                        WWSongSheetModel.createSongSheet(input) {res->
-                                    if(res.code==200){
-                                        createSheetPop?.dismiss()
-                                        initData()
-                                    }else{
-                                        MToast.showToast(requireContext(),R.string.createSongSheetFailed)
-                                        createSheetPop?.dismiss()
-                                    }
-                                }
+    private fun showCreatePop() {
+        if (createSheetPop == null) {
+            createSheetPop = InputDialog(binding.root.context)
+                .setTitle(ResUtil.getString(R.string.inputSongSheetName))
+                .setHint(ResUtil.getString(R.string.songSheetName))
+                .setConfirmListener { input ->
+                    WWSongSheetModel.createSongSheet(input) { res ->
+                        if (res.code == 200) {
+                            createSheetPop?.dismiss()
+                            initData()
+                        } else {
+                            MToast.showToast(requireContext(), R.string.createSongSheetFailed)
+                            createSheetPop?.dismiss()
+                        }
                     }
+                }
         }
-        createSheetPop?.showCenter(rootView!!)
+        createSheetPop?.showCenter(binding.root)
     }
 
-    private fun showListPop(sheetId:Long){
-        if(listPop==null){
-            listPop=ListDialog(requireContext())
-                    .addItem(ResUtil.getString(R.string.delete), View.OnClickListener{
-                        WWSongSheetModel.deleteSongSheet(sheetId){res->
-                            if(res.code==200){
-                                initData()
-                            }
-                            listPop?.dismiss()
+    private fun showListPop(sheetId: Long) {
+        if (listPop == null) {
+            listPop = ListDialog(requireContext())
+                .addItem(ResUtil.getString(R.string.delete), View.OnClickListener {
+                    WWSongSheetModel.deleteSongSheet(sheetId) { res ->
+                        if (res.code == 200) {
+                            initData()
                         }
-                    })
+                        listPop?.dismiss()
+                    }
+                })
         }
         listPop?.show()
     }

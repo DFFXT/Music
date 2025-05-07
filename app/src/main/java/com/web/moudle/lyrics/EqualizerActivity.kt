@@ -10,7 +10,9 @@ import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivityEqualizerBinding
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.constant.AppConfig
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
@@ -24,12 +26,10 @@ import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.plug.ActionControlPlug
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_equalizer.*
 import org.litepal.crud.DataSupport
 import kotlin.math.min
 
-class EqualizerActivity : BaseActivity() {
+class EqualizerActivity : BaseViewBindingActivity<ActivityEqualizerBinding>() {
     private var serviceConnection: ServiceConnection? = null
     private var connect: IMusicControl? = null
     private var equalizer: Equalizer? = null
@@ -54,10 +54,10 @@ class EqualizerActivity : BaseActivity() {
 
                 init()
 
-                rv_soundsSetting.layoutManager = LinearLayoutManager(this@EqualizerActivity)
+                binding.rvSoundsSetting.layoutManager = LinearLayoutManager(this@EqualizerActivity)
                 equalizerAdapter = EqualizerAdapter()
                 loadSounds(currentSelect)
-                rv_soundsSetting.adapter = equalizerAdapter
+                binding.rvSoundsSetting.adapter = equalizerAdapter
                 equalizerAdapter!!.seekToListener = { index, to ->
                     equalizer?.setBandLevel(index, (to + min).toShort())
                 }
@@ -65,7 +65,7 @@ class EqualizerActivity : BaseActivity() {
             }
         }
         bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
-        topBar.setEndImageListener(View.OnClickListener {
+        binding.topBar.setEndImageListener(View.OnClickListener {
             if (currentSelect == 0) return@OnClickListener
             savedData!![currentSelect].soundInfoList.forEach {
                 it.save()
@@ -120,15 +120,15 @@ class EqualizerActivity : BaseActivity() {
             }
         })
         val helper = ItemTouchHelper(MyItemTouchHelperCallBack(adapter))
-        helper.attachToRecyclerView(rv_savedSoundSetting)
-        rv_savedSoundSetting.layoutManager = LinearLayoutManager(this)
-        rv_savedSoundSetting.addItemDecoration(DrawableItemDecoration(0, 0, 0, 4,
+        helper.attachToRecyclerView(binding.rvSavedSoundSetting)
+        binding.rvSavedSoundSetting.layoutManager = LinearLayoutManager(this)
+        binding.rvSavedSoundSetting.addItemDecoration(DrawableItemDecoration(0, 0, 0, 4,
                 RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider)))
-        rv_savedSoundSetting.adapter = adapter
+        binding.rvSavedSoundSetting.adapter = adapter
 
 
         //**创建新的音效
-        tv_addAndSave.setOnClickListener {
+        binding.tvAddAndSave.setOnClickListener {
             if (savedData!!.size > 3) {
                 MToast.showToast(this, R.string.only4Enable)
                 return@setOnClickListener

@@ -1,5 +1,6 @@
 package com.web.moudle.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -15,10 +16,10 @@ import com.web.moudle.home.video.VideoRecommendFragment
 import com.web.moudle.musicSearch.ui.InternetMusicActivity
 import com.web.moudle.search.SearchActivity
 import com.music.m.R
-import kotlinx.android.synthetic.main.activity_home_page.*
-import me.jessyan.autosize.internal.CustomAdapt
+import com.music.m.databinding.ActivityHomePageBinding
+import com.web.common.base.BaseActivity2
 
-class HomePageActivity : BaseActivity(), View.OnClickListener {
+class HomePageActivity : BaseActivity2<ActivityHomePageBinding>(), View.OnClickListener {
 
     private var currentFragmentIndex = 0
     private val pageList = ArrayList<Fragment>(3)
@@ -30,20 +31,20 @@ class HomePageActivity : BaseActivity(), View.OnClickListener {
         pageList.add(MainFragment())
         pageList.add(VideoRecommendFragment())
         pageList.add(LocalFragment())
-        tabImage.add(iv_home)
-        tabText.add(tv_home)
-        tabImage.add(iv_video)
-        tabText.add(tv_video)
-        tabImage.add(iv_local)
-        tabText.add(tv_local)
+        tabImage.add(binding.ivHome)
+        tabText.add(binding.tvHome)
+        tabImage.add(binding.ivVideo)
+        tabText.add(binding.tvVideo)
+        tabImage.add(binding.ivLocal)
+        tabText.add(binding.tvLocal)
     }
 
 
     override fun initView() {
         init()
-        layout_overAll.setOnClickListener(this)
-        layout_video.setOnClickListener(this)
-        layout_local.setOnClickListener(this)
+        binding.layoutOverAll.setOnClickListener(this)
+        binding.layoutVideo.setOnClickListener(this)
+        binding.layoutLocal.setOnClickListener(this)
 
 
         val transaction = supportFragmentManager.beginTransaction()
@@ -93,6 +94,7 @@ class HomePageActivity : BaseActivity(), View.OnClickListener {
     }
 
 
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         moveTaskToBack(true)
     }

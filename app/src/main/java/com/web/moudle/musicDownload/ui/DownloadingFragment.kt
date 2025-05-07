@@ -11,49 +11,54 @@ import com.web.misc.DrawableItemDecoration
 import com.web.moudle.musicDownload.adpter.DownloadingAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import com.music.m.R
+import com.music.m.databinding.ViewRecyclerBinding
 import kotlinx.coroutines.Dispatchers
 
-
-class DownloadingFragment:BaseDownloadFragment(){
-    override var title: String=ResUtil.getString(R.string.downloading)
-    private val adapter=DownloadingAdapter()
-    private var dataList:MutableList<DownloadMusic>?=null
-    private var dialog:ConfirmDialog?=null
-    private val ticker=Ticker(1000,0,Dispatchers.Main){
+class DownloadingFragment : BaseDownloadFragment<ViewRecyclerBinding>() {
+    override var title: String = ResUtil.getString(R.string.downloading)
+    private val adapter = DownloadingAdapter()
+    private var dataList: MutableList<DownloadMusic>? = null
+    private var dialog: ConfirmDialog? = null
+    private val ticker = Ticker(1000, 0, Dispatchers.Main) {
         adapter.notifyDataSetChanged()
     }
-    override fun getLayoutId(): Int =R.layout.view_recycler
+
+    override fun getLayoutId(): Int = R.layout.view_recycler
 
     override fun initView(rootView: View) {
-        (rootView as RecyclerView).layoutManager=LinearLayoutManager(context)
-        rootView.adapter=adapter
-        rootView.addItemDecoration(DrawableItemDecoration(bottom = ViewUtil.dpToPx(2f),
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px)))
+        (binding.root as RecyclerView).layoutManager = LinearLayoutManager(context)
+        binding.root.adapter = adapter
+        binding.root.addItemDecoration(
+            DrawableItemDecoration(
+                bottom = ViewUtil.dpToPx(2f),
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px)
+            )
+        )
 
-        adapter.click={v,position->
-            val status=dataList!![position].status
-            val id=dataList!![position].internetMusicDetail.id
-            when(v.id){
-                R.id.downloadStatu->{
+        adapter.click = { v, position ->
+            val status = dataList!![position].status
+            val id = dataList!![position].internetMusicDetail.id
+            when (v.id) {
+                R.id.downloadStatu -> {
                     if (status == DownloadMusic.DOWNLOAD_DOWNLOADING) {
                         connect?.pause(id)
                     } else {
                         connect?.start(id)
                     }
                 }
-                R.id.close->{
-                    if(dialog==null){
-                        dialog=ConfirmDialog(context!!)
-                                .setMsg(ResUtil.getString(R.string.delete))
-                                .setLeftText(ResUtil.getString(R.string.no))
-                                .setRightText(ResUtil.getString(R.string.yes))
-                                .setRightListener { dialog ->
-                                    connect?.delete(id)
-                                    dialog.dismiss()
-                                }
-                                .setLeftListener { dialog ->
-                                    dialog.dismiss()
-                                }
+                R.id.close -> {
+                    if (dialog == null) {
+                        dialog = ConfirmDialog(requireContext())
+                            .setMsg(ResUtil.getString(R.string.delete))
+                            .setLeftText(ResUtil.getString(R.string.no))
+                            .setRightText(ResUtil.getString(R.string.yes))
+                            .setRightListener { dialog ->
+                                connect?.delete(id)
+                                dialog.dismiss()
+                            }
+                            .setLeftListener { dialog ->
+                                dialog.dismiss()
+                            }
                     }
                     dialog?.showCenter(v)
                 }
@@ -63,8 +68,8 @@ class DownloadingFragment:BaseDownloadFragment(){
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        if(!hidden){
-            val topBarLayout=(activity as MusicDownLoadActivity).topBarLayout
+        if (!hidden) {
+            val topBarLayout = (activity as MusicDownLoadActivity).topBarLayout
             topBarLayout.setEndText(null)
             topBarLayout.setEndImageListener(null)
         }
@@ -80,7 +85,7 @@ class DownloadingFragment:BaseDownloadFragment(){
 
     override fun listChanged(downloadMusicList: MutableList<DownloadMusic>, completeList: MutableList<DownloadMusic>) {
         adapter.update(downloadMusicList)
-        dataList=downloadMusicList
+        dataList = downloadMusicList
     }
 
     override fun onDestroy() {

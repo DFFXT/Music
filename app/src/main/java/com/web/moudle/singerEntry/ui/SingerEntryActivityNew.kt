@@ -7,7 +7,15 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.appbar.AppBarLayout
-import com.web.common.base.*
+import com.music.m.R
+import com.music.m.databinding.ActivitySingerEntryNewBinding
+import com.web.common.base.BaseFragment
+import com.web.common.base.BaseFragmentPagerAdapter
+import com.web.common.base.BaseViewBindingActivity
+import com.web.common.base.errorClickLinsten
+import com.web.common.base.showContent
+import com.web.common.base.showError
+import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.WindowUtil
@@ -15,17 +23,13 @@ import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.model.SingerEntryViewModel
 import com.web.moudle.singerEntry.ui.fragment.SingerAllAlbumFragment
 import com.web.moudle.singerEntry.ui.fragment.SingerAllMusicFragment
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_singer_entry_new.*
 
-class SingerEntryActivityNew : BaseActivity() {
+class SingerEntryActivityNew : BaseViewBindingActivity<ActivitySingerEntryNewBinding>() {
     private lateinit var id: String
     private lateinit var model: SingerEntryViewModel
 
-    private var title=""
-    private val pageList=ArrayList<BaseFragment>()
-
-
+    private var title = ""
+    private val pageList = ArrayList<BaseFragment<*>>()
 
     override fun getLayoutId(): Int {
         return R.layout.activity_singer_entry_new
@@ -43,65 +47,62 @@ class SingerEntryActivityNew : BaseActivity() {
             if (data != null) {
                 if (data.code == LiveDataWrapper.CODE_OK) {
                     val res = data.value
-                    title=res.name
-                    tv_artistName.text=res.name
-                    tv_desc.text=res.introduction
-                    ImageLoad.load(res.avatar500).into(iv_bigImage_detailMusicActivity)
-                    rootView.showContent()
+                    title = res.name
+                    binding.tvArtistName.text = res.name // 替换 tv_artistName 为 binding.tvArtistName
+                    binding.tvDesc.text = res.introduction // 替换 tv_desc 为 binding.tvDesc
+                    ImageLoad.load(res.avatar500).into(binding.ivBigImageDetailMusicActivity) // 替换 iv_bigImage_detailMusicActivity 为 binding.ivBigImageDetailMusicActivity
+                    binding.rootView.showContent()
 
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
-                    rootView.showError()
-                    rootView.errorClickLinsten = View.OnClickListener {
+                    binding.rootView.showError() // 替换 rootView 为 binding.rootView
+                    binding.rootView.errorClickLinsten = View.OnClickListener {
                         model.getArtistInfo(id)
-                        rootView.showLoading()
+                        binding.rootView.showLoading() // 替换 rootView 为 binding.rootView
                     }
                 }
 
             }
         })
 
-        viewPager.adapter=BaseFragmentPagerAdapter(supportFragmentManager,pageList)
-
-        tabLayout.setupWithViewPager(viewPager)
-        pageList.forEachIndexed {index,fragment->
-            tabLayout.getTabAt(index)?.text = fragment.title
+        binding.viewPager.adapter = BaseFragmentPagerAdapter(supportFragmentManager, pageList) // 替换 viewPager 为 binding.viewPager
+        binding.tabLayout.setupWithViewPager(binding.viewPager) // 替换 tabLayout 和 viewPager 为 binding.tabLayout 和 binding.viewPager
+        pageList.forEachIndexed { index, fragment ->
+            binding.tabLayout.getTabAt(index)?.text = fragment.title // 替换 tabLayout 为 binding.tabLayout
         }
 
-
-
-
         model.getArtistInfo(id)
-
     }
 
     override fun initView() {
-        rootView.showLoading(true)
+        binding.rootView.showLoading(true) // 替换 rootView 为 binding.rootView
         WindowUtil.setImmersedStatusBar(window)
-        toolbar.setPadding(topBar.paddingStart,WindowUtil.getStatusHeight(),topBar.paddingEnd,topBar.paddingBottom)
+        binding.toolbar.setPadding(
+            binding.topBar.paddingStart,
+            WindowUtil.getStatusHeight(),
+            binding.topBar.paddingEnd,
+            binding.topBar.paddingBottom
+        ) // 替换 toolbar 和 topBar 为 binding.toolbar 和 binding.topBar
         loadData()
-        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
+        binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             when (-dy) {
                 appBar.totalScrollRange -> {
                     appBar.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                    toolbar.setBackgroundColor(getColor(R.color.themeColor))
-                    topBar.post {
-                        topBar.setMainTitle(title)
+                    binding.toolbar.setBackgroundColor(getColor(R.color.themeColor)) // 替换 toolbar 为 binding.toolbar
+                    binding.topBar.post {
+                        binding.topBar.setMainTitle(title) // 替换 topBar 为 binding.topBar
                     }
 
                 }
                 else -> {
-                    toolbar.setBackgroundColor(Color.TRANSPARENT)
+                    binding.toolbar.setBackgroundColor(Color.TRANSPARENT) // 替换 toolbar 为 binding.toolbar
                     appBar.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-                    topBar.post {
-                        topBar.setMainTitle("")
+                    binding.topBar.post {
+                        binding.topBar.setMainTitle("") // 替换 topBar 为 binding.topBar
                     }
                 }
             }
         })
-
-
     }
-
 
     companion object {
         private const val ID = "itemId"
@@ -112,5 +113,4 @@ class SingerEntryActivityNew : BaseActivity() {
             ctx.startActivity(intent)
         }
     }
-
 }

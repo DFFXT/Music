@@ -8,19 +8,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.music.m.R
+import com.music.m.databinding.ActivityLocalChooserBinding
 import com.web.common.base.BaseActivity
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.base.OnItemClickListener
-import com.web.common.constant.Constant
 import com.web.common.util.ResUtil
 import com.web.misc.DrawableItemDecoration
 import com.web.moudle.setting.chooser.adapter.LocalChooserAdapter
 import com.web.moudle.setting.chooser.bean.LocalItem
 import com.web.moudle.setting.chooser.model.LocalChooserViewModel
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_local_chooser.*
-import java.io.File
 
-class LocalChooserActivity:BaseActivity() {
+class LocalChooserActivity: BaseViewBindingActivity<ActivityLocalChooserBinding>() {
     private var model:LocalChooserViewModel?=null
     private var selected:Boolean=false
     override fun getLayoutId(): Int= R.layout.activity_local_chooser
@@ -35,18 +34,18 @@ class LocalChooserActivity:BaseActivity() {
         val initDir=intent.getStringExtra(INTENT_DATA)
         when(action){
             ACTION_FILE_SELECT->{
-                topBar.setMainTitle(ResUtil.getString(R.string.chooser_fileSelect))
+                binding.topBar.setMainTitle(ResUtil.getString(R.string.chooser_fileSelect))
             }
             ACTION_DIR_SELECT->{
-                topBar.setMainTitle(ResUtil.getString(R.string.chooser_dirSelect))
+                binding.topBar.setMainTitle(ResUtil.getString(R.string.chooser_dirSelect))
             }
         }
-        rv_localChooser.layoutManager=LinearLayoutManager(this)
-        rv_localChooser.addItemDecoration(
+        binding.rvLocalChooser.layoutManager=LinearLayoutManager(this)
+        binding.rvLocalChooser.addItemDecoration(
                 DrawableItemDecoration(0,0,0,2,
                         RecyclerView.VERTICAL,
                         ResUtil.getDrawable(R.drawable.recycler_divider)))
-        rv_localChooser.adapter=adapter
+        binding.rvLocalChooser.adapter=adapter
 
         adapter.setItemClickListener(object :OnItemClickListener<LocalItem> {
             override fun itemClick(item: LocalItem,position:Int) {
@@ -65,12 +64,12 @@ class LocalChooserActivity:BaseActivity() {
         })
         adapter.setItemSelectListener(object :AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                tv_select.setTextColor(ResUtil.getColor(R.color.gray))
+                binding.tvSelect.setTextColor(ResUtil.getColor(R.color.gray))
                 selected=false
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                tv_select.setTextColor(ResUtil.getColor(R.color.white))
+                binding.tvSelect.setTextColor(ResUtil.getColor(R.color.white))
                 selectValue=adapter.data!![position].abPath
                 selected=true
             }
@@ -83,16 +82,16 @@ class LocalChooserActivity:BaseActivity() {
 
         model?.currentPath?.observe(this,Observer<String>{
             selectValue=it
-            tv_currentPath.text=it
+            binding.tvCurrentPath.text=it
         })
         //**选择文件夹模式下，任何目录都是可选的，所以颜色为白色
         if(action== ACTION_DIR_SELECT){
-            tv_select.setTextColor(ResUtil.getColor(R.color.white))
+            binding.tvSelect.setTextColor(ResUtil.getColor(R.color.white))
             selected=true
         }
         model?.requestEntry(initDir)
 
-        tv_select.setOnClickListener {
+        binding.tvSelect.setOnClickListener {
             if(!selected)return@setOnClickListener
             val intent=Intent()
             intent.putExtra(INTENT_DATA,selectValue)

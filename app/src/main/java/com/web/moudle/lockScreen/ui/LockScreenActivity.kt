@@ -34,11 +34,12 @@ import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.lockscreen.LockScreenSettingActivity
 import com.music.m.R
-import kotlinx.android.synthetic.main.activity_lock_screen.*
+import com.music.m.databinding.ActivityLockScreenBinding
+import com.web.common.base.BaseViewBindingActivity
 import java.util.*
 
 
-class LockScreenActivity : BaseActivity() ,View.OnClickListener{
+class LockScreenActivity : BaseViewBindingActivity<ActivityLockScreenBinding>() ,View.OnClickListener{
     private val lyrics= arrayListOf<LyricsLine>()
     private val arrowBitmap = arrayOfNulls<Bitmap>(2)
     private lateinit var params: ConstraintLayout.LayoutParams
@@ -58,8 +59,8 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     val observer=object :PlayerObserver(){
         override fun onLoad(music: Music?, maxTime: Int) {
             if(music==null)return
-            tv_lockScreen_musicName.text=music.musicName
-            tv_lockScreen_singerName.text=music.singer
+            binding.tvLockScreenMusicName.text=music.musicName
+            binding.tvLockScreenSingerName.text=music.singer
             val path=music.lyricsPath
             lyrics.clear()
             if (Shortcut.fileExsist(path)) {//---存在歌词
@@ -71,19 +72,19 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                 line.line = ResUtil.getString(R.string.lyrics_noLyrics)
                 lyrics.add(line)
             }
-            lyricView_lockScreen.lyrics=lyrics
+            binding.lyricViewLockScreen.lyrics=lyrics
         }
 
         override fun onPlay() {
-            iv_lockScreen_status.setImageResource(R.drawable.icon_play_white)
+            binding.ivLockScreenStatus.setImageResource(R.drawable.icon_play_white)
         }
 
         override fun onPause() {
-            iv_lockScreen_status.setImageResource(R.drawable.icon_pause_white)
+            binding.ivLockScreenStatus.setImageResource(R.drawable.icon_pause_white)
         }
 
         override fun onCurrentTime(duration: Int, maxTime: Int) {
-            lyricView_lockScreen.setCurrentTimeImmediately(duration)
+            binding.lyricViewLockScreen.setCurrentTimeImmediately(duration)
         }
     }
 
@@ -102,11 +103,11 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
 
                 ImageLoad.loadAsBitmap(LockScreenSettingActivity.getBgImagePath()).into(object : BaseGlideTarget(ViewUtil.screenWidth(),ViewUtil.screenHeight()) {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        rootView_lockScreenActivity.background=BitmapDrawable(resources,ImageLoad.buildBlurBitmap(resource,10f))
+                        binding.rootViewLockScreenActivity.background=BitmapDrawable(resources,ImageLoad.buildBlurBitmap(resource,10f))
                     }
                 })
             }
-            else ->rootView_lockScreenActivity.setBackgroundColor(LockScreenSettingActivity.getBgColor())
+            else ->binding.rootViewLockScreenActivity.setBackgroundColor(LockScreenSettingActivity.getBgColor())
         }
         if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.N_MR1)
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
@@ -114,20 +115,20 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                 setShowWhenLocked(true)
             }
         showTime()
-        iv_lockScreen_pre.setOnClickListener(this)
-        iv_lockScreen_status.setOnClickListener(this)
-        iv_lockScreen_next.setOnClickListener(this)
+        binding.ivLockScreenPre.setOnClickListener(this)
+        binding.ivLockScreenStatus.setOnClickListener(this)
+        binding.ivLockScreenNext.setOnClickListener(this)
 
-        iv_lockScreen_leftArrow.setImageBitmap(arrowBitmap[0])
-        iv_lockScreen_rightArrow.setImageBitmap(arrowBitmap[1])
-        params=iv_lockScreen_leftArrow.layoutParams as ConstraintLayout.LayoutParams
+        binding.ivLockScreenLeftArrow.setImageBitmap(arrowBitmap[0])
+        binding.ivLockScreenRightArrow.setImageBitmap(arrowBitmap[1])
+        params=binding.ivLockScreenLeftArrow.layoutParams as ConstraintLayout.LayoutParams
         marginEnd=params.marginEnd
         //**歌词行数
-        lyricView_lockScreen.maxLineAccount=5
-        lyricView_lockScreen.setCanScroll(false)
+        binding.lyricViewLockScreen.maxLineAccount=5
+        binding.lyricViewLockScreen.setCanScroll(false)
 
 
-        rootView_lockScreenActivity.setOnTouchListener(object :View.OnTouchListener{
+        binding.rootViewLockScreenActivity.setOnTouchListener(object :View.OnTouchListener{
             private val maxDistance=ViewUtil.screenWidth()/3
             private var preX:Float=0f
             private var preY:Float=0f
@@ -152,7 +153,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                             finish()
                         }
                         val alpha=(maxDistance*2-Math.abs(e.rawX-originX))/(maxDistance*2)
-                        rootView_lockScreenActivity.alpha=alpha
+                        binding.rootViewLockScreenActivity.alpha=alpha
                         if(!marginAdd&&params.marginEnd<=marginEnd){
                             marginAdd=true
                         }
@@ -167,7 +168,7 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                         if(params.marginEnd<marginEnd){
                             params.marginEnd=marginEnd
                         }
-                        iv_lockScreen_leftArrow.layoutParams=params
+                        binding.ivLockScreenLeftArrow.layoutParams=params
                         preDis=thisDis
                         preX=e.rawX
                         preY=e.rawY
@@ -177,16 +178,16 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
                         animatorRun=true
                         val dis=marginEnd-params.marginEnd
                         val start=params.marginEnd
-                        val animator=ValueAnimator.ofFloat(rootView_lockScreenActivity.alpha,1f)
+                        val animator=ValueAnimator.ofFloat(binding.rootViewLockScreenActivity.alpha,1f)
                         animator.addUpdateListener {
                             if(!animatorRun){
                                 it.cancel()
                                 return@addUpdateListener
                             }
                             val value=it.animatedValue as Float
-                            rootView_lockScreenActivity.alpha=value
+                            binding.rootViewLockScreenActivity.alpha=value
                             params.marginEnd=start+(value*dis).toInt()
-                            iv_lockScreen_leftArrow.layoutParams=params
+                            binding.ivLockScreenLeftArrow.layoutParams=params
                         }
                         animator.duration=300
                         animator.start()
@@ -214,9 +215,9 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
     private fun showTime(){
         val calendar=Calendar.getInstance()
         val time=calendar.get(Calendar.HOUR_OF_DAY).toString()+":"+calendar.get(Calendar.MINUTE)
-        tv_lockScreen_time.text=time
+        binding.tvLockScreenTime.text=time
         val date=(calendar.get(Calendar.MONTH)+1).toString()+"月"+calendar.get(Calendar.DAY_OF_MONTH)
-        tv_lockScreen_date.text=date
+        binding.tvLockScreenDate.text=date
         val dayOfWeek=calendar.get(Calendar.DAY_OF_WEEK)
         val week=ResUtil.getString(R.string.text_week)+when(dayOfWeek-1){
             0-> ResUtil.getString(R.string.text_0)
@@ -228,9 +229,9 @@ class LockScreenActivity : BaseActivity() ,View.OnClickListener{
             6-> ResUtil.getString(R.string.text_6)
             else -> ""
         }
-        tv_lockScreen_week.text=week
+        binding.tvLockScreenWeek.text=week
         val second=calendar.get(Calendar.SECOND)
-        rootView_lockScreenActivity.postDelayed({//**隔一定时间更新时间
+        binding.rootViewLockScreenActivity.postDelayed({//**隔一定时间更新时间
             showTime()
         },60_000L-second*1000)
     }

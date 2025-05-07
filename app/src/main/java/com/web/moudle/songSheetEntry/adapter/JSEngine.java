@@ -2,7 +2,6 @@ package com.web.moudle.songSheetEntry.adapter;
 
 import com.web.app.MyApplication;
 import com.web.moudle.songSheetEntry.bean.SongSheetRequestParams;
-import com.web.web.Index;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -70,7 +69,7 @@ public class JSEngine{
             Scriptable scope = rhino.initStandardObjects();
 
             ScriptableObject.putProperty(scope, "javaContext", Context.javaToJS(this, scope));
-            ScriptableObject.putProperty(scope, "javaLoader", Context.javaToJS(Index.class.getClassLoader(), scope));
+            ScriptableObject.putProperty(scope, "javaLoader", Context.javaToJS(getClass().getClassLoader(), scope));
 
 
             rhino.evaluateReader(scope, reader, "JSEngine", 1, null);

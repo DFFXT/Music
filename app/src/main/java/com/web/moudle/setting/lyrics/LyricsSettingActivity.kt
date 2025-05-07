@@ -9,7 +9,12 @@ import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.web.common.base.*
+import com.music.m.R
+import com.music.m.databinding.ActivityLyricsSettingBinding
+import com.web.common.base.BaseAdapter
+import com.web.common.base.BaseViewBindingActivity
+import com.web.common.base.BaseViewHolder
+import com.web.common.base.onSeekTo
 import com.web.common.constant.AppConfig
 import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
@@ -17,10 +22,8 @@ import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
 import com.web.moudle.lyrics.bean.LyricsLine
 import com.web.moudle.music.player.other.FloatLyricsManager
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_lyrics_setting.*
 
-class LyricsSettingActivity : BaseActivity() {
+class LyricsSettingActivity : BaseViewBindingActivity<ActivityLyricsSettingBinding>() {
     override fun getLayoutId(): Int = R.layout.activity_lyrics_setting
 
     private val colorList = ResUtil.getIntArray(R.array.lyricsColorArray).asList()
@@ -31,9 +34,9 @@ class LyricsSettingActivity : BaseActivity() {
                 enableLyricsOverlap(baseContext, isChecked)
             } else {
                 FloatLyricsManager.requestPermission(baseContext)
-                sw_lyricsOverlayWindow.setOnCheckedChangeListener(null)
-                sw_lyricsOverlayWindow.isChecked = false
-                sw_lyricsOverlayWindow.setOnCheckedChangeListener(this)
+                binding.swLyricsOverlayWindow.setOnCheckedChangeListener(null)
+                binding.swLyricsOverlayWindow.isChecked = false
+                binding.swLyricsOverlayWindow.setOnCheckedChangeListener(this)
             }
         }
     }
@@ -47,19 +50,20 @@ class LyricsSettingActivity : BaseActivity() {
     }
 
     override fun initView() {
-        sw_lyricsOverlayWindow.isChecked = lyricsOverlap()
+        binding.swLyricsOverlayWindow.isChecked = lyricsOverlap()
 
-        sw_lyricsOverlayWindow.setOnCheckedChangeListener(checkListener)
+        binding.swLyricsOverlayWindow.setOnCheckedChangeListener(checkListener)
 
-        sw_lyricsLock.isChecked = isFloatWindowLocked()
-        sw_lyricsLock.setOnCheckedChangeListener { _, isChecked ->
+        binding.swLyricsLock.isChecked = isFloatWindowLocked()
+
+        binding.swLyricsLock.setOnCheckedChangeListener { _, isChecked ->
             setFloatWindowLocked(this, isChecked)
         }
 
         // **recyclerView设置
-        rv_color.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        rv_color.addItemDecoration(GapItemDecoration(10, 10, 10, 10, remainTopPadding = true, remainEndPadding = true, remainBottomPadding = true))
-        rv_color.adapter = object : BaseAdapter<Int>(colorList) {
+        binding.rvColor.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        binding.rvColor.addItemDecoration(GapItemDecoration(10, 10, 10, 10, remainTopPadding = true, remainEndPadding = true, remainBottomPadding = true))
+        binding.rvColor.adapter = object : BaseAdapter<Int>(colorList) {
             override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Int) {
                 (holder.itemView as ImageView).setImageDrawable(ColorDrawable(item))
                 holder.itemView.setOnClickListener {
@@ -72,9 +76,9 @@ class LyricsSettingActivity : BaseActivity() {
             }
         }
 
-        rv_focusColor.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        rv_focusColor.addItemDecoration(GapItemDecoration(10, 10, 10, 10, remainTopPadding = true, remainEndPadding = true, remainBottomPadding = true))
-        rv_focusColor.adapter = object : BaseAdapter<Int>(colorList) {
+        binding.rvFocusColor.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        binding.rvFocusColor.addItemDecoration(GapItemDecoration(10, 10, 10, 10, remainTopPadding = true, remainEndPadding = true, remainBottomPadding = true))
+        binding.rvFocusColor.adapter = object : BaseAdapter<Int>(colorList) {
             override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Int) {
                 (holder.itemView as ImageView).setImageDrawable(ColorDrawable(item))
                 holder.itemView.setOnClickListener {
@@ -88,47 +92,47 @@ class LyricsSettingActivity : BaseActivity() {
         }
 
         // **显示当前颜色
-        v_lyricsColor.setImageDrawable(ColorDrawable(getLyricsColor()))
-        v_lyricsColor.setOnClickListener {
+        binding.vLyricsColor.setImageDrawable(ColorDrawable(getLyricsColor()))
+        binding.vLyricsColor.setOnClickListener {
             colorPick(getLyricsColor()) {
                 lyricsColorChange(it)
             }
         }
-        v_lyricsFocusColor.setImageDrawable(ColorDrawable(getLyricsFocusColor()))
-        v_lyricsFocusColor.setOnClickListener {
+        binding.vLyricsFocusColor.setImageDrawable(ColorDrawable(getLyricsFocusColor()))
+        binding.vLyricsFocusColor.setOnClickListener {
             colorPick(getLyricsFocusColor()) {
                 lyricsFocusColorChange(it)
             }
         }
 
-        sb_lyricsSize.max = ResUtil.getSize(R.dimen.textSize_large) - ResUtil.getSize(R.dimen.textSize_min)
-        sb_lyricsSize.progress = getLyricsSize() - ResUtil.getSize(R.dimen.textSize_min)
-        sb_lyricsSize.onSeekTo(
+        binding.sbLyricsSize.max = ResUtil.getSize(R.dimen.textSize_large) - ResUtil.getSize(R.dimen.textSize_min)
+        binding.sbLyricsSize.progress = getLyricsSize() - ResUtil.getSize(R.dimen.textSize_min)
+        binding.sbLyricsSize.onSeekTo(
             onChange = {
                 setLyricsSize(it + ResUtil.getSize(R.dimen.textSize_min))
-                lv_lyrics.setTextSize(getLyricsSize().toFloat())
+                binding.lvLyrics.setTextSize(getLyricsSize().toFloat())
             }
         )
 
-        lv_lyrics.textColor = getLyricsColor()
-        lv_lyrics.setTextSize(getLyricsSize().toFloat())
-        lv_lyrics.setTextFocusColor(getLyricsFocusColor())
-        lv_lyrics.setCanScroll(false)
-        lv_lyrics.lyrics = lyricsSample
-        lv_lyrics.maxLineAccount = 10
-        lv_lyrics.setShowLineAccount(10)
-        lv_lyrics.setCurrentTimeImmediately(lyricsSample[3].time)
+        binding.lvLyrics.textColor = getLyricsColor()
+        binding.lvLyrics.setTextSize(getLyricsSize().toFloat())
+        binding.lvLyrics.setTextFocusColor(getLyricsFocusColor())
+        binding.lvLyrics.setCanScroll(false)
+        binding.lvLyrics.lyrics = lyricsSample
+        binding.lvLyrics.maxLineAccount = 10
+        binding.lvLyrics.setShowLineAccount(10)
+        binding.lvLyrics.setCurrentTimeImmediately(lyricsSample[3].time)
     }
 
     private fun lyricsColorChange(@ColorInt color: Int) {
         setLyricsColor(color)
-        v_lyricsColor.setImageDrawable(ColorDrawable(color))
-        lv_lyrics.textColor = getLyricsColor()
+        binding.vLyricsColor.setImageDrawable(ColorDrawable(color))
+        binding.lvLyrics.textColor = getLyricsColor()
     }
     private fun lyricsFocusColorChange(@ColorInt color: Int) {
         setLyricsFocusColor(color)
-        v_lyricsFocusColor.setImageDrawable(ColorDrawable(color))
-        lv_lyrics.setTextFocusColor(color)
+        binding.vLyricsFocusColor.setImageDrawable(ColorDrawable(color))
+        binding.lvLyrics.setTextFocusColor(color)
     }
 
     /**

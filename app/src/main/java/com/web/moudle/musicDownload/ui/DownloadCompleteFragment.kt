@@ -3,20 +3,20 @@ package com.web.moudle.musicDownload.ui
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.music.m.R
+import com.music.m.databinding.ViewRecyclerBinding
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.data.Music
 import com.web.misc.ConfirmDialog
 import com.web.misc.DrawableItemDecoration
-import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicDownload.adpter.CompleteAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
 import com.web.moudle.service.FileDownloadService
-import com.music.m.R
 
-class DownloadCompleteFragment : BaseDownloadFragment() {
+class DownloadCompleteFragment : BaseDownloadFragment<ViewRecyclerBinding>() {
 
     override var title: String = ResUtil.getString(R.string.downloadComplete)
 
@@ -24,12 +24,13 @@ class DownloadCompleteFragment : BaseDownloadFragment() {
     private var dataList: MutableList<DownloadMusic>? = null
     private var visible = false
     private var dialog: ConfirmDialog? = null
+
     override fun getLayoutId(): Int = R.layout.view_recycler
 
     override fun initView(rootView: View) {
-        (rootView as RecyclerView).layoutManager = LinearLayoutManager(context)
-        rootView.adapter = adapter
-        rootView.addItemDecoration(DrawableItemDecoration(bottom = 2, orientation = RecyclerView.VERTICAL,
+        (binding.root as RecyclerView).layoutManager = LinearLayoutManager(context)
+        binding.root.adapter = adapter
+        binding.root.addItemDecoration(DrawableItemDecoration(bottom = 2, orientation = RecyclerView.VERTICAL,
                 drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
         adapter.click = { v, position ->
             val detail = dataList!![position].internetMusicDetail

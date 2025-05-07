@@ -4,20 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivityLoginBinding
 import com.web.common.base.BaseFragment
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.util.ResUtil
 import com.web.common.util.WindowUtil
 import com.web.moudle.login.fragment.LoginFragment
 import com.web.moudle.login.fragment.RegisterFragment
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : BaseActivity() {
+class LoginActivity : BaseViewBindingActivity<ActivityLoginBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_login
 
-    private val pageList = ArrayList<BaseFragment>()
+    private val pageList = ArrayList<BaseFragment<*>>()
     private val tagList = ArrayList<String>()
     private var currentPageIndex = 0
 
@@ -45,7 +45,7 @@ class LoginActivity : BaseActivity() {
     override fun initView() {
         WindowUtil.setImmersedStatusBar(window)
         switchPage(0)
-        tv_switchPage.setOnClickListener {
+        binding.tvSwitchPage.setOnClickListener {
             val nextIndex = (currentPageIndex + 1) % pageList.size
             switchPage(nextIndex)
         }
@@ -55,7 +55,7 @@ class LoginActivity : BaseActivity() {
     private fun switchPage(index: Int) {
         currentPageIndex = index
         val fragment = pageList[index]
-        tv_switchPage.text = tagList[index]
+        binding.tvSwitchPage.text = tagList[index]
 
         hideOtherFragment(fragment)
         val transaction = supportFragmentManager.beginTransaction()

@@ -9,7 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexboxLayout
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.music.m.R
+import com.music.m.databinding.FragmentSongSheetBinding
+import com.music.m.databinding.LayoutMusicTagBinding
+import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.web.common.base.BaseFragment
 import com.web.common.base.showContent
 import com.web.common.base.showLoading
@@ -24,12 +27,8 @@ import com.web.moudle.home.mainFragment.subFragment.bean.MusicTag
 import com.web.moudle.home.mainFragment.subFragment.bean.MusicTagBox
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.music.m.R
-import kotlinx.android.synthetic.main.fragment_song_sheet.*
-import kotlinx.android.synthetic.main.fragment_song_sheet.view.*
-import kotlinx.android.synthetic.main.layout_music_tag.view.*
 
-class MusicMainFragment : BaseFragment() {
+class MusicMainFragment : BaseFragment<FragmentSongSheetBinding>() {
     override var title = ResUtil.getString(R.string.music)
     private val pageSize = 20
     private lateinit var vm: MainFragmentViewModel
@@ -48,26 +47,25 @@ class MusicMainFragment : BaseFragment() {
 
 
     override fun initView(rootView: View) {
-
         vm = ViewModelProviders.of(this)[MainFragmentViewModel::class.java]
         vm.musicTagList.observe(this, Observer { tags ->
             tagData = tags
-            rv_sheetType.layoutManager = LinearLayoutManager(context)
+            binding.rvSheetType.layoutManager = LinearLayoutManager(context)
             tagAdapter.update(tags.tags)
-            rv_sheetType.adapter = tagAdapter
-            rootView.srl_sheetList.showLoading()
+            binding.rvSheetType.adapter = tagAdapter
+            binding.srlSheetList.showLoading()
             currentTag = tags.tagMap[tags.tags[0]]!![0].title
             vm.getTagMusic(currentTag, 0, pageSize)
         })
 
         vm.tagMusicList.observe(this, Observer {
             if (currentTag != it.tag) return@Observer
-            rootView.srl_sheetList.showContent()
-            rootView.srl_sheetList.finishLoadMore()
+            binding.srlSheetList.showContent()
+            binding.srlSheetList.finishLoadMore()
 
             mainData.addAll(it.taginfo.songlist)
             adapter.update(mainData)
-            rootView.srl_sheetList.setNoMoreData(it.taginfo.havemore == 0)
+            binding.srlSheetList.setNoMoreData(it.taginfo.havemore == 0)
         })
 
         tagAdapter.selectIndex = currentCategoryIndex
@@ -81,43 +79,39 @@ class MusicMainFragment : BaseFragment() {
         }
 
         layoutManager = LinearLayoutManager(context)
-        rootView.rv_SheetList.layoutManager = layoutManager
-        rootView.rv_SheetList.addItemDecoration(DrawableItemDecoration(0, 0, 0, 2, drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
-        rootView.rv_SheetList.adapter = adapter
+        binding.rvSheetList.layoutManager = layoutManager
+        binding.rvSheetList.addItemDecoration(DrawableItemDecoration(0, 0, 0, 2, drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
+        binding.rvSheetList.adapter = adapter
         adapter.itemClick = { item, _ ->
-            MusicDetailActivity.actionStart(context!!, item.song_id)
+            MusicDetailActivity.actionStart(requireContext(), item.song_id)
         }
 
-        rootView.srl_sheetList.setRefreshFooter(ClassicsFooter(context))
-        rootView.srl_sheetList.setOnLoadMoreListener {
+        binding.srlSheetList.setRefreshFooter(ClassicsFooter(context))
+        binding.srlSheetList.setOnLoadMoreListener {
             vm.getTagMusic(currentTag, page * pageSize, pageSize)
         }
 
-
-
-        rootView.rv_sheetType.adapter = tagAdapter
+        binding.rvSheetType.adapter = tagAdapter
         tagAdapter.itemClickListener = { v, index ->
             nextCategoryIndex = index
             showPopTag(v!!, tagData.tagMap[tagData.tags[index]]!!)
         }
 
-
         vm.getMusicTag()
-
     }
 
-    private var popWindow: BasePopupWindow? = null
+    private var popWindow: BasePopupWindow<LayoutMusicTagBinding>? = null
     private val tabViewList = ArrayList<TextView>()
     private fun showPopTag(v: View, tags: List<MusicTag>) {
         if (popWindow == null) {
-            popWindow = BasePopupWindow(context!!, LayoutInflater.from(context).inflate(R.layout.layout_music_tag, null, false))
+            popWindow = BasePopupWindow(requireContext(), LayoutInflater.from(context).inflate(R.layout.layout_music_tag, null, false))
             popWindow?.dismissCallback = {
                 tagAdapter.selectIndex = currentCategoryIndex
                 tagAdapter.notifyItemChanged(currentCategoryIndex)
                 tagAdapter.notifyItemChanged(nextCategoryIndex)
             }
         }
-        val layout = popWindow!!.rootView.flexBoxLayout_tag as ViewGroup
+        val layout = popWindow!!.binding.flexBoxLayoutTag as ViewGroup
         val childCount = layout.childCount
 
         layout.removeAllViews()
@@ -153,7 +147,7 @@ class MusicMainFragment : BaseFragment() {
             page = 0
             mainData.clear()
             currentTag = it.text.toString()
-            rootView?.srl_sheetList?.showLoading()
+            binding.srlSheetList.showLoading()
             vm.getTagMusic(currentTag, 0, pageSize)
             currentCategoryIndex = nextCategoryIndex
             popWindow?.dismiss()

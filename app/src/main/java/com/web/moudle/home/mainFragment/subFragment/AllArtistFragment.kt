@@ -15,44 +15,37 @@ import com.web.moudle.artist.adapter.HotArtistAdapter
 import com.web.moudle.artist.bean.ArtistInfo
 import com.web.moudle.artist.model.AllArtistViewModel
 import com.music.m.R
-import kotlinx.android.synthetic.main.activity_all_artist.view.*
+import com.music.m.databinding.ActivityAllArtistBinding
 
-class AllArtistFragment:BaseFragment() {
-    override var title=ResUtil.getString(R.string.singer_tab)
-    private lateinit var vm:AllArtistViewModel
+class AllArtistFragment : BaseFragment<ActivityAllArtistBinding>() {
+    override var title = ResUtil.getString(R.string.singer_tab)
+    private lateinit var vm: AllArtistViewModel
 
-    private val adapter:HotArtistAdapter=HotArtistAdapter()
+    private val adapter: HotArtistAdapter = HotArtistAdapter()
 
     override fun getLayoutId(): Int = R.layout.activity_all_artist
 
-    override fun initView(rootView:View) {
-        vm=ViewModelProviders.of(this)[AllArtistViewModel::class.java]
+    override fun initView(rootView: View) {
+        vm = ViewModelProviders.of(this)[AllArtistViewModel::class.java]
         vm.artistList.observe(this, Observer {
             adapter.update(it.value?.artist)
         })
 
-        rootView.rv_hotArtist.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
-        val gap=ViewUtil.dpToPx(10f)
-        rootView.rv_hotArtist.addItemDecoration(GapItemDecoration(left = gap,right = gap,remainLeftPadding = true,remainEndPadding = true))
-        rootView.rv_hotArtist.adapter=adapter
+        binding.rvHotArtist.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        val gap = ViewUtil.dpToPx(10f)
+        binding.rvHotArtist.addItemDecoration(GapItemDecoration(left = gap, right = gap, remainLeftPadding = true, remainEndPadding = true))
+        binding.rvHotArtist.adapter = adapter
 
-        val list=ArrayList<ArtistInfo>()
-        for(i in 0..5){
+        val list = ArrayList<ArtistInfo>()
+        for (i in 0..5) {
             list.add(ArtistInfo())
         }
         adapter.update(list)
 
+        binding.rvArtistType.layoutManager = LinearLayoutManager(context)
+        binding.rvArtistType.addItemDecoration(DrawableItemDecoration(bottom = 2, drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
+        binding.rvArtistType.adapter = ArtistTypeAdapter(vm.getArtistTypeList())
 
-        rootView.rv_artistType.layoutManager=LinearLayoutManager(context)
-
-        rootView.rv_artistType.addItemDecoration(DrawableItemDecoration(bottom = 2,drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
-
-
-        rootView.rv_artistType.adapter=ArtistTypeAdapter(vm.getArtistTypeList())
-
-
-
-        vm.getHotArtist(0,0,0,48)
+        vm.getHotArtist(0, 0, 0, 48)
     }
-
 }

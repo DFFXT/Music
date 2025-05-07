@@ -77,14 +77,14 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
     private var musicListPage: MusicListPage? = null
     var connect: IMusicControl? = null
         private set
-    private val pageList: MutableList<BaseMusicPage> = ArrayList()
+    private val pageList: MutableList<BaseMusicPage<*>> = ArrayList()
     private var listAlert: SelectorListAlert? = null
     private val observer: PlayerObserver = object : PlayerObserver() {
         override fun onLoad(music: Music?, maxTime: Int) {
-            mBinding.musicControlBox.bar.max = maxTime
+            binding.musicControlBox.bar.max = maxTime
             if (music == null) {
-                mBinding.musicControlBox.songname.text = null
-                mBinding.musicControlBox.singer.text = null
+                binding.musicControlBox.songname.text = null
+                binding.musicControlBox.singer.text = null
                 tv_duration!!.text = ResUtil.getString(R.string.musicTime)
             } else {
                 tv_duration!!.text = timeFormat("mm:ss", music.duration.toLong())
@@ -115,8 +115,8 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         }
 
         override fun onCurrentTime(duration: Int, maxTime: Int) {
-            if (!mBinding.musicControlBox.bar.isPressed) {
-                mBinding.musicControlBox.bar.progress = duration
+            if (!binding.musicControlBox.bar.isPressed) {
+                binding.musicControlBox.bar.progress = duration
                 tv_currentTime!!.text = timeFormat("mm:ss", duration.toLong())
             }
         }
@@ -126,7 +126,7 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         }
 
         override fun onBufferingUpdate(percent: Int) {
-            mBinding.musicControlBox.bar.secondaryProgress = (percent * mBinding.musicControlBox.bar.max)
+            binding.musicControlBox.bar.secondaryProgress = (percent * binding.musicControlBox.bar.max)
         }
 
         /***
@@ -182,14 +182,14 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
     @SuppressLint("RestrictedApi")
     private fun setToolbar() {
         val paddingStart = ViewUtil.dpToPx(6f)
-        mBinding.toolbar.endImageView.setPadding(paddingStart, paddingStart, paddingStart, paddingStart)
-        mBinding.toolbar.setEndImageListener {
+        binding.toolbar.endImageView.setPadding(paddingStart, paddingStart, paddingStart, paddingStart)
+        binding.toolbar.setEndImageListener {
             actionStart(
                 this@MusicActivity,
                 RESULT_CODE_SEARCH
             )
         }
-        val titleView = mBinding.toolbar.setMainTitle(ResUtil.getString(R.string.page_local))
+        val titleView = binding.toolbar.setMainTitle(ResUtil.getString(R.string.page_local))
         TextViewCompat.setCompoundDrawableTintMode(titleView, PorterDuff.Mode.ADD)
         /*tv_title.setOnClickListener(v -> {
             if (pageList.get(viewPager.getCurrentItem()).getTitle().equals(MusicListPage.pageName)) {
@@ -289,8 +289,8 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         v.findViewById<View>(R.id.scanLocalMusic).setOnClickListener(this)
         v.findViewById<View>(R.id.goDownload).setOnClickListener(this)
         v.findViewById<View>(R.id.item_setting1).setOnClickListener(this)
-        mBinding.musicControlBox.musicOrigin.setOnClickListener(this)
-        mBinding.leftDrawer.tvVersion.text = ResUtil.getString(R.string.about_app, Apk.getVersionName())
+        binding.musicControlBox.musicOrigin.setOnClickListener(this)
+        binding.leftDrawer.tvVersion.text = ResUtil.getString(R.string.about_app, Apk.getVersionName())
         Apk.init(this, drawer)
     }
 
@@ -345,8 +345,8 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         pre!!.setOnClickListener(this)
         pause!!.setOnClickListener(this)
         next!!.setOnClickListener(this)
-        mBinding.musicControlBox.musicplayType.setOnClickListener(this)
-        mBinding.musicControlBox.bar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+        binding.musicControlBox.musicplayType.setOnClickListener(this)
+        binding.musicControlBox.bar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             // --进度条拖动
             override fun onStopTrackingTouch(arg0: SeekBar) {
                 val progress = arg0.progress
@@ -431,12 +431,12 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
         }
     }
 
-    private val currentPage: BaseMusicPage
+    private val currentPage: BaseMusicPage<*>
         get() = pageList[viewPager!!.currentItem]
 
     // **根据playType显示图标
     private fun showPlayType(playType: PlayType?) {
-        val musicPlayType = mBinding.musicControlBox.musicplayType
+        val musicPlayType = binding.musicControlBox.musicplayType
         when (playType) {
             PlayType.ALL_LOOP -> {
                 musicPlayType.setImageResource(R.drawable.music_type_all_loop)

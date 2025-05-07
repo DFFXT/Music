@@ -9,13 +9,13 @@ import java.lang.reflect.ParameterizedType
  * ViewBinding基类
  */
 abstract class BaseViewBindingActivity<T : ViewBinding> : BaseActivity() {
-    protected lateinit var mBinding: T
+    protected lateinit var binding: T
     override fun viewBindingInit(): View {
         val type = this.javaClass.genericSuperclass as ParameterizedType
         val cls = type.actualTypeArguments[0] as Class<*>
         val method = cls.getDeclaredMethod("inflate", LayoutInflater::class.java)
-        mBinding = (method.invoke(null, layoutInflater) as T)
-        return mBinding.root
+        binding = (method.invoke(null, layoutInflater) as T)
+        return binding.root
     }
 
     // 不用再重载这个方法了

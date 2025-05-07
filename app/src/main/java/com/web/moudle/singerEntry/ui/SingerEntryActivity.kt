@@ -5,15 +5,20 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
-import com.web.common.base.*
+import com.music.m.R
+import com.music.m.databinding.ActivitySingerEntryBinding
+import com.web.common.base.BaseGlideTarget
+import com.web.common.base.BaseViewBindingActivity
+import com.web.common.base.errorClickLinsten
+import com.web.common.base.hideLoading
+import com.web.common.base.isStrictEmpty
+import com.web.common.base.showContent
+import com.web.common.base.showError
+import com.web.common.base.showLoading
 import com.web.common.bean.LiveDataWrapper
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.util.WindowUtil
@@ -25,10 +30,8 @@ import com.web.moudle.singerEntry.bean.AlbumEntryBox
 import com.web.moudle.singerEntry.bean.SingerInfo
 import com.web.moudle.singerEntry.bean.SongEntryBox
 import com.web.moudle.singerEntry.model.SingerEntryViewModel
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_singer_entry.*
 
-class SingerEntryActivity : BaseActivity() {
+class SingerEntryActivity : BaseViewBindingActivity<ActivitySingerEntryBinding>() {
     private lateinit var id: String
     private lateinit var model: SingerEntryViewModel
 
@@ -49,19 +52,19 @@ class SingerEntryActivity : BaseActivity() {
                     model.getSongList(id, 0, limit)
                     model.getAlbumList(id, 0, limit)
                     val res = data.value
-                    tv_singerName.text = res.name
-                    tv_country.text = res.country
-                    tv_birth.text = res.birth
-                    tv_constellation.text = res.constellation
-                    tv_company.text = res.company
-                    tv_totalSongs.text = res.totalSongs
-                    tv_totalAlbums.text = res.albumTotal
-                    tv_totalMV.text = "${res.totalMv}"
+                    binding.tvSingerName.text = res.name
+                    binding.tvCountry.text = res.country
+                    binding.tvBirth.text = res.birth
+                    binding.tvConstellation.text = res.constellation
+                    binding.tvCompany.text = res.company
+                    binding.tvTotalSongs.text = res.totalSongs
+                    binding.tvTotalAlbums.text = res.albumTotal
+                    binding.tvTotalMV.text = "${res.totalMv}"
 
                     if (res.introduction?.isStrictEmpty()!=false) {
-                        tv_introductionLabel.text = getString(R.string.singer_introduction_empty)
+                        binding.tvIntroductionLabel.text = getString(R.string.singer_introduction_empty)
                     } else {
-                        ex_introduction.text = res.introduction
+                        binding.exIntroduction.text = res.introduction
                     }
 
                     //**加载图片
@@ -69,20 +72,20 @@ class SingerEntryActivity : BaseActivity() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                             androidx.palette.graphics.Palette.from(resource).generate {
                                 it?.vibrantSwatch?.let { sw ->
-                                    collapseToolbarLayout.setBackgroundColor(sw.rgb)
+                                    binding.collapseToolbarLayout.setBackgroundColor(sw.rgb)
                                 }
                             }
-                            iv_bigImage_detailMusicActivity.setImageBitmap(resource)
+                            binding.ivBigImageDetailMusicActivity.setImageBitmap(resource)
                         }
                     })
-                    rv_singerEntry.showLoading()
-                    rv_albumEntry.showLoading()
-                    rootView.showContent()
+                    binding.rvSingerEntry.showLoading()
+                    binding.rvAlbumEntry.showLoading()
+                    binding.rootView.showContent()
                 } else if (data.code == LiveDataWrapper.CODE_ERROR) {
-                    rootView.showError()
-                    rootView.errorClickLinsten = View.OnClickListener {
+                    binding.rootView.showError()
+                    binding.rootView.errorClickLinsten = View.OnClickListener {
                         model.getArtistInfo(id)
-                        rootView.showLoading()
+                        binding.rootView.showLoading()
                     }
                 }
 
@@ -95,26 +98,26 @@ class SingerEntryActivity : BaseActivity() {
             if (wrapper == null) return@Observer
             if (wrapper.code == LiveDataWrapper.CODE_OK) {
                 if (wrapper.value.songList == null) {
-                    group_musicReference.visibility = View.GONE
-                    rv_singerEntry.hideLoading()
+                    binding.groupMusicReference.visibility = View.GONE
+                    binding.rvSingerEntry.hideLoading()
                     return@Observer
                 }
-                rv_singerEntry.showContent()
-                rv_singerEntry.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-                rv_singerEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
+                binding.rvSingerEntry.showContent()
+                binding.rvSingerEntry.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+                binding.rvSingerEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
                 val adapter = SingerSongAdapter(this@SingerEntryActivity, wrapper.value.songList!!)
-                rv_singerEntry.adapter = adapter
+                binding.rvSingerEntry.adapter = adapter
                 val num = wrapper.value.total
                 if (wrapper.value.haveMore == 0 || wrapper.value.songList!!.size == num) {
                     //只能使text为空，添加在了group里面，group里面的view不能单独隐藏
-                    tv_moreMusic.text = ""
+                    binding.tvMoreMusic.text = ""
                 }else{
-                    tv_moreMusic.setOnClickListener {
-                        NetMusicListActivity.actionStartSingerMusic(it.context,tv_singerName.text.toString(),id)
+                    binding.tvMoreMusic.setOnClickListener {
+                        NetMusicListActivity.actionStartSingerMusic(it.context,binding.tvSingerName.text.toString(),id)
                     }
                 }
             } else if (wrapper.code == LiveDataWrapper.CODE_ERROR) {
-                rv_singerEntry.showError()
+                binding.rvSingerEntry.showError()
             }
         })
 
@@ -123,38 +126,38 @@ class SingerEntryActivity : BaseActivity() {
             if (wrapper == null) return@Observer
             if (wrapper.code == LiveDataWrapper.CODE_OK) {
                 if (wrapper.value.albumList == null) {
-                    group_albumReference.visibility = View.GONE
-                    rv_albumEntry.hideLoading()
+                    binding.groupAlbumReference.visibility = View.GONE
+                    binding.rvAlbumEntry.hideLoading()
                     return@Observer
                 }
-                rv_albumEntry.showContent()
-                rv_albumEntry.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-                rv_albumEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
+                binding.rvAlbumEntry.showContent()
+                binding.rvAlbumEntry.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+                binding.rvAlbumEntry.addItemDecoration(GapItemDecoration(right = 20, remainEndPadding = true))
                 val adapter = SingerAlbumAdapter(this@SingerEntryActivity, wrapper.value.albumList!!)
-                rv_albumEntry.adapter = adapter
+                binding.rvAlbumEntry.adapter = adapter
                 val num = if (wrapper.value.num == null) 0 else wrapper.value.num!!.toInt()
                 if (wrapper.value.haveMore == 0 || wrapper.value.albumList!!.size == num) {
-                    tv_moreAlbum.text = ""
+                    binding.tvMoreAlbum.text = ""
                 }else{
-                    tv_moreAlbum.setOnClickListener {
-                        NetMusicListActivity.actionStartSingerAlbum(it.context,tv_singerName.text.toString(),id)
+                    binding.tvMoreAlbum.setOnClickListener {
+                        NetMusicListActivity.actionStartSingerAlbum(it.context,binding.tvSingerName.text.toString(),id)
                     }
                 }
             } else if (wrapper.code == LiveDataWrapper.CODE_ERROR) {
-                rv_albumEntry.showError()
+                binding.rvAlbumEntry.showError()
             }
         })
 
         model.getArtistInfo(id)
-        tv_moreAlbum.visibility = View.GONE
+        binding.tvMoreAlbum.visibility = View.GONE
     }
 
     override fun initView() {
-        rootView.showLoading(true)
+        binding.rootView.showLoading(true)
         WindowUtil.setImmersedStatusBar(window)
         loadData()
-        val toolbar = toolbar
-        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
+        val toolbar = binding.toolbar
+        binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBar, dy ->
             val offset = -dy
             when (offset) {
                 appBar.totalScrollRange -> {//**完全折叠
@@ -167,27 +170,7 @@ class SingerEntryActivity : BaseActivity() {
                 }
             }
         })
-
-
     }
-
-    /*private fun attributesMap(info: MusicDetailInfo): InternetMusicDetail {
-        val res = info.songInfo2
-        return InternetMusicDetail(
-                songId = res.songId,
-                songName = res.title,
-                artistName = res.artistName,
-                duration = res.duration.toInt(),
-                size = info.bitRate.fileSize,
-                lrcLink = res.lrcLink,
-                songLink = info.bitRate.songLink,
-                singerIconSmall = res.picSmall,
-                albumId = res.albumId,
-                albumName = res.albumName,
-                format = info.bitRate.format
-        )
-    }*/
-
 
     companion object {
         private const val ID = "itemId"
@@ -198,5 +181,4 @@ class SingerEntryActivity : BaseActivity() {
             ctx.startActivity(intent)
         }
     }
-
 }

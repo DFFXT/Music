@@ -8,9 +8,11 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.*
 import android.widget.PopupWindow
+import androidx.viewbinding.ViewBinding
 import com.web.misc.imageDraw.MaxSizeOnMeasure
+import java.lang.reflect.ParameterizedType
 
-open class BasePopupWindow @JvmOverloads constructor (
+open class BasePopupWindow<T: ViewBinding> @JvmOverloads constructor (
     private val ctx: Context,
     val rootView: View,
     width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -19,10 +21,20 @@ open class BasePopupWindow @JvmOverloads constructor (
     maxHeight: Int = ViewGroup.LayoutParams.WRAP_CONTENT
 ) {
 
+    lateinit var binding: T
+    private fun viewBindingInit(): View {
+        val type = this.javaClass.genericSuperclass as ParameterizedType
+        val cls = type.actualTypeArguments[0] as Class<*>
+        val method = cls.getDeclaredMethod("bind", View::class.java)
+        binding = (method.invoke(null, rootView) as T)
+        return binding.root
+    }
+
     private val popupWindow: PopupWindow = PopupWindow(width, height)
     private var enableWindowDark = true
     var dismissCallback: (() -> Unit)? = null
     init {
+        viewBindingInit()
         val viewGroup = MyViewGroup(ctx)
         viewGroup.addView(rootView)
         viewGroup.measureListener = MaxSizeOnMeasure(maxWidth, maxHeight)
@@ -41,7 +53,7 @@ open class BasePopupWindow @JvmOverloads constructor (
         enableWindowDark = enable
     }
 
-    fun enableTouchDismiss(touchDismiss: Boolean): BasePopupWindow {
+    fun enableTouchDismiss(touchDismiss: Boolean): BasePopupWindow<T> {
         if (!touchDismiss) {
             popupWindow.isFocusable = true
             popupWindow.isOutsideTouchable = false

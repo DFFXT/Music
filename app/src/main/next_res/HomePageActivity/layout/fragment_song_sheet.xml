@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/srl_sheetList"
         app:srlEnableRefresh="false"
         android:layout_width="0dp"
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 
 

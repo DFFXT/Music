@@ -9,8 +9,10 @@ import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
 
 import com.google.android.material.tabs.TabLayout;
+import com.music.m.databinding.MusicInternetBinding;
 import com.web.common.base.BaseActivity;
 import com.web.common.base.BaseFragmentPagerAdapter;
+import com.web.common.base.BaseViewBindingActivity;
 import com.web.common.util.ResUtil;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.search.SearchActivity;
@@ -24,7 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-public class InternetMusicActivity extends BaseActivity {
+public class InternetMusicActivity extends BaseViewBindingActivity<MusicInternetBinding> {
     private final static int RESULT_CODE_SEARCH = 1;
     public final static String KEYWORD = "keyword";
 

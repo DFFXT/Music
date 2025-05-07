@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.music.m.databinding.ActivitySettingBinding;
 import com.web.common.base.BaseActivity;
+import com.web.common.base.BaseViewBindingActivity;
 import com.web.common.constant.Apk;
 import com.web.common.util.ResUtil;
 import com.web.common.util.ViewUtil;
@@ -20,7 +22,7 @@ import com.web.moudle.user.UserManager;
 import com.music.m.R;
 
 @SuppressLint("InlinedApi")
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseViewBindingActivity<ActivitySettingBinding> {
 
     private View logout;
     public int getLayoutId() {

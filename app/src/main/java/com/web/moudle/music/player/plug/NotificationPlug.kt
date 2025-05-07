@@ -12,6 +12,7 @@ class NotificationPlug(service: Service) : PlayInterface,ServiceLifeCycle {
     private val notification by lazy { MusicNotification(service) }
 
     override fun onCreate() {
+        //notification.notifyChange()
 
     }
     override fun onPlay() {

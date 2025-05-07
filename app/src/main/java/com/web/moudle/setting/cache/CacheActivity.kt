@@ -4,48 +4,47 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivityCacheBinding
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.constant.AppConfig
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.config.Shortcut
 import com.web.data.MusicCache
 import com.web.misc.ConfirmDialog
-import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.chooser.LocalChooserActivity
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_cache.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.litepal.crud.DataSupport
 
-class CacheActivity:BaseActivity() {
+class CacheActivity: BaseViewBindingActivity<ActivityCacheBinding>() {
     override fun getLayoutId(): Int = R.layout.activity_cache
 
     override fun initView() {
 
-        twd_cacheEnable.setOnClickListener {
-            sw_cacheEnable.isChecked=!sw_cacheEnable.isChecked
+        binding.twdCacheEnable.setOnClickListener {
+            binding.swCacheEnable.isChecked=!binding.swCacheEnable.isChecked
         }
 
         cacheEnable(getCacheEnable())
 
-        sw_cacheEnable.setOnCheckedChangeListener { _, isChecked ->
+        binding.swCacheEnable.setOnCheckedChangeListener { _, isChecked ->
             cacheEnable(isChecked)
         }
 
         getCacheSize {
             val render=ResUtil.getFileSize(it)
             val str=ResUtil.getString(R.string.setting_clearCache)+"  $render"
-            twd_clearCache.setText(ResUtil.getSpannable(str,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min)))
+            binding.twdClearCache.setText(ResUtil.getSpannable(str,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min)))
         }
 
         cachePathChange()
         downloadPathChange()
 
         //**清空缓存
-        twd_clearCache.setOnClickListener {
+        binding.twdClearCache.setOnClickListener {
             buildConfirm(it,ResUtil.getString(R.string.setting_clearCacheTip)){
                 val cacheList=DataSupport.findAll<MusicCache>(MusicCache::class.java)
                 cacheList.forEach {cacheMusic->
@@ -58,15 +57,15 @@ class CacheActivity:BaseActivity() {
 
         }
         //**清空音乐信息
-        twd_clearAllMusic.setOnClickListener { v ->
+        binding.twdClearAllMusic.setOnClickListener { v ->
             buildConfirm(v,ResUtil.getString(R.string.setting_clearAllMusicAlert)){
                 ActionControlPlug.clear(this)
             }
         }
-        twd_selectCachePath.setOnClickListener {
+        binding.twdSelectCachePath.setOnClickListener {
             LocalChooserActivity.actionStartDirSelect(this, getCustomerCachePath(), SELECT_CACHE)
         }
-        twd_selectDownloadPath.setOnClickListener {
+        binding.twdSelectDownloadPath.setOnClickListener {
             LocalChooserActivity.actionStartDirSelect(this, getCustomerDownloadPath(), SELECT_DOWNLOAD)
         }
     }
@@ -90,11 +89,11 @@ class CacheActivity:BaseActivity() {
     }
     private fun cacheEnable(enable: Boolean){
         if(enable){
-            twd_cacheEnable.setText(ResUtil.getString(R.string.setting_cacheOpen))
-            sw_cacheEnable.isChecked=true
+            binding.twdCacheEnable.setText(ResUtil.getString(R.string.setting_cacheOpen))
+            binding.swCacheEnable.isChecked=true
         }else{
-            twd_cacheEnable.setText(ResUtil.getString(R.string.setting_cacheClosed))
-            sw_cacheEnable.isChecked=false
+            binding.twdCacheEnable.setText(ResUtil.getString(R.string.setting_cacheClosed))
+            binding.swCacheEnable.isChecked=false
         }
         if(enable!= getCacheEnable()){
             setCacheEnable(enable)
@@ -103,14 +102,14 @@ class CacheActivity:BaseActivity() {
     private fun cachePathChange(){
         val origin=ResUtil.getString(R.string.setting_cacheSelectPath)+"  "+ getCustomerCachePath()
         val render=getCustomerCachePath()
-        twd_selectCachePath.setText(
+        binding.twdSelectCachePath.setText(
                 ResUtil.getSpannable(origin,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min))
         )
     }
     private fun downloadPathChange(){
         val origin=ResUtil.getString(R.string.setting_downloadSelectPath)+"  "+ getCustomerDownloadPath()
         val render=getCustomerDownloadPath()
-        twd_selectDownloadPath.setText(
+        binding.twdSelectDownloadPath.setText(
                 ResUtil.getSpannable(origin,render,ResUtil.getColor(R.color.textColor_9),ResUtil.getSize(R.dimen.textSize_min))
         )
     }

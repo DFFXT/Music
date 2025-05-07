@@ -7,12 +7,13 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.view.View
 import androidx.annotation.CallSuper
+import androidx.viewbinding.ViewBinding
 import com.web.common.base.BaseFragment
 import com.web.data.InternetMusic
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import com.web.moudle.service.FileDownloadService
 
-abstract class BaseDownloadFragment:BaseFragment() , FileDownloadService.DownloadListener{
+abstract class BaseDownloadFragment<T: ViewBinding>:BaseFragment<T>() , FileDownloadService.DownloadListener{
     var connect: FileDownloadService.Connect?=null
     private var serviceConnection=object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {

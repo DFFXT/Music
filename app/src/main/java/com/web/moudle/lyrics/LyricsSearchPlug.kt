@@ -26,12 +26,12 @@ import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.musicSearch.model.InternetMusicModel
 import com.web.moudle.net.retrofit.SchedulerTransform
 import com.music.m.R
+import com.music.m.databinding.LayoutPopLyrisPlugBinding
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.layout_pop_lyris_plug.view.*
 import kotlinx.coroutines.*
 import java.lang.Exception
 
-class LyricsSearchPlug(ctx: FragmentActivity, connect: IMusicControl) : BasePopupWindow(
+class LyricsSearchPlug(ctx: FragmentActivity, connect: IMusicControl) : BasePopupWindow<LayoutPopLyrisPlugBinding>(
     ctx,
     LayoutInflater.from(ctx).inflate(R.layout.layout_pop_lyris_plug, null, false),
     (ViewUtil.screenWidth() * 0.8f).toInt(),
@@ -59,29 +59,30 @@ class LyricsSearchPlug(ctx: FragmentActivity, connect: IMusicControl) : BasePopu
             (holder.itemView as TextView).setTextColor(ResUtil.getColor(R.color.textColor_3))
         }
 
-        rootView.rv_lyrics.layoutManager = LinearLayoutManager(ctx)
-        rootView.rv_lyrics.addItemDecoration(
+        // 修改：通过 binding 访问视图
+        binding.rvLyrics.layoutManager = LinearLayoutManager(ctx)
+        binding.rvLyrics.addItemDecoration(
             DrawableItemDecoration(
                 0, 0, 0, 2,
                 RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider)
             )
         )
-        rootView.rv_lyrics.adapter = adapter
+        binding.rvLyrics.adapter = adapter
 
-        rootView.iv_search.setOnClickListener {
-            musicNameKeyword = rootView.et_musicName.text.toString()
-            artistNameKeyword = rootView.et_artist.text.toString()
+        binding.ivSearch.setOnClickListener {
+            musicNameKeyword = binding.etMusicName.text.toString()
+            artistNameKeyword = binding.etArtist.text.toString()
             if (musicNameKeyword == "") {
                 return@setOnClickListener
             }
-            rootView.rv_lyrics.showLoading()
+            binding.rvLyrics.showLoading()
             response(model.getSimpleMusic(musicNameKeyword, 0))
         }
-        rootView.button_cancel.setOnClickListener {
+        binding.buttonCancel.setOnClickListener {
             dismiss()
         }
-        rootView.button_confirm.setOnClickListener {
-            if (adapter.selectIndex <0)return@setOnClickListener
+        binding.buttonConfirm.setOnClickListener {
+            if (adapter.selectIndex < 0) return@setOnClickListener
 
             val job = GlobalScope.async(Dispatchers.IO) {
                 IOUtil.onlineDataToLocal(rowList[adapter.selectIndex].lrcLink, music!!.lyricsPath)
@@ -108,23 +109,23 @@ class LyricsSearchPlug(ctx: FragmentActivity, connect: IMusicControl) : BasePopu
                     list.clear()
                     rowList.clear()
                     res.searchSongWrapper2.songList?.forEach {
-                        if (it.lrcLink == "" || artistNameKeyword != "" && !it.author.contains(artistNameKeyword))return@forEach
+                        if (it.lrcLink == "" || artistNameKeyword != "" && !it.author.contains(artistNameKeyword)) return@forEach
                         list.add(it.musicName + " - " + it.author)
                         rowList.add(it)
                     }
                     adapter.reset()
                     adapter.notifyDataSetChanged()
                     if (list.size != 0) {
-                        rootView.rv_lyrics.showContent()
+                        binding.rvLyrics.showContent()
                     } else {
                         val drawable = ResUtil.getDrawable(R.drawable.icon_waring_white)
                         drawable.setTint(ResUtil.getColor(R.color.gray))
-                        rootView.rv_lyrics.showError(ResUtil.getString(R.string.noData), drawable)
+                        binding.rvLyrics.showError(ResUtil.getString(R.string.noData), drawable)
                     }
                 },
                 onError = {
                     it.printStackTrace()
-                    rootView.rv_lyrics.showError()
+                    binding.rvLyrics.showError()
                 }
             )
     }
@@ -135,10 +136,10 @@ class LyricsSearchPlug(ctx: FragmentActivity, connect: IMusicControl) : BasePopu
             this.music = music
             musicNameKeyword = music.musicName
             artistNameKeyword = music.singer
-            rootView.et_musicName.setText(music.musicName)
-            rootView.et_artist.setText(music.singer)
+            binding.etMusicName.setText(music.musicName)
+            binding.etArtist.setText(music.singer)
             view.post {
-                rootView.rv_lyrics.showLoading()
+                binding.rvLyrics.showLoading()
             }
 
             response(model.getSimpleMusic(music.musicName, 0))

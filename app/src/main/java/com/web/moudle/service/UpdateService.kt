@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import androidx.core.content.FileProvider
-import com.music.m.BuildConfig
 import com.web.common.base.BaseActivity
 import com.web.common.base.log
 import com.web.common.bean.Version
@@ -76,7 +75,7 @@ class UpdateService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             val contentUri = FileProvider.getUriForFile(
-                    this, BuildConfig.APPLICATION_ID, apkFile)
+                    this, packageName, apkFile)
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive")
         } else {
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive")

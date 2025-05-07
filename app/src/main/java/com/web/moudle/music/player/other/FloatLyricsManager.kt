@@ -21,7 +21,7 @@ import com.web.data.Music
 import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
 import com.music.m.R
-import kotlinx.android.synthetic.main.layout_float_lyrics.view.*
+import com.music.m.databinding.LayoutFloatLyricsBinding
 
 /**
  * 歌词浮窗
@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.layout_float_lyrics.view.*
 class FloatLyricsManager(private val appContext: Context, private val connect: IMusicControl) {
 
     private var rootView: ViewGroup? = null
+    private var binding: LayoutFloatLyricsBinding? = null
     private var layoutOp: ViewGroup? = null
     private var observer: PlayerObserver? = null
     private var timeImmediately = true
@@ -42,8 +43,8 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
         }
         override fun longClickMove(dx: Float, dy: Float) {
             if (!enableMove)return
-            lp?.x = lp?.x?.plus(dx.toInt())
-            lp?.y = lp?.y?.plus(dy.toInt())
+            lp?.x = lp?.x?.plus(dx.toInt())!!
+            lp?.y = lp?.y?.plus(dy.toInt())!!
             updatePosition(lp!!)
         }
 
@@ -74,7 +75,8 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
     private fun init() {
         enableMove = false
         rootView = LayoutInflater.from(appContext).inflate(R.layout.layout_float_lyrics, null, false) as ViewGroup
-        layoutOp = rootView!!.layout_op
+        binding = LayoutFloatLyricsBinding.bind(rootView!!)
+        layoutOp = binding?.layoutOp
         rootView?.removeViewAt(0)
 
         observer = object : PlayerObserver() {
@@ -82,24 +84,24 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
                 if (music == null) {
                     return
                 }
-                rootView?.lv_lyrics?.lyrics = LyricsAnalysis(GetFiles().readText(music.lyricsPath)).lyrics
+                binding?.lvLyrics?.lyrics = LyricsAnalysis(GetFiles().readText(music.lyricsPath)).lyrics
             }
 
             override fun onCurrentTime(duration: Int, maxTime: Int) {
                 if (timeImmediately) {
                     timeImmediately = false
-                    rootView?.lv_lyrics?.setCurrentTimeImmediately(duration)
+                    binding?.lvLyrics?.setCurrentTimeImmediately(duration)
                 } else {
-                    rootView?.lv_lyrics?.setCurrentTime(duration)
+                    binding?.lvLyrics?.setCurrentTime(duration)
                 }
             }
 
             override fun onPlay() {
-                layoutOp?.iv_play?.setImageResource(R.drawable.icon_play_white)
+                binding?.ivPlay?.setImageResource(R.drawable.icon_play_white)
             }
 
             override fun onPause() {
-                layoutOp?.iv_play?.setImageResource(R.drawable.icon_pause_white_fill)
+                binding?.ivPlay?.setImageResource(R.drawable.icon_pause_white_fill)
             }
         }
         connect.removeObserver(null, observer)
@@ -109,23 +111,22 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
         if (!LyricsSettingActivity.isFloatWindowLocked()) {
             rootView?.setOnTouchListener(dragHelper)
         }
-
-        layoutOp?.iv_sizeIncrease?.setOnClickListener {
+        binding?.ivSizeIncrease?.setOnClickListener {
             setLyricsSize(LyricsSettingActivity.getLyricsSize() + 2)
         }
-        layoutOp?.iv_sizeDecrease?.setOnClickListener {
+        binding?.ivSizeDecrease?.setOnClickListener {
             setLyricsSize(LyricsSettingActivity.getLyricsSize() - 2)
         }
-        layoutOp?.iv_pre?.setOnClickListener {
+        binding?.ivPre?.setOnClickListener {
             connect.pre()
         }
-        layoutOp?.iv_play?.setOnClickListener {
+        binding?.ivPlay?.setOnClickListener {
             connect.changePlayerPlayingStatus()
         }
-        layoutOp?.iv_next?.setOnClickListener {
+        binding?.ivNext?.setOnClickListener {
             connect.next(false)
         }
-        layoutOp?.iv_setting?.setOnClickListener {
+        binding?.ivNext?.setOnClickListener {
             LyricsSettingActivity.actionStart(appContext)
         }
     }
@@ -138,7 +139,7 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
             else -> size
         }
         LyricsSettingActivity.setLyricsSize(mSize)
-        rootView?.lv_lyrics?.setTextSize(mSize.toFloat())
+        binding?.lvLyrics?.setTextSize(mSize.toFloat())
     }
 
     private fun open() {
@@ -168,7 +169,7 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
         lp?.verticalWeight = 0f
         wm.addView(rootView, lp)
 
-        rootView?.lv_lyrics?.ableToTouch = false
+        binding?.lvLyrics?.ableToTouch = false
         refreshLyrics()
     }
     private fun updatePosition(lp: WindowManager.LayoutParams) {
@@ -187,10 +188,10 @@ class FloatLyricsManager(private val appContext: Context, private val connect: I
         rootView = null
     }
     private fun refreshLyrics() {
-        rootView?.lv_lyrics?.textColor = LyricsSettingActivity.getLyricsColor()
-        rootView?.lv_lyrics?.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
-        rootView?.lv_lyrics?.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
-        rootView?.lv_lyrics?.setBlod(true)
+        binding?.lvLyrics?.textColor = LyricsSettingActivity.getLyricsColor()
+        binding?.lvLyrics?.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
+        binding?.lvLyrics?.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
+        binding?.lvLyrics?.setBlod(true)
     }
 
     companion object {

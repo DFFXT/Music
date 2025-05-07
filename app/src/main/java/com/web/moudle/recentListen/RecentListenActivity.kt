@@ -7,7 +7,9 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivityRecentListenBinding
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.data.InternetMusicDetail
@@ -21,15 +23,13 @@ import com.web.moudle.music.player.plug.ActionControlPlug
 import com.web.moudle.musicDownload.adpter.DownloadViewAdapter
 import com.web.moudle.musicDownload.bean.DownloadMusic
 import com.web.moudle.musicEntry.ui.MusicDetailActivity
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_recent_listen.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.litepal.crud.DataSupport
 
-class RecentListenActivity :BaseActivity(){
+class RecentListenActivity : BaseViewBindingActivity<ActivityRecentListenBinding>(){
 
 
     private lateinit var adapter:DownloadViewAdapter
@@ -51,15 +51,15 @@ class RecentListenActivity :BaseActivity(){
 
     override fun initView() {
 
-        topBar.setEndImageListener(View.OnClickListener {
+        binding.topBar.setEndImageListener(View.OnClickListener {
             /*connect?.addListToWait(list.map {
                 map(it.internetMusicDetail)
             }, false)*/
             MToast.showToast(this,"不支持？")
         })
         adapter= DownloadViewAdapter(this,null)
-        rv_recentList.layoutManager=LinearLayoutManager(this)
-        rv_recentList.adapter=adapter
+        binding.rvRecentList.layoutManager=LinearLayoutManager(this)
+        binding.rvRecentList.adapter=adapter
 
 
         adapter.setItemClickListener { v, position ->
@@ -127,7 +127,7 @@ class RecentListenActivity :BaseActivity(){
                         it.dismiss()
                     }
         }
-        dialog?.showCenter(topBar)
+        dialog?.showCenter(binding.topBar)
 
     }
 

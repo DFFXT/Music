@@ -17,73 +17,73 @@ import com.web.moudle.musicSearch.bean.next.next.next.SimpleMusicInfo
 import com.web.moudle.singerEntry.model.SingerEntryViewModel
 import com.web.moudle.singerEntry.ui.SingerEntryActivityNew
 import com.music.m.R
-import kotlinx.android.synthetic.main.fragment_singer_all_music.view.*
+import com.music.m.databinding.FragmentSingerAllMusicBinding
 
-class SingerAllMusicFragment:BaseFragment() {
-    override var title=ResUtil.getString(R.string.music)
+class SingerAllMusicFragment : BaseFragment<FragmentSingerAllMusicBinding>() {
+    override var title = ResUtil.getString(R.string.music)
     override fun getLayoutId(): Int = R.layout.fragment_singer_all_music
 
-    private lateinit var vm:SingerEntryViewModel
+    private lateinit var vm: SingerEntryViewModel
 
-    private val adapter=HomePageMusicAdapter()
-    private val list=ArrayList<HomePageMusic>()
-    private var page=0
+    private val adapter = HomePageMusicAdapter()
+    private val list = ArrayList<HomePageMusic>()
+    private var page = 0
 
     override fun initView(rootView: View) {
-        vm=ViewModelProviders.of(this)[SingerEntryViewModel::class.java]
+        vm = ViewModelProviders.of(this)[SingerEntryViewModel::class.java]
 
         vm.songList.observe(this, Observer {
-            rootView.srl_allMusic.finishLoadMore()
-            when(it.code){
-                LiveDataWrapper.CODE_OK->{
+            binding.srlAllMusic.finishLoadMore()
+            when (it.code) {
+                LiveDataWrapper.CODE_OK -> {
                     page++
-                    list.addAll(it.value.songList!!.map {item->
+                    list.addAll(it.value.songList!!.map { item ->
                         map(item)
                     })
                     adapter.update(list)
-                    rootView.srl_allMusic.setNoMoreData(it.value.haveMore==0)
+                    binding.srlAllMusic.setNoMoreData(it.value.haveMore == 0)
                 }
             }
         })
 
-        rootView.rv_allMusic.layoutManager=LinearLayoutManager(context)
-        rootView.rv_allMusic.addItemDecoration(DrawableItemDecoration(0,0,0,2,
-                drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
-        rootView.rv_allMusic.adapter=adapter
+        binding.rvAllMusic.layoutManager = LinearLayoutManager(context)
+        binding.rvAllMusic.addItemDecoration(DrawableItemDecoration(0, 0, 0, 2,
+            drawable = ResUtil.getDrawable(R.drawable.recycler_divider)))
+        binding.rvAllMusic.adapter = adapter
         adapter.update(list)
-        adapter.itemClick={item,_->
-            MusicDetailActivity.actionStart(context!!,item.song_id)
+        adapter.itemClick = { item, _ ->
+            MusicDetailActivity.actionStart(requireContext(), item.song_id)
         }
 
-        rootView.srl_allMusic.setOnLoadMoreListener {
-            vm.getSongList(arguments!!.getString(ID)!!,page* pageSize, pageSize)
+        binding.srlAllMusic.setOnLoadMoreListener {
+            vm.getSongList(requireArguments().getString(ID)!!, page * pageSize, pageSize)
         }
 
-        vm.getSongList(arguments!!.getString(ID)!!,0, pageSize)
-
-
+        vm.getSongList(requireArguments().getString(ID)!!, 0, pageSize)
     }
-    private fun map(item:SimpleMusicInfo):HomePageMusic{
-        val res=HomePageMusic()
-        res.title=item.musicName
-        res.song_id=item.songId
-        res.pic_big=item.picSmall
-        res.has_mv=0
-        res.author=item.author
-        res.album_title=item.albumTitle
-        res.album_id=item.albumId
+
+    private fun map(item: SimpleMusicInfo): HomePageMusic {
+        val res = HomePageMusic()
+        res.title = item.musicName
+        res.song_id = item.songId
+        res.pic_big = item.picSmall
+        res.has_mv = 0
+        res.author = item.author
+        res.album_title = item.albumTitle
+        res.album_id = item.albumId
         return res
     }
 
-    companion object{
-        private const val pageSize=20
-        private const val ID="id"
+    companion object {
+        private const val pageSize = 20
+        private const val ID = "id"
+
         @JvmStatic
-        fun getInstance(uid:String):SingerAllMusicFragment{
-            val b=Bundle()
-            b.putString(ID,uid)
-            val f=SingerAllMusicFragment()
-            f.arguments=b
+        fun getInstance(uid: String): SingerAllMusicFragment {
+            val b = Bundle()
+            b.putString(ID, uid)
+            val f = SingerAllMusicFragment()
+            f.arguments = b
             return f
         }
     }

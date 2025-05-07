@@ -6,48 +6,49 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivitySelectSuffixBinding
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.base.OnItemClickListener
-import com.web.common.base.log
 import com.web.common.constant.AppConfig
-import com.web.common.tool.MToast
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.data.ScanMusicType
 import com.web.misc.GapItemDecoration
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
-import com.web.moudle.preference.SP
-import com.music.m.R
-import com.web.moudle.setting.suffix.adapter.*
-import kotlinx.android.synthetic.main.activity_select_suffix.*
+import com.web.moudle.setting.suffix.adapter.AddNewAdapter
+import com.web.moudle.setting.suffix.adapter.IAdapterAnimation
+import com.web.moudle.setting.suffix.adapter.IgnorePathAdapter
+import com.web.moudle.setting.suffix.adapter.SuffixSelectAdapter
+import com.web.moudle.setting.suffix.adapter.SuffixTitleAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.litepal.crud.DataSupport
-import java.util.*
 import java.util.regex.Pattern
 
-class SuffixSelectActivity : BaseActivity() {
+class SuffixSelectActivity : BaseViewBindingActivity<ActivitySelectSuffixBinding>() {
     private val types = ArrayList<ScanMusicType>()
     private val mConcatAdapter = ConcatAdapter(ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build(), emptyList())
     private val mSuffixAdapter = SuffixSelectAdapter(types)
     private val mIgnorePathAdapter = IgnorePathAdapter()
+
     override fun getLayoutId(): Int {
         return R.layout.activity_select_suffix
     }
 
     override fun initView() {
-        topBar.setEndImageListener {
+        binding.topBar.setEndImageListener { // 替换 topBar 为 binding.topBar
             save()
         }
         if (isEnableSystemMusic()) {
-            sw_enableSystemMusic.isChecked = true
+            binding.swEnableSystemMusic.isChecked = true // 替换 sw_enableSystemMusic 为 binding.swEnableSystemMusic
         }
-        sw_enableSystemMusic.setOnCheckedChangeListener { _, isChecked ->
+        binding.swEnableSystemMusic.setOnCheckedChangeListener { _, isChecked -> // 替换 sw_enableSystemMusic 为 binding.swEnableSystemMusic
             enableSystemMusic(isChecked)
         }
-        rv_suffixSelect.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        rv_suffixSelect.addItemDecoration(GapItemDecoration(bottom = ViewUtil.dpToPx(10f)))
+        binding.rvSuffixSelect.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false) // 替换 rv_suffixSelect 为 binding.rvSuffixSelect
+        binding.rvSuffixSelect.addItemDecoration(GapItemDecoration(bottom = ViewUtil.dpToPx(10f))) // 替换 rv_suffixSelect 为 binding.rvSuffixSelect
         GlobalScope.launch(Dispatchers.IO) {
             types.addAll(getScanType())
             runOnUiThread {
@@ -73,7 +74,7 @@ class SuffixSelectActivity : BaseActivity() {
                         }
                     }
                 )
-                rv_suffixSelect.adapter = mConcatAdapter
+                binding.rvSuffixSelect.adapter = mConcatAdapter // 替换 rv_suffixSelect 为 binding.rvSuffixSelect
                 ItemTouchHelper(
                     object : MyItemTouchHelperCallBack({ holder, _ ->
                         (holder.bindingAdapter as? IAdapterAnimation)?.remove(holder.bindingAdapterPosition)
@@ -85,7 +86,7 @@ class SuffixSelectActivity : BaseActivity() {
                             return super.getMovementFlags(recyclerView, viewHolder)
                         }
                     }
-                ).attachToRecyclerView(rv_suffixSelect)
+                ).attachToRecyclerView(binding.rvSuffixSelect) // 替换 rv_suffixSelect 为 binding.rvSuffixSelect
             }
         }
     }

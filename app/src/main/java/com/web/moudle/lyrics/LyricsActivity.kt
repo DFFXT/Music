@@ -8,9 +8,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.audiofx.Visualizer
 import android.os.IBinder
 import android.view.View
+import android.widget.ImageView
 import androidx.core.content.FileProvider
 import com.mpatric.mp3agic.Mp3File
-import com.music.m.BuildConfig
 import com.web.common.base.*
 import com.web.common.imageLoader.glide.ImageLoad
 import com.web.common.tool.Ticker
@@ -34,17 +34,14 @@ import com.web.moudle.service.FileDownloadService
 import com.web.moudle.setting.lyrics.LyricsSettingActivity
 
 import com.music.m.R
-import kotlinx.android.synthetic.main.music_control_big.view.*
-import kotlinx.android.synthetic.main.music_lyrics_view.*
-import kotlinx.android.synthetic.main.music_lyrics_view.rootView
-import kotlinx.android.synthetic.main.music_lyrics_view.topBar
+import com.music.m.databinding.MusicLyricsViewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import java.io.File
 import kotlin.Exception
 
 @ObsoleteCoroutinesApi
-class LyricsActivity : BaseActivity() {
+class LyricsActivity : BaseViewBindingActivity<MusicLyricsViewBinding>() {
     private var connect: IMusicControl? = null
     private var visualizer: Visualizer? = null
     private val list = ArrayList<LyricsLine>()
@@ -87,55 +84,55 @@ class LyricsActivity : BaseActivity() {
         if (rotation> 360) {
             rotation -= 360f
         }
-        iv_artistIcon.rotation = rotation
+        binding.ivArtistIcon.rotation = rotation
     }
     private var observer: PlayerObserver = object : PlayerObserver() {
 
         override fun onLoad(music: Music?, maxTime: Int) {
             immediatelyShow = true
             val bitmap =PlayerConfig.bitmap ?: ResUtil.getBitmapFromResoucs(R.drawable.singer_default_icon)
-            val mBitmap = bitmap.copy(bitmap.config, false)
-            iv_artistIcon.setImageBitmap(bitmap)
-            rootView.background = BitmapDrawable(resources, ImageLoad.buildBlurBitmap(mBitmap, 14f))
+            val mBitmap = bitmap.copy(bitmap.config!!, false)
+            binding.ivArtistIcon.setImageBitmap(bitmap)
+            binding.rootView.background = BitmapDrawable(resources, ImageLoad.buildBlurBitmap(mBitmap, 14f))
 
-            layout_musicControl.iv_love.isSelected = music?.isLike ?: false
+            binding.layoutMusicControl.ivLove.isSelected = music?.isLike ?: false
             if (music is InternetMusicForPlay) {
-                layout_musicControl.card_love.alpha = 0.5f
-                layout_musicControl.card_love.cardElevation = 0f
+                binding.layoutMusicControl.cardLove.alpha = 0.5f
+                binding.layoutMusicControl.cardLove.cardElevation = 0f
             } else {
-                layout_musicControl.card_love.alpha = 1f
-                layout_musicControl.card_love.cardElevation = ViewUtil.dpToPx(2f).toFloat()
+                binding.layoutMusicControl.cardLove.alpha = 1f
+                binding.layoutMusicControl.cardLove.cardElevation = ViewUtil.dpToPx(2f).toFloat()
             }
             if (!music?.song_id.isNullOrEmpty()) {
-                card_comment.visibility = View.VISIBLE
+                binding.cardComment.visibility = View.VISIBLE
             } else {
-                card_comment.visibility = View.GONE
+                binding.cardComment.visibility = View.GONE
             }
             loadLyrics(music)
             onPlay()
         }
 
         override fun onPlay() {
-            layout_musicControl.iv_play.setImageResource(R.drawable.icon_play_white)
+            binding.layoutMusicControl.ivPlay.setImageResource(R.drawable.icon_play_white)
             tick.start()
         }
 
         override fun onPause() {
-            layout_musicControl.iv_play.setImageResource(R.drawable.icon_pause_white_fill)
+            binding.layoutMusicControl.ivPlay.setImageResource(R.drawable.icon_pause_white_fill)
             tick.stop()
         }
 
         override fun onCurrentTime(duration: Int, maxTime: Int) {
             if (immediatelyShow) { // **进入activity时需要立即同步
-                lv_lyrics.setCurrentTimeImmediately(duration)
+                binding.lvLyrics.setCurrentTimeImmediately(duration)
                 immediatelyShow = false
             } else {
-                lv_lyrics.setCurrentTime(duration)
+                binding.lvLyrics.setCurrentTime(duration)
             }
         }
 
         override fun onPlayTypeChanged(playType: PlayerConfig.PlayType?) {
-            layout_musicControl.iv_playType.setImageResource(
+            binding.layoutMusicControl.ivPlayType.setImageResource(
                 when (playType) {
                     PlayerConfig.PlayType.ALL_LOOP -> R.drawable.music_type_all_loop
                     PlayerConfig.PlayType.ONE_LOOP -> R.drawable.music_type_one_loop
@@ -149,9 +146,9 @@ class LyricsActivity : BaseActivity() {
 
         override fun onMusicOriginChanged(origin: PlayerConfig.MusicOrigin?) {
             if (origin == PlayerConfig.MusicOrigin.INTERNET) {
-                card_download.visibility = View.VISIBLE
+                binding.cardDownload.visibility = View.VISIBLE
             } else {
-                card_download.visibility = View.GONE
+                binding.cardDownload.visibility = View.GONE
             }
         }
     }
@@ -168,32 +165,32 @@ class LyricsActivity : BaseActivity() {
 
     override fun initView() {
         WindowUtil.setImmersedStatusBar(window)
-        riv_wave.afterDraw = waveDraw
-        lv_lyrics.textColor = LyricsSettingActivity.getLyricsColor()
-        lv_lyrics.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
-        lv_lyrics.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
-        lv_lyrics.lyrics = list
-        topBar.setEndImageListener(
+        binding.rivWave.afterDraw = waveDraw
+        binding.lvLyrics.textColor = LyricsSettingActivity.getLyricsColor()
+        binding.lvLyrics.setTextSize(LyricsSettingActivity.getLyricsSize().toFloat())
+        binding.lvLyrics.setTextFocusColor(LyricsSettingActivity.getLyricsFocusColor())
+        binding.lvLyrics.lyrics = list
+        binding.topBar.setEndImageListener(
             View.OnClickListener {
                 if (canScroll) {
                     canScroll = false
-                    topBar.setEndImage(R.drawable.locked)
+                    binding.topBar.setEndImage(R.drawable.locked)
                 } else {
                     canScroll = true
-                    topBar.setEndImage(R.drawable.unlock)
+                    binding.topBar.setEndImage(R.drawable.unlock)
                 }
-                lv_lyrics.setCanScroll(canScroll)
+                binding.lvLyrics.setCanScroll(canScroll)
             }
         )
 
-        card_comment.setOnClickListener {
+        binding.cardComment.setOnClickListener {
             if (commentDialog == null) {
                 commentDialog = CommentDialog(this)
             }
             commentDialog?.show()
         }
 
-        card_download.setOnClickListener {
+        binding.cardDownload.setOnClickListener {
             val m = (PlayerConfig.music ?: return@setOnClickListener) as? InternetMusicForPlay
                 ?: return@setOnClickListener
             val im = InternetMusicDetail(
@@ -212,64 +209,64 @@ class LyricsActivity : BaseActivity() {
             FileDownloadService.addTask(this, im)
         }
 
-        layout_musicControl.iv_playType.setOnClickListener {
+        binding.layoutMusicControl.ivPlayType.setOnClickListener {
             connect?.changePlayType(PlayerConfig.playType.next())
         }
-        layout_musicControl.iv_love.setOnClickListener {
+        binding.layoutMusicControl.ivLove.setOnClickListener {
             val m = PlayerConfig.music ?: return@setOnClickListener
-            if (m is InternetMusicForPlay)return@setOnClickListener
+            if (m is InternetMusicForPlay) return@setOnClickListener
             if (m.isLike) {
                 SongSheetManager.removeLike(m)
             } else {
                 SongSheetManager.setAsLike(m)
             }
-            layout_musicControl.iv_love.isSelected = m.isLike
+            binding.layoutMusicControl.ivLove.isSelected = m.isLike
         }
 
-        layout_musicControl.next.setOnClickListener {
+        binding.layoutMusicControl.next.setOnClickListener {
             connect?.next(false)
         }
-        layout_musicControl.iv_play.setOnClickListener {
+        binding.layoutMusicControl.ivPlay.setOnClickListener {
             connect?.changePlayerPlayingStatus()
         }
-        layout_musicControl.pre.setOnClickListener {
+        binding.layoutMusicControl.pre.setOnClickListener {
             connect?.pre()
         }
-        iv_musicEffect.setOnClickListener {
+        binding.ivMusicEffect.setOnClickListener {
             EqualizerActivity.actionStart(this)
         }
-        lv_lyrics.setSeekListener { seekTo ->
+        binding.lvLyrics.setSeekListener { seekTo ->
             connect?.seekTo(seekTo)
             true
         }
 
-        iv_setting.setOnClickListener {
+        binding.ivSetting.setOnClickListener {
             toggleSettingBox()
         }
 
-        iv_sizeIncrease.setOnClickListener {
+        binding.ivSizeIncrease.setOnClickListener {
             setLyricsSize(LyricsSettingActivity.getLyricsSize() + 2)
         }
-        iv_sizeDecrease.setOnClickListener {
+        binding.ivSizeDecrease.setOnClickListener {
             setLyricsSize(LyricsSettingActivity.getLyricsSize() - 2)
         }
-        iv_lyricsBg.setOnClickListener {
+        binding.ivLyricsBg.setOnClickListener {
             val color = LyricsSettingActivity.getLyricsColor()
             val nextColor = getNextLyricsColor(color)
             LyricsSettingActivity.setLyricsColor(nextColor)
-            lv_lyrics.textColor = nextColor
+            binding.lvLyrics.textColor = nextColor
         }
-        iv_lyricsFore.setOnClickListener {
+        binding.ivLyricsFore.setOnClickListener {
             val color = LyricsSettingActivity.getLyricsFocusColor()
             val nextColor = getNextLyricsColor(color)
             LyricsSettingActivity.setLyricsFocusColor(nextColor)
-            lv_lyrics.setTextFocusColor(nextColor)
+            binding.lvLyrics.setTextFocusColor(nextColor)
         }
-        iv_lyricsSelect.setOnClickListener {
-            iv_searchLyrics.performClick()
+        binding.ivLyricsSelect.setOnClickListener {
+            binding.ivSearchLyrics.performClick()
         }
-        iv_share.setOnClickListener {
-            if (connect == null)return@setOnClickListener
+        binding.ivShare.setOnClickListener {
+            if (connect == null) return@setOnClickListener
             val intent = Intent(Intent.ACTION_SEND)
 
             val music = PlayerConfig.music
@@ -279,19 +276,19 @@ class LyricsActivity : BaseActivity() {
             } else {
                 intent.putExtra(
                     Intent.EXTRA_STREAM,
-                    FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, File(PlayerConfig.music!!.path))
+                    FileProvider.getUriForFile(this, packageName, File(PlayerConfig.music!!.path))
                 )
                 intent.type = "video/*"
             }
             startActivity(Intent.createChooser(intent, PlayerConfig.music?.musicName + " - 分享"))
         }
 
-        iv_searchLyrics.setOnClickListener {
-            if (PlayerConfig.music == null)return@setOnClickListener
+        binding.ivSearchLyrics.setOnClickListener {
+            if (PlayerConfig.music == null) return@setOnClickListener
             if (lyricsPlug == null) {
                 lyricsPlug = LyricsSearchPlug(this, connect!!)
             }
-            lyricsPlug?.showCenter(rootView, PlayerConfig.music!!)
+            lyricsPlug?.showCenter(binding.rootView, PlayerConfig.music!!)
         }
 
         intent = Intent(this, NewPlayer::class.java)
@@ -321,28 +318,28 @@ class LyricsActivity : BaseActivity() {
             else -> size
         }
         LyricsSettingActivity.setLyricsSize(mSize)
-        lv_lyrics.setTextSize(mSize.toFloat())
+        binding.lvLyrics.setTextSize(mSize.toFloat())
     }
     private fun toggleSettingBox() {
         val duration = 300
-        val lp = layout_setting.layoutParams
-        if (layout_setting.height == 0) {
+        val lp = binding.layoutSetting.layoutParams
+        if (binding.layoutSetting.height == 0) {
             // **加号不能放在第二行
-            val height = layout_setting.childCount * ViewUtil.dpToFloatPx(26f) + (layout_setting.childCount + 1) * ViewUtil.dpToFloatPx(6f) + layout_setting.childCount
+            val height = binding.layoutSetting.childCount * ViewUtil.dpToFloatPx(26f) + (binding.layoutSetting.childCount + 1) * ViewUtil.dpToFloatPx(6f) + binding.layoutSetting.childCount
             ViewUtil.animator(
-                layout_setting, 0, height.toInt(), duration,
+                binding.layoutSetting, 0, height.toInt(), duration,
                 {
                     lp.height = it.animatedValue as Int
-                    layout_setting.layoutParams = lp
+                    binding.layoutSetting.layoutParams = lp
                 },
                 null
             )
         } else {
             ViewUtil.animator(
-                layout_setting, layout_setting.height, 0, duration,
+                binding.layoutSetting, binding.layoutSetting.height, 0, duration,
                 {
                     lp.height = it.animatedValue as Int
-                    layout_setting.layoutParams = lp
+                    binding.layoutSetting.layoutParams = lp
                 },
                 null
             )
@@ -351,7 +348,7 @@ class LyricsActivity : BaseActivity() {
 
     private fun loadLyrics(music: Music?) { // --设置歌词内容
         if (music == null) return
-        topBar.setMainTitle(music.musicName)
+        binding.topBar.setMainTitle(music.musicName)
         list.clear()
         if (Shortcut.fileExsist(music.lyricsPath)) { // ---存在歌词
             val lyricsAnalysis = LyricsAnalysis(GetFiles().readText(music.lyricsPath))
@@ -371,11 +368,11 @@ class LyricsActivity : BaseActivity() {
             }
         }
         if (list.isNotEmpty()) {
-            iv_searchLyrics.visibility = View.GONE
+            binding.ivSearchLyrics.visibility = View.GONE
         } else {
-            iv_searchLyrics.visibility = View.VISIBLE
+            binding.ivSearchLyrics.visibility = View.VISIBLE
         }
-        lv_lyrics!!.lyrics = list
+        binding.lvLyrics!!.lyrics = list
     }
 
     override fun onDestroy() {

@@ -6,12 +6,12 @@ import com.web.common.base.BaseAdapter
 import com.web.common.util.ViewUtil
 import com.web.moudle.music.page.local.control.adapter.SingleTextAdapter
 import com.music.m.R
-import kotlinx.android.synthetic.main.layout_create_select_sheet.view.*
+import com.music.m.databinding.LayoutCreateSelectSheetBinding
 
 /**
  * 目前用于创建歌单
  */
-class SheetCreateAlert constructor(context: Context, title: String) : BaseListPopWindow<String>(
+class SheetCreateAlert constructor(context: Context, title: String) : BaseListPopWindow<String, LayoutCreateSelectSheetBinding>(
         context,
         title,
         R.layout.layout_create_select_sheet,
@@ -20,7 +20,7 @@ class SheetCreateAlert constructor(context: Context, title: String) : BaseListPo
 
     var createListener:(()->Unit)?=null
     init {
-        rootView.tv_addAndSave.setOnClickListener {
+        binding.tvAddAndSave.setOnClickListener {
             createListener?.invoke()
         }
     }

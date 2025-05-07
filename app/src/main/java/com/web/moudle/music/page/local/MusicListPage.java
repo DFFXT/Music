@@ -8,6 +8,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.music.m.databinding.MusicListBinding;
 import com.web.common.base.BaseActivity;
 import com.web.common.tool.MToast;
 import com.web.common.util.ResUtil;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicListPage extends BaseMusicPage {
+public class MusicListPage extends BaseMusicPage<MusicListBinding> {
     private final ArrayList<Music> data = new ArrayList<>();
     private RecyclerView rv_musicList;
     private LocalMusicAdapter adapter;

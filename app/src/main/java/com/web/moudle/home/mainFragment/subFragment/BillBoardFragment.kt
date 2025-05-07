@@ -13,31 +13,30 @@ import com.web.misc.GapItemDecoration
 import com.web.moudle.billboard.adapter.BillboardAdapter
 import com.web.moudle.home.mainFragment.model.MainFragmentViewModel
 import com.music.m.R
-import kotlinx.android.synthetic.main.fragment_billboard.view.*
+import com.music.m.databinding.FragmentBillboardBinding
 
-class BillBoardFragment:BaseFragment() {
-    override var title =ResUtil.getString(R.string.musicBillboard)
-    override fun getLayoutId(): Int= R.layout.fragment_billboard
 
-    private lateinit var vm:MainFragmentViewModel
+class BillBoardFragment : BaseFragment<FragmentBillboardBinding>() {
+    override var title = ResUtil.getString(R.string.musicBillboard)
+    override fun getLayoutId(): Int = R.layout.fragment_billboard
+
+    private lateinit var vm: MainFragmentViewModel
 
     override fun initView(rootView: View) {
-        vm=ViewModelProviders.of(this)[MainFragmentViewModel::class.java]
+        vm = ViewModelProviders.of(this)[MainFragmentViewModel::class.java]
         vm.billboard.observe(this, Observer {
-            if(it==null){
-                rootView.rv_billboard.showError()
-            }else{
-                val adapter= BillboardAdapter(it.content)
-                rootView.rv_billboard.adapter=adapter
-                rootView.rootView.showContent()
+            if (it == null) {
+                binding.rvBillboard.showError()
+            } else {
+                val adapter = BillboardAdapter(it.content)
+                binding.rvBillboard.adapter = adapter
+                binding.root.showContent()
             }
         })
 
-
-        rootView.rv_billboard.layoutManager=LinearLayoutManager(context)
-        rootView.rv_billboard.addItemDecoration(GapItemDecoration(left = 10,right = 10,bottom = 10))
-        rootView.rv_billboard.showLoading()
+        binding.rvBillboard.layoutManager = LinearLayoutManager(context)
+        binding.rvBillboard.addItemDecoration(GapItemDecoration(left = 10, right = 10, bottom = 10))
+        binding.rvBillboard.showLoading()
         vm.getBillboardList()
-
     }
 }

@@ -14,9 +14,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.transition.Transition
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivitySettingLockscreenBinding
 import com.web.common.base.BaseAdapter
 import com.web.common.base.BaseGlideTarget
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.base.BaseViewHolder
 import com.web.common.constant.AppConfig
 import com.web.common.imageLoader.glide.ImageLoad
@@ -24,15 +26,12 @@ import com.web.common.tool.ColorPickerDialog
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.misc.GapItemDecoration
-import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.plug.LockScreenPlug
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_setting_lockscreen.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class LockScreenSettingActivity : BaseActivity() {
+class LockScreenSettingActivity : BaseViewBindingActivity<ActivitySettingLockscreenBinding>() {
     private val colorList = arrayListOf<Int>()
 
     private var mColor = AppConfig.lockScreenBgColor
@@ -53,11 +52,11 @@ class LockScreenSettingActivity : BaseActivity() {
     }
 
     override fun initView() {
-        view_s_lock_colorSelected.setImageDrawable(ColorDrawable(mColor))
-        rv_s_lock_colorList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rv_s_lock_colorList.addItemDecoration(GapItemDecoration(right = 10))
-        view_s_lock_colorSelected.setOnClickListener { colorPick() }
-        sw_lockScreenMode.setOnClickListener {
+        binding.viewSLockColorSelected.setImageDrawable(ColorDrawable(mColor))
+        binding.rvSLockColorList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvSLockColorList.addItemDecoration(GapItemDecoration(right = 10))
+        binding.viewSLockColorSelected.setOnClickListener { colorPick() }
+        binding.swLockScreenMode.setOnClickListener {
             if (getMode() == BG_MODE_COLOR&&switchLockScreenMode(BG_MODE_IMAGE)) {
                 setMode(BG_MODE_IMAGE)
             } else if(switchLockScreenMode(BG_MODE_COLOR)) {
@@ -65,12 +64,12 @@ class LockScreenSettingActivity : BaseActivity() {
             }
         }
         switchLockScreenMode(getMode())
-        sw_s_lock_switch.setOnCheckedChangeListener { _, res ->
+        binding.swSLockSwitch.setOnCheckedChangeListener { _, res ->
             setNoLockScreen(!res)
             LockScreenPlug.lockScreen(this)
         }
-        sw_s_lock_switch.isChecked = !getNoLockScreen()
-        rv_s_lock_colorList.adapter = object : BaseAdapter<Int>(colorList) {
+        binding.swSLockSwitch.isChecked = !getNoLockScreen()
+        binding.rvSLockColorList.adapter = object : BaseAdapter<Int>(colorList) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
                 val v = ImageView(this@LockScreenSettingActivity)
                 v.background = getDrawable(R.drawable.border_1dp)
@@ -84,7 +83,7 @@ class LockScreenSettingActivity : BaseActivity() {
             override fun onBindViewHolder(holder: BaseViewHolder, position: Int, item: Int) {
                 (holder.itemView as ImageView).setImageDrawable(ColorDrawable(item!!))
                 holder.itemView.setOnClickListener {
-                    view_s_lock_colorSelected.setImageDrawable(ColorDrawable(colorList[position]))
+                    binding.viewSLockColorSelected.setImageDrawable(ColorDrawable(colorList[position]))
                     setBgColor(colorList[position])
                 }
             }
@@ -93,10 +92,10 @@ class LockScreenSettingActivity : BaseActivity() {
         setBackgroundImage(getBgImagePath())
 
 
-        iv_s_lock_imageShow.setOnClickListener {
-            tv_s_lock_setImageBackground.performClick()
+        binding.ivSLockImageShow.setOnClickListener {
+            binding.tvSLockSetImageBackground.performClick()
         }
-        tv_s_lock_setImageBackground.setOnClickListener {
+        binding.tvSLockSetImageBackground.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT, null)
             intent.type = "image/*"
             intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -105,17 +104,17 @@ class LockScreenSettingActivity : BaseActivity() {
         }
 
 
-        val lp = iv_s_lock_imageShow.layoutParams
+        val lp = binding.ivSLockImageShow.layoutParams
         lp.width = ViewUtil.screenWidth() shr 2
         lp.height = ViewUtil.screenHeight() shr 2
     }
 
     private fun switchLockScreenMode(mode: String) :Boolean{
         var res=true
-        sw_lockScreenMode.text =
+        binding.swLockScreenMode.text =
                 if (mode == BG_MODE_COLOR) getString(R.string.setting_lockScreen_mode_color)
                 else if (!File(getBgImagePath()).exists()) {
-                    tv_s_lock_setImageBackground.performClick()
+                    binding.tvSLockSetImageBackground.performClick()
                     res=false
                     getString(R.string.setting_lockScreen_mode_color)
                 } else {
@@ -128,7 +127,7 @@ class LockScreenSettingActivity : BaseActivity() {
     private fun setBackgroundImage(path: String) {
         ImageLoad.loadAsBitmap(path).into(object : BaseGlideTarget(ViewUtil.screenWidth() shr 2, ViewUtil.screenHeight() shr 2) {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                iv_s_lock_imageShow.setImageBitmap(resource)
+                binding.ivSLockImageShow.setImageBitmap(resource)
             }
         })
     }
@@ -152,7 +151,7 @@ class LockScreenSettingActivity : BaseActivity() {
             setBgColor(it)
             setMode(BG_MODE_COLOR)
             switchLockScreenMode(BG_MODE_COLOR)
-            view_s_lock_colorSelected.setImageDrawable(ColorDrawable(it))
+            binding.viewSLockColorSelected.setImageDrawable(ColorDrawable(it))
         }
         colorPickerDialog.show()
     }

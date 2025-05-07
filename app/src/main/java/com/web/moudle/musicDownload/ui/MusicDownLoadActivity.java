@@ -7,9 +7,11 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.google.android.material.tabs.TabLayout;
+import com.music.m.databinding.MusicDownloadBinding;
 import com.web.common.base.BaseActivity;
 import com.web.common.base.BaseFragmentPagerAdapter;
 import com.web.common.base.BasePageChangeListener;
+import com.web.common.base.BaseViewBindingActivity;
 import com.web.common.util.ViewUtil;
 import com.web.misc.TopBarLayout;
 import com.web.moudle.service.FileDownloadService;
@@ -21,7 +23,7 @@ import java.util.Objects;
 import androidx.viewpager.widget.ViewPager;
 
 
-public class MusicDownLoadActivity extends BaseActivity {
+public class MusicDownLoadActivity extends BaseViewBindingActivity<MusicDownloadBinding> {
     private ViewPager rv_download;
 
     private ServiceConnection serviceConnection;

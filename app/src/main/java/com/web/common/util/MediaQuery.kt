@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
+import com.music.m.R
 import com.web.app.MyApplication
 import com.web.common.constant.AppConfig
 import com.web.config.Shortcut
@@ -12,7 +13,6 @@ import com.web.data.MusicList
 import com.web.moudle.music.player.SongSheetManager
 import com.web.moudle.music.player.bean.SongSheet
 import com.web.moudle.setting.suffix.SuffixSelectActivity
-import com.music.m.R
 import com.web.moudle.setting.suffix.sp.IgnorePath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 import net.sourceforge.pinyin4j.PinyinHelper
 import org.litepal.crud.DataSupport
 import java.io.File
-import java.util.*
 
 object MediaQuery {
     /**
@@ -131,7 +130,7 @@ object MediaQuery {
                 } else {
                     '*'
                 }
-                defGroup[i].firstChar = defGroup[i].firstChar.toUpperCase()
+                defGroup[i].firstChar = defGroup[i].firstChar.uppercaseChar()
             }
             musicList.add(defGroup)
             // **获取自定义列表的歌曲

@@ -105,15 +105,35 @@ import com.music.m.R;
 	}
 	class Click implements OnClickListener{//--事件监听器
 		public void onClick(View v) {
-			switch(v.getId()){
-				case R.id.Day:colorC(v);flag=0;break;
-				case R.id.Hours:colorC(v);flag=1;break;
-				case R.id.Minutes:colorC(v);flag=2;break;
-				case R.id.add:add_minus(1);break;
-				case R.id.minus:add_minus(-1);break;
-				case R.id.timeSure:setRing();break;
-				case R.id.timeCancel:cancel();break;
-				case R.id.exit:exit();break;
+//			switch(v.getId()){
+//				case R.id.Day:colorC(v);flag=0;break;
+//				case R.id.Hours:colorC(v);flag=1;break;
+//				case R.id.Minutes:colorC(v);flag=2;break;
+//				case R.id.add:add_minus(1);break;
+//				case R.id.minus:add_minus(-1);break;
+//				case R.id.timeSure:setRing();break;
+//				case R.id.timeCancel:cancel();break;
+//				case R.id.exit:exit();break;
+//			}
+			if (v.getId() == R.id.Day) {
+				colorC(v);
+				flag = 0;
+			} else if (v.getId() == R.id.Hours) {
+				colorC(v);
+				flag = 1;
+			} else if (v.getId() == R.id.Minutes) {
+				colorC(v);
+				flag = 2;
+			} else if (v.getId() == R.id.add) {
+				add_minus(1);
+			} else if (v.getId() == R.id.minus) {
+				add_minus(-1);
+			} else if (v.getId() == R.id.timeSure) {
+				setRing();
+			} else if (v.getId() == R.id.timeCancel) {
+				cancel();
+			} else if (v.getId() == R.id.exit) {
+				exit();
 			}
 		}
 		public void colorC(View v){

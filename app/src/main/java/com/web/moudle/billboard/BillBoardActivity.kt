@@ -6,7 +6,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.web.common.base.BaseActivity
+import com.music.m.R
+import com.music.m.databinding.ActivityBillboardBinding
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.base.showContent
 import com.web.common.base.showError
 import com.web.common.base.showLoading
@@ -14,10 +16,8 @@ import com.web.misc.GapItemDecoration
 import com.web.moudle.billboard.adapter.BillboardAdapter
 import com.web.moudle.billboard.bean.BillBoardList
 import com.web.moudle.billboard.viewmodel.RecommendViewModel
-import com.music.m.R
-import kotlinx.android.synthetic.main.activity_billboard.*
 
-class BillBoardActivity:BaseActivity() {
+class BillBoardActivity: BaseViewBindingActivity<ActivityBillboardBinding>() {
     private var model:RecommendViewModel?=null
     override fun getLayoutId(): Int =R.layout.activity_billboard
 
@@ -25,7 +25,7 @@ class BillBoardActivity:BaseActivity() {
         model=ViewModelProviders.of(this)[RecommendViewModel::class.java]
         model?.billboard?.observe(this,Observer<BillBoardList>{
             if(it==null){
-                rootView.showError()
+                binding.rootView.showError()
                 return@Observer
             }
             //**删除千千音乐U榜，U榜时网页的
@@ -36,16 +36,16 @@ class BillBoardActivity:BaseActivity() {
                 }
             }
             val adapter=BillboardAdapter(it.content)
-            rv_billboard.adapter=adapter
-            rootView.showContent()
+            binding.rvBillboard.adapter=adapter
+            binding.rootView.showContent()
         })
 
 
 
-        rv_billboard.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        rv_billboard.addItemDecoration(GapItemDecoration(left = 10,right = 10,bottom = 10))
+        binding.rvBillboard.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        binding.rvBillboard.addItemDecoration(GapItemDecoration(left = 10,right = 10,bottom = 10))
         model?.getBillboard()
-        rootView.showLoading(true)
+        binding.rootView.showLoading(true)
     }
 
 

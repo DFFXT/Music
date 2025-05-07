@@ -3,22 +3,21 @@ package com.web.moudle.music.page.local.control.ui
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.music.m.R
 import com.web.common.base.BaseAdapter
-import com.web.common.util.ViewUtil
 import com.web.misc.BasePopupWindow
 import com.web.moudle.music.page.local.control.adapter.MyItemTouchHelperCallBack
-import com.web.moudle.music.page.local.control.adapter.SimpleSelectListAdapter
 import com.web.moudle.music.page.local.control.interf.ListSelectListener
 import com.web.moudle.music.page.local.control.interf.RemoveItemListener
-import com.music.m.R
-import kotlinx.android.synthetic.main.layout_title_list.view.*
 
 
-abstract class BaseListPopWindow<T> @JvmOverloads constructor(
+abstract class BaseListPopWindow<T, Binding: ViewBinding> @JvmOverloads constructor(
         context: Context,
         title: String,
         @LayoutRes layout:Int,
@@ -26,7 +25,7 @@ abstract class BaseListPopWindow<T> @JvmOverloads constructor(
         height:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
         maxWidth:Int=ViewGroup.LayoutParams.WRAP_CONTENT,
         maxHeight:Int=ViewGroup.LayoutParams.WRAP_CONTENT)
-    : BasePopupWindow(
+    : BasePopupWindow<Binding>(
         context,
         LayoutInflater.from(context).inflate(layout, null),
         width,
@@ -44,7 +43,7 @@ abstract class BaseListPopWindow<T> @JvmOverloads constructor(
     val adapter:BaseAdapter<T>
 
     init {
-        rootView.tv_title.text = title
+        rootView.findViewById<TextView>(R.id.tv_title).text = title
         rv = rootView.findViewById(this.recyclerView()) as RecyclerView
         rv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         this.adapter=this.adapter()

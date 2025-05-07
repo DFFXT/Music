@@ -6,20 +6,20 @@ import android.content.Intent
 import android.view.WindowManager
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
-import com.web.common.base.BaseActivity
 import com.music.m.R
-import kotlinx.android.synthetic.main.activity_video_web_view.*
+import com.music.m.databinding.ActivityVideoWebViewBinding
+import com.web.common.base.BaseViewBindingActivity
 
-class VideoWebViewActivity:BaseActivity() {
+class VideoWebViewActivity: BaseViewBindingActivity<ActivityVideoWebViewBinding>() {
 
     override fun getLayoutId(): Int =R.layout.activity_video_web_view
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun initView() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        wv_webView.webViewClient= WebViewClient()
-        wv_webView.settings.javaScriptEnabled=true
-        wv_webView.loadUrl(intent.getStringExtra(INTENT_DATA)!!)
+        binding.wvWebView.webViewClient= WebViewClient()
+        binding.wvWebView.settings.javaScriptEnabled=true
+        binding.wvWebView.loadUrl(intent.getStringExtra(INTENT_DATA)!!)
     }
 
 

@@ -7,7 +7,9 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import com.music.m.R
+import com.music.m.databinding.ActivityHelloBinding
 import com.web.common.base.BaseActivity
+import com.web.common.base.BaseViewBindingActivity
 import com.web.common.base.PlayerObserver
 import com.web.common.util.PermissionManager
 import com.web.data.Music
@@ -21,7 +23,7 @@ import com.web.moudle.music.player.other.IMusicControl
  * 初始化播放器，获取播放列表
  *
  */
-class HelloActivity : BaseActivity() {
+class HelloActivity : BaseViewBindingActivity<ActivityHelloBinding>() {
     private val code = 0x999
     override fun getLayoutId(): Int = R.layout.activity_hello
     private var connect: IMusicControl? = null

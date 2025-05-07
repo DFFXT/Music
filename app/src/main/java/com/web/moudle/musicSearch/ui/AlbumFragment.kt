@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.music.m.R
+import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.web.common.base.setItemDecoration
 import com.web.common.base.showContent
 import com.web.common.base.showError
@@ -21,62 +22,68 @@ import com.web.moudle.albumEntry.ui.AlbumEntryActivity
 import com.web.moudle.musicSearch.adapter.SimpleAlbumAdapter
 import com.web.moudle.musicSearch.bean.next.next.next.SimpleAlbumInfo
 import com.web.moudle.musicSearch.viewModel.AlbumViewModel
-import com.music.m.R
-import kotlinx.android.synthetic.main.fragment_music_search.*
 
-class AlbumFragment:BaseSearchFragment() {
+class AlbumFragment : BaseSearchFragment() {
     private lateinit var vm: AlbumViewModel
-    private lateinit var adapter:SimpleAlbumAdapter
+    private lateinit var adapter: SimpleAlbumAdapter
+
     override fun getLayoutId(): Int {
         return R.layout.fragment_music_search
     }
 
     override fun initView(rootView: View) {
-        vm= ViewModelProviders.of(this)[AlbumViewModel::class.java]
+        vm = ViewModelProviders.of(this)[AlbumViewModel::class.java]
     }
 
     override fun viewCreated(view: View, savedInstanceState: Bundle?) {
-        smartRefreshLayout.setEnableRefresh(false)
-        smartRefreshLayout.setEnableOverScrollDrag(true)
-        smartRefreshLayout.setEnableLoadMore(true)
-        smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
+        binding.smartRefreshLayout.setEnableRefresh(false)
+        binding.smartRefreshLayout.setEnableOverScrollDrag(true)
+        binding.smartRefreshLayout.setEnableLoadMore(true)
+        binding.smartRefreshLayout.setRefreshFooter(ClassicsFooter(context))
 
-        rv_musicList.layoutManager= LinearLayoutManager(context)
-        rv_musicList.setItemDecoration(DrawableItemDecoration(bottom = 20,left = 20,right = 20,
-                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),orientation = RecyclerView.VERTICAL))
-        adapter= SimpleAlbumAdapter()
-        adapter.itemClick={
-            if(it!=null){
-                AlbumEntryActivity.actionStart(context!!,it.albumId)
+        binding.rvMusicList.layoutManager = LinearLayoutManager(context)
+        binding.rvMusicList.setItemDecoration(
+            DrawableItemDecoration(
+                bottom = 20,
+                left = 20,
+                right = 20,
+                drawable = ResUtil.getDrawable(R.drawable.dash_line_1px),
+                orientation = RecyclerView.VERTICAL
+            )
+        )
+        adapter = SimpleAlbumAdapter()
+        adapter.itemClick = {
+            if (it != null) {
+                AlbumEntryActivity.actionStart(requireContext(), it.albumId)
             }
         }
-        rv_musicList.adapter=adapter
+        binding.rvMusicList.adapter = adapter
 
-        vm.status.observe(this,Observer<LiveDataWrapper<Int>>{
-            if(it!!.code== LiveDataWrapper.CODE_NO_DATA){
-                smartRefreshLayout.setNoMoreData(true)
-            }else if(it.code==LiveDataWrapper.CODE_OK){
+        vm.status.observe(this, Observer<LiveDataWrapper<Int>> {
+            if (it!!.code == LiveDataWrapper.CODE_NO_DATA) {
+                binding.smartRefreshLayout.setNoMoreData(true)
+            } else if (it.code == LiveDataWrapper.CODE_OK) {
                 searchCallBack?.invoke(it.value)
-                if(it.value==0){
-                    smartRefreshLayout.showError("没有数据",ColorDrawable())
-                            .setBackgroundColor(Color.TRANSPARENT)
-                }else{
-                    smartRefreshLayout.showContent()
+                if (it.value == 0) {
+                    binding.smartRefreshLayout.showError("没有数据", ColorDrawable())
+                        .setBackgroundColor(Color.TRANSPARENT)
+                } else {
+                    binding.smartRefreshLayout.showContent()
                 }
             }
         })
 
         search(keyword)
     }
-    override fun search(keyword:String?){
-        this.keyword=keyword
-        if(!isInit())return
+
+    override fun search(keyword: String?) {
+        this.keyword = keyword
+        if (!isInit()) return
         rootView?.showLoading()
-        smartRefreshLayout.setNoMoreData(false)
-        vm.search(keyword).observe(this,Observer<PagedList<SimpleAlbumInfo>>{
+        binding.smartRefreshLayout.setNoMoreData(false)
+        vm.search(keyword).observe(this, Observer<PagedList<SimpleAlbumInfo>> {
             adapter.submitList(it)
             rootView?.showContent()
         })
     }
-
 }

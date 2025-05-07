@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.ViewStubCompat
+import com.music.m.R
 import com.web.common.base.BaseActivity
 import com.web.common.util.ResUtil
 import com.web.common.util.ViewUtil
 import com.web.common.util.WindowUtil
-import com.music.m.R
-import kotlinx.android.synthetic.main.layout_action_tools.view.*
 
 /**
  * 自定义 伪ActionMode
  * 同一个activity不同的ToolsBar都是维护的一个toolsBar
  * 必须在onCreate之后实例化
  */
+@SuppressLint("RestrictedApi")
 class ToolsBar(private val ctx:BaseActivity) {
     private var rootView: ViewGroup?=null
     private var parent:ViewGroup
+
     private var stub:ViewStubCompat?=null
     private var itemNames=ArrayList<String>()
     private var itemIds=ArrayList<Int>()
@@ -58,7 +59,7 @@ class ToolsBar(private val ctx:BaseActivity) {
     }
 
     fun removeAllItem():ToolsBar{
-        rootView?.layout_itemBox?.removeAllViews()
+        rootView?.findViewById<ViewGroup>(R.id.layout_itemBox)?.removeAllViews()
         itemIds.clear()
         itemNames.clear()
         return this
@@ -74,7 +75,7 @@ class ToolsBar(private val ctx:BaseActivity) {
 
         if(rootView!=null){
             val tv=createItem(id,itemName)
-            rootView?.layout_itemBox?.addView(tv)
+            rootView?.findViewById<ViewGroup>(R.id.layout_itemBox)?.addView(tv)
         }
         return this
     }
@@ -103,13 +104,13 @@ class ToolsBar(private val ctx:BaseActivity) {
     @SuppressLint("RestrictedApi")
     fun show():ViewGroup{
         if(rootView==null){
-            stub!!.layoutResource= R.layout.layout_action_tools
+            stub!!.layoutResource = R.layout.layout_action_tools
             rootView=stub!!.inflate() as ViewGroup
             for(i in itemIds.size-1 downTo 0){
-                rootView?.layout_itemBox?.addView(createItem(itemIds[i],itemNames[i]))
+                rootView?.findViewById<ViewGroup>(R.id.layout_itemBox)?.addView(createItem(itemIds[i],itemNames[i]))
             }
             rootView?.setOnClickListener{}
-            rootView?.iv_back?.setOnClickListener { close() }
+            rootView?.findViewById<View>(R.id.iv_back)?.setOnClickListener { close() }
             addPadding(fitWindow)
         }else{
             rootView?.visibility=View.VISIBLE
