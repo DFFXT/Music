@@ -14,6 +14,7 @@ import com.web.common.base.PlayerObserver
 import com.web.common.util.PermissionManager
 import com.web.data.Music
 import com.web.moudle.home.HomePageActivity
+import com.web.moudle.music.page.local.MusicActivity
 import com.web.moudle.music.player.NewPlayer
 import com.web.moudle.music.player.other.IMusicControl
 
@@ -25,7 +26,6 @@ import com.web.moudle.music.player.other.IMusicControl
  */
 class HelloActivity : BaseViewBindingActivity<ActivityHelloBinding>() {
     private val code = 0x999
-    override fun getLayoutId(): Int = R.layout.activity_hello
     private var connect: IMusicControl? = null
     private lateinit var connection: ServiceConnection
 
@@ -33,7 +33,7 @@ class HelloActivity : BaseViewBindingActivity<ActivityHelloBinding>() {
         override fun onMusicListChange(list: MutableList<Music>?) {
             connect?.removeObserver(this@HelloActivity, null)
             // MusicActivity.actionStartForResult(this@HelloActivity, code)
-            HomePageActivity.actionStart(this@HelloActivity)
+            MusicActivity.actionStart(this@HelloActivity)
         }
     }
 
