@@ -52,7 +52,6 @@ class NewPlayer : Service() {
         musicDispatcher.add(null, LockScreenPlug(this))
         musicDispatcher.add(null, HeadSetPlug(control))
         musicDispatcher.add(null, MediaSessionServerPlug(control))
-        musicDispatcher.add(null, MediaSessionServerPlug(control))
         musicDispatcher.add(null, PhoneStatePlug(control))
         musicDispatcher.add(null, ActionControlPlug(control, player, musicDispatcher, musicDataSource))
         musicDispatcher.add(null, FloatWindowPlug(control))

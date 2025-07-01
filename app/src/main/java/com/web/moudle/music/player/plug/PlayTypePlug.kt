@@ -20,10 +20,10 @@ class PlayTypePlug(
     val randomSystem = RandomSystem()
     private val config = PlayerConfig
     override fun next(auto: Boolean) {
-        if (auto && config.playType != PlayType.RANDOM) {
-            control.play(dataSource.nextIndex(), config.musicOrigin)
-            return
-        }
+//        if (auto && config.playType != PlayType.RANDOM) {
+//            control.play(dataSource.nextIndex(), config.musicOrigin)
+//            return
+//        }
         if (!auto) {
             config.musicOrigin = PlayerConfig.MusicOrigin.LOCAL
             control.play(dataSource.nextIndex(), config.musicOrigin)
