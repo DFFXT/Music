@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     //id("kotlin-android-extensions")
     id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 android {
     namespace = "com.music.m"
@@ -60,7 +61,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    viewBinding.enable = true
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
 
     compileOptions {
         targetCompatibility(1.8)
@@ -127,6 +131,15 @@ dependencies {
     implementation("com.google.android.exoplayer:exoplayer-ui:2.19.1")
     implementation("com.github.DFFXT.SkinSwitch:SkinCore:0.22.6")
     debugImplementation("com.github.DFFXT.SkinSwitch:ViewDebug:0.22.6")
+
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.8.3")
 
     /* def room_version = "2.4.3"
 
