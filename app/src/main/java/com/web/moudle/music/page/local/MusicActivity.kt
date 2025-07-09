@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.GravityCompat
 import androidx.core.widget.TextViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -177,6 +178,13 @@ class MusicActivity : BaseViewBindingActivity<RestructMusicLayoutBinding>(), Vie
             }
         }
         viewPager!!.post { currentPage.title = "" }
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                moveTaskToBack(true)
+            }
+
+        })
     }
 
     @SuppressLint("RestrictedApi")

@@ -22,7 +22,11 @@ class NotificationPlug(service: Service) : PlayInterface,ServiceLifeCycle {
 
     override fun onLoad(music: Music?, maxTime: Int) {
         if (music == null) {
-            notification.cancel()
+            // notification.cancel()
+            notification.setName("----")
+            notification.setSinger("--")
+            notification.setBitMap(null)
+            notifyChange()
         } else {
             notification.setName(music.musicName)
             notification.setSinger(music.singer)
@@ -36,11 +40,11 @@ class NotificationPlug(service: Service) : PlayInterface,ServiceLifeCycle {
         notifyChange()
     }
     private fun notifyChange() {
-        if (config.music == null) {
-            notification.cancel()
-        } else {
-            notification.notifyChange()
-        }
+//        if (config.music == null) {
+//            notification.cancel()
+//        } else {
+//        }
+        notification.notifyChange()
     }
 
     override fun onDestroy() {

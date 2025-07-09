@@ -1,6 +1,5 @@
 package com.web.misc
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -8,10 +7,10 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.music.m.R
@@ -64,7 +63,7 @@ class TopBarLayout : FrameLayout {
         //**默认点击事件
         setStartImageListener(OnClickListener {
             if(startImageView.drawable==null)return@OnClickListener
-            (context as Activity).finish()
+            (context as ComponentActivity).onBackPressedDispatcher.onBackPressed()
         })
     }
 
