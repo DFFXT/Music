@@ -161,7 +161,7 @@ object IOUtil{
     }
 
     @JvmStatic
-    fun objToBase64(diskObject: DiskObject):ByteArray {
+    fun objToBase64(diskObject: Serializable):ByteArray {
         ByteArrayOutputStream().use {byteArray->
             ObjectOutputStream(byteArray).use {
                 it.writeObject(diskObject)
@@ -170,7 +170,7 @@ object IOUtil{
         }
     }
     @Suppress("UNCHECKED_CAST")
-    fun <T:DiskObject> base64ToObj(base64String:String?):T?{
+    fun <T:Serializable> base64ToObj(base64String:String?):T?{
         val bytes=Base64.decode(base64String?.toByteArray(),Base64.DEFAULT)
         try {
             ByteArrayInputStream(bytes).use {

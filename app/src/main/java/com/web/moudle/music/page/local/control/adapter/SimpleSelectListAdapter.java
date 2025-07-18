@@ -52,17 +52,17 @@ public class SimpleSelectListAdapter extends BaseAdapter<String> implements Remo
             tv.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
             Drawable drawable=tv.getContext().getDrawable(R.drawable.icon_pause_fill);
             if(drawable!=null){
-                drawable.setTint(ResUtil.getColor(R.color.themeColor));
+                drawable.setTint(ResUtil.getColor(R.color.themeColor, tv.getContext()));
                 drawable.setBounds(0,0,arrowSize,arrowSize);
                 tv.setCompoundDrawables(drawable,null,null,null);
             }
-            tv.setTextColor(ResUtil.getColor(R.color.themeColor));
+            tv.setTextColor(ResUtil.getColor(R.color.themeColor, tv.getContext()));
 
         }else {
             tv.setBackgroundColor(Color.TRANSPARENT);
             tv.setCompoundDrawables(null,null,null,null);
             tv.setPadding(arrowSize+paddingStart,paddingOther,paddingOther,paddingOther);
-            tv.setTextColor(ResUtil.getColor(R.color.textColorGray));
+            tv.setTextColor(ResUtil.getColor(R.color.textColorGray, tv.getContext()));
         }
     }
 

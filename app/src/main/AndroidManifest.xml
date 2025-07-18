@@ -78,6 +78,7 @@
                 <data android:mimeType="audio/*" />
             </intent-filter>
         </activity>
+        <activity android:name="com.compose.MainActivity"/>
         <activity
             android:theme="@style/FullscreenTheme"
             android:name="com.web.web.HelloActivity"

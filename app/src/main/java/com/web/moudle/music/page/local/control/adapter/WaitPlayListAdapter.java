@@ -52,13 +52,13 @@ public class WaitPlayListAdapter extends RecyclerView.Adapter<BaseViewHolder> im
                 drawable.setBounds(0,0,25,25);
                 tv.setCompoundDrawables(drawable,null,null,null);
             }
-            tv.setTextColor(ResUtil.getColor(R.color.themeColor));
+            tv.setTextColor(ResUtil.getColor(R.color.themeColor, holder.itemView.getContext()));
 
         }else {
             tv.setBackgroundColor(Color.TRANSPARENT);
             tv.setCompoundDrawables(null,null,null,null);
             tv.setPadding(45,20,20,20);
-            tv.setTextColor(ResUtil.getColor(R.color.textColorGray));
+            tv.setTextColor(ResUtil.getColor(R.color.textColorGray, holder.itemView.getContext()));
         }
     }
 

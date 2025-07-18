@@ -2,6 +2,8 @@ package com.web.common.constant;
 
 import android.os.Environment;
 
+import androidx.annotation.NonNull;
+
 import com.web.config.Shortcut;
 import com.web.moudle.setting.cache.CacheActivity;
 
@@ -21,7 +23,10 @@ public final class Constant {
         // 默认机身储存
         public static String rootPath= "/storage/emulated/0/0/";
         public static String cachePath=rootPath+"cache/";
+
+        @NonNull
         public static String musicDownloadPath=cachePath+"download/";
+        @NonNull
         public static String musicCachePath=cachePath+"cache/";
         public static String singerIconPath =cachePath+"singer/";
         public static String krcPath=cachePath+"lyrics/";

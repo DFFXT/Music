@@ -1,9 +1,12 @@
 package com.web.moudle.preference
 
+import android.app.Application
+import android.content.Context
 import com.tencent.mmkv.MMKV
 import com.web.app.MyApplication
 import com.web.common.util.IOUtil
 import com.web.moudle.music.player.bean.DiskObject
+import java.io.Serializable
 
 /**
  * key-value 数据存储
@@ -30,7 +33,7 @@ object SP {
             is Boolean ->kv.putBoolean(key,value)
             is Long ->kv.putLong(key,value)
             is Float ->kv.putFloat(key,value)
-            is DiskObject->{
+            is Serializable ->{
                 kv.putString(key, String(IOUtil.objToBase64(value)))
             }
         }

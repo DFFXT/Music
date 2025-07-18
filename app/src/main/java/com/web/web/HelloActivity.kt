@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
+import com.compose.MainActivity
 import com.music.m.R
 import com.music.m.databinding.ActivityHelloBinding
 import com.web.common.base.BaseActivity
@@ -33,7 +34,8 @@ class HelloActivity : BaseViewBindingActivity<ActivityHelloBinding>() {
         override fun onMusicListChange(list: MutableList<Music>?) {
             connect?.removeObserver(this@HelloActivity, null)
             // MusicActivity.actionStartForResult(this@HelloActivity, code)
-            MusicActivity.actionStart(this@HelloActivity)
+           // MusicActivity.actionStart(this@HelloActivity)
+            MainActivity.actionStart(this@HelloActivity)
         }
     }
 

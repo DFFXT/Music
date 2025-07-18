@@ -17,14 +17,12 @@ class MyApplication : LitePalApplication() {
         super.onCreate()
         val configuration = resources.configuration
         configuration.fontScale = Constant.LocalConfig.fontScale
-        context = this
+        app = this
         CrashReport.initCrashReport(this)
-        Config.ctx = this
 
 
         //Thread.setDefaultUncaughtExceptionHandler(UncaughtException)
 
-        Config.ctx = context
 
         InternetProxy.startProxy()
         Constant.LocalConfig.initPath()
@@ -36,6 +34,13 @@ class MyApplication : LitePalApplication() {
         SkinManager.init(this, 0, DefaultProviderFactory())
     }
     companion object {
-        lateinit var context: Application
+        private var app: Application? = null
+        val context: Application
+            get() {
+                if (app == null){
+                    app = Application()
+                }
+                return app!!
+            }
     }
 }

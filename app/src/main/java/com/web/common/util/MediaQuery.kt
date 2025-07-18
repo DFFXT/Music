@@ -39,7 +39,7 @@ object MediaQuery {
                 }
                 val types = SuffixSelectActivity.getScanType()
                 val out = arrayOfNulls<String>(2)
-                val ignorePathList = IgnorePath().ignorePathList.filter { !it.disabled }
+                val ignorePathList = IgnorePath().ignorePathList.filter { it.enable }
                 DataSupport.deleteAll(Music::class.java)
                 while (cursor.moveToNext()) {
                     var index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA)

@@ -107,7 +107,7 @@ public class InternetMusicActivity extends BaseViewBindingActivity<MusicInternet
         return ResUtil.getSpannable(text+"("+number+")",
                 "("+number+")",
                 getColor(R.color.themeColor),
-                ResUtil.getSize(R.dimen.textSize_min));
+                ResUtil.getSize(R.dimen.textSize_min, this));
 
     }
 

@@ -20,7 +20,7 @@ public class LocalChooserAdapter extends BaseAdapter<LocalItem> {
     private OnItemClickListener<LocalItem> itemClickListener;
     private AdapterView.OnItemSelectedListener itemSelectListener;
     private int select = -1;
-    private int selectColor = ResUtil.getColor(R.color.lightBlue);
+    private int selectColor = ResUtil.getColor(R.color.lightBlue, null);
 
 
 
@@ -51,7 +51,7 @@ public class LocalChooserAdapter extends BaseAdapter<LocalItem> {
             holder.itemView.setBackgroundColor(selectColor);
         } else {
             //**此处drawable不能共用公共drawable，否则会出现bug
-            holder.itemView.setBackground(ResUtil.getDrawable(R.drawable.selector_transparent_gray));
+            holder.itemView.setBackground(ResUtil.getDrawable(R.drawable.selector_transparent_gray, holder.itemView.getContext()));
         }
 
     }

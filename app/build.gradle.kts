@@ -124,7 +124,7 @@ dependencies {
 
     implementation("com.tencent.bugly:crashreport:4.1.9.3")
     implementation("com.github.JessYanCoding:AndroidAutoSize:v1.2.1")
-    implementation("com.github.DFFXT:PreferenceUtils:1.2")
+    implementation("com.github.DFFXT:PreferenceUtils:1.2.4")
 
     implementation("com.mpatric:mp3agic:0.9.1")
     implementation("com.google.android.exoplayer:exoplayer-core:2.19.1")
@@ -140,6 +140,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     debugImplementation("androidx.compose.ui:ui-tooling:1.8.3")
+
+    implementation("androidx.navigation:navigation-compose:2.9.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose-android:1.1.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.8.3")
 
     /* def room_version = "2.4.3"
 

@@ -66,7 +66,7 @@ public class Apk {
     public static String getVersionName(){
         String versionName="";
         try {
-            versionName= MyApplication.context.getPackageManager().getPackageInfo(MyApplication.context.getPackageName(), PackageManager.GET_GIDS).versionName;
+            versionName= MyApplication.getContext().getPackageManager().getPackageInfo(MyApplication.getContext().getPackageName(), PackageManager.GET_GIDS).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -75,7 +75,7 @@ public class Apk {
     public static int getVersionCode(){
         int versionCode=0;
         try {
-            versionCode=MyApplication.context.getPackageManager().getPackageInfo(MyApplication.context.getPackageName(), PackageManager.GET_GIDS).versionCode;
+            versionCode=MyApplication.getContext().getPackageManager().getPackageInfo(MyApplication.getContext().getPackageName(), PackageManager.GET_GIDS).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

@@ -1,12 +1,11 @@
 package com.web.moudle.setting.suffix.sp
 
-import com.fxffxt.preferen.Config
 import com.fxffxt.preferen.noneNull
 
 /**
  * 忽略的路径
  */
-class IgnorePath(override val localFileName: String = "MusicIgnorePath") : Config {
+class IgnorePath(override val localFileName: String = "MusicIgnorePath") : ConfigImpl {
     private var wrapper by noneNull(Wrapper())
     var ignorePathList
         get() = wrapper.ignorePathList
@@ -16,7 +15,11 @@ class IgnorePath(override val localFileName: String = "MusicIgnorePath") : Confi
             // 触发保存
             wrapper = w
         }
-    class IgnoreItem(var path: String, var disabled: Boolean)
+
+    fun save() {
+        wrapper = wrapper
+    }
+    class IgnoreItem(var path: String, var enable: Boolean)
     private class Wrapper {
         var ignorePathList = mutableListOf<IgnoreItem>()
     }

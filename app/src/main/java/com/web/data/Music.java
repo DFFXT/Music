@@ -3,6 +3,7 @@ package com.web.data;
 import com.web.app.MyApplication;
 import com.web.common.constant.Constant;
 import com.web.common.tool.MToast;
+import com.web.common.util.ResUtil;
 import com.web.config.Shortcut;
 import com.web.common.util.MediaQuery;
 import com.music.m.R;
@@ -103,11 +104,11 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public boolean rename(String musicName,String singer){
         if(Constant.LocalConfig.isValidFileName(musicName) || Constant.LocalConfig.isValidFileName(singer)){
-            MToast.showToast(MyApplication.context, R.string.invalidFilePath);
+            MToast.showToast(MyApplication.getContext(), R.string.invalidFilePath);
             return false;
         }
         if(!exist(this)){
-            MToast.showToast(MyApplication.context, R.string.fileNotFound);
+            MToast.showToast(MyApplication.getContext(), R.string.fileNotFound);
             return false;
         }
         File file=new File(path);
@@ -120,7 +121,7 @@ public class Music extends DataSupport implements Cloneable,Serializable {
         newMusic.setSinger(singer);
         newMusic.setPath(newFile.getAbsolutePath());
         if(newFile.exists()){
-            MToast.showToast(MyApplication.context, R.string.fileExist);
+            MToast.showToast(MyApplication.getContext(), R.string.fileExist);
             return false;
         }
 
@@ -137,7 +138,7 @@ public class Music extends DataSupport implements Cloneable,Serializable {
             }
             update(id);
         }else{
-            MToast.showToast(MyApplication.context, R.string.renameFailed);
+            MToast.showToast(MyApplication.getContext(), R.string.renameFailed);
         }
         return ok;
     }
@@ -149,6 +150,10 @@ public class Music extends DataSupport implements Cloneable,Serializable {
 
     public int getDuration() {
         return duration;
+    }
+
+    public String getDurationFormatted(){
+        return ResUtil.timeFormat("mm:ss", duration);
     }
 
     public void setDuration(int duration) {

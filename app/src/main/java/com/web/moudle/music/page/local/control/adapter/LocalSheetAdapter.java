@@ -54,17 +54,17 @@ public class LocalSheetAdapter extends BaseAdapter<String> implements RemoveItem
             et.setPadding(paddingStart,paddingOther,paddingOther,paddingOther);
             Drawable drawable=inputItem.getContext().getDrawable(R.drawable.icon_pause_fill);
             if(drawable!=null){
-                drawable.setTint(ResUtil.getColor(R.color.themeColor));
+                drawable.setTint(ResUtil.getColor(R.color.themeColor, et.getContext()));
                 drawable.setBounds(0,0,arrowSize,arrowSize);
                 et.setCompoundDrawables(drawable,null,null,null);
             }
-            et.setTextColor(ResUtil.getColor(R.color.themeColor));
+            et.setTextColor(ResUtil.getColor(R.color.themeColor, et.getContext()));
 
         }else {
             et.setBackgroundColor(Color.TRANSPARENT);
             et.setCompoundDrawables(null,null,null,null);
             et.setPadding(arrowSize+paddingStart,paddingOther,paddingOther,paddingOther);
-            et.setTextColor(ResUtil.getColor(R.color.textColorGray));
+            et.setTextColor(ResUtil.getColor(R.color.textColorGray, et.getContext()));
         }
 
         if(position!=editIndex){

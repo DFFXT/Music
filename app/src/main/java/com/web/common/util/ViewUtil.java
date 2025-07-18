@@ -2,6 +2,7 @@ package com.web.common.util;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,6 +24,13 @@ public class ViewUtil {
         return (int)(MyApplication.getContext().
                 getResources().getDisplayMetrics().density*dp+0.5);
     }
+    public static int dpToPx(Context context, float dp){
+        if (context == null) {
+            return dpToPx(dp);
+        }
+        return (int)(context.
+                getResources().getDisplayMetrics().density*dp+0.5);
+    }
     public static float dpToFloatPx(float dp){
         return MyApplication.getContext().
                 getResources().getDisplayMetrics().density*dp;
@@ -38,13 +46,30 @@ public class ViewUtil {
         }
         return height;
     }
+    public static int screenWidth(Context context){
+        if (context == null) {
+            return screenWidth();
+        }
+        if(width<0)
+            width=context.getResources().getDisplayMetrics().widthPixels;
+        return width;
+    }
+    public static int screenHeight(Context context){
+        if (context == null) {
+            return screenHeight();
+        }
+        if(height<0){
+            height=context.getResources().getDisplayMetrics().heightPixels;
+        }
+        return height;
+    }
     public static void stringSize(String str, float size, Rect rect){
         Paint paint=new Paint();
         paint.setTextSize(size);
         paint.getTextBounds(str,0,str.length(),rect);
     }
     public static Drawable getDrawable(@DrawableRes int id){
-        return ResourcesCompat.getDrawable(MyApplication.context.getResources(), id, MyApplication.getContext().getTheme());
+        return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), id, MyApplication.getContext().getTheme());
     }
     public static void transparentStatusBar(Window window){
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

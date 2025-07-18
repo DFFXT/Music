@@ -273,7 +273,7 @@ public class MusicListPage extends BaseMusicPage<MusicListBinding> {
         RecyclerView indexBar = rootView.findViewById(R.id.indexBar_musicList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), RecyclerView.VERTICAL, false);
         rv_musicList.setLayoutManager(layoutManager);
-        rv_musicList.addItemDecoration(new DrawableItemDecoration(0, 0, 0, 2, RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider)));
+        rv_musicList.addItemDecoration(new DrawableItemDecoration(0, 0, 0, 2, RecyclerView.VERTICAL, ResUtil.getDrawable(R.drawable.recycler_divider, requireContext())));
         adapter = new LocalMusicAdapter(rootView.getContext(), data);
         adapter.setSelect(false);
 

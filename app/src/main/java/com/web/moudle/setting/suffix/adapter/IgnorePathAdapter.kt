@@ -1,6 +1,5 @@
 package com.web.moudle.setting.suffix.adapter
 
-import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
@@ -28,9 +27,9 @@ class IgnorePathAdapter : BaseAdapter<IgnorePath.IgnoreItem>(), IAdapterAnimatio
             })
         }
         holder.findViewById<CheckBox>(R.id.checkBox).apply {
-            isChecked = !item.disabled
+            isChecked = item.enable
             setOnCheckedChangeListener { _, isChecked ->
-                item.disabled = !isChecked
+                item.enable = isChecked
             }
         }
     }

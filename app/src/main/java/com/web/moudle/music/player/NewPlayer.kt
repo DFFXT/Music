@@ -4,12 +4,14 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import com.web.common.base.PlayerObserver
 import com.web.moudle.music.player.other.IMusicControl
 import com.web.moudle.music.player.other.MusicDataSource
 import com.web.moudle.music.player.other.PlayInterfaceManager
@@ -110,6 +112,22 @@ class NewPlayer : Service() {
                 ctx.startForegroundService(intent)
             }
             ctx.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+
+        @JvmStatic
+        fun bind(ctx: Context, observer: PlayerObserver, callback:((control:IMusicControl) -> Unit)? = null) {
+            val connection = object : ServiceConnection {
+                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                    service?.let {
+                        (service as? ExoPlayerConnection)?.addObserver(null, observer)
+                    }
+                    callback?.invoke(service as IMusicControl)
+                }
+
+                override fun onServiceDisconnected(name: ComponentName?) {
+                }
+            }
+            bind(ctx, connection)
         }
     }
 }
