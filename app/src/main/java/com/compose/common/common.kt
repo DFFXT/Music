@@ -68,7 +68,7 @@ fun TopBarComponent(
         ) {
             if (endIcon != 0) {
                 Image(
-                    painter = painterResource(id = startIcon),
+                    painter = painterResource(id = endIcon),
                     colorFilter = ColorFilter.tint(Color.White),
                     contentDescription = null,
                     modifier = Modifier.clickable(onClick = endClick)

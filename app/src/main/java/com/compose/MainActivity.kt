@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.compose.page.MusicDetailComponent
 import com.compose.page.MusicMainComponent
 import com.compose.page.SettingsComponent
 import com.compose.ui.theme.DeleteTheme
@@ -58,10 +59,11 @@ class MainActivity : ComponentActivity() {
                             composable(Navi.MUSIC_HOME) {
                                 MusicMainComponent()
                             }
-                            composable("test") {
-                                Text(MaterialTheme.colorScheme.primary.toString(), modifier = Modifier.clickable {
-                                    controller.navigate("home")
-                                })
+                            composable(Navi.MUSIC_DETAIL) {
+                                MusicDetailComponent()
+//                                Text(MaterialTheme.colorScheme.primary.toString(), modifier = Modifier.clickable {
+//                                    controller.navigate("home")
+//                                })
                             }
                         }
                     }

@@ -67,7 +67,7 @@ fun PlayerInfoComponent(
         modifier = Modifier
             .padding(10.dp)
             .clickable {
-                controller.navigate(Navi.MUSIC_DETAIL)
+                controller.navigate(Navi.MUSIC_DETAIL, )
             }) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             val progress = vm?.progress?.collectAsStateWithLifecycle()

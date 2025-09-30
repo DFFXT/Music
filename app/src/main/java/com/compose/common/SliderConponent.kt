@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
@@ -69,6 +70,7 @@ fun CustomSlider(modifier: Modifier = Modifier, value: Float = 0.5f, onValueChan
             }
         },
         track = { ss ->
+            val activeColor = colorScheme.error
             Box(modifier = Modifier.height(1.dp)) {
                 Canvas(modifier = Modifier
                     .fillMaxWidth()
@@ -76,7 +78,7 @@ fun CustomSlider(modifier: Modifier = Modifier, value: Float = 0.5f, onValueChan
                     drawRect(Color.Gray,
                         topLeft = Offset(ss.value * size.width, 0f),
                         size = Size(size.width - ss.value * size.width, size.height))
-                    drawRect(colors.activeTrackColor, size = Size(ss.value * size.width, size.height))
+                    drawRect(activeColor, size = Size(ss.value * size.width, size.height))
                 }
             }
 
