@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.os.Build
 import androidx.annotation.CallSuper
+import androidx.core.app.NotificationCompat
 import com.music.m.R
 
 /**
@@ -18,16 +19,18 @@ abstract class BaseNotification(
     id: String,
     name: String,
 ) {
-    var builder: Notification.Builder
+    var builder: NotificationCompat.Builder
     var clear = false
 
     init {
         createChannel(id, name)
-        builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(context, id)
-        } else {
-            Notification.Builder(context)
-        }
+//        builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//
+//            Notification.Builder(context, id)
+//        } else {
+//            Notification.Builder(context)
+//        }
+        builder = NotificationCompat.Builder(context, id)
         builder.setSmallIcon(R.drawable.ic_launcher)
     }
 
@@ -65,5 +68,5 @@ abstract class BaseNotification(
         manager.cancel(notificationId)
     }
 
-    abstract fun update(builder: Notification.Builder)
+    abstract fun update(builder: NotificationCompat.Builder)
 }

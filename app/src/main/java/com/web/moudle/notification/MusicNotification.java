@@ -28,7 +28,8 @@ public class MusicNotification extends BaseCustomNotification {
 	private String singer=null;
 	private boolean isPlay=false;
 	public MusicNotification(Context context) {
-		super(context,0, MusicNotification.class.getName(), ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
+		// notification id不能为0，否则会产生anr
+		super(context,context.hashCode(), MusicNotification.class.getName(), ResUtil.getString(R.string.musicControl),R.layout.music_navigator_control);
 		this.context=context;
 		init();
 	}

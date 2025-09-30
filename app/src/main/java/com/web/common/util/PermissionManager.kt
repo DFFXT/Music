@@ -3,6 +3,7 @@ package com.web.common.util
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.os.Build
 
 object PermissionManager {
     @JvmStatic
@@ -22,11 +23,19 @@ object PermissionManager {
 
     @JvmStatic
     fun requestAllPermission(activity: Activity):Boolean{
-        return requestPermission(activity,
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermission(activity,
+                    arrayOf(Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.READ_MEDIA_AUDIO,
+                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.FOREGROUND_SERVICE,
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS))
+        } else {
+            requestPermission(activity,
                 arrayOf(Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_MEDIA_AUDIO,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.MODIFY_AUDIO_SETTINGS))
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.MODIFY_AUDIO_SETTINGS))
+        }
     }
     @JvmStatic
     private fun requestPermission(activity: Activity,permissions:Array<String>):Boolean{

@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationCompat
 import com.web.common.base.BaseNotification
 import com.web.moudle.musicDownload.ui.MusicDownLoadActivity
 
@@ -23,7 +24,7 @@ class DownloadNotification(ctx: Context) : BaseNotification(ctx,3,
         this.count=count
         notifyChange()
     }
-    override fun update(builder: Notification.Builder) {
+    override fun update(builder: NotificationCompat.Builder) {
         builder.setContentTitle("正在下载")
         builder.setContentText("${count}首歌曲正在下载")
         builder.setContentIntent(pIntent)

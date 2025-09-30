@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.annotation.LayoutRes
+import androidx.core.app.NotificationCompat
 
 
 abstract class BaseCustomNotification(context: Context,
@@ -28,7 +29,7 @@ abstract class BaseCustomNotification(context: Context,
 
 
 
-    override fun update(builder: Notification.Builder) {
+    override fun update(builder: NotificationCompat.Builder) {
         update(view)
     }
 

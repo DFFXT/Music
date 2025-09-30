@@ -73,7 +73,7 @@ fun CustomSlider(modifier: Modifier = Modifier, value: Float = 0.5f, onValueChan
                 Canvas(modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()) {
-                    drawRect(colors.inactiveTrackColor,
+                    drawRect(Color.Gray,
                         topLeft = Offset(ss.value * size.width, 0f),
                         size = Size(size.width - ss.value * size.width, size.height))
                     drawRect(colors.activeTrackColor, size = Size(ss.value * size.width, size.height))
