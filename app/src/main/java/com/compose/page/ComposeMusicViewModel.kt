@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 class ComposeMusicViewModel: ViewModel() {
     val musicList: MutableStateFlow<List<Music>> = MutableStateFlow(emptyList())
     val progress: MutableStateFlow<Float> = MutableStateFlow(0f)
+    val duration: MutableStateFlow<Long> = MutableStateFlow(0)
     val music: MutableStateFlow<Music?> = MutableStateFlow(null)
     val index = MutableStateFlow<List<Char>>(emptyList())
     private val playerObserver = object : PlayerObserver() {
@@ -34,6 +35,7 @@ class ComposeMusicViewModel: ViewModel() {
         }
 
         override fun onCurrentTime(duration: Int, maxTime: Int) {
+            this@ComposeMusicViewModel.duration.tryEmit(duration.toLong())
             progress.tryEmit(duration / maxTime.toFloat())
         }
 

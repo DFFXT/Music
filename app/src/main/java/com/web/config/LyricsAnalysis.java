@@ -63,4 +63,12 @@ public class LyricsAnalysis {
     public ArrayList<LyricsLine> getLyrics() {
         return lyricsList;
     }
+
+    public int getTotalHeight() {
+        int height = 0;
+        for (LyricsLine line : lyricsList) {
+            height += line.getHeight();
+        }
+        return height;
+    }
 }
