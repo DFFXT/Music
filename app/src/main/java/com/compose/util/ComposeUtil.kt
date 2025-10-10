@@ -45,3 +45,4 @@ inline operator fun <T> State<T>?.getValue(thisObj: Any?, property: KProperty<*>
 
 val LocalNavi =
     compositionLocalOf<NavHostController> { NavHostController(ContextWrapper(null)) }
+

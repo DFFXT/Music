@@ -54,8 +54,17 @@ class ComposeMusicViewModel: ViewModel() {
     fun action(action: Action) {
         if (!::control.isInitialized) return
         when(action) {
+            Action.Pre -> {
+                control.pre()
+            }
             is Action.Play -> {
                 control.play(action.music)
+            }
+            Action.Toggle -> {
+                control.changePlayerPlayingStatus()
+            }
+            Action.Next -> {
+                control.next(true)
             }
             Action.Pause -> {
                 control.pause()
@@ -68,7 +77,10 @@ class ComposeMusicViewModel: ViewModel() {
     }
 
     sealed class Action {
+        object Pre : Action()
         data class Play(val music: Music) : Action()
+        object Toggle : Action()
+        object Next : Action()
         object Pause : Action()
 
         data class Seek(val percent: Float) : Action()

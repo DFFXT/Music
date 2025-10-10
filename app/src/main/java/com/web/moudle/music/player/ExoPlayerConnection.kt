@@ -61,7 +61,10 @@ class ExoPlayerConnection(
     }
 
     override fun play(music: Music) {
-        loadMusic(music, true)
+        val index = getDataSource().localList.indexOf(music)
+        // getDataSource().setIndex(index)
+        // loadMusic(music, true)
+        play(index, PlayerConfig.MusicOrigin.LOCAL)
     }
 
     override fun addObserver(lifecycleOwner: LifecycleOwner?, playerObserver: PlayerObserver) {

@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -109,6 +110,17 @@ fun PlayerInfoComponent(
                     maxLines = 1
                 )
                 Text(text = music?.singer ?: "---", overflow = TextOverflow.Ellipsis, maxLines = 1)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Image(painter = painterResource(id = R.drawable.icon_pre_black), contentDescription = null, modifier = Modifier.size(40.dp, 40.dp).clickable{
+                        vm?.action(ComposeMusicViewModel.Action.Pre)
+                    })
+                    Image(painter = painterResource(id = R.drawable.icon_play_black), contentDescription = null, modifier = Modifier.padding(horizontal = 20.dp).size(40.dp, 40.dp).clickable{
+                        vm?.action(ComposeMusicViewModel.Action.Toggle)
+                    })
+                    Image(painter = painterResource(id = R.drawable.icon_next_black), contentDescription = null, modifier = Modifier.size(40.dp, 40.dp).clickable{
+                        vm?.action(ComposeMusicViewModel.Action.Next)
+                    })
+                }
             }
         }
     }

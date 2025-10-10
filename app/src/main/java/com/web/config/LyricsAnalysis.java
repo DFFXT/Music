@@ -15,17 +15,49 @@ public class LyricsAnalysis {
 
     public LyricsAnalysis(String lyrics) {
         this.lyrics = lyrics;
-        Matcher m = pattern.matcher(lyrics);
-        int preStart = -1;
-        int start;
-        while (m.find()) {
-            start = m.start();
-            timeLength = m.end() - m.start();
-            add(preStart, start);
-            preStart = start;
+        String[] lines = lyrics.split("\n");
+        for (String line : lines) {
+            Matcher m = pattern.matcher(line);
+            if (m.find()) {
+                int start = m.start();
+                timeLength = m.end() - m.start();
+                // add(line, start, start);
+                int minute = 0;
+                int second = 0;
+                int msec = 0;
+                try {
+                    minute = Integer.parseInt(line.substring(start + 1, start + 3));
+                    second = Integer.parseInt(line.substring(start + 4, start + 6));
+                    msec = Integer.parseInt(line.substring(start + 7, start + 8));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                LyricsLine lyricsLine = new LyricsLine();
+                //***事件 毫秒为单位
+                lyricsLine.setTime((minute * 600 + second * 10 + msec) * 100);
+
+                lyricsLine.setLine(line.substring(start + timeLength).trim());
+                this.lyricsList.add(lyricsLine);
+            } else {
+                LyricsLine lyricsLine = new LyricsLine();
+                if (lyricsList.isEmpty()) {
+                    lyricsLine.setTime(0);
+                } else {
+                    lyricsLine.setTime(-1);
+                }
+                lyricsLine.setLine(line.trim());
+                this.lyricsList.add(lyricsLine);
+            }
         }
-        if (preStart >= 0) {//**添加最后一行歌词或只有一行歌词
-            add(preStart, lyrics.length());
+        for (int i = 0; i < lyricsList.size(); i++) {
+            LyricsLine line = lyricsList.get(i);
+            if (line.getTime() == -1) {
+                if (i + 1 < lyricsList.size() - 1) {
+                    line.setTime(lyricsList.get(i + 1).getTime());
+                } else {
+                    line.setTime(lyricsList.get(i - 1).getTime());
+                }
+            }
         }
     }
 
@@ -35,7 +67,7 @@ public class LyricsAnalysis {
      * @param preStart 开始处
      * @param end      结束处
      */
-    private void add(int preStart, int end) {
+    private void add(String lyrics, int preStart, int end) {
         int minute = 0;
         int second = 0;
         int msec = 0;

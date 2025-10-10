@@ -86,8 +86,10 @@ class NewPlayer : Service() {
             .build()
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        musicDispatcher.dispatch(intent)
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent != null) {
+            musicDispatcher.dispatch(intent)
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 

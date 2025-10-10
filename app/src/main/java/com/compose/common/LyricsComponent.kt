@@ -85,7 +85,7 @@ fun LyricsComponent() {
     val textMeasurer = rememberTextMeasurer()
     // 当前时间正在播放的行
     val time = vm?.duration?.collectAsState() ?: remember {
-        mutableLongStateOf(30000)
+        mutableLongStateOf(2300)
     }
 
 
@@ -113,55 +113,52 @@ fun LyricsComponent() {
                 var top = offsetTop.floatValue
                 var lineHeight = 0
 
-                out@ for (i in 0 until lyricsAnalysis.lyrics.size) {
+                for (i in 0 until lyricsAnalysis.lyrics.size) {
                     val curr = lyricsAnalysis.lyrics[i]
-                    val lines = curr.line.split('\n')
+                    val line = curr.line
                     //curr.width = 0
-                    curr.height = 0
-                    for (line in lines) {
-                        val result = textMeasurer.measure(text = line, style = TextStyle(fontSize = 20.sp))
-                        //curr.width += result.size.width
-                        curr.height += result.size.height
-                        // 将当前行定位到中间
-                        if ((time?.value ?: 0L) > curr.time) {
-                            top = top - curr.height
-                        } else {
-                            break@out
+                    val result = textMeasurer.measure(text = line, style = TextStyle(fontSize = 20.sp))
+                    //curr.width += result.size.width
+                    curr.height = result.size.height
+                    // 将当前行定位到中间
+                    if (time.value > curr.time) {
+                        top = top - curr.height
+                    } else {
+                        if (top != offsetTop.floatValue) {
+                            top = top + curr.height
                         }
+                        break
                     }
                 }
 
 
 
-                out@ for (i in 0 until lyricsAnalysis.lyrics.size) {
+                for (i in 0 until lyricsAnalysis.lyrics.size) {
                     val curr = lyricsAnalysis.lyrics[i]
-                    val lines = curr.line.split('\n')
-                    curr.height = 0
-                    for (line in lines) {
-                        val result = textMeasurer.measure(text = line, style = TextStyle(
+                    val line = curr.line
+                    val result = textMeasurer.measure(text = line, style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 20.sp
+                    ))
+                    lineHeight = result.size.height
+                    val left = size.width / 2f - result.size.width / 2f
+                    curr.height = lineHeight
+                    drawText(
+                        textMeasurer,
+                        text = line,
+                        topLeft = Offset(left, top),
+                        softWrap = false,
+                        style = TextStyle(
                             color = Color.Black,
                             fontSize = 20.sp
-                        ))
-                        lineHeight = result.size.height
-                        val left = size.width / 2f - result.size.width / 2f
-                        curr.height += lineHeight
-                        drawText(
-                            textMeasurer,
-                            text = line,
-                            topLeft = Offset(left, top),
-                            softWrap = false,
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontSize = 20.sp
-                            )
                         )
-                        for (j in 0 until result.lineCount) {
-                            top = top + lineHeight
-                        }
-                        // 不能超出画布，不然不显示
-                        if (top >= size.height) {
-                            break@out
-                        }
+                    )
+                    for (j in 0 until result.lineCount) {
+                        top = top + lineHeight
+                    }
+                    // 不能超出画布，不然不显示
+                    if (top >= size.height) {
+                        break
                     }
 
                 }
